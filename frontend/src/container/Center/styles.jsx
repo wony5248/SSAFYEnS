@@ -5,6 +5,9 @@ const Centerlayout = styled.div`
   height: 324px;
   color: #a3cca3;
   background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 0px;
   // border: 1px solid #a3cca3;
 `;

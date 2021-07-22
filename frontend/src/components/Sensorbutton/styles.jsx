@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
-const Rightsidebtn = styled.div`
+const Sensorbtn = styled.div`
   width: auto;
-  height: 79px;
+  height: 140px;
   color: #a3cca3;
   background-color: white;
-  padding: 0 8px;
+  padding: 0px;
   display: flex;
   align-items: center;
   align-content: center;
@@ -13,4 +13,4 @@ const Rightsidebtn = styled.div`
   border: 1px solid #a3cca3;
 `;
 
-export default Rightsidebtn;
+export default Sensorbtn;

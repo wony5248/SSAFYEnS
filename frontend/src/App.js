@@ -7,8 +7,7 @@ import Rating from './pages/Rating/';
 import Timer from './pages/Timer/';
 import Today from './pages/Today/';
 import Change from './pages/Change/';
-import Leftsidebar from './container/Leftsidebar';
-import Layout from "./layout"
+
 const theme = createTheme({
   typography: {
     fontFamily: ['Noto Sans KR'].join(','),

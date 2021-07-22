@@ -1,6 +1,6 @@
 import React from "react";
 
-import ButtonBases from "../../components/Leftbutton";
+
 import Centerlayout from "./styles";
 
 function Center(props) {

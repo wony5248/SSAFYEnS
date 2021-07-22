@@ -1,24 +1,24 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-const Leftsidebtn = styled.button`
-  width: 90px;
+const Mannerbtn = styled.button`
+  width: 120px;
   height: 81px;
-  color: #A3CCA3;
+  color: #a3cca3;
   background-color: white;
-  padding: 0 15px;
+  padding: 0 8px;
   display: flex;
   align-items: center;
   align-content: center;
   margin: 0px;
-  border: 1px solid #A3CCA3;
+  border: 1px solid #a3cca3;
   &:active {
-    background-color: #a3cca3;
+    background-color: #69a569;
     color: white;
-  }
+  };
   &:hover {
     background-color: #a3cca3;
     color: white;
   }
 `;
 
-export default Leftsidebtn;
+export default Mannerbtn;
