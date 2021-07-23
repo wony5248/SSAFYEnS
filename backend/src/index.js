@@ -1,11 +1,9 @@
-const express = require("express")
-const app = express()
+const express = require("express");
+const routes = require("./routes");
+const app = express();
+//middleware
+app.use("/", routes);
 
-app.get("/hi", (req, res) => {
-    console.log("hi")
-res.send("hello")
-})
-
-app.listen(8080, () => {
-	console.log("welecome to nodejs server");
-})
+app.listen(8081, () => {
+  console.log("welecome to nodejs server");
+});
