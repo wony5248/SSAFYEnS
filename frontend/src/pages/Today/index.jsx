@@ -1,12 +1,27 @@
 import React from "react";
 import Layout from "../../layout";
-import Todaylayout from "./Today";
-const Today = () => {
+import { Link } from "react-router-dom";
+const Todaylayout = () => {
   return (
-    <Layout
-      pages={Todaylayout()}
-    ></Layout>
+    <div>
+      <div>Today</div>
+      <Link to="/">Home</Link>
+      <br></br>
+      <Link to="/Progress">Progress</Link>
+      <br></br>
+      <Link to="/Change">Change</Link>
+      <br></br>
+      <Link to="/Rating">Rating</Link>
+      <br></br>
+      <Link to="/Timer">Timer</Link>
+      <br></br>
+      <Link to="/Today">Today</Link>
+    </div>
   );
+};
+
+const Today = () => {
+  return <Layout pages={Todaylayout()}></Layout>;
 };
 
 export default Today;
