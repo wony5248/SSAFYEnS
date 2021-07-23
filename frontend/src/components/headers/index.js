@@ -34,8 +34,8 @@ const Header = props=>{
                         </Typography>
                     </Grid>
                     <Grid style ={{justifyContent:'space-between'}}>
-                        <Button style={{color:'#A3CCA3', fontWeight:'bold'}}>회원가입</Button>
-                        <Button style={{color:'#A3CCA3', fontWeight:'bold'}}>로그인</Button>
+                        <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}}>회원가입</Button>
+                        <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}}>로그인</Button>
                     </Grid>
                 </Grid>           
             </AppBar>
