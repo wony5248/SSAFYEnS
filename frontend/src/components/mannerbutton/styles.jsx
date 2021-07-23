@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const Mannerbtn = styled.button`
   width: 120px;
-  height: 81px;
+  height: 79px;
   color: #a3cca3;
   background-color: white;
   padding: 0 8px;

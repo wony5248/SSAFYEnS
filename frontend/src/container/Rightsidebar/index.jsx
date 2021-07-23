@@ -2,14 +2,28 @@ import React from "react";
 
 import MannerBtn from "../../components/mannerbutton";
 import Rightsidecontainer from "./styles";
-import Datebtn from "../../components/Datebutton"
 import Sensorbtn from "../../components/Sensorbutton"
 import Date from "../../components/Clock"
 import Sensor from "../../components/Sensor"
+import styled from "styled-components";
+const Datebtn = styled.div`
+  width: auto;
+  height: 101px;
+  color: #a3cca3;
+  background-color: white;
+  padding: 0px 11px;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  margin: 0px;
+  border: 1px solid #a3cca3;
+
+`;
+
 function Rightsidebar() {
   return (
     <Rightsidecontainer>
-      <Datebtn btnName= {Date()}></Datebtn>
+      <Datebtn>{Date()}</Datebtn>
       <Sensorbtn btnName= {Sensor()}></Sensorbtn>
       <MannerBtn btnName="매너모드"></MannerBtn>
     </Rightsidecontainer>

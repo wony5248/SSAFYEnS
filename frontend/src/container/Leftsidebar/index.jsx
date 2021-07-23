@@ -1,15 +1,36 @@
 import React from "react";
-
-import ButtonBases from "../../components/Leftbutton";
+import {Button} from "@material-ui/core"
 import Leftsidecontainer from "./styles";
+import styled from 'styled-components';
+
+const Leftsidebtn = styled.button`
+  width: 90px;
+  height: 81px;
+  color: #A3CCA3;
+  background-color: white;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  margin: 0px;
+  border: 1px solid #A3CCA3;
+  cursor: pointer;
+  &:active {
+    background-color: #a3cca3;
+    color: white;
+  }
+ 
+ 
+`;
+
 
 function Leftsidebar() {
 	return (
 		<Leftsidecontainer>
-			<ButtonBases btnName="진행중인    일정"></ButtonBases>
-			<ButtonBases btnName="오늘 일정"></ButtonBases>
-			<ButtonBases btnName="일정 변경"></ButtonBases>
-			<ButtonBases btnName="타이머/ 스탑워치"></ButtonBases>
+			<Leftsidebtn btnName="진행중인 일정" onClick = {() => window.location.replace (`/Progress`)}>진행중인 일정</Leftsidebtn>
+			<Leftsidebtn btnName="오늘 일정" onClick = {() => window.location.replace (`/Today`)}>오늘 일정</Leftsidebtn>
+			<Leftsidebtn btnName="일정 변경" onClick = {() => window.location.replace (`/Change`)}>일정 변경</Leftsidebtn>
+			<Leftsidebtn btnName="타이머/ 스탑워치" onClick = {() => window.location.replace (`/Timer`)}>타이머/ 스탑워치</Leftsidebtn>
 		</Leftsidecontainer>
 	);
 }
