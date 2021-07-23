@@ -18,6 +18,7 @@ const Homelayout = () => {
           <Link to="/Timer">Timer</Link>
           <br></br>
           <Link to="/Today">Today</Link>
+          
         </div>
   );
 };

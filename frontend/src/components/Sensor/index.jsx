@@ -2,17 +2,26 @@ import React from "react";
 
 import Sensorbtn from "./styles";
 
-const abs = () => {
-  return <div>hello</div>
+const temp = () => {
+  return <div>temp</div>
+}
+const humid = () => {
+  return <div>humid</div>
+}
+const noise = () => {
+  return <div>noise</div>
+}
+const light = () => {
+  return <div>light</div>
 }
 
 const Sensor = () => {
   return (
     <div>
-      <Sensorbtn>온도:{abs()}</Sensorbtn>
-      <Sensorbtn>습도:</Sensorbtn>
-      <Sensorbtn>소음:</Sensorbtn>
-      <Sensorbtn>조도:</Sensorbtn>
+      <Sensorbtn>온도:{temp()}</Sensorbtn>
+      <Sensorbtn>습도:{humid()}</Sensorbtn>
+      <Sensorbtn>소음:{noise()}</Sensorbtn>
+      <Sensorbtn>조도:{light()}</Sensorbtn>
     </div>
   );
 };

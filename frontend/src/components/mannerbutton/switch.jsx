@@ -1,10 +1,10 @@
 import React from 'react';
 import Switch from '@material-ui/core/Switch';
-import { useN01SwitchStyles } from '@mui-treasury/styles/switch/n01';
+import { useIosSwitchStyles } from '@mui-treasury/styles/switch/ios';
 
 const SwitchStyle = () => {
   const [toggled, setToggled] = React.useState(false);
-  const switchStyles = useN01SwitchStyles();
+  const switchStyles = useIosSwitchStyles();
   return (
     <div>
       <Switch
