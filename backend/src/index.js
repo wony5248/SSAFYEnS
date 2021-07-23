@@ -4,12 +4,12 @@ const routes = require("./routes");
 
 require("dotenv").config();
 
-const { PORT } = process.env;
+const env = process.env;
 
 //middleware
 app.use("/", routes);
 
-app.listen(PORT || 8080, () => {
-  console.log(PORT || 8080);
+app.listen(env.NODEJS_PORT || 8080, () => {
+  console.log(env.NODEJS_PORT || 8080);
   console.log("welecome to nodejs server");
 });
