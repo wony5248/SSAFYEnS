@@ -29,8 +29,8 @@ const Footer = () => {
                 </Grid>
             </Grid>
             <Grid container justify = "center" alignItems = "center">
-                <Grid item>
-                    Copyright 2021. Team name. All rights reserved.
+                <Grid item style={{ marginBottom:'10px', marginTop:'10px' }}>
+                    Copyright 2021. Team name. All rights reserved. | Design by Team name.
                 </Grid>
             </Grid>
         </Wrapper>

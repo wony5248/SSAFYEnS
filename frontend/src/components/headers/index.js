@@ -1,12 +1,15 @@
 import React from 'react';
+import store from 'store';
+import {useHistory} from 'react-router-dom';
 import {AppBar, Typography, Toolbar, Button, Grid, IconButton, Divider, Drawer, List, ListItem, ListItemText} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import GroupIcon from '@material-ui/icons/Group';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
-// main color: '#A3CCA3'
+import Wrapper from './styles';
 
 const Header = props=>{
+    let history = useHistory();
     const [open, setOpen] = React.useState(false);
 
     const handleDrawerOpen = () =>{  
@@ -17,9 +20,21 @@ const Header = props=>{
         setOpen(false);
     };
 
+    const onClickRedirectPathHandler = name => e =>{
+        window.scrollTo(0, 0);
+        if ( name === '/plan'){
+            if(history.location.pathname === name){
+                history.goBack();
+                store.remove('plan');
+            }else{
+                history.push(name);
+            }
+        }
+    };
+
     return(
-        <div >
-            <AppBar position = "fixed" style={{background:'#ffffff', color:'#A3CCA3'}}>
+        <Wrapper >
+            <AppBar style={{background:'#ffffff', color:'#A3CCA3'}}>
                 <Grid container justifyContent='space-between' direction = "row" alignItems = "center">     
                     <Grid>
                         <Toolbar>
@@ -47,7 +62,7 @@ const Header = props=>{
                 </div>
                 <Divider/>
                 <List>
-                    <ListItem button>
+                    <ListItem button onClick={onClickRedirectPathHandler('/plan')}>
                             <CalendarTodayIcon fontSize = "large" style={{color:'#A3CCA3', margin:'10px'}} />
                             <ListItemText primary="일정" style={{color:'#A3CCA3', margin:'10px', fontWeight:'bold'}}/>
                     </ListItem>
@@ -57,7 +72,7 @@ const Header = props=>{
                     </ListItem>
                 </List>
             </Drawer>
-        </div>
+        </Wrapper>
     );
 };
 
