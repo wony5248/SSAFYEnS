@@ -2,26 +2,31 @@ import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
 import { Link } from "react-router-dom";
 import axios from "axios";
+
+const loadItem = () => {
+  const [loading, setLoading] = useState(false);
+  const [itemList, setItemList] = useState([]);
+  axios
+    .get("./today.json")
+    .then(({ data }) => {
+      setLoading(true);
+      setItemList(data.Item);
+      console.log(data.Item);
+      return data.Item
+    })
+    .catch((e) => {
+      console.error(e);
+      setLoading(false);
+    });
+  
+};
+
 const Todaylayout = () => {
-  const { loading, setLoading } = useState(0);
-  const { itemList, setItemList } = useState([]);
-
-  // const loadItem = async () => {
-  //   axios
-  //     .get("./today.json")
-  //     .then(({ data }) => {
-  //       setLoading(1);
-  //       setItemList(itemList => data);
-  //     })
-  //     .catch((e) => {
-  //       console.error(e);
-  //       setLoading(loading);
-  //     });
-  // };
   // useEffect(() => {
-  //   loadItem();
-  // });
+  //   console.log("hook0");
+  // }, []);
 
+  const loadData = loadItem();
   return (
     <div>
       <div>Today</div>
