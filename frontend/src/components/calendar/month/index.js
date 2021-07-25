@@ -17,7 +17,7 @@ const Month = () =>{
     };
 
     const firstWeek = today.clone().startOf('month').week();
-    const lastWeek = today.clone().endOf('month').week === 1 ? 53 : today.clone().endOf('month').week();
+    let lastWeek = today.clone().endOf('month').week === 1 ? 53 : today.clone().endOf('month').week();
 
     const weeks = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
@@ -31,9 +31,19 @@ const Month = () =>{
         return result;
     };
 
+    const onClickDate = () =>{
+        // test code
+        alert('TEST CODE');
+    };
+
     const dateArr = () =>{
         let result = [];
         let week = firstWeek;
+        // firstWeek가 lastWeek보다 큰 경우는 12월만 존재한다.
+        if (firstWeek > lastWeek){
+            lastWeek = 53;
+        }
+        
         for (week; week <=lastWeek; week++) {
             result = result.concat(
                 <tr key = {week} >
@@ -43,7 +53,7 @@ const Month = () =>{
                             
                             if (moment().format('YYYYMMDD') === days.format('YYYYMMDD')) {
                                 return(
-                                    <td key={index} style={{color:'#A3CCA3', width: '100px', height: '100px', verticalAlign: 'top'}}>
+                                    <td key={index} style={{color:'#A3CCA3', width: '100px', height: '100px', verticalAlign: 'top'}}  onClick={onClickDate}>
                                         <span>{days.format('D')}</span>
                                     </td>
                                 );
@@ -55,7 +65,7 @@ const Month = () =>{
                                 );
                             }else{
                                 return (
-                                    <td key = {index} style = {{width: '100px', height: '100px', verticalAlign: 'top'}}>
+                                    <td key = {index} style = {{width: '100px', height: '100px', verticalAlign: 'top'}} onClick={onClickDate}>
                                         <span>{days.format('D')}</span>
                                     </td>
                                 );
@@ -79,9 +89,9 @@ const Month = () =>{
                         </IconButton>
                     </Grid>
                     <Grid item >
-                        <div style={{background:'#A3CCA3', width:'100px', height:'30px', textAlign:'center', 
+                        <div style={{background:'#A3CCA3', width:'130px', height:'30px', textAlign:'center', 
                         paddingTop:'5px', marginTop : '10px', borderRadius:45, color:'#ffffff', fontWeight:'bold'}}>
-                            {today.format('MM월')}
+                            {today.format('YYYY년 MM월')}
                         </div>
                     </Grid>
                     <Grid item>
