@@ -7,7 +7,7 @@ import Rating from './pages/Rating/';
 import Timer from './pages/Timer/';
 import Today from './pages/Today/';
 import Change from './pages/Change/';
-
+import Changecalendar from './pages/Changecalendar'
 const theme = createTheme({
   typography: {
     fontFamily: ['Noto Sans KR'].join(','),
@@ -41,6 +41,7 @@ function App() {
             <Route exact path="/Timer" component={Timer} />
             <Route exact path="/Today" component={Today} />
             <Route exact path="/Change" component={Change} />
+            <Route exact path="/Changecalendar" component={Changecalendar} />
             <Redirect to="/" />
           </Switch>
         </BrowserRouter>

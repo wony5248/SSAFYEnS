@@ -4,7 +4,7 @@ const axios = require('axios');
 var fs = require('fs');
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+router.get('/today', function(req, res, next) {
     res.send("HELLO JBJ")
 });
 

@@ -2,37 +2,177 @@ import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import styled from "styled-components";
 
-const loadItem = () => {
-  const [loading, setLoading] = useState(false);
-  const [itemList, setItemList] = useState([]);
-  axios
-    .get("./today.json")
-    .then(({ data }) => {
-      setLoading(true);
-      setItemList(data.Item);
-      console.log(data.Item);
-      return data.Item
-    })
-    .catch((e) => {
-      console.error(e);
-      setLoading(false);
-    });
-  
-};
+const Todaycontainer = styled.div`
+  overflow: auto;
+  width: auto;
+  height: 310px;
+  color: #a3cca3;
+  background-color: white;
+  margin: 0px;
+  padding-top: 14px;
+  padding-right: 12px;
+  padding-left: 12px;
+  padding-bot: 14px;
+`;
+const Todaytitle = styled.div`
+  display: flex-row;
+  flex-wrap: no-wrap;
+  border-radius:4px;
+  justify-content: space-around;
+  width: auto;
+  height: 88px;
+  color: #a3cca3;
+  background-color: #a3cca3;
+  margin-bottom: 14px;
+  padding: 0px;
+`;
+const Todaytitlenamecon = styled.div`
+  width: auto;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  background-color: #a3cca3;
+  margin: 0px 16px;
+  padding-top: 4px;
+`;
+const Todaygoal = styled.div`
+  width: auto;
+  height: auto;
+  color: white;
+  background-color: #a3cca3;
+  margin: 0px 16px;
+  padding-top: 4px;
+`;
+
+const Todaytitlename = styled.div`
+  width: auto;
+  height: auto;
+  color: white;
+  background-color: #a3cca3;
+  padding-top: 4px;
+`;
+
+const Todaytitletime = styled.div`
+  width: auto;
+  height: auto;
+  color: white;
+  background-color: #a3cca3;
+  padding-top: 4px;
+`;
+
+const Todaychangecon = styled.div`
+  width: auto;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  background-color: #a3cca3;
+  margin: 0px 16px;
+`;
+
+const Todaycontenttitle = styled.div`
+  width: auto;
+  height: auto;
+  color: white;
+  background-color: #a3cca3;
+  padding: 0px;
+  margin-bottom: 14px;
+`;
+
+const Todaychangebtn = styled.button`
+  width: 78px;
+  height: auto;
+  border-radius:8px;
+  border:0px;
+  color: white;
+  background-color: #69a569;
+  padding: 4px;
+`;
 
 const Todaylayout = () => {
-  // useEffect(() => {
-  //   console.log("hook0");
-  // }, []);
+  const [loading, setLoading] = useState(false);
+  const [itemList, setItemList] = useState([]);
+  useEffect(() => {
+    async function loadItem() {
+      const result = await axios
+        .get("./today.json")
+        .then(({ data }) => {
+          setLoading(true);
+          setItemList(data.Item);
+          console.log(data.Item);
+        })
+        .catch((e) => {
+          console.error(e);
+          setLoading(false);
+        });
+    }
+    loadItem();
+  }, []);
 
-  const loadData = loadItem();
   return (
-    <div>
+    <Todaycontainer>
+      <Todaytitle>
+        <Todaytitlenamecon>
+          <Todaytitlename>일정 제목</Todaytitlename>
+          <Todaytitletime>00:00 ~ 02:00</Todaytitletime>
+        </Todaytitlenamecon>
+        <Todaygoal>리액트 부시기</Todaygoal>
+        <Todaychangecon>
+          <Todaytitlename>일정 설명</Todaytitlename>
+          <Todaychangebtn onClick = {() => window.location.replace (`/Rating`)}>완료</Todaychangebtn>
+        </Todaychangecon>
+      </Todaytitle>
+      <Todaytitle>
+        <Todaytitlenamecon>
+          <Todaytitlename>일정 제목</Todaytitlename>
+          <Todaytitletime>00:00 ~ 02:00</Todaytitletime>
+        </Todaytitlenamecon>
+        <Todaygoal>리액트 부시기</Todaygoal>
+        <Todaychangecon>
+          <Todaytitlename>일정 설명</Todaytitlename>
+          <Todaychangebtn onClick = {() => window.location.replace (`/Rating`)}>완료</Todaychangebtn>
+        </Todaychangecon>
+      </Todaytitle>
+      <Todaytitle>
+        <Todaytitlenamecon>
+          <Todaytitlename>일정 제목</Todaytitlename>
+          <Todaytitletime>00:00 ~ 02:00</Todaytitletime>
+        </Todaytitlenamecon>
+        <Todaygoal>리액트 부시기</Todaygoal>
+        <Todaychangecon>
+          <Todaytitlename>일정 설명</Todaytitlename>
+          <Todaychangebtn onClick = {() => window.location.replace (`/Rating`)}>완료</Todaychangebtn>
+        </Todaychangecon>
+      </Todaytitle>
+      <Todaytitle>
+        <Todaytitlenamecon>
+          <Todaytitlename>일정 제목</Todaytitlename>
+          <Todaytitletime>00:00 ~ 02:00</Todaytitletime>
+        </Todaytitlenamecon>
+        <Todaygoal>리액트 부시기</Todaygoal>
+        <Todaychangecon>
+          <Todaytitlename>일정 설명</Todaytitlename>
+          <Todaychangebtn onClick = {() => window.location.replace (`/Rating`)}>완료</Todaychangebtn>
+        </Todaychangecon>
+      </Todaytitle>
+      <Todaytitle>
+        <Todaytitlenamecon>
+          <Todaytitlename>일정 제목</Todaytitlename>
+          <Todaytitletime>00:00 ~ 02:00</Todaytitletime>
+        </Todaytitlenamecon>
+        <Todaygoal>리액트 부시기</Todaygoal>
+        <Todaychangecon>
+          <Todaytitlename>일정 설명</Todaytitlename>
+          <Todaychangebtn onClick = {() => window.location.replace (`/Rating`)}>완료</Todaychangebtn>
+        </Todaychangecon>
+      </Todaytitle>
       <div>Today</div>
       <Link to="/">Home</Link>
       <br></br>
-      <Link to="/Progress">Progress</Link>
+      <Link to="/Today">Today</Link>
       <br></br>
       <Link to="/Change">Change</Link>
       <br></br>
@@ -41,8 +181,7 @@ const Todaylayout = () => {
       <Link to="/Timer">Timer</Link>
       <br></br>
       <Link to="/Today">Today</Link>
-      <button>일정 추가</button>
-    </div>
+    </Todaycontainer>
   );
 };
 
