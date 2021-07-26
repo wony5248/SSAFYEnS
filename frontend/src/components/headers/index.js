@@ -29,6 +29,13 @@ const Header = props=>{
             }else{
                 history.push(name);
             }
+        }else if ( name === '/'){
+            if(history.location.pathname === name){
+                history.goBack();
+                store.remove('/');
+            }else{
+                history.push(name);
+            }
         }
     };
 
@@ -44,8 +51,8 @@ const Header = props=>{
                         </Toolbar>
                     </Grid>
                     <Grid >
-                        <Typography variant = "h3" >
-                            LOGO
+                        <Typography variant = "h3" onClick={onClickRedirectPathHandler('/')}>
+                            SSAFYens
                         </Typography>
                     </Grid>
                     <Grid style ={{justifyContent:'space-between'}}>

@@ -2,14 +2,15 @@ import React from 'react';
 import Header from '../../components/headers';
 import Footer from '../../components/footers';
 import Calendar from '../../components/calendar';
+import {Grid} from '@material-ui/core';
 
 const Plan = props => {
     return(
-        <div>
+        <div style={{height: '100%'}}>
             <Header />
-            <div>
+            <Grid style={{minHeight:'100%'}}>
                 <Calendar/>
-            </div>
+            </Grid>
             <Footer />
         </div>
     );

@@ -4,9 +4,21 @@ import moment from 'moment';
 import Wrapper from './styles';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import Plan from '../plan';
 
 const Month = () =>{
     const [getMoment, setMoment] = useState(moment());
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const openModal = () =>{
+        setModalOpen(true);
+    };
+
+    const closeModal = () =>{
+        setModalOpen(false);
+    };
+
     const today = getMoment;
     const previousMonth = () =>{
         setMoment(getMoment.clone().subtract(1, 'month'));
@@ -101,7 +113,15 @@ const Month = () =>{
                     </Grid>
                 </Grid>
             </Grid>
-            <div style={{height:'50px'}}></div>
+            <Grid container justifyContent='center' style={{width:'100%'}}>
+                <div style={{height:'50px', width:'700px', textAlign:'right'}}>
+                    <React.Fragment>
+                        <AddCircleIcon fontSize = "large" style = {{color:'#A3CCA3'}} onClick = {openModal}/>
+                        <Plan open = {modalOpen} close = {closeModal} />
+                    </React.Fragment>
+                    
+                </div>
+            </Grid>
             <Grid container justifyContent= 'center'>
                 <table style={{borderStyle:'solid', borderColor:'#A3CCA3'}}>
                     <tr>
