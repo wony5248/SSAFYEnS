@@ -19,7 +19,7 @@ const Changetitle = styled.div`
   display: flex-row;
   flex-wrap: no-wrap;
   justify-content: space-around;
-  border-radius:4px;
+  border-radius: 4px;
   width: auto;
   height: 88px;
   color: #a3cca3;
@@ -102,7 +102,11 @@ const Changelayout = () => {
         <Changegoal>리액트 부시기</Changegoal>
         <Changechangecon>
           <Changetitlename>일정 설명</Changetitlename>
-          <Changechangebtn onClick = {() => window.location.replace (`/Changecalendar`)}>변경</Changechangebtn>
+          <Changechangebtn
+            onClick={() => window.location.replace(`/Changecalendar`)}
+          >
+            변경
+          </Changechangebtn>
         </Changechangecon>
       </Changetitle>
       <Changetitle>
@@ -113,7 +117,11 @@ const Changelayout = () => {
         <Changegoal>리액트 부시기</Changegoal>
         <Changechangecon>
           <Changetitlename>일정 설명</Changetitlename>
-          <Changechangebtn onClick = {() => window.location.replace (`/Changecalendar`)}>변경</Changechangebtn>
+          <Changechangebtn
+            onClick={() => window.location.replace(`/Changecalendar`)}
+          >
+            변경
+          </Changechangebtn>
         </Changechangecon>
       </Changetitle>
       <Changetitle>
@@ -124,7 +132,11 @@ const Changelayout = () => {
         <Changegoal>리액트 부시기</Changegoal>
         <Changechangecon>
           <Changetitlename>일정 설명</Changetitlename>
-          <Changechangebtn onClick = {() => window.location.replace (`/Changecalendar`)}>변경</Changechangebtn>
+          <Changechangebtn
+            onClick={() => window.location.replace(`/Changecalendar`)}
+          >
+            변경
+          </Changechangebtn>
         </Changechangecon>
       </Changetitle>
       <Changetitle>
@@ -135,7 +147,11 @@ const Changelayout = () => {
         <Changegoal>리액트 부시기</Changegoal>
         <Changechangecon>
           <Changetitlename>일정 설명</Changetitlename>
-          <Changechangebtn onClick = {() => window.location.replace (`/Changecalendar`)}>변경</Changechangebtn>
+          <Changechangebtn
+            onClick={() => window.location.replace(`/Changecalendar`)}
+          >
+            변경
+          </Changechangebtn>
         </Changechangecon>
       </Changetitle>
       <Changetitle>
@@ -146,21 +162,13 @@ const Changelayout = () => {
         <Changegoal>리액트 부시기</Changegoal>
         <Changechangecon>
           <Changetitlename>일정 설명</Changetitlename>
-          <Changechangebtn onClick = {() => window.location.replace (`/Changecalendar`)}>변경</Changechangebtn>
+          <Changechangebtn
+            onClick={() => window.location.replace(`/Changecalendar`)}
+          >
+            변경
+          </Changechangebtn>
         </Changechangecon>
       </Changetitle>
-      <div>Change</div>
-      <Link to="/">Home</Link>
-      <br></br>
-      <Link to="/Change">Change</Link>
-      <br></br>
-      <Link to="/Change">Change</Link>
-      <br></br>
-      <Link to="/Rating">Rating</Link>
-      <br></br>
-      <Link to="/Timer">Timer</Link>
-      <br></br>
-      <Link to="/Today">Today</Link>
     </Changecontainer>
   );
 };

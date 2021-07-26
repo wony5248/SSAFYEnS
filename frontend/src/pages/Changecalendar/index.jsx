@@ -123,17 +123,17 @@ const Changetitleinput = styled(Input)({
   paddingLeft: "8px",
 });
 const Changecontentinput = styled(Input)({
-    backgroundColor: "white",
-    borderRadius: "8px",
-    height: "118px",
-    fontSize: "12px",
-    padding: "8px",
-    marginLeft: "8px",
-    marginBottom: "8px",
-    marginTop: "4px",
-    width: "310px",
-    overflow : "auto",
-  });
+  backgroundColor: "white",
+  borderRadius: "8px",
+  height: "118px",
+  fontSize: "12px",
+  padding: "8px",
+  marginLeft: "8px",
+  marginBottom: "8px",
+  marginTop: "4px",
+  width: "310px",
+  overflow: "auto",
+});
 const Changecalendarlayout = () => {
   const classes = useStyles();
   const [starttime, setStarttime] = useState("");
@@ -217,28 +217,18 @@ const Changecalendarlayout = () => {
         </Changeselect>
       </Changeend>
       <Changetitle>
-          <Changetitletext>일정 제목</Changetitletext>
-          <Changetitleinput placeholder = "변경할 일정 제목"></Changetitleinput>
+        <Changetitletext>일정 제목</Changetitletext>
+        <Changetitleinput placeholder="변경할 일정 제목"></Changetitleinput>
       </Changetitle>
       <ChangeContent>
-          <ChangeContentheader>
-              <Changetitletext>일정 내용</Changetitletext>
-              <Changebtn>변경</Changebtn>
-          </ChangeContentheader>
-          <Changecontentinput placeholder = "변경할 일정 내용">변경할 일정 내용</Changecontentinput>
+        <ChangeContentheader>
+          <Changetitletext>일정 내용</Changetitletext>
+          <Changebtn>변경</Changebtn>
+        </ChangeContentheader>
+        <Changecontentinput placeholder="변경할 일정 내용">
+          변경할 일정 내용
+        </Changecontentinput>
       </ChangeContent>
-      <div>Changecalendar</div>
-      <Link to="/">Home</Link>
-      <br></br>
-      <Link to="/Progress">Progress</Link>
-      <br></br>
-      <Link to="/Change">Change</Link>
-      <br></br>
-      <Link to="/Rating">Rating</Link>
-      <br></br>
-      <Link to="/Timer">Timer</Link>
-      <br></br>
-      <Link to="/Today">Today</Link>
     </Changecalcon>
   );
 };

@@ -19,7 +19,7 @@ const Todaycontainer = styled.div`
 const Todaytitle = styled.div`
   display: flex-row;
   flex-wrap: no-wrap;
-  border-radius:4px;
+  border-radius: 4px;
   justify-content: space-around;
   width: auto;
   height: 88px;
@@ -85,8 +85,8 @@ const Todaycontenttitle = styled.div`
 const Todaychangebtn = styled.button`
   width: 78px;
   height: auto;
-  border-radius:8px;
-  border:0px;
+  border-radius: 8px;
+  border: 0px;
   color: white;
   background-color: #69a569;
   padding: 4px;
@@ -122,7 +122,9 @@ const Todaylayout = () => {
         <Todaygoal>리액트 부시기</Todaygoal>
         <Todaychangecon>
           <Todaytitlename>일정 설명</Todaytitlename>
-          <Todaychangebtn onClick = {() => window.location.replace (`/Rating`)}>완료</Todaychangebtn>
+          <Todaychangebtn onClick={() => window.location.replace(`/Rating`)}>
+            완료
+          </Todaychangebtn>
         </Todaychangecon>
       </Todaytitle>
       <Todaytitle>
@@ -133,7 +135,9 @@ const Todaylayout = () => {
         <Todaygoal>리액트 부시기</Todaygoal>
         <Todaychangecon>
           <Todaytitlename>일정 설명</Todaytitlename>
-          <Todaychangebtn onClick = {() => window.location.replace (`/Rating`)}>완료</Todaychangebtn>
+          <Todaychangebtn onClick={() => window.location.replace(`/Rating`)}>
+            완료
+          </Todaychangebtn>
         </Todaychangecon>
       </Todaytitle>
       <Todaytitle>
@@ -144,7 +148,9 @@ const Todaylayout = () => {
         <Todaygoal>리액트 부시기</Todaygoal>
         <Todaychangecon>
           <Todaytitlename>일정 설명</Todaytitlename>
-          <Todaychangebtn onClick = {() => window.location.replace (`/Rating`)}>완료</Todaychangebtn>
+          <Todaychangebtn onClick={() => window.location.replace(`/Rating`)}>
+            완료
+          </Todaychangebtn>
         </Todaychangecon>
       </Todaytitle>
       <Todaytitle>
@@ -155,7 +161,9 @@ const Todaylayout = () => {
         <Todaygoal>리액트 부시기</Todaygoal>
         <Todaychangecon>
           <Todaytitlename>일정 설명</Todaytitlename>
-          <Todaychangebtn onClick = {() => window.location.replace (`/Rating`)}>완료</Todaychangebtn>
+          <Todaychangebtn onClick={() => window.location.replace(`/Rating`)}>
+            완료
+          </Todaychangebtn>
         </Todaychangecon>
       </Todaytitle>
       <Todaytitle>
@@ -166,21 +174,11 @@ const Todaylayout = () => {
         <Todaygoal>리액트 부시기</Todaygoal>
         <Todaychangecon>
           <Todaytitlename>일정 설명</Todaytitlename>
-          <Todaychangebtn onClick = {() => window.location.replace (`/Rating`)}>완료</Todaychangebtn>
+          <Todaychangebtn onClick={() => window.location.replace(`/Rating`)}>
+            완료
+          </Todaychangebtn>
         </Todaychangecon>
       </Todaytitle>
-      <div>Today</div>
-      <Link to="/">Home</Link>
-      <br></br>
-      <Link to="/Today">Today</Link>
-      <br></br>
-      <Link to="/Change">Change</Link>
-      <br></br>
-      <Link to="/Rating">Rating</Link>
-      <br></br>
-      <Link to="/Timer">Timer</Link>
-      <br></br>
-      <Link to="/Today">Today</Link>
     </Todaycontainer>
   );
 };

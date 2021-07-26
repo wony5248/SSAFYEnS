@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 const Progresstitle = styled.div`
   display: flex-row;
-  border-radius:4px;
+  border-radius: 4px;
   flex-wrap: no-wrap;
   justify-content: space-around;
   width: auto;
@@ -53,7 +53,7 @@ const Progresstitletime = styled.div`
 
 const Progresscontentcon = styled.div`
   display: flex-row;
-  border-radius:4px;
+  border-radius: 4px;
   flex-wrap: nowrap;
   width: auto;
   height: auto;
@@ -73,7 +73,7 @@ const Progresscontenttitle = styled.div`
 `;
 
 const Progresscontent = styled.div`
-  overflow:auto;
+  overflow: auto;
   width: auto;
   height: 125px;
   color: #a3cca3;
@@ -93,25 +93,11 @@ const Progresslayout = () => {
         <Progressgoal>일렉트론 부시기</Progressgoal>
       </Progresstitle>
       <Progresscontentcon>
-        <Progresscontenttitle>
-          일정 내용
-        </Progresscontenttitle>
+        <Progresscontenttitle>일정 내용</Progresscontenttitle>
         <Progresscontent>
           나는 오늘 라면을 먹었다. 내일은 무엇을 먹을까?
         </Progresscontent>
       </Progresscontentcon>
-      <div>Progress</div>
-      <Link to="/">Home</Link>
-      <br></br>
-      <Link to="/Progress">Progress</Link>
-      <br></br>
-      <Link to="/Change">Change</Link>
-      <br></br>
-      <Link to="/Rating">Rating</Link>
-      <br></br>
-      <Link to="/Timer">Timer</Link>
-      <br></br>
-      <Link to="/Today">Today</Link>
     </Progresscontainer>
   );
 };
