@@ -3,6 +3,10 @@ const routes = require("./routes");
 require("dotenv").config();
 const { PORT } = process.env;
 const app = express();
+
+//cors
+const cors = require("cors");
+app.use(cors);
 //middleware
 app.use("/", routes);
 
