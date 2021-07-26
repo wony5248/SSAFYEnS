@@ -6,7 +6,7 @@ const development = {
   database: env.MYSQL_DATABASE,
   host: env.MYSQL_HOST,
   dialect: "mysql",
-  port: env.MYSQL_PORT || 3306,
+   port: env.MYSQL_PORT || 3306
 };
 const production = {
   test: {
@@ -15,7 +15,7 @@ const production = {
     database: env.MYSQL_DATABASE,
     host: env.MYSQL_HOST,
     dialect: "mysql",
-    port: env.MYSQL_PORT || 3306,
+    port: env.MYSQL_PORT || 3306
   },
 };
 const test = {
@@ -25,7 +25,7 @@ const test = {
     database: env.MYSQL_DATABASE,
     host: env.MYSQL_HOST,
     dialect: "mysql",
-    port: env.MYSQL_PORT || 3306,
+    port: env.MYSQL_PORT || 3306
   },
 };
 
