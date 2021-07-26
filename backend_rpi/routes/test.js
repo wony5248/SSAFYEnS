@@ -5,7 +5,7 @@ var fs = require('fs');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    res.send("HELLO JBJ")
+    res.json("HELLO JBJ")
 });
 
 
