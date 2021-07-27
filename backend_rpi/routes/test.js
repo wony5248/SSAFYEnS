@@ -5,18 +5,22 @@ var fs = require("fs");
 
 /*DB 에서 가져올 센서 값*/
 router.get("/sensor", function (req, res, next) {
-  res.send({ "temp": "36", "humid": "56", "noise": "168", "light": "32" });
+  //   res.send({ "temp": "36", "humid": "56", "noise": "168", "light": "32" });
+  res.json(req.body);
 });
 
 router.post("/sensor", function (req, res, next) {
-  res.send("DB로 보낼 센서값");
+//   res.send("DB로 보낼 센서값");
+  res.json(req.body);
 });
 
 router.post("/timer", function (req, res, next) {
-  res.send("2");
+//   res.send("2");
+  res.json(req.body);
 });
 router.post("/stopwatch", function (req, res, next) {
-  res.send("3");
+//   res.send("3");
+  res.json(req.body);
 });
 // router.post('/getModule', function(req, res, next) {
 //     console.log("1" + req.headers["x-access-token"]);
