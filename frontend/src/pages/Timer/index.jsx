@@ -23,14 +23,15 @@ const Todaylayout = () => {
         });
     }
     loadItem();
+    
   }, []);
 
   return (
     <div>
       <ul>
         {itemList.map((item) => (
-          <li key = {item.GoodsCode}>
-              {item.GoodsName}
+          <li key = {item.Title}>
+              {item.Content}
           </li>
         ))}
       </ul>

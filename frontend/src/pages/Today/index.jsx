@@ -91,10 +91,18 @@ const Todaychangebtn = styled.button`
   background-color: #69a569;
   padding: 4px;
 `;
-
+{/* <ul>
+{itemList.map((item) => (
+  <li key = {item.Title}>
+      {item.Content}
+  </li>
+))}
+</ul> */}
 const Todaylayout = () => {
   const [loading, setLoading] = useState(false);
   const [itemList, setItemList] = useState([]);
+  const [starttime, setStarttime] = useState("");
+  const [endtime, setEndtime] = useState("");
   useEffect(() => {
     async function loadItem() {
       const result = await axios
