@@ -1,23 +1,22 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-const axios = require('axios');
-var fs = require('fs');
+const axios = require("axios");
+var fs = require("fs");
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-    res.json("HELLO JBJ")
+/*DB 에서 가져올 센서 값*/
+router.get("/sensor", function (req, res, next) {
+  res.send({ "temp": "36", "humid": "56", "noise": "168", "light": "32" });
 });
 
-
-router.post('/1', function(req, res, next) {
-    res.send("1");
+router.post("/sensor", function (req, res, next) {
+  res.send("DB로 보낼 센서값");
 });
 
-router.post('/2', function(req, res, next) {
-    res.send("2");
+router.post("/timer", function (req, res, next) {
+  res.send("2");
 });
-router.post('/3', function(req, res, next) {
-    res.send("3");
+router.post("/stopwatch", function (req, res, next) {
+  res.send("3");
 });
 // router.post('/getModule', function(req, res, next) {
 //     console.log("1" + req.headers["x-access-token"]);
@@ -53,7 +52,5 @@ router.post('/3', function(req, res, next) {
 //             console.log(error);
 //         });
 // });
-
-
 
 module.exports = router;
