@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
 import { Link } from "react-router-dom";
 import styled1 from "styled-components";
@@ -116,28 +116,32 @@ const ChangeContentheader = styled1.div`
   padding:4px;
   background-color: #a3cca3;
 `;
+const Changecontentinput1 = styled1.textarea`
+    background-color: white;
+    border-radius: 4px;
+    height: 108px;
+    font-size: 12px;
+    margin-left: 8px;
+    margin-bottom: 8px;
+    margin-top: 4px;
+    padding: 4px;
+    width: 304px;
+    border: 0px;
+    overflow: auto;
+    outline: none;
+`;
 const Changetitleinput = styled(Input)({
   backgroundColor: "white",
   height: "25px",
   fontSize: "12px",
   paddingLeft: "8px",
 });
-const Changecontentinput = styled(Input)({
-  backgroundColor: "white",
-  borderRadius: "8px",
-  height: "118px",
-  fontSize: "12px",
-  padding: "8px",
-  marginLeft: "8px",
-  marginBottom: "8px",
-  marginTop: "4px",
-  width: "310px",
-  overflow: "auto",
-});
+
 const Changecalendarlayout = () => {
   const classes = useStyles();
   const [starttime, setStarttime] = useState("");
   const [endtime, setEndtime] = useState("");
+  const [optionarr, setOptionarr] = useState([]);
   const handlestartChange = (event) => {
     setStarttime(event.target.value);
     console.log(event.target.value);
@@ -146,6 +150,25 @@ const Changecalendarlayout = () => {
     setEndtime(event.target.value);
     console.log(event.target.value);
   };
+
+  useEffect(() => {
+    const rendering = () => {
+      const result = [];
+      for (let i = 0; i < 24; i++) {
+        if (i < 10) {
+          result.push("0" + `${i}:00`);
+          result.push("0" + `${i}:30`);
+        } else {
+          result.push(`${i}:00`);
+          result.push(`${i}:30`);
+        }
+      }
+      setOptionarr(result);
+      console.log(result);
+    };
+
+    rendering();
+  }, []);
   return (
     <Changecalcon>
       <Changestart>
@@ -156,30 +179,10 @@ const Changecalendarlayout = () => {
           value={starttime}
           onChange={handlestartChange}
         >
-          <option value={0}>00:00</option>
-          <option value={1}>01:00</option>
-          <option value={2}>02:00</option>
-          <option value={3}>03:00</option>
-          <option value={4}>04:00</option>
-          <option value={5}>05:00</option>
-          <option value={6}>06:00</option>
-          <option value={7}>07:00</option>
-          <option value={8}>08:00</option>
-          <option value={9}>09:00</option>
-          <option value={10}>10:00</option>
-          <option value={11}>11:00</option>
-          <option value={12}>12:00</option>
-          <option value={13}>13:00</option>
-          <option value={14}>14:00</option>
-          <option value={15}>15:00</option>
-          <option value={16}>16:00</option>
-          <option value={17}>17:00</option>
-          <option value={18}>18:00</option>
-          <option value={19}>19:00</option>
-          <option value={20}>20:00</option>
-          <option value={21}>21:00</option>
-          <option value={22}>22:00</option>
-          <option value={23}>23:00</option>
+          {optionarr.map((item) => (
+            <option value={item[0]+item[1]+item[3]+item[4]}>{item}</option>
+            
+          ))}
         </Changeselect>
       </Changestart>
       <Changeend>
@@ -190,30 +193,9 @@ const Changecalendarlayout = () => {
           value={endtime}
           onChange={handleendChange}
         >
-          <option value={0}>00:00</option>
-          <option value={1}>01:00</option>
-          <option value={2}>02:00</option>
-          <option value={3}>03:00</option>
-          <option value={4}>04:00</option>
-          <option value={5}>05:00</option>
-          <option value={6}>06:00</option>
-          <option value={7}>07:00</option>
-          <option value={8}>08:00</option>
-          <option value={9}>09:00</option>
-          <option value={10}>10:00</option>
-          <option value={11}>11:00</option>
-          <option value={12}>12:00</option>
-          <option value={13}>13:00</option>
-          <option value={14}>14:00</option>
-          <option value={15}>15:00</option>
-          <option value={16}>16:00</option>
-          <option value={17}>17:00</option>
-          <option value={18}>18:00</option>
-          <option value={19}>19:00</option>
-          <option value={20}>20:00</option>
-          <option value={21}>21:00</option>
-          <option value={22}>22:00</option>
-          <option value={23}>23:00</option>
+          {optionarr.map((item) => (
+            <option value={item[0]+item[1]+item[3]+item[4]}>{item}</option>
+          ))}
         </Changeselect>
       </Changeend>
       <Changetitle>
@@ -225,9 +207,12 @@ const Changecalendarlayout = () => {
           <Changetitletext>일정 내용</Changetitletext>
           <Changebtn>변경</Changebtn>
         </ChangeContentheader>
-        <Changecontentinput placeholder="변경할 일정 내용">
-          변경할 일정 내용
-        </Changecontentinput>
+        <Changecontentinput1
+          multiline
+          rows={4}
+          placeholder="변경할 일정 내용"
+          variant="outlined"
+        ></Changecontentinput1>
       </ChangeContent>
     </Changecalcon>
   );
