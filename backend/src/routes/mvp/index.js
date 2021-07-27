@@ -72,34 +72,5 @@ router.post("/addSchedule", async (req, res) => {
   }
   //db에 넣기
 });
-router.get("/getSchedule/:year/:month", async (req, res) => {
-  try {
-    const { month, year } = req.params;
-    const standard1 = moment(year + "-" + month)
-      .subtract(1, "months")
-      .add(1, "days")
-      .toDate();
-    const standard2 = moment(year + "-" + month).toDate();
-    const data = await db["schedules"].findAll({
-      where: {
-        [op.or]: [
-          {
-            finished_at: {
-              [op.gt]: standard1,
-            },
-            started_at: {
-              [op.lt]: standard2,
-            },
-          },
-        ],
-      },
-    });
-    date = 1;
-    console.log(standard1, standard2);
-    return res.status(200).send(data);
-  } catch (err) {
-    console.log(err);
-    return res.status(400).send("error");
-  }
-});
+
 module.exports = router;
