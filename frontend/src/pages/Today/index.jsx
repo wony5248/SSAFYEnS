@@ -101,10 +101,8 @@ const Todaychangebtn = styled.button`
 const Todaylayout = () => {
   const [loading, setLoading] = useState(false);
   const [itemList, setItemList] = useState([]);
-  const [starttime, setStarttime] = useState("");
-  const [endtime, setEndtime] = useState("");
   useEffect(() => {
-    async function loadItem() {
+    async function loadCalendar() {
       const result = await axios
         .get("./today.json")
         .then(({ data }) => {
@@ -117,76 +115,29 @@ const Todaylayout = () => {
           setLoading(false);
         });
     }
-    loadItem();
+    loadCalendar();
+    const interval = setInterval(() => {
+      loadCalendar();
+    }, 10000);
   }, []);
 
   return (
     <Todaycontainer>
-      <Todaytitle>
+      {itemList.map((item) => (
+        <Todaytitle>
         <Todaytitlenamecon>
-          <Todaytitlename>일정 제목</Todaytitlename>
-          <Todaytitletime>00:00 ~ 02:00</Todaytitletime>
+          <Todaytitlename>{item.Title}</Todaytitlename>
+          <Todaytitletime>{item.StartTime} ~ {item.EndTime}</Todaytitletime>
         </Todaytitlenamecon>
-        <Todaygoal>리액트 부시기</Todaygoal>
+        <Todaygoal>{item.Goal}</Todaygoal>
         <Todaychangecon>
-          <Todaytitlename>일정 설명</Todaytitlename>
+          <Todaytitlename>{item.Content}</Todaytitlename>
           <Todaychangebtn onClick={() => window.location.replace(`/Rating`)}>
             완료
           </Todaychangebtn>
         </Todaychangecon>
       </Todaytitle>
-      <Todaytitle>
-        <Todaytitlenamecon>
-          <Todaytitlename>일정 제목</Todaytitlename>
-          <Todaytitletime>00:00 ~ 02:00</Todaytitletime>
-        </Todaytitlenamecon>
-        <Todaygoal>리액트 부시기</Todaygoal>
-        <Todaychangecon>
-          <Todaytitlename>일정 설명</Todaytitlename>
-          <Todaychangebtn onClick={() => window.location.replace(`/Rating`)}>
-            완료
-          </Todaychangebtn>
-        </Todaychangecon>
-      </Todaytitle>
-      <Todaytitle>
-        <Todaytitlenamecon>
-          <Todaytitlename>일정 제목</Todaytitlename>
-          <Todaytitletime>00:00 ~ 02:00</Todaytitletime>
-        </Todaytitlenamecon>
-        <Todaygoal>리액트 부시기</Todaygoal>
-        <Todaychangecon>
-          <Todaytitlename>일정 설명</Todaytitlename>
-          <Todaychangebtn onClick={() => window.location.replace(`/Rating`)}>
-            완료
-          </Todaychangebtn>
-        </Todaychangecon>
-      </Todaytitle>
-      <Todaytitle>
-        <Todaytitlenamecon>
-          <Todaytitlename>일정 제목</Todaytitlename>
-          <Todaytitletime>00:00 ~ 02:00</Todaytitletime>
-        </Todaytitlenamecon>
-        <Todaygoal>리액트 부시기</Todaygoal>
-        <Todaychangecon>
-          <Todaytitlename>일정 설명</Todaytitlename>
-          <Todaychangebtn onClick={() => window.location.replace(`/Rating`)}>
-            완료
-          </Todaychangebtn>
-        </Todaychangecon>
-      </Todaytitle>
-      <Todaytitle>
-        <Todaytitlenamecon>
-          <Todaytitlename>일정 제목</Todaytitlename>
-          <Todaytitletime>00:00 ~ 02:00</Todaytitletime>
-        </Todaytitlenamecon>
-        <Todaygoal>리액트 부시기</Todaygoal>
-        <Todaychangecon>
-          <Todaytitlename>일정 설명</Todaytitlename>
-          <Todaychangebtn onClick={() => window.location.replace(`/Rating`)}>
-            완료
-          </Todaychangebtn>
-        </Todaychangecon>
-      </Todaytitle>
+      ))}
     </Todaycontainer>
   );
 };

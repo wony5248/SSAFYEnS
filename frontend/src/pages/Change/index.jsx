@@ -1,7 +1,8 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../../layout";
 import styled from "styled-components";
+import axios from "axios"
 
 const Changecontainer = styled.div`
   overflow: auto;
@@ -92,16 +93,38 @@ const Changechangebtn = styled.button`
 `;
 
 const Changelayout = () => {
+  const [loading, setLoading] = useState(false);
+  const [itemList, setItemList] = useState([]);
+  useEffect(() => {
+    async function loadCalendar() {
+      const result = await axios
+        .get("./today.json")
+        .then(({ data }) => {
+          setLoading(true);
+          setItemList(data.Item);
+          console.log(data.Item);
+        })
+        .catch((e) => {
+          console.error(e);
+          setLoading(false);
+        });
+    }
+    loadCalendar();
+    const interval = setInterval(() => {
+      loadCalendar();
+    }, 10000);
+  }, []);
   return (
     <Changecontainer>
-      <Changetitle>
+      {itemList.map((item) => (
+        <Changetitle>
         <Changetitlenamecon>
-          <Changetitlename>일정 제목</Changetitlename>
-          <Changetitletime>00:00 ~ 02:00</Changetitletime>
+          <Changetitlename>{item.Title}</Changetitlename>
+          <Changetitletime>{item.StartTime} ~ {item.EndTime}</Changetitletime>
         </Changetitlenamecon>
-        <Changegoal>리액트 부시기</Changegoal>
+        <Changegoal>{item.Goal}</Changegoal>
         <Changechangecon>
-          <Changetitlename>일정 설명</Changetitlename>
+          <Changetitlename>{item.Content}</Changetitlename>
           <Changechangebtn
             onClick={() => window.location.replace(`/Changecalendar`)}
           >
@@ -109,66 +132,7 @@ const Changelayout = () => {
           </Changechangebtn>
         </Changechangecon>
       </Changetitle>
-      <Changetitle>
-        <Changetitlenamecon>
-          <Changetitlename>일정 제목</Changetitlename>
-          <Changetitletime>00:00 ~ 02:00</Changetitletime>
-        </Changetitlenamecon>
-        <Changegoal>리액트 부시기</Changegoal>
-        <Changechangecon>
-          <Changetitlename>일정 설명</Changetitlename>
-          <Changechangebtn
-            onClick={() => window.location.replace(`/Changecalendar`)}
-          >
-            변경
-          </Changechangebtn>
-        </Changechangecon>
-      </Changetitle>
-      <Changetitle>
-        <Changetitlenamecon>
-          <Changetitlename>일정 제목</Changetitlename>
-          <Changetitletime>00:00 ~ 02:00</Changetitletime>
-        </Changetitlenamecon>
-        <Changegoal>리액트 부시기</Changegoal>
-        <Changechangecon>
-          <Changetitlename>일정 설명</Changetitlename>
-          <Changechangebtn
-            onClick={() => window.location.replace(`/Changecalendar`)}
-          >
-            변경
-          </Changechangebtn>
-        </Changechangecon>
-      </Changetitle>
-      <Changetitle>
-        <Changetitlenamecon>
-          <Changetitlename>일정 제목</Changetitlename>
-          <Changetitletime>00:00 ~ 02:00</Changetitletime>
-        </Changetitlenamecon>
-        <Changegoal>리액트 부시기</Changegoal>
-        <Changechangecon>
-          <Changetitlename>일정 설명</Changetitlename>
-          <Changechangebtn
-            onClick={() => window.location.replace(`/Changecalendar`)}
-          >
-            변경
-          </Changechangebtn>
-        </Changechangecon>
-      </Changetitle>
-      <Changetitle>
-        <Changetitlenamecon>
-          <Changetitlename>일정 제목</Changetitlename>
-          <Changetitletime>00:00 ~ 02:00</Changetitletime>
-        </Changetitlenamecon>
-        <Changegoal>리액트 부시기</Changegoal>
-        <Changechangecon>
-          <Changetitlename>일정 설명</Changetitlename>
-          <Changechangebtn
-            onClick={() => window.location.replace(`/Changecalendar`)}
-          >
-            변경
-          </Changechangebtn>
-        </Changechangecon>
-      </Changetitle>
+      ))}
     </Changecontainer>
   );
 };
