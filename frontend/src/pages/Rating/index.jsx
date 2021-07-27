@@ -13,6 +13,7 @@ const StyledRating = withStyles({
     color: '#f6f924',
   },
 })(Ratingstar);
+
 const Starttime = styled1.div`
   display: flex;
   justify-content: space-between;
@@ -159,7 +160,6 @@ const Ratinglayout = () => {
           <StyledRating
             name="customized-empty"
             value={value}
-            
             precision={0.5}
             onChange={(event, newValue) => {
               setValue(newValue);
