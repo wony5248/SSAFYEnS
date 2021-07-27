@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
+import store from 'store';
 import {Grid, IconButton} from '@material-ui/core';
+import {useHistory} from 'react-router-dom';
 import moment from 'moment';
 import Wrapper from './styles';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
@@ -8,15 +10,28 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Plan from '../plan';
 
 const Month = () =>{
+    let history = useHistory();
     const [getMoment, setMoment] = useState(moment());
-    const [modalOpen, setModalOpen] = useState(false);
+    const [planOpen, setPlanOpen] = useState(false);
 
-    const openModal = () =>{
-        setModalOpen(true);
+    const openPlanModal = () =>{
+        setPlanOpen(true);
     };
 
-    const closeModal = () =>{
-        setModalOpen(false);
+    const closePlanModal = () =>{
+        setPlanOpen(false);
+    };
+
+    const onClickRedirectPathHandler = name => e =>{
+        window.scrollTo(0, 0);
+        if ( name === '/planlist'){
+            if(history.location.pathname === name){
+                history.goBack();
+                store.remove('planlist');
+            }else{
+                history.push(name);
+            }
+        }
     };
 
     const today = getMoment;
@@ -43,11 +58,6 @@ const Month = () =>{
         return result;
     };
 
-    const onClickDate = () =>{
-        // test code
-        alert('TEST CODE');
-    };
-
     const dateArr = () =>{
         let result = [];
         let week = firstWeek;
@@ -65,8 +75,8 @@ const Month = () =>{
                             
                             if (moment().format('YYYYMMDD') === days.format('YYYYMMDD')) {
                                 return(
-                                    <td key={index} style={{color:'#A3CCA3', width: '100px', height: '100px', verticalAlign: 'top'}}  onClick={onClickDate}>
-                                        <span>{days.format('D')}</span>
+                                    <td key={index} style={{color:'#A3CCA3', width: '100px', height: '100px', verticalAlign: 'top'}}  onClick={onClickRedirectPathHandler('/planlist')}>
+                                        <span >{days.format('D')}</span>
                                     </td>
                                 );
                             }else if (days.format('MM') !== today.format('MM')) {
@@ -77,7 +87,7 @@ const Month = () =>{
                                 );
                             }else{
                                 return (
-                                    <td key = {index} style = {{width: '100px', height: '100px', verticalAlign: 'top'}} onClick={onClickDate}>
+                                    <td key = {index} style = {{width: '100px', height: '100px', verticalAlign: 'top'}} onClick={onClickRedirectPathHandler('/planlist')}>
                                         <span>{days.format('D')}</span>
                                     </td>
                                 );
@@ -116,8 +126,8 @@ const Month = () =>{
             <Grid container justifyContent='center' style={{width:'100%'}}>
                 <div style={{height:'50px', width:'700px', textAlign:'right'}}>
                     <React.Fragment>
-                        <AddCircleIcon fontSize = "large" style = {{color:'#A3CCA3'}} onClick = {openModal}/>
-                        <Plan open = {modalOpen} close = {closeModal} />
+                        <AddCircleIcon fontSize = "large" style = {{color:'#A3CCA3'}} onClick = {openPlanModal}/>
+                        <Plan open = {planOpen} close = {closePlanModal} />
                     </React.Fragment>
                     
                 </div>
