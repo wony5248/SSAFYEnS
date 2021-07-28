@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: S05P12A109
-  description: 여기 적혀있는건 예시입니다. 밑에 API부분만 봐주세요
+  description: 여기 적혀있는건 예시입니다. 밑에 API부분만 봐주세요 읽으실때 복수형 구분에 유의하세요! 실수했을 수도 있으니 어? 얜 array인데 왜 복수형이 붙어있지나 vice versa 알려주세요
 #   termsOfService: http://swagger.io/terms/
 #   contact:
 #     email: apiteam@swagger.io
@@ -21,8 +21,8 @@ tags:
   # externalDocs:
   #   description: Find out more
   #   url: http://swagger.io
-- name: store
-  description: Access to Schedules
+# - name: store
+#   description: Access to Schedules
 - name: user
   description: Operations about user
 - name: daily
@@ -34,8 +34,11 @@ tags:
   externalDocs:
     description: Find out more about our store
     url: http://swagger.io
+    
 paths:
+
   /schedule:
+  
     post:
       tags:
       - schedule
@@ -47,7 +50,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/schedules'
+              $ref: '#/components/schemas/schedule'
         required: true
       responses:
         200:
@@ -62,7 +65,9 @@ paths:
       security:
       - JWT: []
       x-codegen-request-body-name: body
+      
   /schedule/findByStatus:
+  
     get:
       tags:
       - schedule
@@ -93,12 +98,12 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/schedules'
+                  $ref: '#/components/schemas/schedule'
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/schedules'
+                  $ref: '#/components/schemas/schedule'
         400:
           description: Invalid status value
           content: {}
@@ -106,7 +111,9 @@ paths:
       - schedulestore_auth:
         - write:schedules
         - read:schedules
+        
   /schedule/findByTags:
+  
     get:
       tags:
       - schedule
@@ -133,12 +140,12 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/schedules'
+                  $ref: '#/components/schemas/schedule'
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/schedules'
+                  $ref: '#/components/schemas/schedule'
         400:
           description: Invalid tag value
           content: {}
@@ -147,7 +154,9 @@ paths:
       - schedulestore_auth:
         - write:schedules
         - read:schedules
+        
   /schedule/{schedule_id}:
+  
     get:
       tags:
       - schedule
@@ -167,7 +176,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/schedules'
+                $ref: '#/components/schemas/schedule'
         400:
           description: Invalid ID supplied
           content: {}
@@ -227,6 +236,7 @@ paths:
           content: {}
       security:
       - JWT: []
+      
     delete:
       tags:
       - schedule
@@ -248,42 +258,44 @@ paths:
           content: {}
       security:
       - JWT: []
-  /schedule/{scheduleId}/uploadImage:
-    post:
-      tags:
-      - schedule
-      summary: uploads an image
-      operationId: uploadFile
-      parameters:
-      - name: scheduleId
-        in: path
-        description: ID of schedule to update
-        required: true
-        schema:
-          type: integer
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              properties:
-                additionalMetadata:
-                  type: string
-                  description: Additional data to pass to server
-                file:
-                  type: string
-                  description: file to upload
-                  format: binary
-      responses:
-        200:
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
-      security:
-      - schedulestore_auth:
-        - write:schedules
-        - read:schedules
+      
+  # /schedule/{scheduleId}/uploadImage:
+  
+  #   post:
+  #     tags:
+  #     - schedule
+  #     summary: uploads an image
+  #     operationId: uploadFile
+  #     parameters:
+  #     - name: scheduleId
+  #       in: path
+  #       description: ID of schedule to update
+  #       required: true
+  #       schema:
+  #         type: integer
+  #     requestBody:
+  #       content:
+  #         multipart/form-data:
+  #           schema:
+  #             properties:
+  #               additionalMetadata:
+  #                 type: string
+  #                 description: Additional data to pass to server
+  #               file:
+  #                 type: string
+  #                 description: file to upload
+  #                 format: binary
+  #     responses:
+  #       200:
+  #         description: successful operation
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/ApiResponse'
+  #     security:
+  #     - schedulestore_auth:
+  #       - write:schedules
+  #       - read:schedules
 
   /user:
   
@@ -297,7 +309,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/users'
+              $ref: '#/components/schemas/user'
+              # 제외해야할 항목들이 생김
         required: true
       responses:
         default:
@@ -364,7 +377,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/users'
+                $ref: '#/components/schemas/user'
         400:
           description: Invalid user_id supplied
           content: {}
@@ -394,7 +407,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/users'
+              $ref: '#/components/schemas/user'
         required: true
       responses:
         200:
@@ -669,7 +682,7 @@ components:
 
   schemas:
   
-    users:
+    user:
       required:
       - user_id
       type: object
@@ -700,8 +713,19 @@ components:
             true: admin
             false: not admin
           default: false
+        mytrophies:
+          description: 회원이 소유한 트로피만 반환한다
+          type: array
+          items:
+            $ref: '#/components/schemas/mytrophy'
+        mygroups:
+          description: 회원이 속한 그룹만 반환한다
+          type: array
+          items:
+            $ref: '#/components/schemas/group'
           
     daily:
+      description: 하루 정리?하는 화면. environment의 created_at은 무엇으로 해야할까?
       required:
       - date
       type: object
@@ -710,13 +734,27 @@ components:
           type: string
           format: date
         user_id:
-          $ref: '#/components/schemas/users/properties/user_id'
+          $ref: '#/components/schemas/user/properties/user_id'
         context:
           type: string
           format: text
           example: 오늘은 너무 피곤했ㄷr....
+        environment:
+          $ref: '#/components/schemas/environment'
+        schedules:
+          type: array
+          items:
+            $ref: '#/components/schemas/schedule'
+        
           
-    schedules:
+    weekly:
+      description: 주간 내용을 보여주는데 주를 판별하는 방법은???
+      
+          
+    monthly:
+      description: 월간 내용을 보여주는데 다행히 월은 기준이 있다
+      
+    schedule:
       required:
       - schedule_id
       type: object
@@ -724,7 +762,7 @@ components:
         schedule_id:
           type: integer
         user_id:
-          $ref: '#/components/schemas/users/properties/user_id'
+          $ref: '#/components/schemas/user/properties/user_id'
         date:
           $ref: '#/components/schemas/daily/properties/date'
         title:
@@ -832,11 +870,6 @@ components:
       # discriminator:
       #   propertyName: mytrophy
         
-    trophies:
-      type: array
-      items:
-        $ref: '#/components/schemas/trophy'
-        
     mytrophy:
       allOf:
         - $ref: '#/components/schemas/trophy'
@@ -847,14 +880,10 @@ components:
             achieved_at:
               type: string
               format: datetime
-          
-    mytrophies:
-      type: array
-      items:
-        $ref: '#/components/schemas/mytrophy'
         
     environment:
       type: object
+      description: 아직 센서의 측정값을 모르기 때문에 섣불리 하기 힘들다
       properties:
         humidity:
           type: integer
@@ -879,16 +908,21 @@ components:
         code:
           type: integer
           format: int32
+          example:
+          - "404"
+          - "400"
         type:
           type: string
         message:
           type: string
           
   securitySchemes:
+  
     JWT:
       type: apiKey
       name: access_token
       in: header
+      
     schedulestore_auth:
       type: oauth2
       flows:
