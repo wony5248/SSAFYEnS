@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {useLocation, useHistory} from 'react-router-dom';
 import Wrapper from './styles';
 import {Grid, IconButton, Button, Box, withStyles } from '@material-ui/core';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
@@ -7,6 +8,8 @@ import Rating from '@material-ui/lab/Rating';
 import moment from 'moment';
 
 const PlanList = () => {
+    let history = useHistory();
+    const location = useLocation();
     const StyledRating = withStyles({
         iconFilled: {
             color: '#A3CCA3',
@@ -15,7 +18,7 @@ const PlanList = () => {
 
     const [getMoment, setMoment] = useState(moment());
 
-    const today = getMoment;
+    let today = moment(`${location.state.month}-${location.state.day}`);
     const previousDay = () =>{
         setMoment(getMoment.clone().subtract(1, 'day'));
     };
@@ -28,14 +31,22 @@ const PlanList = () => {
 
     const planListArr = () =>{
         let result = [];
+        // 임시 값
         let listCnt = 4;
+        let startHour = 11;
+        let startMin = 30;
+        let endHour = 15;
+        let endMin = 30;
+        let planTitle = "아이디어 회의";
+        let rating = 4;
+
         for (let i = 0; i <listCnt; i++){
             result = result.concat(
                 <Grid Contatiner style={{borderBottom:'1px solid #A3CCA3', width:'100%', height:'150px'}}>
                     {/* title */}
                     <div style={{display: 'flex', margin:'10px'}}>
                         <div  style={{fontWeight:'bold', marginRight:'10px'}}>
-                            아이디어 회의
+                            {planTitle}
                         </div>
                         {finish?(
                             <div style={{background:'#A3CCA3', borderRadius:45, width:'45px', textAlign:'center', color:'#ffffff'}}>
@@ -44,9 +55,8 @@ const PlanList = () => {
                         ):null}
                     </div>
                     {/* body */}
-                    <Grid item style={{margin:'10px', height:'50px'}}>
-                        <div>time 시작 time 마감</div>
-                        <div>아 오늘도 야근이야..</div>
+                    <Grid item style={{margin:'10px', height:'50px', marginTop:'20px', marginBottom:'-10px'}}>
+                        <div>{startHour} : {startMin} 시작 {endHour} : {endMin} 마감</div>
                     </Grid>
                     {/* footer */}
                     <div style={{margin:'10px', display: 'flex', justifyContent:'space-between', width:'100%'}}>
@@ -55,13 +65,33 @@ const PlanList = () => {
                                 <div style={{marginTop:'6px', marginRight:'10px'}}>평점</div>
                                 <div style={{marginTop:'-2px'}}>
                                     <Box component="fieldset" mb={3} borderColor="transparent">
-                                        <StyledRating name="read-only" value={4} readOnly />
+                                        <StyledRating name="read-only" value={rating} readOnly />
                                     </Box>
                                 </div>
                             </div>
                             
                         ):<div> </div>}
-                        <Button style={{background:'#A3CCA3', color:'#ffffff', height:'40px', marginRight:'30px'}} onClick={deletePlan}>삭제</Button>
+                        <div>
+                            <Button style={{background:'#A3CCA3', color:'#ffffff', height:'40px', marginRight:'20px'}} 
+                            onClick={()=>{history.push({
+                                pathname:'/planmodify',
+                                state:{
+                                    startMonth: today.format('MM') , 
+                                    startDay: today.format('DD'),
+                                    startHour : startHour,
+                                    startMin : startMin,
+                                    endHour : endHour,
+                                    endMonth:today.format('MM') ,
+                                    endDay: today.format('DD'),
+                                    endMin : endMin,
+                                    title:planTitle,
+                                    rating:rating
+                                }
+                            })}}>
+                                수정
+                            </Button>
+                            <Button style={{background:'#A3CCA3', color:'#ffffff', height:'40px', marginRight:'30px'}} onClick={deletePlan}>삭제</Button>
+                        </div>
                     </div>
                 </Grid>
             )

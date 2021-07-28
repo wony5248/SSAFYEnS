@@ -22,18 +22,6 @@ const Month = () =>{
         setPlanOpen(false);
     };
 
-    const onClickRedirectPathHandler = name => e =>{
-        window.scrollTo(0, 0);
-        if ( name === '/planlist'){
-            if(history.location.pathname === name){
-                history.goBack();
-                store.remove('planlist');
-            }else{
-                history.push(name);
-            }
-        }
-    };
-
     const today = getMoment;
     const previousMonth = () =>{
         setMoment(getMoment.clone().subtract(1, 'month'));
@@ -75,7 +63,11 @@ const Month = () =>{
                             
                             if (moment().format('YYYYMMDD') === days.format('YYYYMMDD')) {
                                 return(
-                                    <td key={index} style={{color:'#A3CCA3', width: '100px', height: '100px', verticalAlign: 'top'}}  onClick={onClickRedirectPathHandler('/planlist')}>
+                                    <td key={index} style={{color:'#A3CCA3', width: '100px', height: '100px', verticalAlign: 'top'}}  
+                                    onClick={()=>{history.push({
+                                        pathname:'/planlist',
+                                        state:{month:days.format('MM') , day:days.format('DD')}
+                                    })}}>
                                         <span >{days.format('D')}</span>
                                     </td>
                                 );
@@ -87,7 +79,11 @@ const Month = () =>{
                                 );
                             }else{
                                 return (
-                                    <td key = {index} style = {{width: '100px', height: '100px', verticalAlign: 'top'}} onClick={onClickRedirectPathHandler('/planlist')}>
+                                    <td key = {index} style = {{width: '100px', height: '100px', verticalAlign: 'top'}} 
+                                    onClick={()=>{history.push({
+                                        pathname:'/planlist',
+                                        state:{month:days.format('MM') , day:days.format('DD')}
+                                    })}}>
                                         <span>{days.format('D')}</span>
                                     </td>
                                 );

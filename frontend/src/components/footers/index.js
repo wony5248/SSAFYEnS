@@ -7,7 +7,7 @@ const Footer = () => {
         <Wrapper>
             <Grid container justify = "space-around" >
                 <Grid item style={{marginRight:'150px'}}>
-                    <h3>SSFY 5th web IoT</h3>
+                    <h3>SSAFY Improve n Success</h3>
                     <h4>김송현 김지환 신은지 이태용 장범진 허애리</h4>
                 </Grid>
                 <Grid item style = {{marginLeft:'150px'}}>
@@ -30,7 +30,7 @@ const Footer = () => {
             </Grid>
             <Grid container justify = "center" alignItems = "center">
                 <Grid item style={{ marginBottom:'10px', marginTop:'10px' }}>
-                    Copyright 2021. Team name. All rights reserved. | Design by Team name.
+                    Copyright 2021. SSAFYInS. All rights reserved. | Design by SSAFYInS.
                 </Grid>
             </Grid>
         </Wrapper>
