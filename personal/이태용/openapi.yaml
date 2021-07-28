@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: S05P12A109
-  description: 여기 적혀있는건 예시입니다. 밑에 API부분만 봐주세요 읽으실때 복수형 구분에 유의하세요! 실수했을 수도 있으니 어? 얜 array인데 왜 복수형이 붙어있지나 vice versa 알려주세요 / 그리고 jwt 시큐리티는 아직 다 복붙을 안했습니다 / response의 코드 등도 제대로 되어있지 않으니, 클라이언트측 parameter와 reqeustbody(JSON), 그리고 서버측 response JSON 위주로 확인바랍니다
+  description: 여기 적혀있는건 예시입니다. 밑에 API부분만 봐주세요 읽으실때 복수형 구분에 유의하세요! 실수했을 수도 있으니 어? 얜 array인데 왜 복수형이 붙어있지나 vice versa 알려주세요 / 그리고 jwt 시큐리티는 아직 다 복붙을 안했습니다 / response의 코드 등도 제대로 되어있지 않으니, 클라이언트측 parameter와 reqeustbody(JSON), 그리고 서버측 response JSON 위주로 확인바랍니다 / response에서 코드 말고 전달할 내용이 있나요?
 #   termsOfService: http://swagger.io/terms/
 #   contact:
 #     email: apiteam@swagger.io
@@ -70,107 +70,24 @@ paths:
               # 제외해야할 properties 발생
       responses:
         200:
-          description: 'successful operation: 해당 일정의 정보를 돌려줌'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/schedule'
+          $ref: '#/components/responses/200schedule'
+        # 200:
+        #   description: 'successful operation: 해당 일정의 정보를 돌려줌'
+        #   content:
+        #     application/json:
+        #       schema:
+        #         $ref: '#/components/schemas/schedule'
                 
-        405:
-          description: Invalid input
-          content: {}
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        404:
+          $ref: '#/components/responses/404'
+          
       security:
       - JWT: []
       
-  # /schedule/findByStatus:
-  
-  #   get:
-  #     tags:
-  #     - schedule
-  #     summary: Finds Schedules by status
-  #     description: Multiple status values can be provided with comma separated strings
-  #     operationId: findSchedulesByStatus
-  #     parameters:
-  #     - name: status
-  #       in: query
-  #       description: Status values that need to be considered for filter
-  #       required: true
-  #       style: form
-  #       explode: true
-  #       schema:
-  #         type: array
-  #         items:
-  #           type: string
-  #           default: available
-  #           enum:
-  #           - available
-  #           - pending
-  #           - sold
-  #     responses:
-  #       200:
-  #         description: successful operation
-  #         content:
-  #           application/xml:
-  #             schema:
-  #               type: array
-  #               items:
-  #                 $ref: '#/components/schemas/schedule'
-  #           application/json:
-  #             schema:
-  #               type: array
-  #               items:
-  #                 $ref: '#/components/schemas/schedule'
-  #       400:
-  #         description: Invalid status value
-  #         content: {}
-  #     security:
-  #     - schedulestore_auth:
-  #       - write:schedules
-  #       - read:schedules
-        
-  # /schedule/findByTags:
-  
-  #   get:
-  #     tags:
-  #     - schedule
-  #     summary: Finds Schedules by tags
-  #     description: Muliple tags can be provided with comma separated strings. Use         tag1,
-  #       tag2, tag3 for testing.
-  #     operationId: findSchedulesByTags
-  #     parameters:
-  #     - name: tags
-  #       in: query
-  #       description: Tags to filter by
-  #       required: true
-  #       style: form
-  #       explode: true
-  #       schema:
-  #         type: array
-  #         items:
-  #           type: string
-  #     responses:
-  #       200:
-  #         description: successful operation
-  #         content:
-  #           application/xml:
-  #             schema:
-  #               type: array
-  #               items:
-  #                 $ref: '#/components/schemas/schedule'
-  #           application/json:
-  #             schema:
-  #               type: array
-  #               items:
-  #                 $ref: '#/components/schemas/schedule'
-  #       400:
-  #         description: Invalid tag value
-  #         content: {}
-  #     deprecated: true
-  #     security:
-  #     - schedulestore_auth:
-  #       - write:schedules
-  #       - read:schedules
-        
   /schedule/{schedule_id}:
   
     get:
@@ -188,11 +105,7 @@ paths:
           type: integer
       responses:
         200:
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/schedule'
+          $ref: '#/components/responses/200schedule'
         400:
           description: Invalid ID supplied
           content: {}
@@ -249,9 +162,14 @@ paths:
                   description: Updated noti_extend of the schedule
                   format: int32
       responses:
-        405:
-          description: Invalid input
-          content: {}
+        200:
+          $ref: '#/components/responses/200schedule'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        404:
+          $ref: '#/components/responses/404'
       security:
       - JWT: []
       
@@ -298,45 +216,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/schedule'
-  
-      
-  # /schedule/{scheduleId}/uploadImage:
-  
-  #   post:
-  #     tags:
-  #     - schedule
-  #     summary: uploads an image
-  #     operationId: uploadFile
-  #     parameters:
-  #     - name: scheduleId
-  #       in: path
-  #       description: ID of schedule to update
-  #       required: true
-  #       schema:
-  #         type: integer
-  #     requestBody:
-  #       content:
-  #         multipart/form-data:
-  #           schema:
-  #             properties:
-  #               additionalMetadata:
-  #                 type: string
-  #                 description: Additional data to pass to server
-  #               file:
-  #                 type: string
-  #                 description: file to upload
-  #                 format: binary
-  #     responses:
-  #       200:
-  #         description: successful operation
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/ApiResponse'
-  #     security:
-  #     - schedulestore_auth:
-  #       - write:schedules
-  #       - read:schedules
 
   /user:
   
@@ -367,12 +246,102 @@ paths:
               # $ref: '#/components/schemas/user'
               # 제외해야할 항목들이 생김
       responses:
-        default:
-          description: successful operation
+        200:
+          $ref: '#/components/responses/200user'
+      
+  /user/id:
+  
+    get:
+      tags:
+      - user
+      summary: 아이디 찾기(get은 requestbody말고 path, query)
+      description: description'
+      operationId: finduserid
+      parameters:
+      - name: name
+        in: query
+        description: 이름
+        required: true
+        schema:
+          type: string
+      - name: email
+        in: query
+        description: 이메일
+        required: true
+        schema:
+          type: string
+      # requestBody:
+      #   description: 이름, 이메일
+      #   content:
+      #     application/json:
+      #       schema:
+      #         properties:
+      #           name:
+      #             $ref: '#/components/schemas/user/properties/name'
+      #           email:
+      #             $ref: '#/components/schemas/user/properties/email'
+      responses:
+        200:
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
+                properties:
+                  user_id:
+                    $ref: '#/components/schemas/user/properties/user_id'
+                
+      
+    
+    
+  /user/password:
+    
+    get:
+      tags:
+      - user
+      summary: 비밀번호 재설정 인증(get은 requestbody말고 path, query)
+      description: description
+      operationId: finduserpassword
+      parameters:
+      - name: name
+        in: query
+        description: 이름
+        required: true
+        schema:
+          type: string
+      - name: user_id
+        in: query
+        description: 아이디
+        required: true
+        schema:
+          type: string
+      - name: email
+        in: query
+        description: 이메일
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK/비밀번호 재설정 페이지로 이동
+      
+    put:
+      tags:
+      - user
+      summary: 비밀번호 재설정
+      description: description
+      operationId: updateuserpassword
+      requestBody:
+        description: 재설정할 비밀번호를 보내줍니다(id정보는 인증 단계에서 이미 가졌다고 가정)
+        content:
+          application/json:
+            schema:
+              properties:
+                password:
+                  $ref: '#/components/schemas/user/properties/password'
+      responses:
+        200:
+          description: 잘 변경되었다
+            
       
   /user/login:
   
@@ -432,11 +401,7 @@ paths:
           $ref: "#/components/schemas/daily/properties/date"
       responses:
         200:
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/user'
+          $ref: '#/components/responses/200user'
         400:
           description: Invalid user_id supplied
           content: {}
@@ -470,8 +435,7 @@ paths:
         required: true
       responses:
         200:
-          description: Update user successful
-          content: {}
+          $ref: '#/components/responses/200user'
         400:
           description: Invalid user supplied
           content: {}
@@ -480,7 +444,6 @@ paths:
           content: {}
       security:
       - JWT: []
-      x-codegen-request-body-name: body
       
     delete:
       tags:
@@ -666,7 +629,7 @@ paths:
       - group
       summary: |-
         check if there is a group in that name so that it doesn't override
-        중복 확인
+        중복 확인, 근데 group에서 제일 밑으로 내려가야할것 같다({group_id}, id, password 등과 혼동 방지)
       description: 그룹 이름이 영어가 아니면 path로 받아오기 곤란할텐데 requestbody로 할까요?
       operationId: checkGroupName
       parameters:
@@ -934,7 +897,7 @@ components:
         created_at:
           type: string
           format: datetime
-          example: 2021-07-24T06:38:22.326Z
+          example: '2021-07-24T06:38:22.326Z'
         pax:
           type: integer
           description: amount of person in this group
@@ -1013,19 +976,72 @@ components:
           description: 측정된 시각
           format: datetime
           
-    ApiResponse:
+    error:
       type: object
+      required:
+        - code
+        - message
       properties:
         code:
-          type: integer
-          format: int32
-          example:
-          - "404"
-          - "400"
-        type:
           type: string
+          example: '400'
         message:
           type: string
+          example: 'Bad Request'
+          
+  responses:
+    # description: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+    
+    200user:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/user'
+
+    200schedule:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/schedule'
+    
+    
+            
+    400:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+            
+    401:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+            
+    404:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+        
+    # ApiResponse:
+    #   type: object
+    #   properties:
+    #     code:
+    #       type: integer
+    #       format: int32
+    #       example:
+    #       - "404"
+    #       - "400"
+    #     type:
+    #       type: string
+    #     message:
+    #       type: string
           
   securitySchemes:
   
