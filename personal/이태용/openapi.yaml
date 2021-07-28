@@ -286,6 +286,7 @@ paths:
         - read:schedules
 
   /user:
+  
     post:
       tags:
       - user
@@ -304,6 +305,7 @@ paths:
           content: {}
       
   /user/login:
+  
     get:
       tags:
       - user
@@ -329,7 +331,9 @@ paths:
         400:
           description: Invalid username/password supplied
           content: {}
+          
   /user/logout:
+  
     get:
       tags:
       - user
@@ -339,7 +343,9 @@ paths:
         default:
           description: successful operation
           content: {}
+          
   /user/{user_id}:
+  
     get:
       tags:
       - user
@@ -347,7 +353,11 @@ paths:
       description: 비밀번호도 포함되어서 전송되어야하는가? 아니면 수정할 것인가..
       operationId: getUserById
       parameters:
-      - $ref: '#/components/schemas/users/properties/user_id'
+      - in: path
+        name: user_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/daily/properties/date"
       responses:
         200:
           description: successful operation
@@ -363,6 +373,7 @@ paths:
           content: {}
       security:
       - JWT: []
+      
     put:
       tags:
       - user
@@ -398,6 +409,7 @@ paths:
       security:
       - JWT: []
       x-codegen-request-body-name: body
+      
     delete:
       tags:
       - user
@@ -540,14 +552,15 @@ paths:
             schema:
               type: object
               properties:
-                - $ref: '#/components/schemas/group/properties/name'
-                - $ref: '#/components/schemas/group/properties/context'
-                # name:
-                #   type: string
-                #   format: varchar
-                # context:
-                #   type: string
-                #   format: text
+                # 두 개 이상의 필수적인 inheritance는 왜 작동을 안하지
+                # - $ref: '#/components/schemas/group/properties/name'
+                # - $ref: '#/components/schemas/group/properties/context'
+                name:
+                  type: string
+                  format: varchar
+                context:
+                  type: string
+                  format: text
 
       responses:
         200:
@@ -609,6 +622,12 @@ paths:
       - group
       summary: update group by group_id
       operationId: updateGroupById
+      parameters:
+      - in: path
+        required: true
+        name: group_id
+        schema:
+          $ref: '#/components/schemas/group/properties/group_id'
       # https://swagger.io/docs/specification/describing-request-body/
       requestBody:
         description: A JSON object containing updated(including original) values
@@ -626,13 +645,18 @@ paths:
         400:
           description: 400error
           content: {}
+          
     delete:
       tags:
       - group
       summary: delete group by group_id
       operationId: deleteGroupById
       parameters:
-      - $ref: '#/components/schemas/group/properties/group_id'
+      - in: path
+        required: true
+        name: group_id
+        schema:
+          $ref: '#/components/schemas/group/properties/group_id'
       responses:
         200:
           description: group deleted
