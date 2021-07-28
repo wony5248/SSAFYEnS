@@ -3,7 +3,7 @@ import Layout from "../../layout";
 import styled1 from "styled-components";
 import Ratingstar from "@material-ui/lab/Rating";
 import { withStyles } from '@material-ui/core/styles';
-
+import moment from "moment"
 
 const StyledRating = withStyles({
   iconFilled: {
@@ -135,17 +135,38 @@ const Changeendtext = styled1.div`
   color: white;
   background-color: #a3cca3;
 `;
-const Ratinglayout = () => {
-  const [value, setValue] = useState(2);
+
+const Confirm = () => {
+  if(window.confirm("정말 완료하시겠 습니까?")){
+    window.location.replace(`/Today`)
+  }
+  else {
+    console.log("변화 없음")
+  }
+}
+
+const Cancel = () => {
+  if(window.confirm("정말 취소하시겠 습니까?")){
+    window.location.replace(`/Today`)
+  }
+  else {
+    console.log("변화 없음")
+  }
+}
+
+const Ratinglayout = (props) => {
+  const [value, setValue] = useState(0);
+  const {time} = props;
+  console.log(time)
   return (
     <Ratingcon>
       <Starttime>
         <Changestarttext>일정 시작 시간</Changestarttext>
-        <Changestarttext>00 : 00</Changestarttext>
+        <Changestarttext>{time}</Changestarttext>
       </Starttime>
       <Endtime>
         <Changeendtext>일정 종료 시간</Changeendtext>
-        <Changeendtext>01 : 00</Changeendtext>
+        <Changeendtext>{moment().format("H : mm")}</Changeendtext>
       </Endtime>
       <Ratingbody>
         <Ratingcontent>
@@ -166,16 +187,17 @@ const Ratinglayout = () => {
             }}
           />
           <Ratingbtncon>
-            <Ratingbtn onClick={() => window.location.replace(`/Today`)}>취소</Ratingbtn>
-            <Ratingbtn onClick={() => window.location.replace(`/Today`)}>완료</Ratingbtn>
+            <Ratingbtn onClick={() => Cancel()}>취소</Ratingbtn>
+            <Ratingbtn onClick={() => Confirm()}>완료</Ratingbtn>
           </Ratingbtncon>
         </Ratingstarcon>
       </Ratingbody>
     </Ratingcon>
   );
 };
-const Rating = () => {
-  return <Layout pages={Ratinglayout()}></Layout>;
+const Rating = ({match}) => {
+  const {time} = match.params;
+  return <Layout pages={Ratinglayout({time})}></Layout>;
 };
 
 export default Rating;

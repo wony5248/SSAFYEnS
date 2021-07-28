@@ -37,7 +37,7 @@ function App() {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/Progress" component={Progress} />
-            <Route exact path="/Rating" component={Rating} />
+            <Route exact path="/Rating/:time" component={Rating} />
             <Route exact path="/Timer" component={Timer} />
             <Route exact path="/Today" component={Today} />
             <Route exact path="/Change" component={Change} />

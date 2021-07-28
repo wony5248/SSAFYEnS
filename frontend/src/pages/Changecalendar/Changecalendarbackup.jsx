@@ -4,9 +4,7 @@ import { Link } from "react-router-dom";
 import styled1 from "styled-components";
 import { makeStyles, styled } from "@material-ui/core/styles";
 import Input from "@material-ui/core/Input";
-import { Icon } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
@@ -17,12 +15,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Changeselect = styled1.div`
-  width: auto;
-  height: 24px;
+const Changeselect = styled1.select`
+  width: 80px;
+  height: auto;
   color: white;
+  background-color: #69a569;
   border: 0px;
-  margin-left: 12px;
 `;
 
 const Changecalcon = styled1.div`
@@ -61,7 +59,6 @@ const Changeend = styled1.div`
 `;
 const Changestarttext = styled1.div`
   width: auto;
-  text-align: center;
   height: auto;
   color: white;
   background-color: #a3cca3;
@@ -99,25 +96,6 @@ const Changebtn = styled1.button`
   background-color: #69a569;
   padding: 4px;
 `;
-const Plusbtn = styled1.button`
-  width: 24px;
-  height: 24px;
-  border-radius:8px;
-  border:0px;
-  background-color: #a3cca3;
-  color: white;
-  margin-right : 4px;
-  padding-ringt: 4px;
-`;
-const Minusbtn = styled1.button`
-  width: 24px;
-  height: 24px;
-  border-radius:8px;
-  font-size: 24px;
-  border:0px;
-  background-color: #a3cca3;
-  color: white;
-`;
 const ChangeContent = styled1.div`
   display: flex-row;
   justify-content: space-between;
@@ -152,11 +130,6 @@ const Changecontentinput1 = styled1.textarea`
     overflow: auto;
     outline: none;
 `;
-const Timebox = styled1.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-`;
 const Changetitleinput = styled(Input)({
   backgroundColor: "white",
   height: "25px",
@@ -166,35 +139,64 @@ const Changetitleinput = styled(Input)({
 
 const Changecalendarlayout = () => {
   const classes = useStyles();
-  const [starttime, setStarttime] = useState(0);
-  const [endtime, setEndtime] = useState(0);
+  const [starttime, setStarttime] = useState("");
+  const [endtime, setEndtime] = useState("");
   const [optionarr, setOptionarr] = useState([]);
-  
+  const handlestartChange = (event) => {
+    setStarttime(event.target.value);
+    console.log(event.target.value);
+  };
+  const handleendChange = (event) => {
+    setEndtime(event.target.value);
+    console.log(event.target.value);
+  };
+
+  useEffect(() => {
+    const rendering = () => {
+      const result = [];
+      for (let i = 0; i < 24; i++) {
+        if (i < 10) {
+          result.push("0" + `${i}:00`);
+          result.push("0" + `${i}:30`);
+        } else {
+          result.push(`${i}:00`);
+          result.push(`${i}:30`);
+        }
+      }
+      setOptionarr(result);
+      console.log(result);
+    };
+
+    rendering();
+  }, []);
   return (
     <Changecalcon>
       <Changestart>
         <Changestarttext>변경할 시작 시간</Changestarttext>
-        {starttime < 10 ? (
-          <Timebox>
-            <Minusbtn><RemoveIcon></RemoveIcon></Minusbtn>
-            <Changeselect>0{starttime} : 00</Changeselect>
-            <Plusbtn><AddIcon></AddIcon></Plusbtn>
-          </Timebox>
-        ) : (
-          <Changeselect>{starttime} : 00</Changeselect>
-        )}
+        <Changeselect
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={starttime}
+          onChange={handlestartChange}
+        >
+          {optionarr.map((item) => (
+            <option value={item[0]+item[1]+item[3]+item[4]}>{item}</option>
+            
+          ))}
+        </Changeselect>
       </Changestart>
       <Changeend>
         <Changeendtext>변경할 종료 시간</Changeendtext>
-        {endtime < 10 ? (
-          <Timebox>
-            <Minusbtn><RemoveIcon></RemoveIcon></Minusbtn>
-            <Changeselect>0{endtime} : 00</Changeselect>
-            <Plusbtn><AddIcon></AddIcon></Plusbtn>
-          </Timebox>
-        ) : (
-          <Changeselect>{endtime} : 00</Changeselect>
-        )}
+        <Changeselect
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={endtime}
+          onChange={handleendChange}
+        >
+          {optionarr.map((item) => (
+            <option value={item[0]+item[1]+item[3]+item[4]}>{item}</option>
+          ))}
+        </Changeselect>
       </Changeend>
       <Changetitle>
         <Changetitletext>일정 제목</Changetitletext>

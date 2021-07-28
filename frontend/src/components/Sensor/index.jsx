@@ -2,6 +2,12 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import Sensorbtn from "./styles";
 import axios from "axios";
+import styled  from "styled-components";
+import {Thermometer} from "react-feather"
+import { Icon } from '@material-ui/core';
+import OpacityIcon from '@material-ui/icons/Opacity';
+import WbIncandescentIcon from '@material-ui/icons/WbIncandescent';
+import SettingsVoiceIcon from '@material-ui/icons/SettingsVoice';
 
 const Sensor = () => {
   const [temp, setTemp] = useState("");
@@ -29,10 +35,10 @@ const Sensor = () => {
   }, []);
   return (
     <div>
-      <Sensorbtn>온도: {temp}℃</Sensorbtn>
-      <Sensorbtn>습도: {humid}％</Sensorbtn>
-      <Sensorbtn>소음: {noise}dB</Sensorbtn>
-      <Sensorbtn>조도: {light}lx</Sensorbtn>
+      <Sensorbtn><Thermometer></Thermometer>온도: {temp}℃</Sensorbtn>
+      <Sensorbtn><OpacityIcon></OpacityIcon>습도: {humid}％</Sensorbtn>
+      <Sensorbtn><SettingsVoiceIcon></SettingsVoiceIcon>소음: {noise}dB</Sensorbtn>
+      <Sensorbtn><WbIncandescentIcon></WbIncandescentIcon>조도: {light}lx</Sensorbtn>
     </div>
   );
 };

@@ -132,7 +132,7 @@ const Todaylayout = () => {
         <Todaygoal>{item.Goal}</Todaygoal>
         <Todaychangecon>
           <Todaytitlename>{item.Content}</Todaytitlename>
-          <Todaychangebtn onClick={() => window.location.replace(`/Rating`)}>
+          <Todaychangebtn onClick={() => window.location.replace(`/Rating/${item.StartTime}`)}>
             완료
           </Todaychangebtn>
         </Todaychangecon>

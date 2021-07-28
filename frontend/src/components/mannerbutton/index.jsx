@@ -7,14 +7,10 @@ const Button = (props) => {
 
   return (
     <Mannerbtn>
-      {
-        <div>
-          <div>매너모드</div>
-          <div>
-            <SwitchStyle></SwitchStyle>
-          </div>
-        </div>
-      }
+      <div>매너모드</div>
+      <div>
+        <SwitchStyle></SwitchStyle>
+      </div>
     </Mannerbtn>
   );
 };

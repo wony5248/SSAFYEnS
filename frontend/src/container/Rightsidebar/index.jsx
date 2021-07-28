@@ -6,6 +6,7 @@ import Sensorbtn from "../../components/Sensorbutton"
 import Date from "../../components/Clock"
 import Sensor from "../../components/Sensor"
 import styled from "styled-components";
+
 const Datebtn = styled.div`
   width: auto;
   height: 101px;
@@ -17,7 +18,6 @@ const Datebtn = styled.div`
   align-content: center;
   margin: 0px;
   border: 1px solid #a3cca3;
-
 `;
 
 function Rightsidebar() {
