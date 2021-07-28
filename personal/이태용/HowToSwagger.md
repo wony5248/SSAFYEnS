@@ -36,3 +36,7 @@
   - 예.
 - response는 밑에 있는 models(definitions)와 동일하도록 하여 `$ref` 로 접근할 수 있게
 
+추가
+
+- 2개 이상 상속 받기 https://github.com/OAI/OpenAPI-Specification/issues/1467
+
