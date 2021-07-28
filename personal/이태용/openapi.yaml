@@ -509,42 +509,7 @@ paths:
           content: {}
       security:
       - JWT: []
-          
-    put:
-      tags:
-      - daily
-      deprecated: true
-      summary: Update comment on daily
-      description: |-
-        This can only be done by the logged in user
-        본인의 일간에만 작성함
-      operationId: updateCommentDaily
-      parameters:
-      - in: path
-        name: date
-        required: true
-        schema:
-          $ref: "#/components/schemas/daily/properties/date"
-      requestBody:
-        description: A JSON object containing updated(including origin) values to update daily
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                context:
-                  $ref: '#/components/schemas/daily/properties/context'
-      responses:
-        200:
-          description: Update Comment on daily successful
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/daily'
-        400:
-          description: 400error
-          content: {}
-          
+
     post:
       tags:
       - daily
@@ -577,8 +542,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/daily'
         400:
-          description: 400error
-          content: {}
+          $ref: '#/components/responses/400'
+      security:
+      - JWT: []
           
     delete:
       tags:
@@ -601,6 +567,8 @@ paths:
         400:
           description: 400error
           content: {}
+      security:
+      - JWT: []
           
   /weekly/{week}:
     get:
@@ -685,26 +653,34 @@ paths:
         200:
           description: create group successful
           content: {}
-          
-  /group/{name}:
+      security:
+      - JWT: []
+      
+  /group/namevalidation:
   
-    get:
+    post:
       tags:
       - group
       summary: |-
-        check if there is a group in that name so that it doesn't override
-        중복 확인, 근데 group에서 제일 밑으로 내려가야할것 같다({group_id}, id, password 등과 혼동 방지)
-      description: 그룹 이름이 영어가 아니면 path로 받아오기 곤란할텐데 requestbody로 할까요?
+        그룹 생성시 그룹 이름 중복 확인
+      description: check if there is a group in that name so that it doesn't override
       operationId: checkGroupName
-      parameters:
-      - in: path
-        name: name
-        required: true
-        schema:
-          $ref: '#/components/schemas/group/properties/name'
+      # parameters:
+      # - in: path
+      #   name: name
+      #   required: true
+      #   schema:
+      #     $ref: '#/components/schemas/group/properties/name'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  $ref: '#/components/schemas/group/properties/name'
       responses:
         200:
-          description: ""
+          description: "true면 해당 이름의 그룹이 존재하므로, 중복 방지를 위해 거절"
           content:
             application/json:
               schema:
@@ -712,6 +688,8 @@ paths:
                 properties:
                   found:
                     type: boolean
+      security:
+      - JWT: []                    
                     
   /group/{group_id}:
   
@@ -735,6 +713,8 @@ paths:
                 $ref: '#/components/schemas/group'
         400:
           $ref: '#/components/responses/400'
+      security:
+      - JWT: []          
           
     put:
       tags:
@@ -763,7 +743,9 @@ paths:
                 $ref: '#/components/schemas/group'
         400:
           $ref: '#/components/responses/400'
-          
+      security:
+      - JWT: []
+      
     delete:
       tags:
       - group
@@ -782,7 +764,9 @@ paths:
         400:
           description: 400error
           content: {}
-          
+      security:
+      - JWT: []
+      
 components:
 
   schemas:
@@ -936,6 +920,9 @@ components:
           type: boolean
           default: false
         notification:
+          type: boolean
+          description: true면 일정에 대한 알림이 존재, false는 존재하지 않음
+        notificationtime:
           type: string
           description: 알림이 있는 경우에는 datetime 형식으로, 없는 경우에는 0값으로(혹은 특정한 시간으로?)
           format: datetime
