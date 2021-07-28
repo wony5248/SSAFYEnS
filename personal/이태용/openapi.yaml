@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: S05P12A109
-  description: 여기 적혀있는건 예시입니다. 밑에 API부분만 봐주세요 읽으실때 복수형 구분에 유의하세요! 실수했을 수도 있으니 어? 얜 array인데 왜 복수형이 붙어있지나 vice versa 알려주세요 / 그리고 jwt 시큐리티는 아직 다 복붙을 안했습니다
+  description: 여기 적혀있는건 예시입니다. 밑에 API부분만 봐주세요 읽으실때 복수형 구분에 유의하세요! 실수했을 수도 있으니 어? 얜 array인데 왜 복수형이 붙어있지나 vice versa 알려주세요 / 그리고 jwt 시큐리티는 아직 다 복붙을 안했습니다 / response의 코드 등도 제대로 되어있지 않으니, 클라이언트측 parameter와 reqeustbody(JSON), 그리고 서버측 response JSON 위주로 확인바랍니다
 #   termsOfService: http://swagger.io/terms/
 #   contact:
 #     email: apiteam@swagger.io
@@ -29,9 +29,9 @@ tags:
   description: 하루 평가(용어 정리 필요)를 위한 내용입니다
 - name: group
   description: 그룹에 관한 내용입니다
-  externalDocs:
-    description: Find out more about our store
-    url: http://swagger.io
+  # externalDocs:
+  #   description: Find out more about our store
+  #   url: http://swagger.io
     
 paths:
 
@@ -41,28 +41,46 @@ paths:
       tags:
       - schedule
       summary: Add a new schedule to user
-      description: Form으로 받을지 JSON으로 받을지 결정 필요.
+      description: |-
+        Form으로 받을지 JSON으로 받을지 결정 필요. => JSON으로 통일
+        schedule_id, user_id, finished_at, created_at, updated_at, point, is_finished, noti_extend는 불필요.
+        date, title, context, started_at, deadline_at, notification만 받으면 되는 것 같은데?
       operationId: addSchedule
       requestBody:
+        required: true
         description: Schedule object that needs to be added to the user
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/schedule'
-        required: true
+              properties:
+                date:
+                  $ref: '#/components/schemas/schedule/properties/date'
+                title:
+                  $ref: '#/components/schemas/schedule/properties/title'
+                context:
+                  $ref: '#/components/schemas/schedule/properties/context'
+                started_at:
+                  $ref: '#/components/schemas/schedule/properties/started_at'
+                deadline_at:
+                  $ref: '#/components/schemas/schedule/properties/deadline_at'
+                notification:
+                  $ref: '#/components/schemas/schedule/properties/notification'
+                
+              # $ref: '#/components/schemas/schedule'
+              # 제외해야할 properties 발생
       responses:
         200:
           description: 'successful operation: 해당 일정의 정보를 돌려줌'
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/schedule'
+                
         405:
           description: Invalid input
           content: {}
       security:
       - JWT: []
-      x-codegen-request-body-name: body
       
   # /schedule/findByStatus:
   
@@ -183,11 +201,13 @@ paths:
           content: {}
       security:
       - JWT: []
+      
     put:
       tags:
       - schedule
-      summary: Updates a schedule with form data
-      operationId: updateScheduleWithForm
+      summary: Updates a schedule with JSON data
+      operationId: updateScheduleWithJSON
+      description: requestBody 일일이 입력해줬지만... 맞나? $ref로 불러오는게 맞는거같은데
       parameters:
       - name: schedule_id
         in: path
@@ -197,7 +217,7 @@ paths:
           type: integer
       requestBody:
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
               properties:
                 title:
@@ -324,19 +344,35 @@ paths:
       tags:
       - user
       summary: Create user
+      description: 유저를 생성할 때는 id, name, email, cellphone, password 만 받으면 될 것, user_id, email, cellphone 중복 확인, password는 어떤 암호화를 거칠지 합의
       operationId: createUser
       requestBody:
         description: Created user object
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/user'
+              properties:
+                user_id:
+                  $ref: '#/components/schemas/user/properties/user_id'
+                name:
+                  $ref: '#/components/schemas/user/properties/name'
+                email:
+                  $ref: '#/components/schemas/user/properties/email'
+                cellphone:
+                  $ref: '#/components/schemas/user/properties/cellphone'
+                password:
+                  $ref: '#/components/schemas/user/properties/password'
+        
+              # $ref: '#/components/schemas/user'
               # 제외해야할 항목들이 생김
-        required: true
       responses:
         default:
           description: successful operation
-          content: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
       
   /user/login:
   
@@ -377,6 +413,8 @@ paths:
         default:
           description: successful operation
           content: {}
+      security:
+      - JWT: []
           
   /user/{user_id}:
   
@@ -752,8 +790,8 @@ components:
         is_admin:
           type: boolean
           description: |-
-            true: admin
-            false: not admin
+            true: admin,
+            false: not admin,
           default: false
         mytrophies:
           description: 회원이 소유한 트로피만 반환한다
@@ -767,7 +805,7 @@ components:
             $ref: '#/components/schemas/group'
           
     daily:
-      description: 하루 정리?하는 화면. environment의 created_at은 무엇으로 해야할까?
+      description: 하루 정리?하는 화면. / environment.created_at은 어느시점을 넣어놓을까
       required:
       - date
       type: object
@@ -782,7 +820,6 @@ components:
           format: text
           example: 오늘은 너무 피곤했ㄷr....
         environment:
-          description: created_at은 어느시점을 넣어놓을까
           $ref: '#/components/schemas/environment'
         schedules:
           type: array
@@ -791,7 +828,7 @@ components:
         
           
     weekly:
-      description: 주간 내용을 보여주는데 주를 판별하는 방법은???
+      description: 주간 내용을 보여주는데 주를 판별하는 방법은??? / environment.created_at은 어느시점을 넣어놓을까
       required:
       - week
       type: object
@@ -803,7 +840,6 @@ components:
           type: integer
           description: table 속성에 넣어놓을지(post/put되면 업데이트), 프론트엔드에서 dailies 기준으로 계산하게 할지
         environment:
-          description: created_at은 어느시점을 넣어놓을까
           $ref: '#/components/schemas/environment'
         dailies:
           type: array
@@ -812,7 +848,7 @@ components:
         
           
     monthly:
-      description: 월간 내용을 보여주는데 다행히 월은 기준이 있다
+      description: 월간 내용을 보여주는데 다행히 월은 기준이 있다 / environment.created_at은 어느시점을 넣어놓을까
       required:
       - month
       type: object
@@ -824,7 +860,6 @@ components:
           type: integer
           description: table 속성에 넣어놓을지(post/put되면 업데이트), 프론트엔드에서 weeklies 기준으로 계산하게 할지
         environment:
-          description: created_at은 어느시점을 넣어놓을까
           $ref: '#/components/schemas/environment'
         weeklies:
           type: array
@@ -877,7 +912,7 @@ components:
           type: string
           description: 알림이 있는 경우에는 datetime 형식으로, 없는 경우에는 0값으로(혹은 특정한 시간으로?)
           format: datetime
-          example: ""
+          # example: "2021-07-27T05:20:48.682Z"
         noti_extend:
           type: integer
           description: 알림을 연장한 횟수
