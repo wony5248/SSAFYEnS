@@ -168,20 +168,47 @@ const Changecalendarlayout = () => {
   const classes = useStyles();
   const [starttime, setStarttime] = useState(0);
   const [endtime, setEndtime] = useState(0);
+  const [click, setClick] = useState(0);
   const [optionarr, setOptionarr] = useState([]);
+  const Clickplus = () => {
+    setClick(click+1)
+    console.log("click:" + click)
+    if (click % 2 === 0){
+      setStarttime(parseInt((click+1) / 2))
+      console.log("starttime:" + starttime)
+    } 
+    if (click === 48){
+      setClick(0)
+    }
+  }
   
+  const Clickminus = () => {
+    setClick(click - 1)
+    console.log("click:" + click)
+    if (click % 2 === 0){
+      setStarttime(parseInt(click / 2))
+    }
+    if (click === -1){
+      setClick(47)
+    }
+    console.log("starttime:" + starttime)
+  }
   return (
     <Changecalcon>
       <Changestart>
         <Changestarttext>변경할 시작 시간</Changestarttext>
-        {starttime < 10 ? (
+        {(click % 2) === 0 ? (
           <Timebox>
-            <Minusbtn><RemoveIcon></RemoveIcon></Minusbtn>
-            <Changeselect>0{starttime} : 00</Changeselect>
-            <Plusbtn><AddIcon></AddIcon></Plusbtn>
+            <Minusbtn onClick = {() => Clickminus()}><RemoveIcon></RemoveIcon></Minusbtn>
+            <Changeselect>{starttime} : 00</Changeselect>
+            <Plusbtn onClick = {() => Clickplus()}><AddIcon></AddIcon></Plusbtn>
           </Timebox>
         ) : (
-          <Changeselect>{starttime} : 00</Changeselect>
+          <Timebox>
+          <Minusbtn onClick = {() => Clickminus()}><RemoveIcon></RemoveIcon></Minusbtn>
+          <Changeselect>{starttime} : 30</Changeselect>
+          <Plusbtn onClick = {() => Clickplus()}><AddIcon></AddIcon></Plusbtn>
+        </Timebox>
         )}
       </Changestart>
       <Changeend>

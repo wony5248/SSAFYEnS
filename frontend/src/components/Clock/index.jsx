@@ -12,7 +12,6 @@ const Logodiv = styled.div`
 const Date = () => {
   return (
     <Datediv>
-      <Logodiv></Logodiv>
       <div>
         <Clock format={"YYYY.MM.DD"} ticking={true} timezone={"Asia/Seoul"} />
       </div>
