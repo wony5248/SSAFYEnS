@@ -26,7 +26,7 @@ tags:
 - name: user
   description: Operations about user
 - name: daily
-  description: 하루 평가(용어 정리 필요)를 위한 내용입니다
+  description: 하루 평가(용어 정리 필요)를 위한 내용입니다 / average로 바꿀까요?
 - name: group
   description: 그룹에 관한 내용입니다
   # externalDocs:
@@ -120,7 +120,7 @@ paths:
       - schedule
       summary: Updates a schedule with JSON data
       operationId: updateScheduleWithJSON
-      description: requestBody 일일이 입력해줬지만... 맞나? $ref로 불러오는게 맞는거같은데
+      description: requestBody 일일이 입력해줬지만... 맞나? $ref로 불러오는게 맞는거같은데 / PUT요청에 (is_finished가 true면) daily/weekly/monthly 업데이트 필요
       parameters:
       - name: schedule_id
         in: path
@@ -345,24 +345,34 @@ paths:
       
   /user/login:
   
-    get:
+    post:
       tags:
       - user
       summary: Logs user into the system
+      description: GET에서 POST로 바꿈
       operationId: loginUser
-      parameters:
-      - name: user_id
-        in: query
-        description: The user_id for login
-        required: true
-        schema:
-          type: string
-      - name: password
-        in: query
-        description: The password for login(그대로? 암호화?)
-        required: true
-        schema:
-          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                user_id:
+                  $ref: "#/components/schemas/user/properties/user_id"
+                password:
+                  $ref: "#/components/schemas/user/properties/password"
+      # parameters:
+      # - name: user_id
+      #   in: query
+      #   description: The user_id for login
+      #   required: true
+      #   schema:
+      #     type: string
+      # - name: password
+      #   in: query
+      #   description: The password for login(그대로? 암호화?)
+      #   required: true
+      #   schema:
+      #     type: string
       responses:
         200:
           description: successful operation
@@ -503,6 +513,7 @@ paths:
     put:
       tags:
       - daily
+      deprecated: true
       summary: Update comment on daily
       description: |-
         This can only be done by the logged in user
@@ -591,13 +602,67 @@ paths:
           description: 400error
           content: {}
           
+  /weekly/{week}:
+    get:
+      tags:
+      - weekly
+      summary: Get weekly information
+      description: |-
+        This can only be done by the logged in user
+        본인의 주간만 가져옴
+      operationId: getWeekly
+      parameters:
+      - in: path
+        name: week
+        required: true
+        schema:
+          $ref: "#/components/schemas/weekly/properties/week"
+      responses:
+        200:
+          description: Comment on daily successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/weekly'
+        400:
+          $ref: '#/components/responses/400'
+      security:
+      - JWT: []
+          
+  /monthly/{month}:
+    get:
+      tags:
+      - monthly
+      summary: Get monthly information
+      description: |-
+        This can only be done by the logged in user
+        본인의 월간만 가져옴
+      operationId: getMonthly
+      parameters:
+      - in: path
+        name: month
+        required: true
+        schema:
+          $ref: "#/components/schemas/monthly/properties/month"
+      responses:
+        200:
+          description: Comment on daily successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/monthly'
+        400:
+          $ref: '#/components/responses/400'
+      security:
+      - JWT: []
+          
   /group:
   
     post:
       tags:
       - group
       summary: create new group
-      description: "requestBody key값 확인바람"
+      description: ""
       operationId: createGroup
       # https://swagger.io/docs/specification/describing-request-body/
       requestBody:
@@ -616,7 +681,6 @@ paths:
                   # format: varchar
                   # type: string
                   # format: text
-
       responses:
         200:
           description: create group successful
@@ -670,8 +734,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/group'
         400:
-          description: 400error
-          content: {}
+          $ref: '#/components/responses/400'
           
     put:
       tags:
@@ -697,10 +760,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/groups'
+                $ref: '#/components/schemas/group'
         400:
-          description: 400error
-          content: {}
+          $ref: '#/components/responses/400'
           
     delete:
       tags:
@@ -745,6 +807,7 @@ components:
           example: 010-1234-5678
         password:
           type: string
+          example: "abcd1234!@#$"
         exp:
           type: integer
         created_at:
@@ -799,7 +862,8 @@ components:
         week:
           type: string
           format: date
-        average:
+          description: week를 date로 할지, 그냥 string형으로 할지, 기간을 잡을지...
+        averagepoint:
           type: integer
           description: table 속성에 넣어놓을지(post/put되면 업데이트), 프론트엔드에서 dailies 기준으로 계산하게 할지
         environment:
@@ -819,7 +883,7 @@ components:
         month:
           type: string
           format: date
-        average:
+        averagepoint:
           type: integer
           description: table 속성에 넣어놓을지(post/put되면 업데이트), 프론트엔드에서 weeklies 기준으로 계산하게 할지
         environment:
@@ -882,6 +946,7 @@ components:
 
     group:
       type: object
+      description: user 목록이 필요한데, 해당 유저가 가입한 시간 등을 같이 넣어줘야함
       properties:
         group_id:
           type: integer
@@ -905,17 +970,26 @@ components:
           type: integer
           description: ranking of group between all groups, based on WHAT???
           example: 40
+        members:
+          type: array
+          description: user의 모든 속성과 가입/관리자 속성을 합치고 싶었는데...
+          items:
+            type: object
+            properties:
+              joined_at:
+                type: string
+                format: datetime
+              is_groupadmin:
+                type: boolean
+              user:
+                $ref: '#/components/schemas/user'
           
     # 만들다보니 너무 더러워서 그냥 직접 requestBody에 작성
     # creategroupdata:
     #   allOf:
     #   - $ref: "#/components/schemas/group/properties/name"
     #   - $ref: "#/components/schemas/group/properties/context"
-          
-    groups:
-      type: array
-      items:
-        $ref: '#/components/schemas/group'
+        
           
     trophy:
       type: object
