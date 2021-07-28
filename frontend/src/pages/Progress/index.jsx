@@ -91,7 +91,7 @@ const Progresslayout = () => {
   const [title, setTitle] = useState("");
   const [goal, setGoal] = useState("");
   const [content, setContent] = useState("");
-  const [istrue, setIstrue] = useState(false)
+  const [istrue, setIstrue] = useState(false);
   useEffect(() => {
     async function loadCalendar() {
       const result = await axios
@@ -117,31 +117,34 @@ const Progresslayout = () => {
               data.Item[i].EndTime[5] + data.Item[i].EndTime[6]
             );
             const currentTime = Number(moment().format("H"));
-            // console.log(startTime)
-            // console.log(currentTime);
+            console.log(startTime);
+            console.log(currentTime);
             // console.log(endTime)
             const currentMin = Number(moment().format("mm"));
-            // console.log(startMin)
-            // console.log(currentMin)
+            console.log(startMin);
+            console.log(currentMin);
             // console.log(endMin)
-            if (
-              startTime < currentTime &&
-              currentTime < endTime 
-            ) {
-              console.log(data.Item[i].StartTime)
+            if (startTime < currentTime && currentTime < endTime) {
+              console.log(data.Item[i].StartTime);
               setStarttime(data.Item[i].StartTime);
               setEndtime(data.Item[i].EndTime);
               setGoal(data.Item[i].Goal);
               setTitle(data.Item[i].Title);
-              setContent(data.Item[i].Content)
+              setContent(data.Item[i].Content);
               setIstrue(true);
-            }
-            else if (currentTime == endTime && currentMin <= endMin){
+            } else if (currentTime == endTime && currentMin <= endMin) {
               setStarttime(data.Item[i].StartTime);
               setEndtime(data.Item[i].EndTime);
               setGoal(data.Item[i].Goal);
               setTitle(data.Item[i].Title);
-              setContent(data.Item[i].Content)
+              setContent(data.Item[i].Content);
+              setIstrue(true);
+            } else if (currentTime == startTime && startMin <= currentMin) {
+              setStarttime(data.Item[i].StartTime);
+              setEndtime(data.Item[i].EndTime);
+              setGoal(data.Item[i].Goal);
+              setTitle(data.Item[i].Title);
+              setContent(data.Item[i].Content);
               setIstrue(true);
             }
           }
@@ -156,9 +159,9 @@ const Progresslayout = () => {
           console.error(e);
           setLoading(false);
         });
-      
-      console.log(Number(moment().format("H")));
-      console.log(Number(moment().format("mm")));
+
+      // console.log(Number(moment().format("H")));
+      // console.log(Number(moment().format("mm")));
     }
     loadCalendar();
     const interval = setInterval(() => {
@@ -168,24 +171,24 @@ const Progresslayout = () => {
   return (
     <Progresscontainer>
       {istrue ? (
-        <>
+        <div>
           <Progresstitle>
             <Progresstitlenamecon>
               <Progresstitlename>{title}</Progresstitlename>
-              <Progresstitletime>{starttime} ~ {endtime}</Progresstitletime>
+              <Progresstitletime>
+                {starttime} ~ {endtime}
+              </Progresstitletime>
             </Progresstitlenamecon>
             <Progressgoal>일정 목표</Progressgoal>
             <Progressgoal>{goal}</Progressgoal>
           </Progresstitle>
           <Progresscontentcon>
             <Progresscontenttitle>일정 내용</Progresscontenttitle>
-            <Progresscontent>
-              {content}
-            </Progresscontent>
+            <Progresscontent>{content}</Progresscontent>
           </Progresscontentcon>
-        </>
+        </div>
       ) : (
-        <>현재 일정이 없습니다.</>
+        <div>현재 일정이 없습니다.</div>
       )}
     </Progresscontainer>
   );
