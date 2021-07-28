@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 import styled1 from "styled-components";
 import { makeStyles, styled } from "@material-ui/core/styles";
 import Input from "@material-ui/core/Input";
-import { Icon } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
+import { Icon } from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+import RemoveIcon from "@material-ui/icons/Remove";
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
@@ -168,56 +168,37 @@ const Changecalendarlayout = () => {
   const classes = useStyles();
   const [starttime, setStarttime] = useState(0);
   const [endtime, setEndtime] = useState(0);
-  const [click, setClick] = useState(0);
-  const [optionarr, setOptionarr] = useState([]);
-  const Clickplus = () => {
-    setClick(click+1)
-    console.log("click:" + click)
-    if (click % 2 === 0){
-      setStarttime(parseInt((click+1) / 2))
-      console.log("starttime:" + starttime)
-    } 
-    if (click === 48){
-      setClick(0)
-    }
-  }
-  
-  const Clickminus = () => {
-    setClick(click - 1)
-    console.log("click:" + click)
-    if (click % 2 === 0){
-      setStarttime(parseInt(click / 2))
-    }
-    if (click === -1){
-      setClick(47)
-    }
-    console.log("starttime:" + starttime)
-  }
+  const [minute, setMinute] = useState(0);
+
   return (
     <Changecalcon>
       <Changestart>
         <Changestarttext>변경할 시작 시간</Changestarttext>
-        {(click % 2) === 0 ? (
+        {minute == 0 ? (
           <Timebox>
-            <Minusbtn onClick = {() => Clickminus()}><RemoveIcon></RemoveIcon></Minusbtn>
-            <Changeselect>{starttime} : 00</Changeselect>
-            <Plusbtn onClick = {() => Clickplus()}><AddIcon></AddIcon></Plusbtn>
+            <Minusbtn>
+              <RemoveIcon></RemoveIcon>
+            </Minusbtn>
+            <Changeselect>0{starttime} : 00</Changeselect>
+            <Plusbtn>
+              <AddIcon></AddIcon>
+            </Plusbtn>
           </Timebox>
         ) : (
-          <Timebox>
-          <Minusbtn onClick = {() => Clickminus()}><RemoveIcon></RemoveIcon></Minusbtn>
-          <Changeselect>{starttime} : 30</Changeselect>
-          <Plusbtn onClick = {() => Clickplus()}><AddIcon></AddIcon></Plusbtn>
-        </Timebox>
+          <Changeselect>{starttime} : 00</Changeselect>
         )}
       </Changestart>
       <Changeend>
         <Changeendtext>변경할 종료 시간</Changeendtext>
         {endtime < 10 ? (
           <Timebox>
-            <Minusbtn><RemoveIcon></RemoveIcon></Minusbtn>
+            <Minusbtn>
+              <RemoveIcon></RemoveIcon>
+            </Minusbtn>
             <Changeselect>0{endtime} : 00</Changeselect>
-            <Plusbtn><AddIcon></AddIcon></Plusbtn>
+            <Plusbtn>
+              <AddIcon></AddIcon>
+            </Plusbtn>
           </Timebox>
         ) : (
           <Changeselect>{endtime} : 00</Changeselect>
