@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: S05P12A109
-  description: 밑에 API부분만 봐주세요 읽으실때 복수형 구분에 유의하세요! 실수했을 수도 있으니 어? 얜 array인데 왜 복수형이 붙어있지나 vice versa 알려주세요 / 각 회원의 정보는 jwt를 통해 취득합니다 / response의 코드 등도 제대로 되어있지 않으니, 클라이언트측 parameter와 requestbody(JSON), 그리고 서버측 response JSON 위주로 확인바랍니다 / 200이 아닌 response는 굳이 필요한가요? / operationId는 CRUD를 따서 create, get, update, delete와 parameter를 사용하는 경우 By{parameter}를 뒤에 붙였습니다. (예외 checkGroupName)
+  description: 밑에 API부분만 봐주세요 읽으실때 복수형 구분에 유의하세요! 실수했을 수도 있으니 어? 얜 array인데 왜 복수형이 붙어있지나 vice versa 알려주세요 / 각 회원의 정보는 jwt를 통해 취득합니다 / response의 코드 등도 제대로 되어있지 않으니, 클라이언트측 parameter와 requestbody(JSON), 그리고 서버측 response JSON 위주로 확인바랍니다 / 200이 아닌 response는 굳이 필요한가요? / operationId는 CRUD를 따서 create, get, update, delete와 parameter를 사용하는 경우 By{parameter}를 뒤에 붙였습니다. (예외 checkGroupName) / 0729 논의해본 결과 schedule에 일, 주, 월, 년?을 넣어서 쉽게 접근할 수 있도록 바꿨습니다. 혹시 날짜와 관련된 내용인데 schedule을 참조(ref)하고 있지 않으면 제보바랍니다 / required 가 문제를 일으키는 것 같아 path parameter를 제외하고 required는 전부 주석처리했습니다
 #   termsOfService: http://swagger.io/terms/
 #   contact:
 #     email: apiteam@swagger.io
@@ -45,9 +45,11 @@ paths:
         Form으로 받을지 JSON으로 받을지 결정 필요. => JSON으로 통일
         schedule_id, user_id, finished_at, created_at, updated_at, point, is_finished, noti_extend는 불필요.
         date, title, context, started_at, deadline_at, notification만 받으면 되는 것 같은데?
+        schedule에 date, week, month 정보를 넣어놓으면 한 번에 조회 가능해서 간편해질 듯 하다.
+      # aksdjfajksd:askdjfkhakf
       operationId: createSchedule
       requestBody:
-        required: true
+        # required: true
         description: Schedule object that needs to be added to the user
         content:
           application/json:
@@ -228,7 +230,7 @@ paths:
       operationId: createUser
       requestBody:
         description: Created user object
-        required: true
+        # required: true
         content:
           application/json:
             schema:
@@ -262,13 +264,13 @@ paths:
       - name: name
         in: query
         description: 이름
-        required: true
+        # required: true
         schema:
           type: string
       - name: email
         in: query
         description: 이메일
-        required: true
+        # required: true
         schema:
           type: string
       # requestBody:
@@ -306,19 +308,19 @@ paths:
       - name: name
         in: query
         description: 이름
-        required: true
+        # required: true
         schema:
           type: string
       - name: user_id
         in: query
         description: 아이디
-        required: true
+        # required: true
         schema:
           type: string
       - name: email
         in: query
         description: 이메일
-        required: true
+        # required: true
         schema:
           type: string
       responses:
@@ -439,11 +441,11 @@ paths:
           type: string
       requestBody:
         description: Updated user object
+        # required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/user'
-        required: true
       responses:
         200:
           $ref: '#/components/responses/200user'
@@ -818,8 +820,8 @@ components:
   schemas:
   
     user:
-      required:
-      - user_id
+      # required:
+      # - user_id
       type: object
       properties:
         user_id:
@@ -861,42 +863,61 @@ components:
             $ref: '#/components/schemas/group'
           
     daily:
-      description: 하루 정리?하는 화면. / environment.created_at은 어느시점을 넣어놓을까
-      required:
-      - date
+      description: 하루 정리?하는 화면. JSON크기를 줄일 방법을 찾자.  / environment.created_at은 어느시점을 넣어놓을까
+      # required:
+      # - date
       type: object
       properties:
         date:
-          type: string
-          format: date
+          $ref: '#/components/schemas/schedule/properties/date'
+          # type: string
+          # format: date
         user_id:
           $ref: '#/components/schemas/user/properties/user_id'
         context:
           type: string
           format: text
           example: 오늘은 너무 피곤했ㄷr....
-        environment:
+        avgpoint:
+          type: integer
+          description: 해당 날짜의 schedule이 update(post/put)될때마다 계산해준다
+        avgenvironment:
           $ref: '#/components/schemas/environment'
         schedules:
           type: array
+          description: '정말 필요한 정보만 집어넣자는 결론에 따라, 와이어프레임에서 요구하는 정보로 제한함. 그래프 Y축은 일정의 시간으로 합의했으므로, finished_at - started_at 로 구할 수 있음. 그리고 그 값을 0~100의 값으로 변환도 가능해보임. 만약 필요하다면 백엔드에서 계산해서 줄 수도 있으므로 리뷰시 알려주세요.'
           items:
-            $ref: '#/components/schemas/schedule'
+            type: object
+            properties:
+              schedule_id:
+                $ref: '#/components/schemas/schedule/properties/schedule_id'
+              title:
+                $ref: '#/components/schemas/schedule/properties/title'
+              started_at:
+                $ref: '#/components/schemas/schedule/properties/started_at'
+              finished_at:
+                $ref: '#/components/schemas/schedule/properties/finished_at'
+              # time:
+              #   type: integer
+                  
+                
         
           
     weekly:
-      description: 주간 내용을 보여주는데 주를 판별하는 방법은??? / environment.created_at은 어느시점을 넣어놓을까
-      required:
-      - week
+      description: 주간 내용을 보여주는데 주를 판별하는 방법은??? moment weekofyear를 사용할 수 있을 것 같다. / environment.created_at은 어느시점을 넣어놓을까
+      # required:
+      # - week
       type: object
       properties:
         week:
-          type: string
-          format: date
-          description: week를 date로 할지, 그냥 string형으로 할지, 기간을 잡을지...
-        averagepoint:
+          $ref: '#/components/schemas/schedule/properties/week'
+          # type: string
+          # format: date
+          # description: week를 date로 할지, 그냥 string형으로 할지, 기간을 잡을지...
+        avgpoint:
           type: integer
-          description: table 속성에 넣어놓을지(post/put되면 업데이트), 프론트엔드에서 dailies 기준으로 계산하게 할지
-        environment:
+          description: 해당 날짜의 schedule이 update(post/put)될때마다 계산해준다
+        avgenvironment:
           $ref: '#/components/schemas/environment'
         dailies:
           type: array
@@ -906,17 +927,17 @@ components:
           
     monthly:
       description: 월간 내용을 보여주는데 다행히 월은 기준이 있다 / environment.created_at은 어느시점을 넣어놓을까
-      required:
-      - month
+      # required:
+      # - month
       type: object
       properties:
         month:
           type: string
           format: date
-        averagepoint:
+        avgpoint:
           type: integer
           description: table 속성에 넣어놓을지(post/put되면 업데이트), 프론트엔드에서 weeklies 기준으로 계산하게 할지
-        environment:
+        avgenvironment:
           $ref: '#/components/schemas/environment'
         weeklies:
           type: array
@@ -924,8 +945,8 @@ components:
             $ref: '#/components/schemas/weekly'
       
     schedule:
-      required:
-      - schedule_id
+      # required:
+      # - schedule_id
       type: object
       properties:
         schedule_id:
@@ -933,7 +954,24 @@ components:
         user_id:
           $ref: '#/components/schemas/user/properties/user_id'
         date:
-          $ref: '#/components/schemas/daily/properties/date'
+          type: string
+          format: date
+          # $ref: '#/components/schemas/daily/properties/date'
+        week:
+          type: string
+          format: week
+          description: moment().isoweek()로 1년의 몇번째 주(weekofyear)인지 구할 수 있습니다
+          # $ref: '#/components/schemas/daily/properties/date'
+        month:
+          type: string
+          format: month
+          description: moment().메서드로 1년의 몇번째 월인지 구할 수 있습니다
+          # $ref: '#/components/schemas/daily/properties/date'
+        year:
+          type: string
+          format: year
+          description: 솔직히 연단위까지 필요한가 싶지만... 일단 넣어봅시다
+          # $ref: '#/components/schemas/daily/properties/date'
         title:
           type: string
           format: varchar
@@ -1010,9 +1048,9 @@ components:
             allOf:
               - $ref: '#/components/schemas/user'
               - type: object
-                required:
-                - joined_at
-                - is_groupadmin
+                # required:
+                # - joined_at
+                # - is_groupadmin
                 properties:
                   joined_at:
                     type: string
@@ -1097,9 +1135,9 @@ components:
           
     error:
       type: object
-      required:
-        - code
-        - message
+      # required:
+      #   - code
+      #   - message
       properties:
         code:
           type: string

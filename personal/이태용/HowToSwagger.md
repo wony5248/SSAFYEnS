@@ -40,3 +40,17 @@
 
 - 2개 이상 상속 받기 https://github.com/OAI/OpenAPI-Specification/issues/1467
 
+#### API 설계를 기반으로 코드 generate하기
+
+code generator는 크게 두 가지로 나뉘는 것 같습니다
+
+- [openapi-generator.tech](openapi-generator.tech)
+  - 
+- [https://github.com/swagger-api/swagger-codegen](https://github.com/swagger-api/swagger-codegen)
+  - 기존에 [Swagger editor](editor.swagger.io) 를 사용하는 경우 위 generator를 기반으로 생성됨 https://github.com/swagger-api/swagger-editor
+  - Java 기반으로 소스코드 이해가 어려움ㅠ
+  - javascript
+    - https://github.com/wcandillon/swagger-js-codegen (지원종료)
+    - https://github.com/swagger-api/swagger-js (현재버젼)
+
+generator에 따라 지원하는 client 와 server 가 다르다.
