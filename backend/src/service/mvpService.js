@@ -51,12 +51,12 @@ exports.addScedule = function (body) {
 
       const data = await db["schedules"].create({
         user_id,
-        date: moment(started_at).format("YYYY-MM-DD hh:mm").toDate(),
+        date: moment(started_at).format("YYYY-MM-DD hh:mm"),
         title,
         context,
-        started_at: moment(started_at).format("YYYY-MM-DD hh:mm").toDate(),
-        finished_at: moment(started_at).format("YYYY-MM-DD hh:mm").toDate(),
-        deadline_at: moment(started_at).format("YYYY-MM-DD hh:mm").toDate(),
+        started_at: moment(started_at).format("YYYY-MM-DD hh:mm"),
+        finished_at: moment(started_at).format("YYYY-MM-DD hh:mm"),
+        deadline_at: moment(started_at).format("YYYY-MM-DD hh:mm"),
         point,
         is_finished,
         notification,
