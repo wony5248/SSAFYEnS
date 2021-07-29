@@ -4,6 +4,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import {Grid, Checkbox, FormGroup, FormControlLabel, Select
     , InputLabel, FormControl, MenuItem, Button, TextField} from '@material-ui/core';
 import moment from 'moment';
+import {scheduleAPI} from '../../../utils/axios';
 
 const Plan = (props) =>{
     const { open, close } = props;
@@ -24,7 +25,13 @@ const Plan = (props) =>{
     const [endHour, setEndHour] = useState('');
     const [endMin, setEndMin] = useState('');
 
-    const [content, setContent] =useState('');
+    const [title, setTitle] =useState('');
+
+    const addSchedule = async () => {
+        const started_at = moment(`${moment().format('YYYY')}-${startMonth}-${startDay} ${startHour}:${startMin}`).format('YYYY-MM-DD hh:mm');
+        const deadline_at = moment(`${moment().format('YYYY')}-${endMonth}-${endDay} ${endHour}:${endMin}`).format('YYYY-MM-DD hh:mm');
+        const result = await scheduleAPI.addSchedule(title, started_at, deadline_at);
+    }
 
     const handleAlarm = (event) => {
         setState({...state, [event.target.name]: event.target.checked});
@@ -66,8 +73,8 @@ const Plan = (props) =>{
         setEndMin(event.target.value);
     };
     
-    const handleContent = (event) => {
-        setContent(event.target.value);
+    const handleTitle = (event) => {
+        setTitle(event.target.value);
     };
 
     const monthArr = () =>{
@@ -141,24 +148,10 @@ const Plan = (props) =>{
         return result;
     };
 
-    const planSubmit = () =>{
-        if (startMonth===endMonth && startDay===endDay && startHour>endHour || startHour===endHour && startDay>endDay){
-            alert("시작시간이 마감시간보다 느립니다.");
-        }
-        else if(startMonth>endMonth){
-            alert("시작일이 마감일보다 느립니다.");
-        }
-        else if(startMonth===endMonth && startDay>endDay) {
-            alert("시작일이 마감일보다 느립니다.");
+    // const planSubmit = () =>{
         
-        }    
-        else{
-            alert(`start month : ${startMonth}월 ${startDay}일 ${startHour}시 ${startMin}분
-        end Date : ${endMonth}월 ${endDay}일 ${endHour}시 ${endMin}분
-        Plan : ${content}`);
-        }
-        
-    };
+    //     alert(`${started_at}, ${deadline_at}`);  
+    // };
 
 
     return(
@@ -281,7 +274,7 @@ const Plan = (props) =>{
                                 <Grid container justify="center" alignItems="center" style={{marginLeft:'50px', marginBottom:'3px', border:'1px solid #D6E6F5'
                                 , borderRadius:25, width:'380px', height:'40px', textAlign:'center'}}>
                                     <TextField type="text" placeholder="일정 내용을 적어주세요" id="standard-basic" 
-                                        value = {content} onChange={handleContent} />
+                                        value = {title} onChange={handleTitle} />
                                 </Grid>
                             </Grid>
                             <Grid container direction="row" alignItems = "center">
@@ -311,7 +304,7 @@ const Plan = (props) =>{
                         </Grid>
                         {/* footer */}
                         <Grid container justifyContent="center" alignItems="center" style={{marginTop:'30px'}}>
-                            <Button type = "submit" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF'}} onClick={planSubmit}>등록하기</Button>
+                            <Button type = "submit" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF'}} onClick={addSchedule}>등록하기</Button>
                         </Grid>
                     </form>
                 </Wrapper>
