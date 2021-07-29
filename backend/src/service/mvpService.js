@@ -51,12 +51,12 @@ exports.addScedule = function (body) {
 
       const data = await db["schedules"].create({
         user_id,
-        date: moment(date).toDate(),
+        date: moment(started_at).format("YYYY-MM-DD hh:mm").toDate(),
         title,
         context,
-        started_at: moment(started_at).toDate(),
-        finished_at: moment(finisted_at).toDate(),
-        deadline_at: moment(deadline_at).toDate(),
+        started_at: moment(started_at).format("YYYY-MM-DD hh:mm").toDate(),
+        finished_at: moment(started_at).format("YYYY-MM-DD hh:mm").toDate(),
+        deadline_at: moment(started_at).format("YYYY-MM-DD hh:mm").toDate(),
         point,
         is_finished,
         notification,
@@ -66,6 +66,7 @@ exports.addScedule = function (body) {
       resolve(data);
     } catch (err) {
       console.log(err);
+      console.log(body);
       reject(data);
     }
     //db에 넣기
