@@ -3,6 +3,11 @@ const app = express();
 const routes = require("./routes");
 
 require("dotenv").config();
+
+//cors
+const cors = require("cors");
+app.use(cors);
+
 const env = process.env;
 
 //middleware
