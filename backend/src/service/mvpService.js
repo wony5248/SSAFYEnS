@@ -49,7 +49,7 @@ exports.addScedule = function (body) {
         challendge_id,
       } = body;
 
-      await db["schedules"].create({
+      const data = await db["schedules"].create({
         user_id,
         date: moment(date).toDate(),
         title,
