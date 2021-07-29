@@ -1,12 +1,14 @@
 const express = require("express");
-const routes = require("./routes");
-require("dotenv").config();
-const { PORT } = process.env;
 const app = express();
+const routes = require("./routes");
+
+require("dotenv").config();
 
 //cors
 const cors = require("cors");
 app.use(cors);
+
+const env = process.env;
 
 //middleware
 app.use("/", routes);
@@ -17,7 +19,7 @@ app.use(express.json());
 // content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-app.listen(PORT || 8080, () => {
-  console.log(PORT || 8080);
+app.listen(env.NODEJS_PORT || 8080, () => {
+  console.log(env.NODEJS_PORT || 8080);
   console.log("welecome to nodejs server");
 });
