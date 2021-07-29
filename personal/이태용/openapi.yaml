@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: S05P12A109
-  description: 밑에 API부분만 봐주세요 읽으실때 복수형 구분에 유의하세요! 실수했을 수도 있으니 어? 얜 array인데 왜 복수형이 붙어있지나 vice versa 알려주세요 / 각 회원의 정보는 jwt를 통해 취득합니다 / response의 코드 등도 제대로 되어있지 않으니, 클라이언트측 parameter와 requestbody(JSON), 그리고 서버측 response JSON 위주로 확인바랍니다 / 200이 아닌 response는 굳이 필요한가요? / operationId는 CRUD를 따서 create, get, update, delete와 parameter를 사용하는 경우 By{parameter}를 뒤에 붙였습니다. (예외 checkGroupName) / 0729 논의해본 결과 schedule에 일, 주, 월, 년?을 넣어서 쉽게 접근할 수 있도록 바꿨습니다. 혹시 날짜와 관련된 내용인데 schedule을 참조(ref)하고 있지 않으면 제보바랍니다 / required 가 문제를 일으키는 것 같아 path parameter를 제외하고 required는 전부 주석처리했습니다
+  description: 밑에 API부분만 봐주세요 읽으실때 복수형 구분에 유의하세요! 실수했을 수도 있으니 어? 얜 array인데 왜 복수형이 붙어있지나 vice versa 알려주세요 / 각 회원의 정보는 jwt를 통해 취득합니다 / response의 코드 등도 제대로 되어있지 않으니, 클라이언트측 parameter와 requestbody(JSON), 그리고 서버측 response JSON 위주로 확인바랍니다 / 200이 아닌 response는 굳이 필요한가요? / operationId는 CRUD를 따서 create, get, update, delete와 parameter를 사용하는 경우 By{parameter}를 뒤에 붙였습니다. (예외 checkGroupName) / 0729 논의해본 결과 schedule에 일, 주, 월, 년?을 넣어서 쉽게 접근할 수 있도록 바꿨습니다. 혹시 날짜와 관련된 내용인데 schedule을 참조(ref)하고 있지 않으면 제보바랍니다 / required 가 문제를 일으키는 것 같아 path parameter를 제외하고 required는 전부 주석처리했습니다 / schedule에 expectstart_at 시작예정시각 속성을 추가했습니다
 #   termsOfService: http://swagger.io/terms/
 #   contact:
 #     email: apiteam@swagger.io
@@ -405,7 +405,7 @@ paths:
       - user
       summary: Get user info by user_id
       operationId: getUserById
-      description: 비밀번호도 포함되어서 전송되어야하는가? 아니면 수정할 것인가..
+      description: ''
       parameters:
       - in: path
         name: user_id
@@ -414,7 +414,29 @@ paths:
           $ref: "#/components/schemas/daily/properties/date"
       responses:
         200:
-          $ref: '#/components/responses/200user'
+          # $ref: '#/components/responses/200user'
+          # ======================================
+          description: OK
+          content:
+            application/json:
+              schema:
+                # $ref: '#/components/schemas/user'
+                # ======================================
+                allOf:
+                - $ref: '#/components/schemas/user'
+                - type: object
+                  properties:
+                    mytrophies:
+                      description: 회원이 소유한 트로피만 반환한다
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/mytrophy'
+                    mygroups:
+                      description: 회원이 속한 그룹만 반환한다
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/group'
+              
         400:
           description: Invalid user_id supplied
           content: {}
@@ -493,6 +515,8 @@ paths:
       description: |-
         This can only be done by the logged in user
         본인의 일간만 가져옴
+        기존 daily 모델 + 해당되는 모든 schedule도 포함하여 제공함
+        '정말 필요한 정보만 집어넣자는 결론에 따라, 와이어프레임에서 요구하는 정보로 제한함. 그래프 Y축은 일정의 시간으로 합의했으므로, finished_at - started_at 로 구할 수 있음. 그리고 그 값을 0~100의 값으로 변환도 가능해보임. 만약 필요하다면 백엔드에서 계산해서 줄 수도 있으므로 리뷰시 정해주세요.'
       operationId: getDailyByDate
       parameters:
       - in: path
@@ -506,10 +530,32 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/daily'
+                # $ref: '#/components/schemas/daily'
+                # ====================================
+                allOf:
+                - $ref: '#/components/schemas/daily'
+                - type: object
+                  description: 'response의 schema에만 표출됨'
+                  properties:
+                    schedules:
+                      type: array
+                      items:
+                        # $ref: '#/components/schemas/schedule'
+                        # ========================================
+                        type: object
+                        properties:
+                          schedule_id:
+                            $ref: '#/components/schemas/schedule/properties/schedule_id'
+                          title:
+                            $ref: '#/components/schemas/schedule/properties/title'
+                          started_at:
+                            $ref: '#/components/schemas/schedule/properties/started_at'
+                          finished_at:
+                            $ref: '#/components/schemas/schedule/properties/finished_at'
+                          time:
+                            type: integer                    
         400:
-          description: 400error
-          content: {}
+          $ref: '#/components/responses/400'
       security:
       - JWT: []
 
@@ -571,8 +617,7 @@ paths:
           description: Delete Comment on daily successful
           content: {}
         400:
-          description: 400error
-          content: {}
+          $ref: '#/components/responses/400'
       security:
       - JWT: []
           
@@ -584,6 +629,7 @@ paths:
       description: |-
         This can only be done by the logged in user
         본인의 주간만 가져옴
+        Y축이 각 일간 스케쥴의 개수인거죠?(시간의 합이 아니라...)
       operationId: getWeeklyByWeek
       parameters:
       - in: path
@@ -593,11 +639,28 @@ paths:
           $ref: "#/components/schemas/weekly/properties/week"
       responses:
         200:
-          description: Comment on daily successful
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/weekly'
+                # $ref: '#/components/schemas/weekly'
+                # ================================
+                allOf:
+                - $ref: '#/components/schemas/weekly'
+                - type: object
+                  properties:
+                    dailies:
+                      type: array
+                      items:
+                        # $ref: '#/components/schemas/daily'
+                        # =================================
+                        type: object
+                        properties:
+                          date:
+                            $ref: '#/components/schemas/daily/properties/date'
+                          cntschedule:
+                            type: integer
+                
         400:
           $ref: '#/components/responses/400'
       security:
@@ -620,23 +683,82 @@ paths:
           $ref: "#/components/schemas/monthly/properties/month"
       responses:
         200:
-          description: Comment on daily successful
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/monthly'
+                # $ref: '#/components/schemas/monthly'
+                # ====================================
+                allOf:
+                - $ref: '#/components/schemas/monthly'
+                - type: object
+                  properties:
+                    dailies:
+                      type: array
+                      items:
+                        # $ref: '#/components/schemas/weekly'
+                        # =================================
+                        type: object
+                        properties:
+                          week:
+                            $ref: '#/components/schemas/weekly/properties/week'
+                          cntdaily:
+                            type: integer
         400:
           $ref: '#/components/responses/400'
       security:
       - JWT: []
           
+  /yearly/{year}:
+    get:
+      tags:
+      - yearly
+      summary: Get yearly information
+      description: |-
+        This can only be done by the logged in user
+        본인의 연간만 가져옴
+      operationId: getYearlyByYear
+      parameters:
+      - in: path
+        name: year
+        required: true
+        schema:
+          $ref: "#/components/schemas/yearly/properties/year"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                # $ref: '#/components/schemas/yearly'
+                # ====================================
+                allOf:
+                - $ref: '#/components/schemas/yearly'
+                - type: object
+                  properties:
+                    monthlies:
+                      type: array
+                      items:
+                        # $ref: '#/components/schemas/monthly'
+                        # =================================
+                        type: object
+                        properties:
+                          month:
+                            $ref: '#/components/schemas/monthly/properties/month'
+                          cntdaily:
+                            type: integer
+        400:
+          $ref: '#/components/responses/400'
+      security:
+      - JWT: []
+      
   /group:
   
     post:
       tags:
       - group
       summary: create new group
-      description: /group/namevalidation 을 통해 그룹명이 겹치지 않는지 중복확인 된 경우에만 요청을 보내주세요
+      description: /group/namevalidation 을 통해 그룹명이 겹치지 않는지 중복확인 된 경우에만 요청을 보내주세요. 그룹을 생성한 사람이 자동적으로 첫 회원이자 관리자가 됩니다
       operationId: createGroup
       # https://swagger.io/docs/specification/describing-request-body/
       requestBody:
@@ -657,8 +779,7 @@ paths:
                   # format: text
       responses:
         200:
-          description: create group successful
-          content: {}
+          $ref: '#/components/responses/200group'
       security:
       - JWT: []
       
@@ -823,17 +944,18 @@ components:
       # required:
       # - user_id
       type: object
+      description: 회원의 트로피와 그룹 가입 정보를 모델에 넣을 경우 group>user>mygroup>group 재귀의 시작이라 제거했으며 get 요청으로 가져오는 경우에 포함되도록 설계했습니다
       properties:
         user_id:
           type: string
           format: varchar(20)
-          example: exampleuserid
+          example: honggildong1!
         name:
           type: string
-          example: 홍길동
+          example: 홍길동1!
         email:
           type: string
-          example: hong@korea.kr
+          example: hong1@korea.kr
         cellphone:
           type: string
           example: 010-1234-5678
@@ -850,17 +972,19 @@ components:
           description: |-
             true: admin,
             false: not admin,
+            이때의 admin은 사이트 전체를 의미함, groupadmin과 다름
           default: false
-        mytrophies:
-          description: 회원이 소유한 트로피만 반환한다
-          type: array
-          items:
-            $ref: '#/components/schemas/mytrophy'
-        mygroups:
-          description: 회원이 속한 그룹만 반환한다
-          type: array
-          items:
-            $ref: '#/components/schemas/group'
+        # 아래 array도 user에 필수적인 것 같지는 않은데,,, group>user>mygroup>group 재귀의 시작이라 제거
+        # mytrophies:
+        #   description: 회원이 소유한 트로피만 반환한다
+        #   type: array
+        #   items:
+        #     $ref: '#/components/schemas/mytrophy'
+        # mygroups:
+        #   description: 회원이 속한 그룹만 반환한다
+        #   type: array
+        #   items:
+        #     $ref: '#/components/schemas/group'
           
     daily:
       description: 하루 정리?하는 화면. JSON크기를 줄일 방법을 찾자.  / environment.created_at은 어느시점을 넣어놓을까
@@ -883,24 +1007,11 @@ components:
           description: 해당 날짜의 schedule이 update(post/put)될때마다 계산해준다
         avgenvironment:
           $ref: '#/components/schemas/environment'
-        schedules:
-          type: array
-          description: '정말 필요한 정보만 집어넣자는 결론에 따라, 와이어프레임에서 요구하는 정보로 제한함. 그래프 Y축은 일정의 시간으로 합의했으므로, finished_at - started_at 로 구할 수 있음. 그리고 그 값을 0~100의 값으로 변환도 가능해보임. 만약 필요하다면 백엔드에서 계산해서 줄 수도 있으므로 리뷰시 알려주세요.'
-          items:
-            type: object
-            properties:
-              schedule_id:
-                $ref: '#/components/schemas/schedule/properties/schedule_id'
-              title:
-                $ref: '#/components/schemas/schedule/properties/title'
-              started_at:
-                $ref: '#/components/schemas/schedule/properties/started_at'
-              finished_at:
-                $ref: '#/components/schemas/schedule/properties/finished_at'
-              # time:
-              #   type: integer
-                  
-                
+        # 모델이 schedule을 포함하는 것이 아니라 response에서 섞어서 보내주는걸로
+        # schedules:
+        #   type: array
+        #   items:
+        #     $ref: '#/components/schemas/schedule'
         
           
     weekly:
@@ -914,15 +1025,18 @@ components:
           # type: string
           # format: date
           # description: week를 date로 할지, 그냥 string형으로 할지, 기간을 잡을지...
+        user_id:
+          $ref: '#/components/schemas/user/properties/user_id'
         avgpoint:
           type: integer
-          description: 해당 날짜의 schedule이 update(post/put)될때마다 계산해준다
+          description: 해당 주의 schedule이 update(post/put)될때마다 계산해준다
         avgenvironment:
           $ref: '#/components/schemas/environment'
-        dailies:
-          type: array
-          items:
-            $ref: '#/components/schemas/daily'
+        # 모델이 daily를 포함하는 것이 아니라 response에서 섞어서 보내주는걸로
+        # dailies:
+        #   type: array
+        #   items:
+        #     $ref: '#/components/schemas/daily'
         
           
     monthly:
@@ -934,20 +1048,47 @@ components:
         month:
           type: string
           format: date
+        user_id:
+          $ref: '#/components/schemas/user/properties/user_id'
         avgpoint:
           type: integer
-          description: table 속성에 넣어놓을지(post/put되면 업데이트), 프론트엔드에서 weeklies 기준으로 계산하게 할지
+          description: 해당 월의 schedule이 update(post/put)될때마다 계산해준다
         avgenvironment:
           $ref: '#/components/schemas/environment'
-        weeklies:
-          type: array
-          items:
-            $ref: '#/components/schemas/weekly'
+        # 모델이 weekly를 포함하는 것이 아니라 response에서 섞어서 보내주는걸로
+        # weeklies:
+        #   type: array
+        #   items:
+        #     $ref: '#/components/schemas/weekly'
       
+    yearly:
+      description: 연간 내용을 보여준다 / environment.created_at은 어느시점을 넣어놓을까
+      # required:
+      # - year
+      type: object
+      properties:
+        year:
+          type: string
+          format: year
+        user_id:
+          $ref: '#/components/schemas/user/properties/user_id'
+        avgpoint:
+          type: integer
+          description: 해당 년의 schedule이 update(post/put)될때마다 계산해준다
+        avgenvironment:
+          $ref: '#/components/schemas/environment'
+        # 모델이 monthly를 포함하는 것이 아니라 response에서 섞어서 보내주는걸로
+        # monthlies:
+        #   type: array
+        #   items:
+        #     $ref: '#/components/schemas/monthly'
+        
+        
     schedule:
       # required:
       # - schedule_id
       type: object
+      description: '시작예정/마감예정/실제시작/실제완료'
       properties:
         schedule_id:
           type: integer
@@ -978,9 +1119,12 @@ components:
         context:
           type: string
           format: text
-        started_at:
+        expectstart_at:
           type: string
           description: 설정 시작시간
+        started_at:
+          type: string
+          description: 실제 시작시간
           format: date-time
         finished_at:
           type: string
@@ -1163,6 +1307,12 @@ components:
           schema:
             $ref: '#/components/schemas/schedule'
     
+    200group:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/group'
     
             
     400:
@@ -1207,16 +1357,16 @@ components:
       name: access_token
       in: header
       
-    schedulestore_auth:
-      type: oauth2
-      flows:
-        implicit:
-          authorizationUrl: http://schedulestore.swagger.io/oauth/dialog
-          scopes:
-            write:schedules: modify schedules in your account
-            read:schedules: read your schedules
+    # schedulestore_auth:
+    #   type: oauth2
+    #   flows:
+    #     implicit:
+    #       authorizationUrl: http://schedulestore.swagger.io/oauth/dialog
+    #       scopes:
+    #         write:schedules: modify schedules in your account
+    #         read:schedules: read your schedules
             
-    api_key:
-      type: apiKey
-      name: api_key
-      in: header
+    # api_key:
+    #   type: apiKey
+    #   name: api_key
+    #   in: header
