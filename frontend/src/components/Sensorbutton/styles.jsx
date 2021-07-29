@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const Sensorbtn = styled.div`
   width: auto;
-  height: 140px;
+  height: 40%;
   color: #a3cca3;
   background-color: white;
   padding: 0px;

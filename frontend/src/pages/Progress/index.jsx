@@ -12,7 +12,7 @@ const Progresstitle = styled.div`
   flex-wrap: no-wrap;
   justify-content: space-around;
   width: auto;
-  height: 88px;
+  height: 30%;
   color: #a3cca3;
   background-color: #a3cca3;
   // margin: 14px 12px;
@@ -20,9 +20,10 @@ const Progresstitle = styled.div`
 `;
 const Progresstitlenamecon = styled.div`
   width: auto;
-  height: auto;
+  height: 30%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   color: white;
   background-color: #a3cca3;
   margin: 0px 16px;
@@ -30,18 +31,18 @@ const Progresstitlenamecon = styled.div`
 `;
 const Progressgoal = styled.div`
   width: auto;
-  height: auto;
+  height: 30%;
   color: white;
-  background-color: #a3cca3;
+  display: flex;
+  align-items: center;
   margin: 0px 16px;
   padding-top: 4px;
 `;
 
 const Progresstitlename = styled.div`
   width: auto;
-  height: auto;
+  height: 30%;
   color: white;
-  background-color: #a3cca3;
   padding-top: 4px;
 `;
 
@@ -49,7 +50,6 @@ const Progresstitletime = styled.div`
   width: auto;
   height: auto;
   color: white;
-  background-color: #a3cca3;
   padding-top: 4px;
 `;
 
@@ -58,7 +58,7 @@ const Progresscontentcon = styled.div`
   border-radius: 4px;
   flex-wrap: nowrap;
   width: auto;
-  height: auto;
+  height: 60%;
   color: #a3cca3;
   background-color: #a3cca3;
   margin-top: 14px;
@@ -67,8 +67,10 @@ const Progresscontentcon = styled.div`
 
 const Progresscontenttitle = styled.div`
   width: auto;
-  height: auto;
+  height: 10%;
   color: white;
+  display:flex;
+  align-items: center;
   background-color: #a3cca3;
   padding: 0px;
   margin-bottom: 14px;
@@ -77,12 +79,14 @@ const Progresscontenttitle = styled.div`
 const Progresscontent = styled.div`
   overflow: auto;
   width: auto;
-  height: 125px;
+  height: 80%;
   color: #a3cca3;
   background-color: white;
   padding: 4px;
 `;
-
+const Fulldiv = styled.div`
+  height: 100%;
+`;
 const Progresslayout = () => {
   const [loading, setLoading] = useState(false);
   const [itemList, setItemList] = useState([]);
@@ -171,7 +175,7 @@ const Progresslayout = () => {
   return (
     <Progresscontainer>
       {istrue ? (
-        <div>
+        <Fulldiv>
           <Progresstitle>
             <Progresstitlenamecon>
               <Progresstitlename>{title}</Progresstitlename>
@@ -186,9 +190,9 @@ const Progresslayout = () => {
             <Progresscontenttitle>일정 내용</Progresscontenttitle>
             <Progresscontent>{content}</Progresscontent>
           </Progresscontentcon>
-        </div>
+        </Fulldiv>
       ) : (
-        <div>현재 일정이 없습니다.</div>
+        <Fulldiv>현재 일정이 없습니다.</Fulldiv>
       )}
     </Progresscontainer>
   );

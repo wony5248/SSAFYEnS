@@ -6,10 +6,10 @@ import Sensorbtn from "../../components/Sensorbutton"
 import Date from "../../components/Clock"
 import Sensor from "../../components/Sensor"
 import styled from "styled-components";
-
+import Manner from "../../components/mannerbutton"
 const Datebtn = styled.div`
-  width: auto;
-  height: 101px;
+  width: 88%;
+  height: 40%;
   color: #a3cca3;
   background-color: white;
   padding: 0px 11px;

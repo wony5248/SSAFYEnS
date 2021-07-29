@@ -9,6 +9,11 @@ import OpacityIcon from '@material-ui/icons/Opacity';
 import WbIncandescentIcon from '@material-ui/icons/WbIncandescent';
 import SettingsVoiceIcon from '@material-ui/icons/SettingsVoice';
 
+const Fulldiv = styled.div`
+  height: 100%;
+  width: 100%;
+`;
+
 const Sensor = () => {
   const [temp, setTemp] = useState("");
   const [humid, setHumid] = useState("");
@@ -16,7 +21,7 @@ const Sensor = () => {
   const [light, setLight] = useState("");
   async function loadSensor() {
     const result = await axios
-      .get("http://127.0.0.1:3000/test/sensor")
+      .get("http://127.0.0.1:4500/test/sensor")
       .then(({ data }) => {
         setTemp(data.temp);
         setNoise(data.noise);
@@ -34,12 +39,12 @@ const Sensor = () => {
     }, 10000);
   }, []);
   return (
-    <div>
+    <Fulldiv>
       <Sensorbtn><Thermometer></Thermometer>온도: {temp}℃</Sensorbtn>
       <Sensorbtn><OpacityIcon></OpacityIcon>습도: {humid}％</Sensorbtn>
       <Sensorbtn><SettingsVoiceIcon></SettingsVoiceIcon>소음: {noise}dB</Sensorbtn>
       <Sensorbtn><WbIncandescentIcon></WbIncandescentIcon>조도: {light}lx</Sensorbtn>
-    </div>
+    </Fulldiv>
   );
 };
 export default Sensor;

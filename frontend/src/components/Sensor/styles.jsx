@@ -1,8 +1,9 @@
 import styled from "styled-components";
 
 const Sensorbtn = styled.div`
-  width: 118px;
-  height: 33px;
+  width: 100%;
+  height: 25%;
+  font-size: 24px;
   color: #a3cca3;
   background-color: white;
   display: flex;

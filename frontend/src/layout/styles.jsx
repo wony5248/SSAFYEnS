@@ -2,7 +2,8 @@ import styled from "styled-components";
 
 const Mainlayout = styled.div`
   display: flex;
-  width: 585px;
+  width: 100%;
+  height: 100%;
   color: #a3cca3;
   background-color: white;
   margin: 0px;

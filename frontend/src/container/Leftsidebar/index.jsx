@@ -3,14 +3,16 @@ import Leftsidecontainer from "./styles";
 import styled from 'styled-components';
 
 const Leftsidebtn = styled.button`
-  width: 90px;
-  height: 81px;
+  width: 100%;
+  height: 25%;
+  display: flex;
+  justify-content: center;
   color: #A3CCA3;
   background-color: white;
   padding: 0 15px;
   display: flex;
   align-items: center;
-  align-content: center;
+  text-align: center;
   margin: 0px;
   border: 1px solid #A3CCA3;
   cursor: pointer;

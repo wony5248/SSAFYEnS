@@ -23,6 +23,7 @@ const theme = createTheme({
       '@global': {
         body: {
           backgroundColor: 'white',
+          height: "100%"
         },
       },
     },

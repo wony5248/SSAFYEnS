@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const Rightsidecontainer = styled.div`
   display: flex-row;
-  width: 120px;
+  width: 16%;
   color: #a3cca3;
   background-color: white;
   margin: 0px;
