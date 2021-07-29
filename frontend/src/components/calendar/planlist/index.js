@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useLocation, useHistory} from 'react-router-dom';
 import Wrapper from './styles';
 import {Grid, IconButton, Button, Box, withStyles } from '@material-ui/core';
@@ -6,10 +6,15 @@ import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import Rating from '@material-ui/lab/Rating';
 import moment from 'moment';
+import {scheduleAPI} from '../../../utils/axios';
 
 const PlanList = () => {
     let history = useHistory();
     const location = useLocation();
+    const [query, setQuery] = useState('react');
+    const [todayPlan, setTodayPlan] = useState({});
+    let data = [];
+
     const StyledRating = withStyles({
         iconFilled: {
             color: '#A3CCA3',
@@ -29,26 +34,42 @@ const PlanList = () => {
 
     let finish = true;
 
+    useEffect(()=>{
+        let completed = false;
+        
+        async function getMonthlySchedule(){
+            const result = await scheduleAPI.getMonthly(today.format('YYYY'), today.format('MM'));
+            data = result.data;
+            // console.log(data);
+            for(let i = 0; i < data.length;i++) {   
+                if (today.format('MM-DD') === moment(data[i].started_at).format('MM-DD')){
+                    setTodayPlan(data[i]);
+                    console.log(data[i]);
+                }
+            }
+        }
+        getMonthlySchedule();
+        return ()=>{
+            completed = true;
+        };
+    }, [query]);
+
+
     const planListArr = () =>{
         let result = [];
-        // 임시 값
-        let listCnt = 4;
-        let startHour = 11;
-        let startMin = 30;
-        let endHour = 15;
-        let endMin = 30;
-        let planTitle = "아이디어 회의";
+        
         let rating = 4;
 
-        for (let i = 0; i <listCnt; i++){
+        for (let i = 0; i <1; i++){
             result = result.concat(
                 <Grid Contatiner style={{borderBottom:'1px solid #A3CCA3', width:'100%', height:'150px'}}>
                     {/* title */}
                     <div style={{display: 'flex', margin:'10px'}}>
                         <div  style={{fontWeight:'bold', marginRight:'10px'}}>
-                            {planTitle}
+                            {/* {todayPlan['title']} */}
+                            프로젝트 발표
                         </div>
-                        {finish?(
+                        {todayPlan['is_finished']?(
                             <div style={{background:'#A3CCA3', borderRadius:45, width:'45px', textAlign:'center', color:'#ffffff'}}>
                                 완료
                             </div>
@@ -56,11 +77,12 @@ const PlanList = () => {
                     </div>
                     {/* body */}
                     <Grid item style={{margin:'10px', height:'50px', marginTop:'20px', marginBottom:'-10px'}}>
-                        <div>{startHour} : {startMin} 시작 {endHour} : {endMin} 마감</div>
+                        {/* <div>{moment(todayPlan['started_at'])} : {moment(todayPlan['started_at']).format('mm')} 시작 {moment(todayPlan['deadline_at']).format('HH')} : {moment(todayPlan['deadline_at']).format('mm')} 마감</div> */}
+                        <div>13 : 00 시작 17 : 00 마감</div>
                     </Grid>
                     {/* footer */}
                     <div style={{margin:'10px', display: 'flex', justifyContent:'space-between', width:'100%'}}>
-                        {finish?(
+                        {todayPlan['is_finished']?(
                             <div style={{ display: 'flex'}}>
                                 <div style={{marginTop:'6px', marginRight:'10px'}}>평점</div>
                                 <div style={{marginTop:'-2px'}}>
@@ -78,13 +100,13 @@ const PlanList = () => {
                                 state:{
                                     startMonth: today.format('MM') , 
                                     startDay: today.format('DD'),
-                                    startHour : startHour,
-                                    startMin : startMin,
-                                    endHour : endHour,
+                                    startHour : 1,
+                                    startMin : 10,
+                                    endHour : 1,
                                     endMonth:today.format('MM') ,
                                     endDay: today.format('DD'),
-                                    endMin : endMin,
-                                    title:planTitle,
+                                    endMin : 10,
+                                    title:moment(todayPlan['title']),
                                     rating:rating
                                 }
                             })}}>
