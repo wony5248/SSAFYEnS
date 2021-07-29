@@ -75,9 +75,8 @@ exports.addScedule = function (body) {
 exports.getSchedule = function (date) {
   return new Promise(async (resolve, reject) => {
     try {
-      const standard1 = moment(date)
-        .toDate();
-        const standard2 = moment(date)
+      const standard1 = moment(date).toDate();
+      const standard2 = moment(date)
         .add(1, "months")
         .subtract(1, "days")
         .toDate();
@@ -94,6 +93,7 @@ exports.getSchedule = function (date) {
             },
           ],
         },
+      });
       console.log(standard1, standard2);
       resolve(data);
     } catch (error) {
