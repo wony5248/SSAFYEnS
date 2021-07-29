@@ -33,7 +33,6 @@ const theme = createTheme({
 
 function App() {
   return (
-    <MuiThemeProvider theme={theme}>
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={Home} />
@@ -46,7 +45,6 @@ function App() {
             <Redirect to="/" />
           </Switch>
         </BrowserRouter>
-      </MuiThemeProvider>
   );
 }
 

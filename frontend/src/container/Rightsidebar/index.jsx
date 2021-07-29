@@ -10,8 +10,6 @@ import Manner from "../../components/mannerbutton"
 const Datebtn = styled.div`
   width: auto;
   height: 40%;
-  color: #a3cca3;
-  background-color: white;
   display: flex;
   align-items: center;
   justify-content: space-around;

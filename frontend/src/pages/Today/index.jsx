@@ -19,6 +19,7 @@ const Todaycontainer = styled.div`
 `;
 const Todaytitle = styled.div`
   display: flex-row;
+  font-size: 20px;
   flex-wrap: no-wrap;
   border-radius: 4px;
   justify-content: space-around;

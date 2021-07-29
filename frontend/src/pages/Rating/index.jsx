@@ -17,6 +17,7 @@ const StyledRating = withStyles({
 const Starttime = styled1.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   border-radius: 4px;
   width: auto;
   height: 5%;
@@ -30,6 +31,7 @@ const Starttime = styled1.div`
 const Endtime = styled1.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   border-radius: 4px;
   width: auto;
   height: 5%;
@@ -60,6 +62,7 @@ const Ratingcontent = styled1.div`
   height: 76%;
   color: black;
   background-color: white;
+  font-size: 20px;
   overflow: auto;
   margin-top: 12px;
   padding-top: 5px;
@@ -74,7 +77,6 @@ const Ratingquestiontitle = styled1.div`
 `;
 const Ratingquestion = styled1.div`
   width: auto;
-  font-size: 12px;
   margin-bottom:5px;
   height: auto;
 
@@ -111,6 +113,7 @@ const Ratingstarcon = styled1.div`
 
 const Ratingcon = styled1.div`
   width: auto;
+  font-size: 20px;
   height: 100%;
   display: flex-row;
   flex-wrap: nowrap;
@@ -126,6 +129,7 @@ const Changestarttext = styled1.div`
   width: auto;
   height: auto;
   color: white;
+  align-items: center;
   background-color: #a3cca3;
 `;
 
@@ -181,6 +185,7 @@ const Ratinglayout = (props) => {
           <StyledRating
             name="customized-empty"
             value={value}
+            size= "large"
             precision={0.5}
             onChange={(event, newValue) => {
               setValue(newValue);

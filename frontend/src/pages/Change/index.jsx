@@ -16,6 +16,7 @@ const Changecontainer = styled.div`
   padding-right: 12px;
   padding-left: 12px;
   padding-bot: 14px;
+  font-size: 20px;
 `;
 const Changetitle = styled.div`
   display: flex-row;

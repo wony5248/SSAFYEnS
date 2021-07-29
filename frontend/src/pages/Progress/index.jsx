@@ -36,6 +36,7 @@ const Progressgoal = styled.div`
   display: flex;
   align-items: center;
   margin: 0px 16px;
+  font-size: 20px;
   padding-top: 4px;
 `;
 
@@ -43,6 +44,7 @@ const Progresstitlename = styled.div`
   width: auto;
   height: 30%;
   color: white;
+  font-size: 20px;
   padding-top: 4px;
 `;
 
@@ -50,6 +52,7 @@ const Progresstitletime = styled.div`
   width: auto;
   height: auto;
   color: white;
+  font-size: 20px;
   padding-top: 4px;
 `;
 
@@ -74,10 +77,12 @@ const Progresscontenttitle = styled.div`
   background-color: #a3cca3;
   padding: 0px;
   margin-bottom: 14px;
+  font-size: 20px;
 `;
 
 const Progresscontent = styled.div`
   overflow: auto;
+  font-size: 20px;
   width: auto;
   height: 80%;
   color: #a3cca3;
