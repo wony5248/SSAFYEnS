@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const Mannerbtn = styled.button`
   width: 100%;
-  height: 19.4%;
+  height: 19.7%;
   color: #a3cca3;
   background-color: white;
   padding: 0 8px;
@@ -10,6 +10,7 @@ const Mannerbtn = styled.button`
   align-items: center;
   align-content: center;
   margin: 0px;
+  font-size: 12px;
   border: 1px solid #a3cca3;
   &:active {
     background-color: #69a569;

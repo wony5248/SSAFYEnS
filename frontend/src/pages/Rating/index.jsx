@@ -19,7 +19,7 @@ const Starttime = styled1.div`
   justify-content: space-between;
   border-radius: 4px;
   width: auto;
-  height: auto;
+  height: 5%;
   color: white;
   background-color: #a3cca3;
   margin: 12px 0px;
@@ -32,7 +32,7 @@ const Endtime = styled1.div`
   justify-content: space-between;
   border-radius: 4px;
   width: auto;
-  height: auto;
+  height: 5%;
   color: white;
   background-color: #a3cca3;
   margin: 12px 0px;
@@ -45,7 +45,7 @@ const Ratingbody = styled1.div`
   justify-content: space-between;
   border-radius: 4px;
   width: auto;
-  height: 206px;
+  height: 80%;
   color: white;
   background-color: #a3cca3;
   margin-top: 12px;
@@ -57,7 +57,7 @@ const Ratingcontent = styled1.div`
   display: flex-row;
   border-radius: 4px;
   width: auto;
-  height: 150px;
+  height: 76%;
   color: black;
   background-color: white;
   overflow: auto;
@@ -102,16 +102,16 @@ const Ratingstarcon = styled1.div`
   justify-content: space-between;
   border-radius: 4px;
   width: auto;
-  height: 30px;
+  height: auto;
   color: white;
   background-color: #a3cca3;
-  margin-top: 4px;
+  margin-top: 4%;
   padding: 4px;
 `;
 
 const Ratingcon = styled1.div`
   width: auto;
-  height: 310px;
+  height: 100%;
   display: flex-row;
   flex-wrap: nowrap;
   color: #a3cca3;

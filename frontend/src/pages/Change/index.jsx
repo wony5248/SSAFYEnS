@@ -7,9 +7,10 @@ import axios from "axios"
 const Changecontainer = styled.div`
   overflow: auto;
   width: auto;
-  height: 310px;
+  height: 98.8%;
   color: #a3cca3;
   background-color: white;
+  border: 1px solid #a3cca3;
   margin: 0px;
   padding-top: 14px;
   padding-right: 12px;
@@ -19,10 +20,10 @@ const Changecontainer = styled.div`
 const Changetitle = styled.div`
   display: flex-row;
   flex-wrap: no-wrap;
-  justify-content: space-around;
   border-radius: 4px;
+  justify-content: space-around;
   width: auto;
-  height: 88px;
+  height: 20%;
   color: #a3cca3;
   background-color: #a3cca3;
   margin-bottom: 14px;
@@ -30,9 +31,10 @@ const Changetitle = styled.div`
 `;
 const Changetitlenamecon = styled.div`
   width: auto;
-  height: auto;
+  height: 20%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   color: white;
   background-color: #a3cca3;
   margin: 0px 16px;
@@ -40,7 +42,9 @@ const Changetitlenamecon = styled.div`
 `;
 const Changegoal = styled.div`
   width: auto;
-  height: auto;
+  height: 20%;
+  display: flex;
+  align-items: center;
   color: white;
   background-color: #a3cca3;
   margin: 0px 16px;
@@ -49,15 +53,17 @@ const Changegoal = styled.div`
 
 const Changetitlename = styled.div`
   width: auto;
-  height: auto;
+  height: 100%;
   color: white;
+  display: flex;
+  align-items: center;
   background-color: #a3cca3;
   padding-top: 4px;
 `;
 
 const Changetitletime = styled.div`
   width: auto;
-  height: auto;
+  height: 100%;
   color: white;
   background-color: #a3cca3;
   padding-top: 4px;
@@ -65,9 +71,10 @@ const Changetitletime = styled.div`
 
 const Changechangecon = styled.div`
   width: auto;
-  height: auto;
+  height: 40%;
   display: flex;
   justify-content: space-between;
+  align-items:center;
   color: white;
   background-color: #a3cca3;
   margin: 0px 16px;
@@ -84,10 +91,13 @@ const Changecontenttitle = styled.div`
 
 const Changechangebtn = styled.button`
   width: 78px;
-  height: auto;
+  height: 60%;
   border-radius: 8px;
   border: 0px;
   color: white;
+  display: flex;
+  align-items:center;
+  justify-content: center;
   background-color: #69a569;
   padding: 4px;
 `;

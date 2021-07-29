@@ -13,6 +13,7 @@ const Leftsidebtn = styled.button`
   display: flex;
   align-items: center;
   text-align: center;
+  font-size: 12px;
   margin: 0px;
   border: 1px solid #A3CCA3;
   cursor: pointer;

@@ -4,7 +4,7 @@ const Centerlayout = styled.div`
   display: flex-row;
   flex-wrap: nowrap;
   width: 68%;
-  height: 99.7%;
+  height: 99.9%;
   color: #a3cca3;
   background-color: white;
   align-items: center;

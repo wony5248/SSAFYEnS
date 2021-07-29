@@ -8,13 +8,13 @@ import Sensor from "../../components/Sensor"
 import styled from "styled-components";
 import Manner from "../../components/mannerbutton"
 const Datebtn = styled.div`
-  width: 88%;
+  width: auto;
   height: 40%;
   color: #a3cca3;
   background-color: white;
-  padding: 0px 11px;
   display: flex;
   align-items: center;
+  justify-content: space-around;
   align-content: center;
   margin: 0px;
   border: 1px solid #a3cca3;
