@@ -1,106 +1,41 @@
 const router = require("express").Router();
-const Sequelize = require("sequelize");
 
-const moment = require("moment");
-const op = Sequelize.Op;
-const db = require("../../models");
-const { json } = require("sequelize");
+const mvp = require("../../service/mvpService");
+//user
 
-router.get("/getDaily/:year/:month/:day", async (req, res) => {
-  try {
-    const { year, month, day } = req.params;
-    const today = moment(`${year}-${month}-${day}`).toDate();
-    const data = await db["schedules"].findAll({
-      where: {
-        [op.and]: [
-          {
-            started_at: {
-              [op.lte]: today,
-            },
-          },
-          {
-            finished_at: {
-              [op.gte]: today,
-            },
-          },
-        ],
-      },
+router.get("/getDaily/:date", (req, res) => {
+  mvp
+    .getDaily(req.params.date)
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(400).send("error");
     });
-    res.status(200).send(data);
-  } catch (err) {
-    console.log(err);
-    res.status(400).send("error");
-  }
-});
-router.post("/addSchedule", async (req, res) => {
-  //스케쥴 값 입력받기
-  // const {schedule_id, user_id, date, title, context, started, finished_at, deadline_at, point, is_finished, notification, noti_extend, challendge_id} = req
-  try {
-    const {
-      user_id,
-      date,
-      title,
-      context,
-      started_at,
-      finisted_at,
-      deadline_at,
-      point,
-      is_finished,
-      notification,
-      noti_extend,
-      challendge_id,
-    } = req.body;
-
-    await db["schedules"].create({
-      user_id,
-      date: moment(date).toDate(),
-      title,
-      context,
-      started_at: moment(started_at).toDate(),
-      finished_at: moment(finisted_at).toDate(),
-      deadline_at: moment(deadline_at).toDate(),
-      point,
-      is_finished,
-      notification,
-      noti_extend,
-      challendge_id,
-    });
-    return res.status(200).send("ok");
-  } catch (err) {
-    console.log(err);
-    return res.status(400).send("error");
-  }
-  //db에 넣기
 });
 
-router.get("/getSchedule/:year/:month", async (req, res) => {
-  try {
-    const { month, year } = req.params;
-    const standard1 = moment(year + "-" + month)
-      .subtract(1, "months")
-      .add(1, "days")
-      .toDate();
-    const standard2 = moment(year + "-" + month).toDate();
-    const data = await db["schedules"].findAll({
-      where: {
-        [op.or]: [
-          {
-            finished_at: {
-              [op.gt]: standard1,
-            },
-            started_at: {
-              [op.lt]: standard2,
-            },
-          },
-        ],
-      },
+router.post("/addSchedule", (req, res) => {
+  mvp
+    .addScedule(req.body)
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((error) => {
+      res.status(400).send("error");
     });
-    date = 1;
-    console.log(standard1, standard2);
-    return res.status(200).send(data);
-  } catch (err) {
-    console.log(err);
-    return res.status(400).send("error");
-  }
 });
+
+router.get("/getMonthly/:year/:month", (req, res) => {
+  const { year, month } = req.params;
+  mvp
+    .getSchedule(year + "-" + month)
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((error) => {
+      res.status(400).send("error");
+    });
+});
+
 module.exports = router;
