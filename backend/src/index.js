@@ -5,7 +5,7 @@ const routes = require("./routes");
 require("dotenv").config();
 
 //cors
-app.use(require("./config/cors")());
+app.use(require("./config/cors.js"));
 
 const env = process.env;
 
