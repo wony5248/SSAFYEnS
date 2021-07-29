@@ -7,7 +7,7 @@ import styled from "styled-components";
 const Todaycontainer = styled.div`
   overflow: auto;
   width: auto;
-  height: 98.8%;
+  height: 98.2%;
   color: #a3cca3;
   background-color: white;
   border: 1px solid #a3cca3;

@@ -58,7 +58,7 @@ const Progresscontentcon = styled.div`
   border-radius: 4px;
   flex-wrap: nowrap;
   width: auto;
-  height: 60%;
+  height: 59%;
   color: #a3cca3;
   background-color: #a3cca3;
   margin-top: 14px;

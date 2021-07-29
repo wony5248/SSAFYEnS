@@ -20,7 +20,7 @@ const Date = () => {
         <Clockdiv format={"YYYY.MM.DD"} ticking={true} timezone={"Asia/Seoul"} />
       </Logodiv>
       <Logodiv>
-        <Clockdiv format={"HH시MM분SS초"} ticking={true} timezone={"Asia/Seoul"} />
+        <Clockdiv format={"HH시mm분ss초"} ticking={true} timezone={"Asia/Seoul"} />
       </Logodiv>
     </Datediv>
   );
