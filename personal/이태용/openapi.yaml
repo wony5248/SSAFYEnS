@@ -767,6 +767,48 @@ paths:
       security:
       - JWT: []
       
+  /group/search:
+  
+    post:
+      tags:
+      - group
+      summary: search group
+      operationId: searchGroup
+      description: 검색 내용을 보내면 해당되는 그룹들을 반환한다. url경로로 한글, 특수문자도 전달되면 그냥 get, query parameter로 받아도 될 것 같은데 확인 필요.
+      requestBody:
+        description: "asdf"
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                q:
+                  type: string
+      # parameters:
+      # - in: query
+      #   required: true
+      #   name: q
+      #   schema:
+      #     type: string
+      responses:
+        200:
+          description: groups found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/group'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        404:
+          $ref: '#/components/responses/404'
+      security:
+      - JWT: []          
+      
+      
 components:
 
   schemas:
