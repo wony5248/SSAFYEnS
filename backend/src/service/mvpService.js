@@ -40,7 +40,7 @@ exports.addScedule = function (body) {
         title,
         context,
         started_at,
-        finisted_at,
+        finished_at,
         deadline_at,
         point,
         is_finished,
