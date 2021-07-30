@@ -23,7 +23,7 @@ const PlanList = () => {
 
     const [getMoment, setMoment] = useState(moment());
 
-    let today = moment(`${location.state.month}-${location.state.day}`);
+    let today = moment(`${getMoment.format('YYYY')}-${location.state.month}-${location.state.day}`);
     const previousDay = () =>{
         setMoment(getMoment.clone().subtract(1, 'day'));
     };
@@ -32,19 +32,15 @@ const PlanList = () => {
         setMoment(getMoment.clone().add(1, 'day'));
     };
 
-    let finish = true;
-
     useEffect(()=>{
         let completed = false;
         
         async function getMonthlySchedule(){
             const result = await scheduleAPI.getMonthly(today.format('YYYY'), today.format('MM'));
             data = result.data;
-            // console.log(data);
             for(let i = 0; i < data.length;i++) {   
                 if (today.format('MM-DD') === moment(data[i].started_at).format('MM-DD')){
                     setTodayPlan(data[i]);
-                    console.log(data[i]);
                 }
             }
         }
@@ -66,8 +62,8 @@ const PlanList = () => {
                     {/* title */}
                     <div style={{display: 'flex', margin:'10px'}}>
                         <div  style={{fontWeight:'bold', marginRight:'10px'}}>
-                            {/* {todayPlan['title']} */}
-                            프로젝트 발표
+                            {todayPlan['title']}
+                            {/* 프로젝트 발표 */}
                         </div>
                         {todayPlan['is_finished']?(
                             <div style={{background:'#A3CCA3', borderRadius:45, width:'45px', textAlign:'center', color:'#ffffff'}}>
@@ -77,8 +73,7 @@ const PlanList = () => {
                     </div>
                     {/* body */}
                     <Grid item style={{margin:'10px', height:'50px', marginTop:'20px', marginBottom:'-10px'}}>
-                        {/* <div>{moment(todayPlan['started_at'])} : {moment(todayPlan['started_at']).format('mm')} 시작 {moment(todayPlan['deadline_at']).format('HH')} : {moment(todayPlan['deadline_at']).format('mm')} 마감</div> */}
-                        <div>13 : 00 시작 17 : 00 마감</div>
+                        <div>{moment(todayPlan['started_at']).format('hh')} : {moment(todayPlan['started_at']).format('mm')} 시작 {moment(todayPlan['deadline_at']).format('HH')} : {moment(todayPlan['deadline_at']).format('mm')} 마감</div>
                     </Grid>
                     {/* footer */}
                     <div style={{margin:'10px', display: 'flex', justifyContent:'space-between', width:'100%'}}>
@@ -100,12 +95,12 @@ const PlanList = () => {
                                 state:{
                                     startMonth: today.format('MM') , 
                                     startDay: today.format('DD'),
-                                    startHour : 1,
-                                    startMin : 10,
-                                    endHour : 1,
+                                    startHour : moment(todayPlan['started_at']).format('hh'),
+                                    startMin : moment(todayPlan['started_at']).format('mm'),
+                                    endHour : moment(todayPlan['deadline_at']).format('hh'),
                                     endMonth:today.format('MM') ,
                                     endDay: today.format('DD'),
-                                    endMin : 10,
+                                    endMin : moment(todayPlan['deadline_at']).format('mm'),
                                     title:moment(todayPlan['title']),
                                     rating:rating
                                 }

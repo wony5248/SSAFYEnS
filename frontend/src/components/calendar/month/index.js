@@ -23,7 +23,7 @@ const Month = () =>{
         async function getMonthlySchedule(){
             const result = await scheduleAPI.getMonthly(today.format('YYYY'), today.format('MM'));
             data = result.data;
-            // console.log(data);
+            console.log(data);
             for(let i = 0; i < data.length;i++) {   
                 if (today.format('MM-DD') === moment(data[i].started_at).format('MM-DD')){
                     setTodayPlan(data[i]);
