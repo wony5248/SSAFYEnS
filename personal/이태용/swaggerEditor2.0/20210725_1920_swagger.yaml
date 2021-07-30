@@ -1,0 +1,700 @@
+swagger: "2.0"
+info:
+  description: "여기 적혀있는건 예시입니다. 밑에 API부분만 봐주세요"
+  version: "1.0.0"
+  title: "S05P12A109"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "schedulestore.swagger.io"
+basePath: "/basePath"
+tags:
+- name: "schedule"
+  description: "Everything about your schedules"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+- name: "store"
+  description: "Access to Schedules"
+- name: "user"
+  description: "Operations about user"
+- name: "daily"
+  description: "일간의 일정을 정리하는 내용입니다."
+  externalDocs:
+    description: "Find out more about our store"
+    url: "http://swagger.io"
+schemes:
+- "https"
+- "http"
+paths:
+  /schedule:
+    post:
+      tags:
+      - "schedule"
+      summary: "Add a new schedule to user"
+      description: "Form으로 받을지 JSON으로 받을지 결정 필요."
+      operationId: "addSchedule"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Schedule object that needs to be added to the user"
+        required: true
+        schema:
+          $ref: "#/definitions/schedules"
+      responses:
+        "200":
+          description: "successful operation: 해당 일정의 정보를 돌려줌"
+          schema:
+            items:
+              $ref: "#/definitions/schedules"
+        "405":
+          description: "Invalid input"
+      security:
+      - JWT: []
+  /schedule/findByStatus:
+    get:
+      tags:
+      - "schedule"
+      summary: "Finds Schedules by status"
+      description: "Multiple status values can be provided with comma separated strings"
+      operationId: "findSchedulesByStatus"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "status"
+        in: "query"
+        description: "Status values that need to be considered for filter"
+        required: true
+        type: "array"
+        items:
+          type: "string"
+          enum:
+          - "available"
+          - "pending"
+          - "sold"
+          default: "available"
+        collectionFormat: "multi"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/schedules"
+        "400":
+          description: "Invalid status value"
+      security:
+      - schedulestore_auth:
+        - "write:schedules"
+        - "read:schedules"
+  /schedule/findByTags:
+    get:
+      tags:
+      - "schedule"
+      summary: "Finds Schedules by tags"
+      description: "Muliple tags can be provided with comma separated strings. Use         tag1, tag2, tag3 for testing."
+      operationId: "findSchedulesByTags"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "tags"
+        in: "query"
+        description: "Tags to filter by"
+        required: true
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/schedules"
+        "400":
+          description: "Invalid tag value"
+      security:
+      - schedulestore_auth:
+        - "write:schedules"
+        - "read:schedules"
+      deprecated: true
+  /schedule/{schedule_id}:
+    get:
+      tags:
+      - "schedule"
+      summary: "Find schedule by ID"
+      description: "Returns a single schedule"
+      operationId: "getScheduleById"
+      produces:
+      - "application/json"
+      parameters:
+      # - in: header
+      #   name: "user_id"
+      #   type: "string"
+      - name: "schedule_id"
+        in: "path"
+        description: "ID of schedule to return"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/schedules"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Schedule not found"
+      security:
+      - JWT: []
+    put:
+      tags:
+      - "schedule"
+      summary: "Updates a schedule with form data"
+      description: ""
+      operationId: "updateScheduleWithForm"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "schedule_id"
+        in: "path"
+        description: "ID of schedule that needs to be updated"
+        required: true
+        type: "integer"
+      - name: "title"
+        in: "formData"
+        description: "Updated name of the schedule"
+        required: false
+        type: "string"
+      - name: "context"
+        in: "formData"
+        description: "Updated context of the schedule"
+        required: false
+        type: "string"
+      - name: "started_at"
+        in: "formData"
+        description: "Updated started_at of the schedule"
+        required: false
+        type: "string"
+        format: "datetime"
+      - name: "deadline_at"
+        in: "formData"
+        description: "Updated deadline_at of the schedule"
+        required: false
+        type: "string"
+        format: "datetime"
+      - name: "point"
+        in: "formData"
+        description: "Updated point of the schedule"
+        required: false
+        type: "integer"
+      - name: "is_finished"
+        in: "formData"
+        description: "Updated is_finished of the schedule"
+        required: false
+        type: "boolean"
+      - name: "notification"
+        in: "formData"
+        allOf:
+        - $ref: "#/definitions/schedules/properties/notification"
+        description: "Updated notification of the schedule"
+        required: false
+        type: "string"
+      - name: "noti_extend"
+        in: "formData"
+        type: "integer"
+        allOf:
+        - $ref: "#/definitions/schedules/properties/noti_extend"
+        description: "Updated noti_extend of the schedule"
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+      - JWT: []
+      # security:
+      # - schedulestore_auth:
+      #   - "write:schedules"
+      #   - "read:schedules"
+    delete:
+      tags:
+      - "schedule"
+      summary: "Deletes a schedule"
+      description: ""
+      operationId: "deleteSchedule"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "schedule_id"
+        in: "path"
+        description: "Schedule id to delete"
+        required: true
+        type: "integer"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Schedule not found"
+      security:
+      - JWT: []
+      # security:
+      # - schedulestore_auth:
+      #   - "write:schedules"
+      #   - "read:schedules"
+  /schedule/{scheduleId}/uploadImage:
+    post:
+      tags:
+      - "schedule"
+      summary: "uploads an image"
+      description: ""
+      operationId: "uploadFile"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "scheduleId"
+        in: "path"
+        description: "ID of schedule to update"
+        required: true
+        type: "integer"
+      - name: "additionalMetadata"
+        in: "formData"
+        description: "Additional data to pass to server"
+        required: false
+        type: "string"
+      - name: "file"
+        in: "formData"
+        description: "file to upload"
+        required: false
+        type: "file"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      security:
+      - schedulestore_auth:
+        - "write:schedules"
+        - "read:schedules"
+  /store/inventory:
+    get:
+      tags:
+      - "store"
+      summary: "Returns schedule inventories by status"
+      description: "Returns a map of status codes to quantities"
+      operationId: "getInventory"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            additionalProperties:
+              type: "integer"
+              format: "int32"
+      security:
+      - api_key: []
+  /store/order:
+    post:
+      tags:
+      - "store"
+      summary: "Place an order for a schedule"
+      description: ""
+      operationId: "placeOrder"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "order placed for purchasing the schedule"
+        required: true
+        schema:
+          $ref: "#/definitions/Order"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Order"
+        "400":
+          description: "Invalid Order"
+  /store/order/{orderId}:
+    get:
+      tags:
+      - "store"
+      summary: "Find purchase order by ID"
+      description: "For valid response try integer IDs with value >= 1 and <= 10.         Other values will generated exceptions"
+      operationId: "getOrderById"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "orderId"
+        in: "path"
+        description: "ID of schedule that needs to be fetched"
+        required: true
+        type: "integer"
+        maximum: 10.0
+        minimum: 1.0
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Order"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Order not found"
+    delete:
+      tags:
+      - "store"
+      summary: "Delete purchase order by ID"
+      description: "For valid response try integer IDs with positive integer value.         Negative or non-integer values will generate API errors"
+      operationId: "deleteOrder"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "orderId"
+        in: "path"
+        description: "ID of the order that needs to be deleted"
+        required: true
+        type: "integer"
+        minimum: 1.0
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Order not found"
+  /user:
+    post:
+      tags:
+      - "user"
+      summary: "Create user"
+      description: ""
+      operationId: "createUser"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created user object"
+        required: true
+        schema:
+          $ref: "#/definitions/users"
+      responses:
+        default:
+          description: "successful operation"
+      # 생각해보니 비회원은 JWT가 없는 상태이므로, 정상적인 요청인지 확인할 필요(APIKEY등)가 있다.
+      # security:
+      # - JWT: []
+  /user/login:
+    get:
+      tags:
+      - "user"
+      summary: "Logs user into the system"
+      description: ""
+      operationId: "loginUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "user_id"
+        in: "query"
+        description: "The user_id for login"
+        allOf:
+        - $ref: "#/definitions/users/properties/user_id" 
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "The password for login(그대로? 암호화?)"
+        allOf:
+        - $ref: "#/definitions/users/properties/password" 
+        required: true
+        type: "string"
+      responses:
+        "200":
+          # headers:
+          # - JWT: []
+          description: "successful operation"
+          # schema:
+          #   type: "string"
+          # headers:
+          #   X-Rate-Limit:
+          #     type: "integer"
+          #     format: "int32"
+          #     description: "calls per hour allowed by the user"
+          #   X-Expires-After:
+          #     type: "string"
+          #     format: "date-time"
+          #     description: "date in UTC when token expires"
+        "400":
+          description: "Invalid username/password supplied"
+  /user/logout:
+    get:
+      tags:
+      - "user"
+      summary: "Logs out current logged in user session"
+      description: ""
+      operationId: "logoutUser"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        default:
+          description: "successful operation"
+  /user/{user_id}:
+    get:
+      tags:
+      - "user"
+      summary: "Get user info by user_id"
+      description: "비밀번호도 포함되어서 전송되어야하는가? 아니면 수정할 것인가.."
+      operationId: "getUserById"
+      produces:
+      # - "application/xml"
+      - "application/json"
+      parameters:
+      # - name: "user_id"
+        # in: "path"
+        # description: "The name that needs to be fetched. Use user1 for testing. "
+        # required: true
+        # type: "string"
+        # schema:
+      - $ref: "#/definitions/users/properties/user_id"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/users"
+        "400":
+          description: "Invalid user_id supplied"
+        "404":
+          description: "User not found"
+      security:
+      - JWT: []
+    put:
+      tags:
+      - "user"
+      summary: "Update user"
+      description: "This can only be done by the logged in user.\n 현재 방식은 프론트엔드가 GET으로 갖고 온 정보에 변경될 내용만 override해서 json 형태로 보내주는 것임"
+      operationId: "updateUser"
+      produces:
+      # - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "user_id"
+        in: "path"
+        description: "user_id of user that need info to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated user object"
+        required: true
+        schema:
+          $ref: "#/definitions/users"
+      responses:
+        "200":
+          description: "Update user successful"
+        "400":
+          description: "Invalid user supplied"
+        "404":
+          description: "User not found"
+      security:
+      - JWT: []
+    delete:
+      tags:
+      - "user"
+      summary: "Delete user"
+      description: "This can only be done by the logged in user."
+      operationId: "deleteUser"
+      produces:
+      # - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "user_id"
+        in: "path"
+        description: "The user that needs to be deleted"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "User deletion successful"
+        "400":
+          description: "Invalid username supplied"
+        "404":
+          description: "User not found"
+      security:
+      - JWT: []
+  /daily/{date}:
+    post:
+      tags:
+      - "daily"
+      summary: "Comment on daily"
+      description: "This can only be done by the logged in user"
+      operationId: "commentDaily"
+      produces:
+      - application/json
+      parameters:
+      - $ref: "#/definitions/daily/properties/date"
+      responses:
+        "200":
+          description: "Commented on daily"
+          schema:
+            $ref: "#/definitions/daily"
+    get:
+    put:
+    delete:
+  
+securityDefinitions:
+  # https://stackoverflow.com/questions/43669302/swagger-and-jwt-token-authentication
+  JWT:
+    type: apiKey
+    in: header
+    name: access_token
+  schedulestore_auth:
+    type: "oauth2"
+    authorizationUrl: "http://schedulestore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:schedules: "modify schedules in your account"
+      read:schedules: "read your schedules"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  users:
+    type: "object"
+    required: 
+    - "user_id"
+    properties:
+      user_id:
+        type: "string"
+        format: "varchar(20)"
+        example: "exampleuserid"
+      name:
+        type: "string"
+        example: "홍길동"
+      email:
+        type: "string"
+        example: "hong@korea.kr"
+      cellphone:
+        type: "string"
+        example: "010-1234-5678"
+      password:
+        type: "string"
+      exp:
+        type: "integer"
+        default: "0"
+      created_at:
+        type: "string"
+        format: "date-time"
+      is_admin:
+        type: "boolean"
+        default: false
+        description: "true: admin\nfalse: not admin"
+        enum:
+        - true
+        - false
+    xml:
+      name: "User"
+  daily:
+    type: "object"
+    required:
+    - date
+    properties:
+      date:
+        type: "string"
+        format: "date"
+      user_id:
+        $ref: "#/definitions/users/properties/user_id"
+      context:
+        type: "string"
+        format: "text"
+        example: "오늘은 너무 피곤했ㄷr...."
+  schedules:
+    type: "object"
+    required:
+    - schedule_id
+    properties:
+      schedule_id:
+        type: "integer"
+      user_id:
+        $ref: "#/definitions/users/properties/user_id"
+      date:
+        $ref: "#/definitions/daily/properties/date"
+      title:
+        type: "string"
+        format: "varchar"
+      context:
+        type: "string"
+        format: "text"
+      started_at:
+        type: "string"
+        format: "date-time"
+        description: "설정 시작시간"
+      finished_at:
+        type: "string"
+        format: "date-time"
+        description: "실제로 완료한 시간"
+      deadline_at:
+        type: "string"
+        format: "date-time"
+        description: "설정 마감일시"
+      created_at:
+        type: "string"
+        format: "date-time"
+        description: "이 일정이 등록된 시간"
+      updated_at:
+        type: "string"
+        format: "date-time"
+        description: "이 일정이 마지막으로 수정된 시간"
+      point:
+        type: "integer"
+      is_finished:
+        type: "boolean"
+        default: false
+        enum:
+        - true
+        - false
+      notification:
+        type: "string"
+        format: "datetime"
+        example:
+        - 0
+        - "2021-07-23T06:38:22.326Z"
+        description: "알림이 있는 경우에는 datetime 형식으로, 없는 경우에는 0값으로(혹은 특정한 시간으로?)"
+      noti_extend:
+        type: "integer"
+        description: "알림을 연장한 횟수"
+        default: 0
+    xml:
+      name: "schedules"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
