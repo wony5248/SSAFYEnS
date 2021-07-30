@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-import store from 'store';
+import React, {useState, useEffect} from 'react';
 import {Grid, IconButton} from '@material-ui/core';
 import {useHistory} from 'react-router-dom';
 import moment from 'moment';
@@ -8,11 +7,34 @@ import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Plan from '../plan';
+import {scheduleAPI} from '../../../utils/axios';
 
 const Month = () =>{
+    const [query, setQuery] = useState('react');
+    const [todayPlan, setTodayPlan] = useState({});
+    let data = [];
     let history = useHistory();
     const [getMoment, setMoment] = useState(moment());
     const [planOpen, setPlanOpen] = useState(false);
+
+    useEffect(()=>{
+        let completed = false;
+        
+        async function getMonthlySchedule(){
+            const result = await scheduleAPI.getMonthly(today.format('YYYY'), today.format('MM'));
+            data = result.data;
+            console.log(data);
+            for(let i = 0; i < data.length;i++) {   
+                if (today.format('MM-DD') === moment(data[i].started_at).format('MM-DD')){
+                    setTodayPlan(data[i]);
+                }
+            }
+        }
+        getMonthlySchedule();
+        return ()=>{
+            completed = true;
+        };
+    }, [query]);
 
     const openPlanModal = () =>{
         setPlanOpen(true);
@@ -63,12 +85,16 @@ const Month = () =>{
                             
                             if (moment().format('YYYYMMDD') === days.format('YYYYMMDD')) {
                                 return(
-                                    <td key={index} style={{color:'#A3CCA3', width: '100px', height: '100px', verticalAlign: 'top'}}  
+                                    <td key={index}  style={{color:'#A3CCA3', width: '100px', height: '100px', verticalAlign: 'top'}}  
                                     onClick={()=>{history.push({
                                         pathname:'/planlist',
                                         state:{month:days.format('MM') , day:days.format('DD')}
                                     })}}>
-                                        <span >{days.format('D')}</span>
+                                        <Grid container direction="column">
+                                            <span >{days.format('D')}</span>
+                                            <span style={{color:'black', fontSize:12, marginTop:'3px'}}>{todayPlan['title']}</span>
+                                        </Grid>
+                                        
                                     </td>
                                 );
                             }else if (days.format('MM') !== today.format('MM')) {
@@ -84,7 +110,10 @@ const Month = () =>{
                                         pathname:'/planlist',
                                         state:{month:days.format('MM') , day:days.format('DD')}
                                     })}}>
-                                        <span>{days.format('D')}</span>
+                                        <Grid container direction="column">
+                                            <span >{days.format('D')}</span>
+                                            {/* <span style={{color:'black'}}>title</span> */}
+                                        </Grid>
                                     </td>
                                 );
                             }

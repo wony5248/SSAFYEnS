@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import store from 'store';
 import {useHistory} from 'react-router-dom';
 import {AppBar, Typography, Toolbar, Button, Grid, IconButton, Divider, Drawer, List, ListItem, ListItemText} from '@material-ui/core';
@@ -7,17 +7,27 @@ import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import GroupIcon from '@material-ui/icons/Group';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import Wrapper from './styles';
+import logo from '../../images/logo2.png';
 
 const Header = props=>{
     let history = useHistory();
-    const [open, setOpen] = React.useState(false);
-
+    const [open, setOpen] = useState(false);
+    const [islogin, setLogin] = useState(true);
+    
     const handleDrawerOpen = () =>{  
         setOpen(true);
     };
 
     const handleDrawerClose = () =>{ 
         setOpen(false);
+    };
+
+    const handleLogin = () => {
+        setLogin(true);
+    };
+
+    const handleLogout = () => {
+        setLogin(false);
     };
 
     const onClickRedirectPathHandler = name => e =>{
@@ -36,7 +46,16 @@ const Header = props=>{
             }else{
                 history.push(name);
             }
+        }else if ( name === '/login'){
+            if(history.location.pathname === name){
+                history.goBack();
+                store.remove('/login');
+            }else{
+                history.push(name);
+            }
         }
+
+        
     };
 
     return(
@@ -52,12 +71,22 @@ const Header = props=>{
                     </Grid>
                     <Grid >
                         <Typography variant = "h3" onClick={onClickRedirectPathHandler('/')}>
-                            SSAFYens
+                            <img src={logo} style={{width:'250px', height:'80px', marginTop:'3px'}}/>
                         </Typography>
                     </Grid>
                     <Grid style ={{justifyContent:'space-between'}}>
-                        <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}}>회원가입</Button>
-                        <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}}>로그인</Button>
+                        {islogin?(
+                            <div>
+                                <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}}>jbj님 환영합니다</Button>
+                                <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}} onClick={handleLogout}>로그아웃</Button>
+                            </div>
+                        ):(
+                            <div>
+                                <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}}>회원가입</Button>
+                                <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}}
+                            onClick={onClickRedirectPathHandler('/login')}>로그인</Button>
+                            </div>
+                        )}
                     </Grid>
                 </Grid>           
             </AppBar>
