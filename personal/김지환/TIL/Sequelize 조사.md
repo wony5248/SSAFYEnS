@@ -1,10 +1,16 @@
 # Sequelize 조사
 
+nodejs 기반 프로젝트 PoC중에 SQL을 제어할 수 있는 ORM인 Sequelize 사용여부를 확정하기 위해 조사한 내용입니다.
+
+
+
 ### 용어
 
 **ORM** : Object-Relational Management의 약자로, MySQL, MsSQL 등 등의 데이터베이스와 데이터베이스 안의 테이블을 프로그래밍 할 때 객체 처럼 쓸 수 있게 해주는 방식입니다. 
 
 ORM을 사용하면 어플리케이션에서 쿼리문을 사용하지 않고 프로그래머에게 친숙한 명령어 방식으로 데이터베이스를 제어할 수 있습니다.
+
+Sequelize도 ORM에 포함됩니다.
 
 
 
@@ -38,11 +44,11 @@ class Person(models.Model):
 
 >  [Sequelize](https://sequelize.org/master/class/lib/model.js~Model.html)
 >
-> # Model
+>  # Model
 >
-> A Model represents a table in the database. Instances of this class represent a database row.
+>  A Model represents a table in the database. Instances of this class represent a database row.
 >
-> 모델은 테이블의 이름을 나타냅니다. 이 클래스의 인스턴스는 데이터베이스의 **행** 을 나타냅니다
+>  모델은 테이블의 이름을 나타냅니다. 이 클래스의 인스턴스는 데이터베이스의 **행** 을 나타냅니다
 
  시퀄라이즈에서는 테이블의 이름을 나타낸다고 하니 정말 Schema와 유사한 것 같습니다. 근데 왜 행일까요..? 제 머릿속의 2차원 데이터 테이블에서는 행이 instance, 열이 field인데...??
 
@@ -106,6 +112,18 @@ public static build(values: object | Array, options: object): Model | Array<Mode
 
 ```bash
 	$ npm install --save sequelize
+```
+
+
+
+# 사용하기
+
+```bash
+#Daily 모델 생성
+$ npx sequelize model:generate
+
+#schedule 모델 생성
+$ npx sequelize model:generate --name schedules --attributes schedule_id:integer,user_id:string,date:date,title:string,context:string,started_at:date,finished_at:date,deadline_at:date,created_at:date,updated_at:date,point:integer,is_finished:boolean,notification:date,noti_extend:integer,challenge_id:integer
 ```
 
 

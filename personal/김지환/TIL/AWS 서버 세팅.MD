@@ -1,4 +1,4 @@
-# AWS 서버 세팅과정 설명
+# AWS 서버 세팅과정
 
 ### 환경설정
  **apt**는 ubuntu software package management system입니다.
