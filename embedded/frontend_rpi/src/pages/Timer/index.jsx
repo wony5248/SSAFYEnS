@@ -4,8 +4,16 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Stopwatch from "./Stopwatch";
 import Timer from "./Timer";
+import styled from "styled-components";
+const Timercon = styled.div`
+  border-radius: 4px;
+  width: auto;
+  height: 100%;
+  color: #121212;
+  font-size: 40px;
+`;
 
-const Todaylayout = () => {
+const Timerlayout = () => {
   const [loading, setLoading] = useState(false);
   const [itemList, setItemList] = useState([]);
   useEffect(() => {
@@ -26,18 +34,16 @@ const Todaylayout = () => {
   }, []);
 
   return (
-    <div>
+    <Timercon>
       <Stopwatch />
-
-      <hr className="line" />
-
+      <div><hr className="line" /></div>
       <Timer />
-    </div>
+    </Timercon>
   );
 };
 
 const Today = () => {
-  return <Layout pages={Todaylayout()}></Layout>;
+  return <Layout pages={Timerlayout()}></Layout>;
 };
 
 export default Today;

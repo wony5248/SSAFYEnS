@@ -1,5 +1,56 @@
 import React, { Component } from "react";
+import styled from "styled-components"
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 
+import HourglassTopIcon from '@material-ui/icons/HourglassEmpty';
+const Countdiv = styled.div`
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+align-content: center;
+border-radius: 4px;
+width: auto;
+height: 46.9%;
+color: #121212;
+margin: 12px 0px;
+font-size: 40px;
+padding: 4px;
+padding-left:16px;
+padding-right:16px;
+`;
+
+const Countbtn = styled.button`
+
+border-radius: 4px;
+width: 20%;
+height: 15%;
+color: white;
+background-color: #a3cca3;
+margin: 12px 0px;
+font-size: 40px;
+padding: 4px;
+padding-left:16px;
+padding-right:16px;
+`;
+
+const Titlediv = styled.div`
+
+display:flex;
+align-items: center;
+justify-content: space-around;
+`;
+
+const Addbtn = styled.button`
+border: none;
+height: 100%;
+display:flex;
+align-items: center;
+justify-content: space-around;
+background-color: white;
+font-size: 40px;
+`;
 class Countdown extends Component {
   state = {
     timerOn: false,
@@ -38,7 +89,17 @@ class Countdown extends Component {
       });
     }
   };
-
+  plusTimer = () => {
+    this.setState({
+      timerTime : this.state.timerTime + 60000
+    })
+  }
+  minusTimer = () => {
+    if (this.state.startTime !== 0)
+    {this.setState({
+      timerTime : this.state.timerTime - 60000
+    })}
+  }
   render() {
     const { timerTime, timerStart, timerOn } = this.state;
     let seconds = ("0" + (Math.floor((timerTime / 1000) % 60) % 60)).slice(-2);
@@ -46,42 +107,38 @@ class Countdown extends Component {
     let hours = ("0" + Math.floor((timerTime / 3600000) % 60)).slice(-2);
 
     return (
-      <div>
-        <div >Countdown</div>
-        <div >Hours : Minutes : Seconds</div>
-        <div >
-          <div >
-            {hours} : {minutes} : {seconds}
-          </div>
-        </div>
-        <div >
+      <Countdiv>
+        <Titlediv><HourglassTopIcon fontSize = "large"/>Timer</Titlediv>
+          <Titlediv >
+            <Addbtn onClick = {this.minusTimer}><RemoveIcon fontSize="large"/></Addbtn>{hours} : {minutes} : {seconds} <Addbtn onClick = {this.plusTimer}><AddIcon fontSize="large"/></Addbtn>
+          </Titlediv>
+
           {timerOn === false && (timerStart === 0 || timerTime === timerStart) && (
-            <button onClick={this.startTimer}>
+            <Countbtn onClick={this.startTimer}>
               Start
-            </button>
+            </Countbtn>
           )}
           {timerOn === true && timerTime >= 1000 && (
-            <button onClick={this.stopTimer}>
+            <Countbtn onClick={this.stopTimer}>
               Stop
-            </button>
+            </Countbtn>
           )}
           {timerOn === false &&
             (timerStart !== 0 &&
               timerStart !== timerTime &&
               timerTime !== 0) && (
-              <button onClick={this.startTimer}>
+              <Countbtn onClick={this.startTimer}>
                 Resume
-              </button>
+              </Countbtn>
             )}
 
           {(timerOn === false || timerTime < 1000) &&
             (timerStart !== timerTime && timerStart > 0) && (
-              <button onClick={this.resetTimer}>
+              <Countbtn onClick={this.resetTimer}>
                 Reset
-              </button>
+              </Countbtn>
             )}
-        </div>
-      </div>
+      </Countdiv>
     );
   }
 }

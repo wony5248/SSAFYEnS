@@ -10,6 +10,7 @@ const Logodiv = styled1.div`
 
 const Clockdiv = styled(Clock)({
   width: "100%",
+  fontSize: "30px"
 });
 const Date = () => {
   return (

@@ -1,5 +1,42 @@
 import React, { Component } from "react";
+import styled from "styled-components";
+import TimerIcon from '@material-ui/icons/Timer';
+const Stopwatchdiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  border-radius: 4px;
+  width: auto;
+  height: 45.4%;
+  color: #121212;
+  margin: 12px 0px;
+  font-size: 40px;
+  padding: 4px;
+  padding-left:16px;
+  padding-right:16px;
+`;
+const Stopwatchbtn = styled.button`
 
+border-radius: 4px;
+width: 20%;
+height: 15%;
+color: white;
+background-color: #a3cca3;
+margin: 12px 0px;
+font-size: 40px;
+padding: 4px;
+padding-left:16px;
+padding-right:16px;
+`;
+
+const Titlediv = styled.div`
+
+display:flex;
+align-items: center;
+justify-content: space-around;
+`;
 class Stopwatch extends Component {
   state = {
     timerOn: false,
@@ -39,26 +76,25 @@ class Stopwatch extends Component {
     let minutes = ("0" + (Math.floor(timerTime / 60000) % 60)).slice(-2);
     let hours = ("0" + Math.floor(timerTime / 3600000)).slice(-2);
     return (
-      <div>
-        <div>Stopwatch</div>
-        <div>Hours : Minutes : Seconds</div>
+      <Stopwatchdiv>
+        <Titlediv><TimerIcon fontSize = "large"/>Stopwatch</Titlediv>
         <div>
           {hours} : {minutes} : {seconds}
         </div>
 
         {this.state.timerOn === false && this.state.timerTime === 0 && (
-          <button onClick={this.startTimer}>Start</button>
+          <Stopwatchbtn onClick={this.startTimer}>Start</Stopwatchbtn>
         )}
         {this.state.timerOn === true && (
-          <button onClick={this.stopTimer}>Stop</button>
+          <Stopwatchbtn onClick={this.stopTimer}>Stop</Stopwatchbtn>
         )}
         {this.state.timerOn === false && this.state.timerTime > 0 && (
-          <button onClick={this.startTimer}>Resume</button>
+          <Stopwatchbtn onClick={this.startTimer}>Resume</Stopwatchbtn>
         )}
         {this.state.timerOn === false && this.state.timerTime > 0 && (
-          <button onClick={this.resetTimer}>Reset</button>
+          <Stopwatchbtn onClick={this.resetTimer}>Reset</Stopwatchbtn>
         )}
-      </div>
+      </Stopwatchdiv>
     );
   }
 }
