@@ -1,6 +1,6 @@
-backend/node_modules
-embedded/frontend/node_modules
-embedded/frontend/package-lock.json
+embedded/backend/node_modules
+embedded/frontend_rpi/node_modules
+embedded/frontend_rpi/package-lock.json
 
 node_modules/
 node_modules
