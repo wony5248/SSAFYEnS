@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
 import { Link } from "react-router-dom";
 import axios from "axios";
-
-
+import Stopwatch from "./Stopwatch";
+import Timer from "./Timer";
 
 const Todaylayout = () => {
   const [loading, setLoading] = useState(false);
@@ -23,31 +23,15 @@ const Todaylayout = () => {
         });
     }
     loadItem();
-    
   }, []);
 
   return (
     <div>
-      <ul>
-        {itemList.map((item) => (
-          <li key = {item.Title}>
-              {item.Content}
-          </li>
-        ))}
-      </ul>
-      <div>Today</div>
-      <Link to="/">Home</Link>
-      <br></br>
-      <Link to="/Progress">Progress</Link>a
-      <br></br>
-      <Link to="/Change">Change</Link>
-      <br></br>
-      <Link to="/Rating">Rating</Link>
-      <br></br>
-      <Link to="/Timer">Timer</Link>
-      <br></br>
-      <Link to="/Today">Today</Link>
-      <button>일정 추가</button>
+      <Stopwatch />
+
+      <hr className="line" />
+
+      <Timer />
     </div>
   );
 };
