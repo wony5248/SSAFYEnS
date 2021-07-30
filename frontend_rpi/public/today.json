@@ -1,0 +1,109 @@
+{
+  "ResultItemViewStyle": "Gallery",
+  "FocusItemCount": 7,
+  "SrpRedirectionYN": false,
+  "SrpRedirectionUrl": "",
+  "LcId": "",
+  "LcIdName": "",
+  "McId": "200002669",
+  "McIdName": "티셔츠",
+  "ScId": "",
+  "ScIdName": "",
+  "CurrentCategoryLevel": null,
+  "CurrentCategoryName": "",
+  "PageNo": 1,
+  "PageSize": 50,
+  "IsShowSmartDeliveryFilter": false,
+  "IsShowBrandOnlyFilter": true,
+  "ShowDirectLink": false,
+  "DirectLinkURL": "",
+  "DirectLinkText": "",
+  "DirectLinkDesc": "",
+  "KeywordBanner": null,
+  "Item": [
+    {
+      "StartTime": "00 : 00",
+      "EndTime": "01 : 30",
+      "Title": "리액트1",
+      "Goal": "부시기1",
+      "Content": "리액트 부시기1"
+    },
+    {
+      "StartTime": "02 : 00",
+      "EndTime": "04 : 00",
+      "Title": "리액트2",
+      "Goal": "부시기2",
+      "Content": "리액트 부시기2"
+    },
+    {
+      "StartTime": "04 : 00",
+      "EndTime": "06 : 00",
+      "Title": "리액트3",
+      "Goal": "부시기3",
+      "Content": "리액트 부시기3"
+    },
+    {
+      "StartTime": "06 : 00",
+      "EndTime": "08 : 00",
+      "Title": "리액트4",
+      "Goal": "부시기4",
+      "Content": "리액트 부시기4"
+    },
+    {
+      "StartTime": "08 : 00",
+      "EndTime": "10 : 00",
+      "Title": "리액트5",
+      "Goal": "부시기5",
+      "Content": "리액트 부시기5"
+    },
+    {
+      "StartTime": "10 : 00",
+      "EndTime": "12 : 00",
+      "Title": "리액트6",
+      "Goal": "부시기6",
+      "Content": "리액트 부시기6"
+    },
+    {
+      "StartTime": "12 : 00",
+      "EndTime": "14 : 00",
+      "Title": "리액트7",
+      "Goal": "부시기7",
+      "Content": "리액트 부시기7"
+    },
+    {
+      "StartTime": "14 : 00",
+      "EndTime": "16 : 00",
+      "Title": "리액트8",
+      "Goal": "부시기8",
+      "Content": "리액트 부시기8"
+    },
+    {
+      "StartTime": "16 : 00",
+      "EndTime": "18 : 00",
+      "Title": "리액트9",
+      "Goal": "부시기9",
+      "Content": "리액트 부시기9"
+    },
+    {
+      "StartTime": "18 : 00",
+      "EndTime": "20 : 00",
+      "Title": "리액트10",
+      "Goal": "부시기10",
+      "Content": "리액트 부시기10"
+    },
+    {
+      "StartTime": "20 : 00",
+      "EndTime": "21 : 51",
+      "Title": "리액트11",
+      "Goal": "부시기11",
+      "Content": "리액트 부시기11"
+    },
+    {
+      "StartTime": "22 : 00",
+      "EndTime": "24 : 00",
+      "Title": "리액트12",
+      "Goal": "부시기12",
+      "Content": "리액트 부시기12"
+    }
+  ]
+}
