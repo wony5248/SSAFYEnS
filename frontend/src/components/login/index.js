@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
 import {Grid, Button, TextField} from '@material-ui/core';
 import Wrapper from './styles';
+import store from 'store';
+import {useHistory} from 'react-router-dom';
 
 const Login = () =>{
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
+    let history = useHistory();
 
     const handleId = (event) =>{
         setId(event.target.value);
@@ -13,6 +16,18 @@ const Login = () =>{
     const handlePassword = (event) =>{
         setPassword(event.target.value);
     }
+
+    const onClickRedirectPathHandler = name => e =>{
+        window.scrollTo(0, 0);
+        if ( name === '/signin'){
+            if(history.location.pathname === name){
+                history.goBack();
+                store.remove('/signin');
+            }else{
+                history.push(name);
+            }
+        }
+    };
 
     return (
         <Wrapper>
@@ -56,7 +71,8 @@ const Login = () =>{
                         </Grid>
                     </form>
                     <Grid container direction="row" justifyContent="center" style={{marginTop:'30px', marginLeft:'40px'}}>
-                        <Button style={{margin:'10px'}}>회원가입</Button>
+                        <Button style={{margin:'10px'}}
+                        onClick={onClickRedirectPathHandler('/signin')}>회원가입</Button>
                         <Button style={{margin:'10px'}}>아이디/비밀번호 찾기</Button>
                     </Grid>
                 </Grid>

@@ -12,7 +12,7 @@ import logo from '../../images/logo2.png';
 const Header = props=>{
     let history = useHistory();
     const [open, setOpen] = useState(false);
-    const [islogin, setLogin] = useState(true);
+    const [islogin, setLogin] = useState(false);
     
     const handleDrawerOpen = () =>{  
         setOpen(true);
@@ -53,9 +53,14 @@ const Header = props=>{
             }else{
                 history.push(name);
             }
+        }else if ( name === '/signup'){
+            if(history.location.pathname === name){
+                history.goBack();
+                store.remove('/signup');
+            }else{
+                history.push(name);
+            }
         }
-
-        
     };
 
     return(
@@ -82,7 +87,8 @@ const Header = props=>{
                             </div>
                         ):(
                             <div>
-                                <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}}>회원가입</Button>
+                                <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}}
+                                onClick={onClickRedirectPathHandler('/signup')}>회원가입</Button>
                                 <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}}
                             onClick={onClickRedirectPathHandler('/login')}>로그인</Button>
                             </div>
