@@ -8,6 +8,7 @@ import GroupIcon from '@material-ui/icons/Group';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import Wrapper from './styles';
 import logo from '../../images/logo2.png';
+import PersonIcon from '@material-ui/icons/Person';
 
 const Header = props=>{
     let history = useHistory();
@@ -111,6 +112,10 @@ const Header = props=>{
                     <ListItem button onClick={() => window.location.replace (`/group`)}>
                             <GroupIcon fontSize = "large" style={{color:'#A3CCA3', margin:'10px'}} />
                             <ListItemText primary="그룹" style={{color:'#A3CCA3', margin:'10px', fontWeight:'bold'}}/>
+                    </ListItem>
+                    <ListItem button>
+                            <PersonIcon fontSize = "large" style={{color:'#A3CCA3', margin:'10px'}} />
+                            <ListItemText primary="내 정보" style={{color:'#A3CCA3', margin:'10px', fontWeight:'bold'}}/>
                     </ListItem>
                 </List>
             </Drawer>

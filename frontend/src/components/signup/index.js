@@ -11,9 +11,9 @@ const SignUp = () =>{
     const [number, setNumber] = useState('');
     const [check, setCheck] = useState('');
 
-    let idLabel = false;
-    let emailLabel = false;
-    let numberLabel = false;
+    const [idLabel, setIdLabel] = useState(false);
+    const [emailLabel, setEmailLabel] = useState(false);
+    const [numberLabel, setNumberLabel] = useState(false);
 
     const handleId = (event) =>{
         setId(event.target.value);
@@ -44,15 +44,16 @@ const SignUp = () =>{
         setNumber(event.target.value);
     };
 
-    const checkOverlap = (value) =>{
-        if (value === 'id'){
-            // id가 있는 지 체크 후 없으면 disabled
-            idLabel = true;
-        }else if (value === 'email'){
-            emailLabel = true;
-        }else if (value === 'number'){
-            numberLabel = true;
-        }
+    const handleIdLabel = () => {
+        setIdLabel(true);
+    };
+
+    const handleNumberLabel = () => {
+        setNumberLabel(true);
+    };
+
+    const handleEmailLabel = () => {
+        setEmailLabel(true);
     };
 
     const submit = () => {
@@ -96,7 +97,7 @@ const SignUp = () =>{
                                             )}
                                         </div>
                                         <div style={{marginLeft:'20px', marginTop:'10px'}}>
-                                            <Button style={{height:'50px'}} onClick={checkOverlap('id')}>중복 확인</Button>
+                                            <Button style={{height:'50px'}} onClick={handleIdLabel}>중복 확인</Button>
                                         </div>
                                     </Grid>
                                     {/* passwd */}
@@ -152,7 +153,7 @@ const SignUp = () =>{
                                             )}
                                         </div>
                                         <div style={{marginLeft:'20px', marginTop:'10px'}}>
-                                            <Button style={{height:'50px'}}>중복 확인</Button>
+                                            <Button style={{height:'50px'}} onClick={handleEmailLabel}>중복 확인</Button>
                                         </div>
                                     </Grid>
                                     {/* phone */}
@@ -171,7 +172,7 @@ const SignUp = () =>{
                                             )}
                                         </div>
                                         <div style={{marginLeft:'20px', marginTop:'10px'}}>
-                                            <Button style={{height:'50px'}}>중복 확인</Button>
+                                            <Button style={{height:'50px'}} onClick={handleNumberLabel}>중복 확인</Button>
                                         </div>
                                     </Grid>
                                 </Grid>

@@ -8,6 +8,7 @@ import PlanModify from './pages/planmodify';
 import LogIn from './pages/login';
 import Signup from './pages/signup';
 import Group from "./pages/group"
+import Find from './pages/find';
 
 const App = () =>{
   return (
@@ -20,6 +21,7 @@ const App = () =>{
         <Route exact path = "/login" component={LogIn}/>
         <Route exact path = "/signup" component={Signup}/>
         <Route exact path = "/group" component={Group}/>
+        <Route exact path = "/find" component={Find}/>
       </Switch>
     </BrowserRouter>
   );
