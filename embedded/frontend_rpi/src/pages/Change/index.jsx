@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import Layout from "../../layout";
 import styled from "styled-components";
 import axios from "axios"
@@ -81,14 +80,6 @@ const Changechangecon = styled.div`
   margin: 0px 16px;
 `;
 
-const Changecontenttitle = styled.div`
-  width: auto;
-  height: auto;
-  color: white;
-  background-color: #a3cca3;
-  padding: 0px;
-  margin-bottom: 14px;
-`;
 
 const Changechangebtn = styled.button`
   width: 78px;
@@ -104,24 +95,21 @@ const Changechangebtn = styled.button`
 `;
 
 const Changelayout = () => {
-  const [loading, setLoading] = useState(false);
   const [itemList, setItemList] = useState([]);
   useEffect(() => {
     async function loadCalendar() {
-      const result = await axios
+      await axios
         .get("./today.json")
         .then(({ data }) => {
-          setLoading(true);
           setItemList(data.Item);
           console.log(data.Item);
         })
         .catch((e) => {
           console.error(e);
-          setLoading(false);
         });
     }
     loadCalendar();
-    const interval = setInterval(() => {
+    setInterval(() => {
       loadCalendar();
     }, 10000);
   }, []);

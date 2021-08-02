@@ -1,12 +1,9 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { AppBar, Toolbar, Typography } from "@material-ui/core";
-import { Link } from "react-router-dom";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
 import { styled } from "@material-ui/core/styles";
 import Clock from "react-live-clock";
 import Logo from "../../assets/ssafyenslogo.png";
@@ -48,10 +45,6 @@ const MuiTypo = styled(Typography)({
   alignItems: "center",
 });
 
-const MuiCard = styled(CardActionArea)({
-  display: "flex",
-  justi: "center",
-});
 const HOME = () => {
   const classes = useStyles();
   return (
@@ -59,7 +52,7 @@ const HOME = () => {
       <MuiAppbar position="static">
         <MuiToolbar>
           <MuiTypo variant="h6" className={classes.title}>
-            <img src={Logo} width="20%" />
+            <img src={Logo} alt="logo" width="20%" />
           </MuiTypo>
           <Clock
             format={"YYYY년MM월DD일 hh시mm분ss초"}
@@ -72,7 +65,7 @@ const HOME = () => {
         <Grid item xs={5}>
           <Card className={classes.root}>
             <CardActionArea>
-              <img src={Progressimg} width="40%"></img>
+              <img src={Progressimg} alt="progress" width="40%"></img>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
                   Progress
@@ -88,7 +81,7 @@ const HOME = () => {
         <Grid item xs={5}>
           <Card className={classes.root}>
             <CardActionArea>
-              <img src={Progressimg} width="40%"></img>
+              <img src={Progressimg} alt="progress" width="40%"></img>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
                   Today
@@ -104,7 +97,7 @@ const HOME = () => {
         <Grid item xs={4}>
           <Card className={classes.root}>
             <CardActionArea>
-              <img src={Progressimg} width="40%"></img>
+              <img src={Progressimg} alt="progress" width="40%"></img>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
                   Change
@@ -120,7 +113,7 @@ const HOME = () => {
         <Grid item xs={4}>
           <Card className={classes.root}>
             <CardActionArea>
-              <img src={Progressimg} width="40%"></img>
+              <img src={Progressimg} alt="progress" width="40%"></img>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
                   Timer

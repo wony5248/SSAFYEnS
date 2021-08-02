@@ -6,7 +6,6 @@ import Sensorbtn from "../../components/Sensorbutton"
 import Date from "../../components/Clock"
 import Sensor from "../../components/Sensor"
 import styled from "styled-components";
-import Manner from "../../components/mannerbutton"
 const Datediv = styled.div`
   width: auto;
   height: 40%;

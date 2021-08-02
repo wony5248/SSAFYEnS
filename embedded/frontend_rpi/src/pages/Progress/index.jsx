@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
-import { Link } from "react-router-dom";
 import Progresscontainer from "./styles";
 import styled from "styled-components";
 import axios from "axios";
@@ -111,8 +110,7 @@ const Btndiv = styled.div`
   align-items: center;
 `;
 const Progresslayout = () => {
-  const [loading, setLoading] = useState(false);
-  const [itemList, setItemList] = useState([]);
+
   const [starttime, setStarttime] = useState("");
   const [endtime, setEndtime] = useState("");
   const [title, setTitle] = useState("");
@@ -121,11 +119,10 @@ const Progresslayout = () => {
   const [istrue, setIstrue] = useState(false);
   useEffect(() => {
     async function loadCalendar() {
-      const result = await axios
+      await axios
         .get("./today.json")
         .then(({ data }) => {
-          setLoading(true);
-          setItemList(data.Item);
+          console.log(data.Item)
           // console.log(data.Item)
           for (let i = 0; i < data.Item.length; i++) {
             // console.log(
@@ -144,29 +141,29 @@ const Progresslayout = () => {
               data.Item[i].EndTime[5] + data.Item[i].EndTime[6]
             );
             const currentTime = Number(moment().format("H"));
-            console.log(startTime);
-            console.log(currentTime);
+            // console.log(startTime);
+            // console.log(currentTime);
             // console.log(endTime)
             const currentMin = Number(moment().format("mm"));
-            console.log(startMin);
-            console.log(currentMin);
+            // console.log(startMin);
+            // console.log(currentMin);
             // console.log(endMin)
             if (startTime < currentTime && currentTime < endTime) {
-              console.log(data.Item[i].StartTime);
+              // console.log(data.Item[i].StartTime);
               setStarttime(data.Item[i].StartTime);
               setEndtime(data.Item[i].EndTime);
               setGoal(data.Item[i].Goal);
               setTitle(data.Item[i].Title);
               setContent(data.Item[i].Content);
               setIstrue(true);
-            } else if (currentTime == endTime && currentMin <= endMin) {
+            } else if (currentTime === endTime && currentMin <= endMin) {
               setStarttime(data.Item[i].StartTime);
               setEndtime(data.Item[i].EndTime);
               setGoal(data.Item[i].Goal);
               setTitle(data.Item[i].Title);
               setContent(data.Item[i].Content);
               setIstrue(true);
-            } else if (currentTime == startTime && startMin <= currentMin) {
+            } else if (currentTime === startTime && startMin <= currentMin) {
               setStarttime(data.Item[i].StartTime);
               setEndtime(data.Item[i].EndTime);
               setGoal(data.Item[i].Goal);
@@ -184,14 +181,13 @@ const Progresslayout = () => {
         })
         .catch((e) => {
           console.error(e);
-          setLoading(false);
         });
 
       // console.log(Number(moment().format("H")));
       // console.log(Number(moment().format("mm")));
     }
     loadCalendar();
-    const interval = setInterval(() => {
+    setInterval(() => {
       loadCalendar();
     }, 10000);
   }, []);

@@ -18,7 +18,7 @@ const Button = (props) => {
 
   return (
     <Mannerbtn>
-      <Mannerdiv><MicOffIcon />매너모드</Mannerdiv>
+      <Mannerdiv><MicOffIcon />{btnName}</Mannerdiv>
         <SwitchStyle></SwitchStyle>
     </Mannerbtn>
   );

@@ -1,21 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
-import { Link } from "react-router-dom";
 import styled1 from "styled-components";
-import { makeStyles, styled } from "@material-ui/core/styles";
+import { styled } from "@material-ui/core/styles";
 import Input from "@material-ui/core/Input";
-import { Icon } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import RemoveIcon from "@material-ui/icons/Remove";
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-}));
+
+
 
 const Changeselect = styled1.select`
   width: 15%;
@@ -116,29 +105,7 @@ const Changebtn = styled1.button`
   background-color: #69a569;
   padding: 4px;
 `;
-const Plusbtn = styled1.button`
-  width: 24px;
-  height: 24px;
-  border-radius:8px;
-  border:0px;
-  background-color: #a3cca3;
-  color: white;
-  display: flex;
-  align-items: center;
-  margin-right : 4px;
-  padding-ringt: 4px;
-`;
-const Minusbtn = styled1.button`
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  border-radius:8px;
-  font-size: 24px;
-  border:0px;
-  background-color: #a3cca3;
-  color: white;
-`;
+
 const ChangeContent = styled1.div`
   display: flex-row;
   justify-content: space-between;
@@ -186,7 +153,6 @@ const Changetitleinput = styled(Input)({
 });
 
 const Changecalendarlayout = () => {
-  const classes = useStyles();
   const [starttime, setStarttime] = useState("");
   const [endtime, setEndtime] = useState("");
   const [optionarr, setOptionarr] = useState([]);
@@ -204,8 +170,8 @@ const Changecalendarlayout = () => {
       const result = [];
       for (let i = 0; i < 24; i++) {
         if (i < 10) {
-          result.push("0" + `${i}:00`);
-          result.push("0" + `${i}:30`);
+          result.push(`0${i}:00`);
+          result.push(`0${i}:30`);
         } else {
           result.push(`${i}:00`);
           result.push(`${i}:30`);

@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import moment from "moment";
 import Sensorbtn from "./styles";
 import axios from "axios";
 import styled  from "styled-components";
 import {Thermometer} from "react-feather"
-import { Icon } from '@material-ui/core';
 import OpacityIcon from '@material-ui/icons/Opacity';
 import WbIncandescentIcon from '@material-ui/icons/WbIncandescent';
 import SettingsVoiceIcon from '@material-ui/icons/SettingsVoice';
@@ -20,7 +18,7 @@ const Sensor = () => {
   const [noise, setNoise] = useState("");
   const [light, setLight] = useState("");
   async function loadSensor() {
-    const result = await axios
+    await axios
       .get("http://127.0.0.1:4500/test/sensor")
       .then(({ data }) => {
         setTemp(data.temp);
@@ -34,7 +32,7 @@ const Sensor = () => {
   }
   useEffect(() => {
     loadSensor();
-    const interval = setInterval(() => {
+    setInterval(() => {
       loadSensor();
     }, 10000);
   }, []);

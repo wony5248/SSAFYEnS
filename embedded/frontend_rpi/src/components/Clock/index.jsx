@@ -20,7 +20,7 @@ const Date = () => {
   return (
     <Datediv>
       <Logobtn>
-        <img src={Logo} width="100%" height="100%" />
+        <img src={Logo} alt = "logo" width="100%" height="100%" />
       </Logobtn>
       <div>
         <Logodiv>

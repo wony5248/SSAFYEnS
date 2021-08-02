@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
 
@@ -81,15 +80,6 @@ const Todaychangecon = styled.div`
   margin: 0px 16px;
 `;
 
-const Todaycontenttitle = styled.div`
-  width: auto;
-  height: auto;
-  color: white;
-  background-color: #a3cca3;
-  padding: 0px;
-  margin-bottom: 14px;
-`;
-
 const Todaychangebtn = styled.button`
   width: 78px;
   height: 60%;
@@ -102,32 +92,22 @@ const Todaychangebtn = styled.button`
   background-color: #69a569;
   padding: 4px;
 `;
-{/* <ul>
-{itemList.map((item) => (
-  <li key = {item.Title}>
-      {item.Content}
-  </li>
-))}
-</ul> */}
+
 const Todaylayout = () => {
-  const [loading, setLoading] = useState(false);
   const [itemList, setItemList] = useState([]);
   useEffect(() => {
     async function loadCalendar() {
-      const result = await axios
+      await axios
         .get("./today.json")
         .then(({ data }) => {
-          setLoading(true);
           setItemList(data.Item);
           console.log(data.Item);
         })
         .catch((e) => {
-          console.error(e);
-          setLoading(false);
         });
     }
     loadCalendar();
-    const interval = setInterval(() => {
+    setInterval(() => {
       loadCalendar();
     }, 10000);
   }, []);

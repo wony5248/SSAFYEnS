@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Layout from "../../layout";
 import styled1 from "styled-components";
 import Ratingstar from "@material-ui/lab/Rating";
@@ -9,7 +9,6 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
 const StyledRating = withStyles({
   iconFilled: {
     color: "#f6f924",
@@ -170,8 +169,6 @@ const Cancel = () => {
 };
 
 const Ratinglayout = (props) => {
-  const [value, setValue] = useState(0);
-  const [rate, setRate] = useState(0);
   const [selectedValue1, setSelectedValue1] = React.useState("1");
   const [selectedValue2, setSelectedValue2] = React.useState("1");
   const [selectedValue3, setSelectedValue3] = React.useState("1");
