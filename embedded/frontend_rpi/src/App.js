@@ -35,7 +35,7 @@ function App() {
   return (
         <BrowserRouter>
           <Switch>
-            <Route exact path="/" component={Home} />
+            <Route exact path="/" component={Progress} />
             <Route exact path="/Progress" component={Progress} />
             <Route exact path="/Rating/:time" component={Rating} />
             <Route exact path="/Timer" component={Timer} />
