@@ -7,6 +7,7 @@ import PlanList from './pages/planlist';
 import PlanModify from './pages/planmodify';
 import LogIn from './pages/login';
 import Signup from './pages/signup';
+import Find from './pages/find';
 
 const App = () =>{
   return (
@@ -18,6 +19,7 @@ const App = () =>{
         <Route exact path = "/planmodify" component={PlanModify}/>
         <Route exact path = "/login" component={LogIn}/>
         <Route exact path = "/signup" component={Signup}/>
+        <Route exact path = "/find" component={Find}/>
       </Switch>
     </BrowserRouter>
   );

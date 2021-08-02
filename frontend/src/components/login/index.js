@@ -26,6 +26,13 @@ const Login = () =>{
             }else{
                 history.push(name);
             }
+        }else if ( name === '/find'){
+            if(history.location.pathname === name){
+                history.goBack();
+                store.remove('/find');
+            }else{
+                history.push(name);
+            }
         }
     };
 
@@ -73,7 +80,8 @@ const Login = () =>{
                     <Grid container direction="row" justifyContent="center" style={{marginTop:'30px', marginLeft:'40px'}}>
                         <Button style={{margin:'10px'}}
                         onClick={onClickRedirectPathHandler('/signin')}>회원가입</Button>
-                        <Button style={{margin:'10px'}}>아이디/비밀번호 찾기</Button>
+                        <Button style={{margin:'10px'}}
+                        onClick={onClickRedirectPathHandler('/find')}>아이디/비밀번호 찾기</Button>
                     </Grid>
                 </Grid>
             </Grid>
