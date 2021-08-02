@@ -66,7 +66,7 @@ const Header = props=>{
 
     return(
         <Wrapper >
-            <AppBar style={{background:'#ffffff', color:'#A3CCA3'}}>
+            <AppBar style={{background:'#ffffff', color:'#A3CCA3', height:"auto"}}>
                 <Grid container justifyContent='space-between' direction = "row" alignItems = "center">     
                     <Grid>
                         <Toolbar>

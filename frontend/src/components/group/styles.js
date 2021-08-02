@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  top:100px;
-  position:absolute;
-  width: 100%;
+  width: 95%;
   background: #ffffff ;
   height : 100% ;
-  padding-bottom : 100px;
+  padding: 2.5%;
+
+
 `;
 
 export default Wrapper;

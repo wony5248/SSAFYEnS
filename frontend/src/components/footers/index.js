@@ -16,14 +16,14 @@ const Footer = () => {
                         <Grid item >
                             <h4>embedded</h4>
                             <p>Ssej0221@gmail.com</p>
-                            <h4>embedded web</h4>
+                            <h4>embedded web & server</h4>
                             <p>wony5248@gmail.com</p>
                         </Grid>
                         <Grid item style = {{marginLeft:'25px'}}>
                             <h4>server and service</h4>
                             <p>tyl1996@gmail.com / bure5kzam@gmail.com</p>
                             <h4>web page</h4>
-                            <p>heoeari51@gmail.com</p>
+                            <p>heoeari51@gmail.com / wony5248@gmail.com</p>
                         </Grid>
                     </Grid>
                 </Grid>
