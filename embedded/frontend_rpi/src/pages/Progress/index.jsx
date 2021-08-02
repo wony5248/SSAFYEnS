@@ -61,7 +61,7 @@ const Progresscontentcon = styled.div`
   border-radius: 4px;
   flex-wrap: nowrap;
   width: auto;
-  height: 59%;
+  height: 63%;
   color: #a3cca3;
   background-color: #a3cca3;
   margin-top: 14px;
@@ -84,13 +84,31 @@ const Progresscontent = styled.div`
   overflow: auto;
   font-size: 20px;
   width: auto;
-  height: 80%;
+  height: 76%;
   color: #a3cca3;
   background-color: white;
   padding: 4px;
 `;
 const Fulldiv = styled.div`
   height: 100%;
+`;
+
+const Completebtn = styled.button`
+  border: none;
+  color: white;
+  border-radius: 8px;
+  background-color: #69a569;
+  padding: 4px;
+  height: 70%;
+  width: 10%;
+`;
+
+const Btndiv = styled.div`
+  height: 10%;
+  margin-top: 1%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 `;
 const Progresslayout = () => {
   const [loading, setLoading] = useState(false);
@@ -183,7 +201,7 @@ const Progresslayout = () => {
         <Fulldiv>
           <Progresstitle>
             <Progresstitlenamecon>
-              <Progresstitlename>{title}</Progresstitlename>
+              <Progresstitlename>일정 제목: {title}</Progresstitlename>
               <Progresstitletime>
                 {starttime} ~ {endtime}
               </Progresstitletime>
@@ -194,6 +212,7 @@ const Progresslayout = () => {
           <Progresscontentcon>
             <Progresscontenttitle>일정 내용</Progresscontenttitle>
             <Progresscontent>{content}</Progresscontent>
+            <Btndiv><Completebtn onClick={() => window.location.replace(`/Rating/${starttime}`)}>완료</Completebtn></Btndiv>
           </Progresscontentcon>
         </Fulldiv>
       ) : (
