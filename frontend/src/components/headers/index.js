@@ -75,22 +75,22 @@ const Header = props=>{
                         </Toolbar>
                     </Grid>
                     <Grid >
-                        <Typography variant = "h3" onClick={onClickRedirectPathHandler('/')}>
+                        <Typography variant = "h3" onClick={() => window.location.replace (`/`)}>
                             <img src={logo} style={{width:'250px', height:'80px', marginTop:'3px'}}/>
                         </Typography>
                     </Grid>
                     <Grid style ={{justifyContent:'space-between'}}>
                         {islogin?(
                             <div>
-                                <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}}>jbj님 환영합니다</Button>
+                                <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}}>God애리님 환영합니다</Button>
                                 <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}} onClick={handleLogout}>로그아웃</Button>
                             </div>
                         ):(
                             <div>
                                 <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}}
-                                onClick={onClickRedirectPathHandler('/signup')}>회원가입</Button>
+                                onClick={() => window.location.replace (`/signup`)}>회원가입</Button>
                                 <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}}
-                            onClick={onClickRedirectPathHandler('/login')}>로그인</Button>
+                            onClick={() => window.location.replace (`/login`)}>로그인</Button>
                             </div>
                         )}
                     </Grid>
@@ -104,11 +104,11 @@ const Header = props=>{
                 </div>
                 <Divider/>
                 <List>
-                    <ListItem button onClick={onClickRedirectPathHandler('/plan')}>
+                    <ListItem button onClick={() => window.location.replace (`/plan`)}>
                             <CalendarTodayIcon fontSize = "large" style={{color:'#A3CCA3', margin:'10px'}} />
                             <ListItemText primary="일정" style={{color:'#A3CCA3', margin:'10px', fontWeight:'bold'}}/>
                     </ListItem>
-                    <ListItem button>
+                    <ListItem button onClick={() => window.location.replace (`/group`)}>
                             <GroupIcon fontSize = "large" style={{color:'#A3CCA3', margin:'10px'}} />
                             <ListItemText primary="그룹" style={{color:'#A3CCA3', margin:'10px', fontWeight:'bold'}}/>
                     </ListItem>
