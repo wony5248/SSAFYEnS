@@ -10,10 +10,10 @@ export const scheduleAPI = {
             year, month
         })
     },
-    addSchedule:(title, started_at, deadline_at)=>{
+    addSchedule:(title, started_at, deadline_at, date)=>{
         return request.post('/mvp/addSchedule', {
-            user_id : 'jbj', date : '2021-07-30', title, context : 'test'
-            , started_at, finished_at : '2021-07-31', deadline_at, point : 10, is_finished : false
+            user_id : 'jbj', date , title, context : 'test'
+            , started_at, finished_at : '2021-08-31', deadline_at, point : 10, is_finished : false
         })
     }
 }

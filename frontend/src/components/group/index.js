@@ -4,6 +4,7 @@ import { DataGrid } from "@material-ui/data-grid";
 import styled1 from "styled-components";
 import { styled, makeStyles } from "@material-ui/styles";
 import { Divider } from "@material-ui/core";
+import Create from "../groupcreate"
 const columns = [
   {
     field: "id",
@@ -65,7 +66,7 @@ const possiblegroup = [
   },
   {
     id: 4,
-    groupName: "HER와 함께하는 React.js",
+    groupName: "HAR와 함께하는 죽여줘...",
     description: "React.js 정복기",
     leader: "허애리",
     member: "2",
@@ -100,7 +101,7 @@ const possiblegroup = [
   },
   {
     id: 9,
-    groupName: "HER와 함께하는 Framer",
+    groupName: "HAR와 함께하는 Framer",
     description: "Framer 정복기",
     leader: "허애리",
     member: "2",
@@ -248,16 +249,28 @@ const Joinedbtn = styled1.button`
   }
 `;
 const Group = () => {
-  const [isgroup, setIsgroup] = useState(false);
+  const [isgroup, setIsgroup] = useState(true);
+  const [createopen, setCreateopen] = useState(false);
+
+  const openCreateModal = () => {
+    setCreateopen(true);
+  };
+
+  const closeCreateModal = () => {
+    setCreateopen(false);
+  };
+
   return (
     <div>
       <Wrapper>
         <Joineddiv>
           <Availablediv>가입 가능한 그룹</Availablediv>
-          <Joinedbtn onClick={() => window.location.replace("/")}>
+          <Create open={createopen} close={closeCreateModal} />
+          <Joinedbtn onClick={openCreateModal}>
               그룹 생성
             </Joinedbtn>
         </Joineddiv>
+        
         <div style={{ height: 400, width: "100%" }}>
           <Muidatagrid
             rows={possiblegroup}
@@ -299,7 +312,10 @@ const Group = () => {
         </Wrapper>
       ) : (
         <Wrapper>
-          <Availablediv>내가 가입한 그룹</Availablediv>
+          <Joineddiv>
+            <Availablediv>내가 가입한 그룹</Availablediv>
+            
+          </Joineddiv>
           <Nogroupdiv>
             <Nogrouptextdiv>
               가입되어 있는 그룹이 없습니다. 그룹에 가입해 보세요!

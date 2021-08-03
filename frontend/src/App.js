@@ -10,6 +10,8 @@ import Signup from './pages/signup';
 import Group from "./pages/group"
 import Find from './pages/find';
 import Groupmanage from './pages/groupmanage'
+import MyPage from './pages/mypage'
+
 const App = () =>{
   return (
     <BrowserRouter>
@@ -23,6 +25,7 @@ const App = () =>{
         <Route exact path = "/group/:id/manage" component = {Groupmanage}/>
         <Route exact path = "/group" component={Group}/>
         <Route exact path = "/find" component={Find}/>
+        <Route exact path = "/mypage" component={MyPage}/>
       </Switch>
     </BrowserRouter>
   );

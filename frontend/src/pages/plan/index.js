@@ -8,7 +8,7 @@ const Plan = props => {
     return(
         <div style={{height: '100%', display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
             <Header />
-            <Grid>
+            <Grid style ={{marginTop: "100px"}}>
                 <Calendar/>
             </Grid>
             <Footer />

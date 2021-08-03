@@ -79,9 +79,9 @@ const Login = () =>{
                     </form>
                     <Grid container direction="row" justifyContent="center" style={{marginTop:'30px', marginLeft:'40px'}}>
                         <Button style={{margin:'10px'}}
-                        onClick={onClickRedirectPathHandler('/signin')}>회원가입</Button>
+                        onClick={() => (window.location.replace('/signup'))}>회원가입</Button>
                         <Button style={{margin:'10px'}}
-                        onClick={onClickRedirectPathHandler('/find')}>아이디/비밀번호 찾기</Button>
+                        onClick={() => (window.location.replace('/find'))}>아이디/비밀번호 찾기</Button>
                     </Grid>
                 </Grid>
             </Grid>
