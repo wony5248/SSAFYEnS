@@ -248,7 +248,7 @@ const Joinedbtn = styled1.button`
   }
 `;
 const Group = () => {
-  const [isgroup, setIsgroup] = useState(true);
+  const [isgroup, setIsgroup] = useState(false);
   return (
     <div>
       <Wrapper>
