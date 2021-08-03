@@ -1,8 +1,7 @@
 const router = require("express").Router();
-const moment = require("moment");
 const validation = require("../../validation/scheduleValidation");
 const service = require("../../service/scheduleService");
-const { check, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 
 router.post(
   "/",
@@ -21,7 +20,7 @@ router.post(
       service
         .post(req.body)
         .then((data) => {
-          res.send(data);
+          res.json({ data });
         })
         .catch((error) => {
           res.status("405").send(error);
@@ -35,7 +34,7 @@ router.get("/:schedule_id", (req, res) => {
   service
     .get_$schedule_id$(req.params)
     .then((data) => {
-      res.send(data);
+      res.json({ data });
     })
     .catch((error) => {
       res.status("405").send(error);
@@ -49,17 +48,23 @@ router.put(
   validation.notification,
   validation.isfinished,
   (req, res) => {
-    service
-      .put_$schedule_id$({
-        schedule_id: req.params.schedule_id,
-        body: req.body,
-      })
-      .then((data) => {
-        res.send(data);
-      })
-      .catch((error) => {
-        res.status("405").send(error);
-      });
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      console.log(validationResult(req));
+      res.status("400").json({ result });
+    } else {
+      service
+        .put_$schedule_id$({
+          schedule_id: req.params.schedule_id,
+          body: req.body,
+        })
+        .then((data) => {
+          res.json({ data });
+        })
+        .catch((error) => {
+          res.status("405").send(error);
+        });
+    }
   }
 );
 router.delete("/:schedule_id", (req, res) => {
@@ -73,14 +78,28 @@ router.delete("/:schedule_id", (req, res) => {
       res.status("405").json({ error });
     });
 });
-router.post("/month", (req, res) => {
-  service
-    .get_month(req.body.date)
-    .then((data) => {
-      res.json({ data });
-    })
-    .catch((error) => {
-      res.status("405").json({ error });
-    });
-});
+router.post(
+  "/month",
+  validation.started_at,
+  validation.finished_at,
+  validation.deadline_at,
+  validation.notification,
+  validation.isfinished,
+  (req, res) => {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      console.log(validationResult(req));
+      res.status("400").json({ result });
+    } else {
+      service
+        .get_month(req.body.date)
+        .then((data) => {
+          res.json({ data });
+        })
+        .catch((error) => {
+          res.status("405").json({ error });
+        });
+    }
+  }
+);
 module.exports = router;
