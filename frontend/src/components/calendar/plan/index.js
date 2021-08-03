@@ -30,7 +30,7 @@ const Plan = (props) =>{
     const addSchedule = async () => {
         const started_at = moment(`${moment().format('YYYY')}-${startMonth}-${startDay} ${startHour}:${startMin}`).format('YYYY-MM-DD hh:mm');
         const deadline_at = moment(`${moment().format('YYYY')}-${endMonth}-${endDay} ${endHour}:${endMin}`).format('YYYY-MM-DD hh:mm');
-        const result = await scheduleAPI.addSchedule(title, started_at, deadline_at);
+        const result = await scheduleAPI.addSchedule(title, started_at, deadline_at, moment().format('YYYY-MM-DD'));
     }
 
     const handleAlarm = (event) => {
