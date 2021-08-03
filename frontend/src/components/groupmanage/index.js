@@ -255,14 +255,16 @@ const Groupinput = styled1.input`
       outline:none;
   }
 `;
-const Groupmanage = () => {
+const Groupmanage = (props) => {
   const [isleader, setIsleader] = useState(true);
+  const {id} = props
+  console.log(id)
   return (
     <div style={{ padding: "24px 0" }}>
       {isleader ? (
         <Wrapper>
           <Grouptitlediv>
-            <div style={{ width: "140px" }}></div>
+            <Challengebtn onClick = {() => window.location.replace("/group")}>뒤로 가기</Challengebtn>
             <GroupNamediv>JBJ와 함께하는 Electron</GroupNamediv>
             <Challengebtn>챌린지 만들기</Challengebtn>
           </Grouptitlediv>
@@ -290,7 +292,7 @@ const Groupmanage = () => {
             />
           </div>
           <Joindiv>
-            <Joinbtn onClick={() => window.confirm("정말 가입하시겠습니까?")}>
+            <Joinbtn onClick={() => window.confirm("정말 추방하시겠습니까?")}>
               추방하기
             </Joinbtn>
           </Joindiv>

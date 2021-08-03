@@ -1,20 +1,21 @@
 import React from 'react';
 import Header from '../../components/headers';
 import Footer from '../../components/footers';
-import Groupcom from '../../components/groupmanage';
+import Groupinfo from '../../components/groupinfo';
 import {Grid} from '@material-ui/core';
 
-const Groupmanage = ({match}) => {
+const GroupInfo = ({match}) => {
     const {id} = match.params;
+    console.log(id)
     return(
         <div style={{height: '100%', display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
             <Header />
             <Grid style ={{marginTop: "100px"}}>
-                <Groupcom id = {id}/>
+                <Groupinfo id={id}/>
             </Grid>
             <Footer />
         </div>
     );
 };
 
-export default Groupmanage;
+export default GroupInfo;

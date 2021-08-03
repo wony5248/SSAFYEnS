@@ -11,6 +11,7 @@ import Group from "./pages/group"
 import Find from './pages/find';
 import Groupmanage from './pages/groupmanage'
 import MyPage from './pages/mypage'
+import Groupinfo from './pages/groupinfo';
 
 const App = () =>{
   return (
@@ -23,6 +24,7 @@ const App = () =>{
         <Route exact path = "/login" component={LogIn}/>
         <Route exact path = "/signup" component={Signup}/>
         <Route exact path = "/group/:id/manage" component = {Groupmanage}/>
+        <Route exact path = "/group/:id" component = {Groupinfo}/>
         <Route exact path = "/group" component={Group}/>
         <Route exact path = "/find" component={Find}/>
         <Route exact path = "/mypage" component={MyPage}/>

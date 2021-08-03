@@ -259,7 +259,6 @@ const Group = () => {
   const closeCreateModal = () => {
     setCreateopen(false);
   };
-
   return (
     <div>
       <Wrapper>
@@ -281,7 +280,7 @@ const Group = () => {
           />
         </div>
         <Joindiv>
-          <Joinbtn onClick={() => window.confirm("정말 가입하시겠습니까?")}>
+          <Joinbtn onClick={() => window.confirm("선택한 그룹 정보화면으로 이동하시겠습니까?")? (window.location.replace(`/group/${joinedgroup[0].id}`)) : (console.log("변화 없음"))}>
             가입
           </Joinbtn>
         </Joindiv>
