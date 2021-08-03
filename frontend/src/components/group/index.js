@@ -41,7 +41,7 @@ const columns = [
   },
 ];
 
-const rows = [
+const possiblegroup = [
   {
     id: 1,
     groupName: "JBJ와 함께하는 Electron",
@@ -128,6 +128,36 @@ const rows = [
   },
 ];
 
+const joinedgroup = [
+  {
+    id: 1,
+    groupName: "JBJ와 함께하는 Electron",
+    description: "Electron 정복기",
+    leader: "장범진",
+    member: "1",
+  },
+  {
+    id: 6,
+    groupName: "JBJ와 함께하는 Raspberry pi",
+    description: "Raspberry pi 정복기",
+    leader: "장범진",
+    member: "2",
+  },
+  {
+    id: 11,
+    groupName: "모두가 함께하는 식사",
+    description: "식사 정복기",
+    leader: "모두",
+    member: "5",
+  },
+  {
+    id: 12,
+    groupName: "모두가 같이하는 코딩",
+    description: "코딩 정복기",
+    leader: "모두",
+    member: "5",
+  },
+];
 // const useStyles = makeStyles({
 //   root: {
 //     '& .super-app-theme--header': {
@@ -143,10 +173,9 @@ const Muidatagrid = styled(DataGrid)({
 
 const Availablediv = styled1.div`
   width:263px;
-  height: 51px;
+  height: 100%;
   background-color: #a3cca3;
   border-radius: 45px;
-  margin-bottom: 2.5%;
   color: white;
   display: flex;
   align-items: center;
@@ -198,15 +227,40 @@ const Joinbtn = styled1.button`
     background-color: #69a569;
   }
 `;
+
+const Joineddiv = styled1.div`
+  display:flex;
+  justify-content: space-between;
+  height: 51px;
+  margin-bottom: 2.5%;
+`;
+
+const Joinedbtn = styled1.button`
+  width:100px;
+  height: 100%;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #a3cca3;
+  border:none;
+  color: white;
+  &:hover{
+    background-color: #69a569;
+  }
+`;
 const Group = () => {
   const [isgroup, setIsgroup] = useState(true);
   return (
     <div>
       <Wrapper>
-        <Availablediv>가입 가능한 그룹</Availablediv>
+        <Joineddiv>
+          <Availablediv>가입 가능한 그룹</Availablediv>
+          <Joinedbtn onClick={() => window.location.replace("/")}>
+              그룹 생성
+            </Joinedbtn>
+        </Joineddiv>
         <div style={{ height: 400, width: "100%" }}>
           <Muidatagrid
-            rows={rows}
+            rows={possiblegroup}
             columns={columns}
             pageSize={5}
             checkboxSelection
@@ -222,10 +276,15 @@ const Group = () => {
       <Divider style={{ backgroundColor: "#a3cca3" }} />
       {isgroup ? (
         <Wrapper>
-          <Availablediv>내가 가입한 그룹</Availablediv>
+          <Joineddiv>
+            <Availablediv>내가 가입한 그룹</Availablediv>
+            <Joinedbtn onClick={() => window.location.replace(`/group/${joinedgroup[0].id}/manage`)}>
+              그룹 관리
+            </Joinedbtn>
+          </Joineddiv>
           <div style={{ height: 400, width: "100%" }}>
             <Muidatagrid
-              rows={rows}
+              rows={joinedgroup}
               columns={columns}
               pageSize={5}
               checkboxSelection

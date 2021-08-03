@@ -9,6 +9,7 @@ import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import Wrapper from './styles';
 import logo from '../../images/logo2.png';
 import PersonIcon from '@material-ui/icons/Person';
+import CasinoIcon from '@material-ui/icons/Casino';
 
 const Header = props=>{
     let history = useHistory();
@@ -112,6 +113,10 @@ const Header = props=>{
                     <ListItem button onClick={() => window.location.replace (`/group`)}>
                             <GroupIcon fontSize = "large" style={{color:'#A3CCA3', margin:'10px'}} />
                             <ListItemText primary="그룹" style={{color:'#A3CCA3', margin:'10px', fontWeight:'bold'}}/>
+                    </ListItem>
+                    <ListItem button onClick={() => window.location.replace (`/group`)}>
+                            <CasinoIcon fontSize = "large" style={{color:'#A3CCA3', margin:'10px'}} />
+                            <ListItemText primary="챌린지" style={{color:'#A3CCA3', margin:'10px', fontWeight:'bold'}}/>
                     </ListItem>
                     <ListItem button>
                             <PersonIcon fontSize = "large" style={{color:'#A3CCA3', margin:'10px'}} />
