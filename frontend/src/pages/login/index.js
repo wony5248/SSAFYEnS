@@ -6,9 +6,9 @@ import {Grid} from '@material-ui/core';
 
 const LogIn = props => {
     return(
-        <div style={{height: '100%'}}>
+        <div style={{height: '100%', display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
             <Header />
-            <Grid style={{minHeight:'100%'}}>
+            <Grid>
                 <Login/>
             </Grid>
             <Footer />

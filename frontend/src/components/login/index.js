@@ -42,7 +42,7 @@ const Login = () =>{
                 <Grid container justifyContent='space-around' style={{width:'20%'}}>
                     <Grid item >
                         <div style={{background:'#A3CCA3', width:'200px', height:'50px', textAlign:'center', 
-                        paddingTop:'5px', marginTop : '50px', borderRadius:45, color:'#ffffff', fontWeight:'bold'}}>
+                        paddingTop:'5px', borderRadius:45, color:'#ffffff', fontWeight:'bold'}}>
                             <div style={{fontSize:30}}>로그인</div>
                         </div>
                     </Grid>

@@ -71,7 +71,7 @@ const SignUp = () =>{
                 <Grid justifyContent='space-around'>
                     <Grid container justifyContent= 'center' style={{justifyContent:'center', alignItems:'center'}}>
                         <div style={{background:'#A3CCA3', width:'200px', height:'50px', textAlign:'center', 
-                        paddingTop:'5px', marginTop : '50px', borderRadius:45, color:'#ffffff', fontWeight:'bold'}}>
+                        paddingTop:'5px', borderRadius:45, color:'#ffffff', fontWeight:'bold'}}>
                             <div style={{fontSize:30}}>회원 가입</div>
                         </div>
                     </Grid>
