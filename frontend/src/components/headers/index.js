@@ -104,7 +104,7 @@ const Header = props=>{
                     </IconButton>
                 </div>
                 <Divider/>
-                <List>
+                <List style = {{width : "250px"}}>
                     <ListItem button onClick={() => window.location.replace (`/plan`)}>
                             <CalendarTodayIcon fontSize = "large" style={{color:'#A3CCA3', margin:'10px'}} />
                             <ListItemText primary="일정" style={{color:'#A3CCA3', margin:'10px', fontWeight:'bold'}}/>
