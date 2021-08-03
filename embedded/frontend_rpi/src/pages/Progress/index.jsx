@@ -110,7 +110,6 @@ const Btndiv = styled.div`
   align-items: center;
 `;
 const Progresslayout = () => {
-
   const [starttime, setStarttime] = useState("");
   const [endtime, setEndtime] = useState("");
   const [title, setTitle] = useState("");
@@ -123,6 +122,7 @@ const Progresslayout = () => {
         .get("./today.json")
         .then(({ data }) => {
           console.log(data.Item)
+          // console.log(moment())
           // console.log(data.Item)
           for (let i = 0; i < data.Item.length; i++) {
             // console.log(

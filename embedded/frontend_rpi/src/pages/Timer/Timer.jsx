@@ -177,6 +177,7 @@ class Countdown extends Component {
         {(timerOn === false || timerTime < 1000) &&
           timerStart !== timerTime &&
           timerStart > 0 && (
+
             <Countbtn onClick={this.resetTimer}>Reset</Countbtn>
           )}
       </Countdiv>
