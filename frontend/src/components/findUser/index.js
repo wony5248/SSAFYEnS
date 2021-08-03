@@ -84,7 +84,7 @@ const FindUser = () =>{
                         </Grid>
                     </Grid>
                 </div>
-                <div style={{marginRight:'150px', marginTop:'40px', marginLeft:'100px'}}>
+                <div style={{marginRight:'80px', marginTop:'40px', marginLeft:'30px', height:"100%"}}>
                     <Grid container justifyContent= 'center'>
                         <div style={{width:'1px', height:'500px', background:'#A3CCA3'}}></div>
                     </Grid>

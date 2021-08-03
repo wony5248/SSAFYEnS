@@ -183,7 +183,7 @@ const Month = () => {
   return (
     <Wrapper>
       <Grid container justifyContent="center">
-        <Grid container justifyContent="space-around" style={{ width: "20%" }}>
+        <Grid container justifyContent="space-around" style={{ width: "20%", display: "flex", alignItems:"center"}}>
           <Grid item>
             <IconButton onClick={previousMonth}>
               <KeyboardArrowLeftIcon
@@ -200,7 +200,6 @@ const Month = () => {
                 height: "30px",
                 textAlign: "center",
                 paddingTop: "5px",
-                marginTop: "10px",
                 borderRadius: 45,
                 color: "#ffffff",
                 fontWeight: "bold",

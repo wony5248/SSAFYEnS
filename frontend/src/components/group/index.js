@@ -65,7 +65,7 @@ const possiblegroup = [
   },
   {
     id: 4,
-    groupName: "HER와 함께하는 React.js",
+    groupName: "HAR와 함께하는 죽여줘...",
     description: "React.js 정복기",
     leader: "허애리",
     member: "2",
@@ -100,7 +100,7 @@ const possiblegroup = [
   },
   {
     id: 9,
-    groupName: "HER와 함께하는 Framer",
+    groupName: "HAR와 함께하는 Framer",
     description: "Framer 정복기",
     leader: "허애리",
     member: "2",
@@ -299,7 +299,10 @@ const Group = () => {
         </Wrapper>
       ) : (
         <Wrapper>
-          <Availablediv>내가 가입한 그룹</Availablediv>
+          <Joineddiv>
+            <Availablediv>내가 가입한 그룹</Availablediv>
+            
+          </Joineddiv>
           <Nogroupdiv>
             <Nogrouptextdiv>
               가입되어 있는 그룹이 없습니다. 그룹에 가입해 보세요!

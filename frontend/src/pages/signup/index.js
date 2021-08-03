@@ -8,7 +8,7 @@ const Signup = props => {
     return(
         <div style={{height: '100%', display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
             <Header />
-            <Grid>
+            <Grid style ={{marginTop: "100px", padding:"20px 0"}}>
                 <SignUp/>
             </Grid>
             <Footer />
