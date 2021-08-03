@@ -321,11 +321,11 @@ const Groupmanage = () => {
           <Joindiv>
             <div style={{ height: "51px" }}>
               <Acceptbtn
-                onClick={() => window.confirm("정말 가입하시겠습니까?")}
+                onClick={() => window.confirm("정말 승인하시겠습니까?")}
               >
                 승인하기
               </Acceptbtn>
-              <Joinbtn onClick={() => window.confirm("정말 가입하시겠습니까?")}>
+              <Joinbtn onClick={() => window.confirm("정말 거절하시겠습니까?")}>
                 거절하기
               </Joinbtn>
             </div>

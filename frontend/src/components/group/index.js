@@ -4,6 +4,7 @@ import { DataGrid } from "@material-ui/data-grid";
 import styled1 from "styled-components";
 import { styled, makeStyles } from "@material-ui/styles";
 import { Divider } from "@material-ui/core";
+import Create from "../groupcreate"
 const columns = [
   {
     field: "id",
@@ -249,15 +250,27 @@ const Joinedbtn = styled1.button`
 `;
 const Group = () => {
   const [isgroup, setIsgroup] = useState(true);
+  const [createopen, setCreateopen] = useState(false);
+
+  const openCreateModal = () => {
+    setCreateopen(true);
+  };
+
+  const closeCreateModal = () => {
+    setCreateopen(false);
+  };
+
   return (
     <div>
       <Wrapper>
         <Joineddiv>
           <Availablediv>가입 가능한 그룹</Availablediv>
-          <Joinedbtn onClick={() => window.location.replace("/")}>
+          <Create open={createopen} close={closeCreateModal} />
+          <Joinedbtn onClick={openCreateModal}>
               그룹 생성
             </Joinedbtn>
         </Joineddiv>
+        
         <div style={{ height: 400, width: "100%" }}>
           <Muidatagrid
             rows={possiblegroup}
