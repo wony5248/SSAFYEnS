@@ -1,17 +1,39 @@
 const router = require("express").Router();
-const { body, validationResult } = require("express-validator");
+const moment = require("moment");
+const validation = require("../../validation/scheduleValidation");
 const service = require("../../service/scheduleService");
-const myValidationResult = validationResult.withDefaults({
-  formatter: (error) => {
-    return {
-      myLocation: error.location,
-    };
-  },
-});
+const { check, validationResult } = require("express-validator");
 
-router.post("/", (req, res) => {
+router.post(
+  "/",
+  validation.started_at,
+  validation.finished_at,
+  validation.deadline_at,
+  validation.notification,
+  validation.isfinished,
+  (req, res) => {
+    //validation middleware에서 에러 발생시 req에 에러 관련 객체 담김.
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      console.log(validationResult(req));
+      res.status("400").json({ result });
+    } else {
+      service
+        .post(req.body)
+        .then((data) => {
+          res.send(data);
+        })
+        .catch((error) => {
+          res.status("405").send(error);
+        });
+    }
+  }
+);
+router.get("/:schedule_id", (req, res) => {
+  const errors = validationResult(req);
+  console.log("error : ", errors);
   service
-    .post(req.body)
+    .get_$schedule_id$(req.params)
     .then((data) => {
       res.send(data);
     })
@@ -19,26 +41,13 @@ router.post("/", (req, res) => {
       res.status("405").send(error);
     });
 });
-router.get(
-  "/:schedule_id",
-  // username must be an email
-  check("started_at"),
-  (req, res) => {
-    const errors = validationResult(req);
-    console.log("error : ", errors);
-    service
-      .get_$schedule_id$(req.params)
-      .then((data) => {
-        res.send(data);
-      })
-      .catch((error) => {
-        res.status("405").send(error);
-      });
-  }
-);
 router.put(
   "/:schedule_id",
-
+  validation.started_at,
+  validation.finished_at,
+  validation.deadline_at,
+  validation.notification,
+  validation.isfinished,
   (req, res) => {
     service
       .put_$schedule_id$({
@@ -74,15 +83,4 @@ router.post("/month", (req, res) => {
       res.status("405").json({ error });
     });
 });
-
-// router.put("/:schedule_id", (req, res) => {
-//   console.log("zzz");
-//   service
-//     .unimplemented()
-//     .then((data) => {})
-//     .catch((error) => {
-//       console.log("zzz");
-//       res.status(403).send(error);
-//     });
-// });
 module.exports = router;

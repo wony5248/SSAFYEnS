@@ -25,16 +25,16 @@ exports.post = function (body) {
       noti_extend,
       challendge_id,
     } = body;
-
+    console.log(" gg : ", notification);
     const data = await db["schedules"]
       .create({
         user_id,
-        date: moment(date).isValid() ? moment(date) : moment("2021-01-02"),
+        date,
         title,
         context,
-        started_at: moment(started_at).isValid() ? moment(started_at) : null,
-        finished_at: moment(finished_at).isValid() ? moment(finished_at) : null,
-        deadline_at: moment(deadline_at).isValid() ? moment(deadline_at) : null,
+        started_at,
+        finished_at,
+        deadline_at,
         point,
         is_finished,
         notification,
