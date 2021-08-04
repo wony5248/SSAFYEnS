@@ -16,11 +16,14 @@ exports.deadline_at = check("deadline_at")
   .notEmpty()
   .custom((value, { req }) => moment(value).isValid())
   .customSanitizer((value, { req }) => moment(value).toDate());
-exports.notification = check("notification")
-  .custom((value, { req }) => moment(value).isValid())
-  .customSanitizer((value, { req }) =>
-    moment(value).isValid() ? moment(value).toDate() : null
-  );
+exports.notification = oneOf([
+  check("notification")
+    .custom((value, { req }) => moment(value).isValid())
+    .customSanitizer((value, { req }) =>
+      moment(value).isValid() ? moment(value).toDate() : null
+    ),
+  check("notification").custom((value, { req }) => value == null),
+]);
 exports.isfinished = check("is_finished").isIn([null, true, false]);
 //   check("isfinished").isBoolean(),);
 //   .custom((value, { req }) => [null, true, false].indexOf(value) != -1)

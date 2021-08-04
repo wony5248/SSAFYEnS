@@ -1,6 +1,7 @@
 // const constraints = require("../constraint/schedule")
 const moment = require("moment");
 const Sequelize = require("sequelize");
+const { finished } = require("stream");
 const op = Sequelize.Op;
 const db = require("../models");
 exports.unimplemented = function () {
@@ -25,7 +26,14 @@ exports.post = function (body) {
       noti_extend,
       challendge_id,
     } = body;
-    console.log(" gg : ", notification);
+    if (
+      moment(started_at).format("YYYY-MM-DD") !=
+      moment(finished_at).format("YYYY-MM-DD")
+    ) {
+      reject(
+        "started_at과 end_at이 다른 날짜로 작성되었습니다. 같은 날짜만 지원하도록 구현되어 있습니다."
+      );
+    }
     const data = await db["schedules"]
       .create({
         user_id,
@@ -42,12 +50,27 @@ exports.post = function (body) {
         challendge_id,
       })
       .then((data) => {
-        resolve(data);
+        return resolve(data);
       })
       .catch((error) => {
         console.error(error);
-        reject("sequelize error");
+        return reject("schedules 인스턴스를 생성하는데 오류가 발생했습니다.");
       });
+    const day = moment(started_at).format("DD");
+    const month = moment(started_at).format("DD");
+    const year = moment(started_at).format("DD");
+    console.log(day, month, year);
+    //daily가 있을경우 => 키 가져오기
+
+    //daily가 없을경우 생성
+    //week가 있을 경우 => 키 가져오기
+    //week가 없을 경우
+    //month가 있을 경우 => 키 가져오기
+    //month가 없을 경우
+    //month 생성 => 키가져오기
+    //month에 week 할당
+    //week에 daily 추가 후 daily 생성
+    //daily에 schedule 할당
   });
 };
 exports.get_$schedule_id$ = function (params) {
