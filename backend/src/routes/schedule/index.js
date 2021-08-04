@@ -102,28 +102,28 @@ router.post(
     }
   }
 );
-// router.post(
-// "/daily",
-// validation.started_at,
-// validation.finished_at,
-// validation.deadline_at,
-// validation.notification,
-// validation.isfinished,
-// (req, res) => {
-//   const result = validationResult(req);
-//   if (!result.isEmpty()) {
-//     console.log(validationResult(req));
-//     res.status("400").json({ result });
-//   } else {
-//     service
-//       .get_month(req.body.date)
-//       .then((data) => {
-//         res.json({ data });
-//       })
-//       .catch((error) => {
-//         res.status("405").json({ error });
-//       });
-//   }
-// }
-// );
+router.post(
+  "/daily",
+  // validation.date,
+  // validation.week,
+  // validation.month,
+  // validation.year,
+  // validation.user_id
+  (req, res) => {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      console.log(validationResult(req));
+      res.status("400").json({ result });
+    } else {
+      service
+        .daily(req.body)
+        .then((data) => {
+          res.json({ data });
+        })
+        .catch((error) => {
+          res.status("405").json({ error });
+        });
+    }
+  }
+);
 module.exports = router;
