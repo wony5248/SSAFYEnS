@@ -251,7 +251,8 @@ const Joinedbtn = styled1.button`
 const Group = () => {
   const [isgroup, setIsgroup] = useState(true);
   const [createopen, setCreateopen] = useState(false);
-
+  const [select, setSelect] = useState([]);
+  const [select2, setSelect2] = useState([]);
   const openCreateModal = () => {
     setCreateopen(true);
   };
@@ -275,12 +276,11 @@ const Group = () => {
             rows={possiblegroup}
             columns={columns}
             pageSize={5}
-            checkboxSelection
-            disableSelectionOnClick
+            onSelectionModelChange={itm => setSelect(itm)}
           />
         </div>
         <Joindiv>
-          <Joinbtn onClick={() => window.confirm("선택한 그룹 정보화면으로 이동하시겠습니까?")? (window.location.replace(`/group/${joinedgroup[0].id}`)) : (console.log("변화 없음"))}>
+          <Joinbtn onClick={() => window.confirm("선택한 그룹 정보화면으로 이동하시겠습니까?")? (select[0] ? window.location.replace(`/group/${select[0]}`) : window.alert("그룹을 선택해 주세요")) : console.log("아무일 없음")}>
             가입
           </Joinbtn>
         </Joindiv>
@@ -290,7 +290,7 @@ const Group = () => {
         <Wrapper>
           <Joineddiv>
             <Availablediv>내가 가입한 그룹</Availablediv>
-            <Joinedbtn onClick={() => window.location.replace(`/group/${joinedgroup[0].id}/manage`)}>
+            <Joinedbtn onClick={() => select2[0] ? window.location.replace(`/group/${select2[0]}/manage`) : window.alert("그룹을 선택해 주세요")}>
               그룹 관리
             </Joinedbtn>
           </Joineddiv>
@@ -299,12 +299,11 @@ const Group = () => {
               rows={joinedgroup}
               columns={columns}
               pageSize={5}
-              checkboxSelection
-              disableSelectionOnClick
+              onSelectionModelChange={itm => setSelect2(itm)}
             />
           </div>
           <Joindiv>
-            <Joinbtn onClick={() => window.confirm("정말 탈퇴하시겠습니까?")}>
+            <Joinbtn onClick={() => window.confirm(`${select2[0]}그룹을 정말 탈퇴하시겠습니까?`)}>
               탈퇴
             </Joinbtn>
           </Joindiv>

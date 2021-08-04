@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Wrapper from "./styles";
-
+import Join from "../groupjoin"
 const Topdiv = styled.div`
   display: flex;
   justify-content: space-between;
@@ -28,8 +28,6 @@ const Seconddiv = styled.div`
   margin-top: 32px;
 `;
 const Secondcontent = styled.div`
-  display: flex;
-  flex-direction: column;
   align-items: center;
   width: 45%;
   height: 600px;
@@ -49,8 +47,8 @@ const Joinbtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  align-self: flex-end;
   margin-top: 130px;
+  float:right;
   width: 199px;
   background-color: #a3cca3;
   color: white;
@@ -68,7 +66,6 @@ const Secondleftdiv = styled.div`
   align-items: top;
   width: 100%;
   margin-top: 24px;
-  border-radius: 20px;
   height: 500px;
   border: 1px solid #a3cca3;
   overflow: auto;
@@ -90,6 +87,7 @@ const Challengetitlediv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  align-self:center;
   width: 263px;
   color: #000000;
   border: 1px solid #a3cca3;
@@ -98,18 +96,6 @@ const Challengetitlediv = styled.div`
   margin-left: 27px;
   font-size: 16px;
   height: 51px;
-`;
-const Summarydiv = styled.div`
-  justify-content: center;
-  align-self: flex-end;
-  align-items: center;
-  width: 178px;
-  border: 1px solid #a3cca3;
-  margin-top: 27px;
-  margin-right: 27px;
-  font-size: 14px;
-  overflow: auto;
-  height: 104px;
 `;
 const Progressdiv = styled.div`
   justify-content: center;
@@ -120,7 +106,7 @@ const Progressdiv = styled.div`
   margin-left: 27px;
   margin-bottom: 27px;
   font-size: 14px;
-  height: 220px;
+  height: 300px;
   overflow: auto;
 `;
 const Challengeaddbtn = styled.button`
@@ -152,20 +138,11 @@ const Backbtn = styled.button`
     background-color: #69a569;
   }
 `;
-const Summarybardiv = styled.div`
-  height: 20px;
-  width: 140px;
-  display: flex;
-  justify-content: space-between;
-  min-height: 20px;
-  margin-top: 8px;
-  margin-left: 8px;
-  align-items: center;
-`;
 const Progressbardiv = styled.div`
   height: 40px;
   width: 300px;
   display: flex;
+  color:black;
   justify-content: flex-start;
   min-height: 20px;
   margin-top: 8px;
@@ -176,22 +153,30 @@ const Groupinfo = (props) => {
   const { id } = props;
   console.log(props);
   const [ismember, setIsmember] = useState(true);
+  const [joinopen, setJoinopen] = useState(false);
+  const openCreateModal = () => {
+    setJoinopen(true);
+  };
+
+  const closeCreateModal = () => {
+    setJoinopen(false);
+  };
   return (
     <div style={{ padding: "24px 0" }}>
       {" "}
       {ismember ? (
         <Wrapper>
-          <Topdiv>
+          <div><Topdiv>
             <Backbtn onClick={() => window.location.replace("/group")}>
               뒤로 가기{" "}
             </Backbtn>{" "}
             <Namediv> CS 스터디 </Namediv>{" "}
             <div style={{ width: "200px" }}> </div>{" "}
-          </Topdiv>{" "}
-          <Seconddiv>
-            <Secondcontent>
+          </Topdiv><Seconddiv>
+          <Secondcontent>
               <Titlediv> 현재 진행중인 챌린지 </Titlediv>{" "}
               <Secondleftdiv>
+              <div>
                 <div
                   style={{
                     display: "flex",
@@ -213,78 +198,6 @@ const Groupinfo = (props) => {
                     </svg>{" "}
                   </Challengeaddbtn>{" "}
                 </div>{" "}
-                <Summarydiv>
-                  <Summarybardiv>
-                    <div
-                      style={{
-                        height: "100%",
-                        width: "15px",
-                        backgroundColor: "red",
-                      }}
-                    ></div>{" "}
-                    <div> 1 장 </div>{" "}
-                  </Summarybardiv>{" "}
-                  <Summarybardiv>
-                    <div
-                      style={{
-                        height: "100%",
-                        width: "30px",
-                        backgroundColor: "orange",
-                      }}
-                    ></div>{" "}
-                    <div> 2 장 </div>{" "}
-                  </Summarybardiv>{" "}
-                  <Summarybardiv>
-                    <div
-                      style={{
-                        height: "100%",
-                        width: "45px",
-                        backgroundColor: "yellow",
-                      }}
-                    ></div>{" "}
-                    <div> 3 장 </div>{" "}
-                  </Summarybardiv>{" "}
-                  <Summarybardiv>
-                    <div
-                      style={{
-                        height: "100%",
-                        width: "60px",
-                        backgroundColor: "green",
-                      }}
-                    ></div>{" "}
-                    <div> 4 장 </div>{" "}
-                  </Summarybardiv>{" "}
-                  <Summarybardiv>
-                    <div
-                      style={{
-                        height: "100%",
-                        width: "75px",
-                        backgroundColor: "blue",
-                      }}
-                    ></div>{" "}
-                    <div> 5 장 </div>{" "}
-                  </Summarybardiv>{" "}
-                  <Summarybardiv>
-                    <div
-                      style={{
-                        height: "100%",
-                        width: "90px",
-                        backgroundColor: "navy",
-                      }}
-                    ></div>{" "}
-                    <div> 6 장 </div>{" "}
-                  </Summarybardiv>{" "}
-                  <Summarybardiv>
-                    <div
-                      style={{
-                        height: "100%",
-                        width: "100px",
-                        backgroundColor: "purple",
-                      }}
-                    ></div>{" "}
-                    <div> 7 장 </div>{" "}
-                  </Summarybardiv>{" "}
-                </Summarydiv>{" "}
                 <Progressdiv>
                   <Progressbardiv>
                     <div> 1 장 </div>{" "}
@@ -371,7 +284,98 @@ const Groupinfo = (props) => {
                     ></div>{" "}
                   </Progressbardiv>{" "}
                 </Progressdiv>{" "}
+              </div>
+                <div>
+                <Challengetitlediv> 이산 수학 마스터 하기 </Challengetitlediv>{" "}
+                <Progressdiv>
+                  <Progressbardiv>
+                    <div> 1 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "30px",
+                        backgroundColor: "red",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 2 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "60px",
+                        backgroundColor: "orange",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 3 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "90px",
+                        backgroundColor: "yellow",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 4 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "120px",
+                        backgroundColor: "green",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 5 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "150px",
+                        backgroundColor: "blue",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 6 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "180px",
+                        backgroundColor: "navy",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 7 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "210px",
+                        backgroundColor: "purple",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                </Progressdiv>{" "}
+              </div>
               </Secondleftdiv>{" "}
+              
             </Secondcontent>{" "}
             <Secondcontent>
               <Titlediv> 그룹 소개 </Titlediv>{" "}
@@ -379,30 +383,202 @@ const Groupinfo = (props) => {
                 아!죽여줘 하시는 분들의 모임. <br /> 주 1 회 모여서 스터디
                 합니다. <br /> 코딩에 깔려 죽으실꺼 같은 분들 환영입니다.{" "}
               </Secondrightdiv>{" "}
-              <Joinbtn> 관리하기 </Joinbtn>{" "}
+              <Joinbtn onClick={openCreateModal}> 가입 하기 </Joinbtn>{" "}
             </Secondcontent>{" "}
-          </Seconddiv>{" "}
+          </Seconddiv></div>)
         </Wrapper>
       ) : (
         <Wrapper>
-          <Topdiv>
+         {joinopen ? (<div><Join open={joinopen} close={closeCreateModal} /></div>) : (<div><Topdiv>
+            <Backbtn onClick={() => window.location.replace("/group")}>
+              뒤로 가기{" "}
+            </Backbtn>{" "}
             <Namediv> CS 스터디 </Namediv>{" "}
-          </Topdiv>{" "}
-          <Seconddiv>
-            <Secondcontent>
+            <div style={{ width: "200px" }}> </div>{" "}
+          </Topdiv><Seconddiv>
+          <Secondcontent>
               <Titlediv> 현재 진행중인 챌린지 </Titlediv>{" "}
               <Secondleftdiv>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <Challengetitlediv> 이산 수학 마스터 하기 </Challengetitlediv>{" "}
-                </div>{" "}
-                <Summarydiv> </Summarydiv> <Progressdiv> </Progressdiv>{" "}
+              <div>
+                <Challengetitlediv> 이산 수학 마스터 하기 </Challengetitlediv>{" "}
+                <Progressdiv>
+                  <Progressbardiv>
+                    <div> 1 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "30px",
+                        backgroundColor: "red",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 2 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "60px",
+                        backgroundColor: "orange",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 3 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "90px",
+                        backgroundColor: "yellow",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 4 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "120px",
+                        backgroundColor: "green",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 5 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "150px",
+                        backgroundColor: "blue",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 6 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "180px",
+                        backgroundColor: "navy",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 7 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "210px",
+                        backgroundColor: "purple",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                </Progressdiv>{" "}
+              </div>
+                <div>
+                <Challengetitlediv> 이산 수학 마스터 하기 </Challengetitlediv>{" "}
+                <Progressdiv>
+                  <Progressbardiv>
+                    <div> 1 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "30px",
+                        backgroundColor: "red",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 2 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "60px",
+                        backgroundColor: "orange",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 3 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "90px",
+                        backgroundColor: "yellow",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 4 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "120px",
+                        backgroundColor: "green",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 5 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "150px",
+                        backgroundColor: "blue",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 6 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "180px",
+                        backgroundColor: "navy",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 7 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "210px",
+                        backgroundColor: "purple",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                </Progressdiv>{" "}
+              </div>
               </Secondleftdiv>{" "}
+              
             </Secondcontent>{" "}
             <Secondcontent>
               <Titlediv> 그룹 소개 </Titlediv>{" "}
@@ -410,9 +586,10 @@ const Groupinfo = (props) => {
                 아!죽여줘 하시는 분들의 모임. <br /> 주 1 회 모여서 스터디
                 합니다. <br /> 코딩에 깔려 죽으실꺼 같은 분들 환영입니다.{" "}
               </Secondrightdiv>{" "}
-              <Joinbtn> 가입하기 </Joinbtn>{" "}
+              <Joinbtn onClick={openCreateModal}> 가입 하기 </Joinbtn>{" "}
             </Secondcontent>{" "}
-          </Seconddiv>{" "}
+          </Seconddiv></div>)}
+          
         </Wrapper>
       )}{" "}
     </div>

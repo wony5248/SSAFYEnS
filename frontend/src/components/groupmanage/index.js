@@ -260,7 +260,7 @@ const Groupinput = styled1.input`
 const Groupmanage = (props) => {
   const [isleader, setIsleader] = useState(true);
   const [createopen, setCreateopen] = useState(false);
-
+  const [select, setSelect] = useState([]);
   const openCreateModal = () => {
     setCreateopen(true);
   };
@@ -270,6 +270,7 @@ const Groupmanage = (props) => {
   };
   const { id } = props;
   console.log(id);
+  console.log(select);
   return (
     <div style={{ padding: "24px 0" }}>
       {isleader ? (
@@ -290,8 +291,7 @@ const Groupmanage = (props) => {
               rows={possiblegroup}
               columns={columns}
               pageSize={5}
-              checkboxSelection
-              disableSelectionOnClick
+              onSelectionModelChange={itm => setSelect(itm)}
             />
           </div>
           <Joindiv>
@@ -319,8 +319,7 @@ const Groupmanage = (props) => {
               rows={joinedgroup}
               columns={application}
               pageSize={5}
-              checkboxSelection
-              disableSelectionOnClick
+              onSelectionModelChange={itm => setSelect(itm)}
             />
           </div>
           <Joindiv>
@@ -328,7 +327,7 @@ const Groupmanage = (props) => {
               <Acceptbtn
                 onClick={() => window.confirm("정말 승인하시겠습니까?")}
               >
-                승인하기
+                승인하기{select[0]}
               </Acceptbtn>
               <Joinbtn onClick={() => window.confirm("정말 거절하시겠습니까?")}>
                 거절하기
