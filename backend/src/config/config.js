@@ -28,5 +28,10 @@ const test = {
     port: env.MYSQL_PORT || 3306,
   },
 };
+// 현재 작동 안되는 것으로 보임
+const jwt = { 
+  secret: env.SECRET_KEY,
+  expiresIn: env.EXPIRES_IN || 86400, // 기본값 24시간
 
-module.exports = { development, production, test };
+}
+module.exports = { development, production, test, jwt };
