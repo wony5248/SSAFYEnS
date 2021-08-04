@@ -1,14 +1,13 @@
 const { validationResult, check, oneOf } = require("express-validator");
 const moment = require("moment");
+moment.tz.setDefault("Asia/Seoul");
 
 //example
 
 exports.date = check("date")
   .notEmpty()
   .custom((value, { req }) => moment(value).isValid())
-  .customSanitizer((value, { req }) =>
-    moment(value).format("YYYY-MM-DD").toDate()
-  );
+  .customSanitizer((value, { req }) => moment(value).startOf("day").toDate());
 
 exports.started_at = check("started_at") //req에 있는 key 중 started_at를 찾아 value를 검사
   .notEmpty() //(validation) empty 값 null, "", false 이면 req에 에러 추가

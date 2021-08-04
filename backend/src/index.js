@@ -13,13 +13,13 @@ const env = process.env;
 
 // content-type - application/json
 app.use(express.json());
-const moment = require("moment");
-const date = moment("2021-01-23 4:5:6");
-console.log(date);
-console.log(date.utc());
-console.log(date.toDate());
-console.log(date.utc().toDate());
-console.log(date.startOf("days"));
+const moment = require("moment-timezone");
+moment.tz.setDefault("Asia/Seoul");
+const date = moment("2021-08-03 11:00:00");
+console.log("date : ", date);
+console.log("date.startOf.format : ", date.startOf("days").format());
+console.log("date.startOf.toDate : ", date.startOf("days").toDate());
+// console.log("date2 : ", date2);
 
 // content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));

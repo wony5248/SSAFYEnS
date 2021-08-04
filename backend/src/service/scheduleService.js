@@ -1,5 +1,5 @@
 // const constraints = require("../constraint/schedule")
-const { update } = require("lodash");
+const { update, result } = require("lodash");
 const moment = require("moment");
 const Sequelize = require("sequelize");
 const { finished } = require("stream");
@@ -59,17 +59,14 @@ exports.post = function (body) {
         return reject("schedules 인스턴스를 생성하는데 오류가 발생했습니다.");
       });
 
-    console.log(started_at);
-    date = moment(started_at).startOf("day");
-    const day = moment(started_at).day();
-    const month = moment(started_at).month();
+    const day = moment(started_at).startOf("day").toDate();
+    const month = moment(started_at).month() + 1;
     const year = moment(started_at).year();
     const week = moment(started_at).isoWeek();
-    console.log(date);
 
     let result = await db["daily"].findOne({
       where: {
-        date: date,
+        date: day,
       },
     });
     console.log(result);
@@ -77,7 +74,7 @@ exports.post = function (body) {
     if (result == null) {
       console.log("no date");
       db["daily"].create({
-        date,
+        date: day,
         week,
         month,
         year,
@@ -89,78 +86,8 @@ exports.post = function (body) {
       });
     } else {
       result.context = result.context + context + "\n";
-      result.avgpoint = result.avgpoint + avgpoint;
-      result.save();
-    }
-
-    //weekly 확인
-    result = await db["weekly"].findOne(
-      {},
-      {
-        where: {
-          year,
-          week: week,
-        },
-      }
-    );
-
-    if (result == null) {
-      console.log("no date");
-      db["weekly"].create({
-        week,
-        month,
-        year,
-        user_id,
-        avgpoint: point,
-        // avgenvironment,
-      });
-    } else {
-      result.avgpoint += avgpoint;
-      result.save();
-    }
-
-    //monthly
-    result = await db["monthly"].findOne(
-      {},
-      {
-        where: {
-          year,
-          month,
-        },
-      }
-    );
-
-    if (result == null) {
-      console.log("no date");
-      db["monthly"].create({
-        month,
-        year,
-        user_id,
-        avgpoint: point,
-      });
-    } else {
-      result.avgpoint += avgpoint;
-      result.save();
-    }
-
-    result = await db["yearly"].findOne(
-      {},
-      {
-        where: {
-          year,
-        },
-      }
-    );
-
-    if (result == null) {
-      console.log("no date");
-      db["yearly"].create({
-        year,
-        user_id,
-        avgpoint: point,
-      });
-    } else {
-      result.avgpoint += avgpoint;
+      result.cntschedule = result.cntschedule + 1 + "\n";
+      result.avgpoint = result.avgpoint + point;
       result.save();
     }
   });
@@ -189,7 +116,7 @@ exports.get_$schedule_id$ = function (params) {
 exports.put_$schedule_id$ = function (data) {
   return new Promise(async function (resolve, reject) {
     const { schedule_id, body } = data;
-    db["schedules"]
+    let result = await db["schedules"]
       .update(
         {
           ...body,
@@ -208,7 +135,6 @@ exports.put_$schedule_id$ = function (data) {
         console.log(error);
         reject("db error");
       });
-    // reject("db instance not finded");
   });
 };
 exports.delete_$schedule_id$ = function (data) {
@@ -273,8 +199,100 @@ exports.get_month = function (date) {
   });
 };
 
-// exports.daily = function (body) {
-//   return new Promise(async function (resolve, reject) {
-//     const {date, week, month, year, user_id, context, avgpoint, cntschedule, avgenvironment}
-//   })
-// };
+exports.post_submit = function (body) {
+  return new Promise(async function (resolve, reject) {
+    const { date, point, context, user_id } = body;
+    const day = moment(date).startOf("day").toDate();
+    const month = moment(date).month() + 1;
+    const year = moment(date).year();
+    const week = moment(date).isoWeek();
+
+    const dailyResult = await db["daily"].update(
+      {
+        context,
+        point,
+        is_finished: true,
+      },
+      {
+        where: {
+          date,
+        },
+      }
+    );
+    console.log(dailyResult);
+    //update할 일자 정보가 없음.
+    if (dailyResult == null || dailyResult[0] == 0)
+      return reject("해당 일자를 찾을 수 없습니다.");
+
+    //weekly 확인
+    const weeklyResult = await db["weekly"].findOne({
+      where: {
+        [op.and]: [
+          {
+            year,
+          },
+          {
+            week,
+          },
+        ],
+      },
+    });
+
+    if (weeklyResult == null) {
+      //weekly가 해당 존재하지않음
+      console.log(`week ${week}가 존재하지 않습니다.`);
+      db["weekly"].create({
+        week,
+        month,
+        year,
+        user_id,
+        avgpoint: point,
+      });
+    } else weeklyResult.avgpoint += point;
+
+    //monthly
+    const monthlyResult = await db["monthly"].findOne({
+      where: {
+        year,
+        month,
+      },
+    });
+
+    if (monthlyResult == null) {
+      console.log(`month ${month}가 존재하지 않습니다.`);
+      db["monthly"].create({
+        month,
+        year,
+        user_id,
+        avgpoint: point,
+      });
+    } else {
+      monthlyResult.avgpoint += point;
+    }
+
+    const yearlyResult = await db["yearly"].findOne(
+      {},
+      {
+        where: {
+          year,
+        },
+      }
+    );
+
+    if (yearlyResult == null) {
+      console.log(`year ${week}가 존재하지 않습니다.`);
+      db["yearly"].create({
+        year,
+        user_id,
+        avgpoint: point,
+      });
+    } else {
+      yearlyResult.avgpoint += point;
+    }
+    // if (dailyResult != null) dailyResult.save();
+    if (weeklyResult != null) weeklyResult.save();
+    if (monthlyResult != null) monthlyResult.save();
+    if (yearlyResult != null) yearlyResult.save();
+    resolve({ result: "changed" });
+  });
+};
