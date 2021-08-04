@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const request = axios.create({
-    baseURL:"http://i5a109.p.ssafy.io:8080"
+    baseURL:"http://i5a109.p.ssafy.io:8079"
 });
 
 export const scheduleAPI = {

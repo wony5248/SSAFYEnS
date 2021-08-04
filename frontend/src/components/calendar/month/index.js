@@ -11,8 +11,7 @@ import { scheduleAPI } from "../../../utils/axios";
 
 const Month = () => {
   const [query, setQuery] = useState("react");
-  const [todayPlan, setTodayPlan] = useState({});
-  let data = [];
+  const [data, setData] = useState([]);
   let history = useHistory();
   const [getMoment, setMoment] = useState(moment());
   const [planOpen, setPlanOpen] = useState(false);
@@ -25,15 +24,7 @@ const Month = () => {
         today.format("YYYY"),
         today.format("MM")
       );
-      data = result.data;
-      console.log(data);
-      for (let i = 0; i < data.length; i++) {
-        if (
-          today.format("MM-DD") === moment(data[i].started_at).format("MM-DD")
-        ) {
-          setTodayPlan(data[i]);
-        }
-      }
+      setData(result.data);
     }
     getMonthlySchedule();
     return () => {
@@ -78,6 +69,27 @@ const Month = () => {
     return result;
   };
 
+  const dayPlan = (date)=>{
+    let result = [];
+    // console.log(data);
+    for (let i=0; i<data.length; i++){
+      if (date.format("MM-DD") === moment(data[i].started_at).format("MM-DD")){
+        result = result.concat(
+          <span
+            style={{
+              color: "black",
+              fontSize: 12,
+              marginTop: "3px",
+            }}
+          >
+            {data[i].title}
+          </span>
+        );
+      }
+      
+    }
+    return result;
+  }
   const dateArr = () => {
     let result = [];
     let week = firstWeek;
@@ -121,15 +133,7 @@ const Month = () => {
                   >
                     <Grid container direction="column">
                       <span>{days.format("D")}</span>
-                      <span
-                        style={{
-                          color: "black",
-                          fontSize: 12,
-                          marginTop: "3px",
-                        }}
-                      >
-                        {todayPlan["title"]}
-                      </span>
+                      {dayPlan(days)}
                     </Grid>
                   </td>
                 );
@@ -168,6 +172,7 @@ const Month = () => {
                   >
                     <Grid container direction="column">
                       <span>{days.format("D")}</span>
+                      {dayPlan(days)}
                       {/* <span style={{color:'black'}}>title</span> */}
                     </Grid>
                   </td>
