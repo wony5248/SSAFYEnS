@@ -2,7 +2,6 @@ const router = require("express").Router();
 const validation = require("../../validation/scheduleValidation");
 const service = require("../../service/scheduleService");
 const { validationResult } = require("express-validator");
-
 router.post(
   "/",
   validation.date,
@@ -10,7 +9,11 @@ router.post(
   validation.finished_at,
   validation.deadline_at,
   validation.notification,
-  validation.isfinished,
+  validation.is_finished,
+  validation.month,
+  validation.year,
+  validation.week,
+  validation.point,
   (req, res) => {
     //validation middleware에서 에러 발생시 req에 에러 관련 객체 담김.
     const result = validationResult(req);
@@ -47,7 +50,7 @@ router.put(
   validation.finished_at,
   validation.deadline_at,
   validation.notification,
-  validation.isfinished,
+  validation.is_finished,
   (req, res) => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
@@ -79,13 +82,28 @@ router.delete("/:schedule_id", (req, res) => {
       res.status("405").json({ error });
     });
 });
+router.post("/month", validation.date, (req, res) => {
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    console.log(validationResult(req));
+    res.status("400").json({ result });
+  } else {
+    service
+      .get_month(req.body.date)
+      .then((data) => {
+        res.json({ data });
+      })
+      .catch((error) => {
+        res.status("405").json({ error });
+      });
+  }
+});
 router.post(
-  "/month",
-  validation.started_at,
-  validation.finished_at,
-  validation.deadline_at,
-  validation.notification,
-  validation.isfinished,
+  "/submit",
+  validation.date,
+  validation.month,
+  validation.year,
+  validation.week,
   (req, res) => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
@@ -93,7 +111,7 @@ router.post(
       res.status("400").json({ result });
     } else {
       service
-        .get_month(req.body.date)
+        .post_submit(req.body)
         .then((data) => {
           res.json({ data });
         })
@@ -103,38 +121,14 @@ router.post(
     }
   }
 );
-// router.post(
-//   "/daily",
-//   // validation.date,
-//   // validation.week,
-//   // validation.month,
-//   // validation.year,
-//   // validation.user_id
-//   (req, res) => {
-//     const result = validationResult(req);
-//     if (!result.isEmpty()) {
-//       console.log(validationResult(req));
-//       res.status("400").json({ result });
-//     } else {
-//       service
-//         .daily(req.body)
-//         .then((data) => {
-//           res.json({ data });
-//         })
-//         .catch((error) => {
-//           res.status("405").json({ error });
-//         });
-//     }
-//   }
-// );
-router.post("/submit", validation.date, (req, res) => {
+router.post("/daily", validation.date, (req, res) => {
   const result = validationResult(req);
   if (!result.isEmpty()) {
     console.log(validationResult(req));
     res.status("400").json({ result });
   } else {
     service
-      .post_submit(req.body)
+      .post_daily(req.body)
       .then((data) => {
         res.json({ data });
       })

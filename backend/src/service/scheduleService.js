@@ -5,6 +5,7 @@ const Sequelize = require("sequelize");
 const { finished } = require("stream");
 const op = Sequelize.Op;
 const db = require("../models");
+const { post } = require("../routes/schedule");
 const router = require("../routes/schedule");
 exports.unimplemented = function () {
   return new Promise(async function (resolve, reject) {
@@ -13,83 +14,44 @@ exports.unimplemented = function () {
 };
 exports.post = function (body) {
   return new Promise(async function (resolve, reject) {
-    let {
-      user_id,
-      date,
-      title,
-      context,
-      started_at,
-      finished_at,
-      deadline_at,
-      updated_at,
-      point,
-      is_finished,
-      notification,
-      noti_extend,
-      challendge_id,
-    } = body;
-    if (
-      moment(started_at).format("YYYY-MM-DD") !=
-      moment(finished_at).format("YYYY-MM-DD")
-    ) {
-      reject(
-        "started_at과 end_at이 다른 날짜로 작성되었습니다. 같은 날짜만 지원하도록 구현되어 있습니다."
-      );
-    }
-    const data = await db["schedules"]
-      .create({
-        user_id,
-        date,
-        title,
-        context,
-        started_at,
-        finished_at,
-        deadline_at,
-        point,
-        is_finished,
-        notification,
-        noti_extend,
-        challendge_id,
-      })
-      .then((data) => {
-        return resolve(data);
-      })
-      .catch((error) => {
-        console.error(error);
-        return reject("schedules 인스턴스를 생성하는데 오류가 발생했습니다.");
-      });
+    console.log("body : ", body);
+    //유효성 검사 => schedule => daily 순으로 생성
+    //유효성검사. validation에서 두 속성(started_at, finished_at)에 대한 조건 거는법을 몰라서 service에 작성
 
-    const day = moment(started_at).startOf("day").toDate();
-    const month = moment(started_at).month() + 1;
-    const year = moment(started_at).year();
-    const week = moment(started_at).isoWeek();
+    //schedule 생성 (트랜젝션 커밋은 마지막에)
+    const db_schedules = await db["schedules"].build({
+      ...body,
+    });
 
-    let result = await db["daily"].findOne({
+    //daily 생성에 필요한 date 객체 생성
+    let data_daily = ({ standard_at, user_id, date, month, year, week } = body);
+    data_daily = {
+      ...data_daily,
+      avgpoint: body.point,
+      cntschedule: 1,
+      context: body.context + "n",
+    };
+
+    var db_daily = await db["daily"].findOne({
       where: {
-        date: day,
+        date: moment(body.started_at).startOf("day").toDate(),
       },
     });
-    console.log(result);
 
-    if (result == null) {
-      console.log("no date");
-      db["daily"].create({
-        date: day,
-        week,
-        month,
-        year,
-        user_id,
-        context: context + "\n",
-        avgpoint: point,
-        cntschedule: 1,
-        // avgenvironment,
-      });
+    //아래부터 트랜잭션 일괄적용
+    db_schedules.save();
+    if (db_daily == null) {
+      console.log("해당 Daily를 생성합니다");
+      var db_daily2 = db["daily"].build(data_daily);
+      db_daily2.save();
     } else {
-      result.context = result.context + context + "\n";
-      result.cntschedule = result.cntschedule + 1 + "\n";
-      result.avgpoint = result.avgpoint + point;
-      result.save();
+      console.log("해당 Daily를 수정합니다");
+      db_daily.context = db_daily.context + body.context + "\n";
+      db_daily.cntschedule = db_daily.cntschedule + 1 + "\n";
+      db_daily.avgpoint = db_daily.avgpoint + body.point;
+      db_daily.save();
     }
+    return resolve({ result: "post" });
   });
 };
 exports.get_$schedule_id$ = function (params) {
@@ -161,15 +123,15 @@ exports.delete_$schedule_id$ = function (data) {
 };
 exports.get_month = function (date) {
   return new Promise(async function (resolve, reject) {
-    const month = moment(date, "YYYY-MM");
-    console.log(month);
+    const month = moment(date).startOf("month");
+
     const standard1 = moment(month).toDate();
     const standard2 = moment(month)
       .add(1, "months")
       .subtract(1, "days")
       .toDate();
 
-    console.log(standard1, standard2);
+    console.log(`${month} 월을 조회합니다`, standard1, standard2);
     const data = await db["schedules"]
       .findAll({
         where: {
@@ -186,9 +148,7 @@ exports.get_month = function (date) {
         },
       })
       .then((result) => {
-        console.log("답 : ", result);
-        if (result == 0) reject("no db instance");
-        else if (result == 1) resolve(result);
+        // console.log("답 : ", result);
         resolve(result);
       })
       .catch((error) => {
@@ -201,12 +161,9 @@ exports.get_month = function (date) {
 
 exports.post_submit = function (body) {
   return new Promise(async function (resolve, reject) {
-    const { date, point, context, user_id } = body;
-    const day = moment(date).startOf("day").toDate();
-    const month = moment(date).month() + 1;
-    const year = moment(date).year();
-    const week = moment(date).isoWeek();
+    const { date, point, context, user_id, month, year, week } = body;
 
+    console.log(date);
     const dailyResult = await db["daily"].update(
       {
         context,
@@ -219,7 +176,6 @@ exports.post_submit = function (body) {
         },
       }
     );
-    console.log(dailyResult);
     //update할 일자 정보가 없음.
     if (dailyResult == null || dailyResult[0] == 0)
       return reject("해당 일자를 찾을 수 없습니다.");
@@ -293,6 +249,34 @@ exports.post_submit = function (body) {
     if (weeklyResult != null) weeklyResult.save();
     if (monthlyResult != null) monthlyResult.save();
     if (yearlyResult != null) yearlyResult.save();
-    resolve({ result: "changed" });
+    resolve({ result: "put" });
+  });
+};
+
+exports.post_daily = function (body) {
+  return new Promise(async function (resolve, reject) {
+    try {
+      const { date } = body;
+      const date_end = moment(date).add(1, "days").toDate();
+      const data = await db["schedules"].findAll({
+        where: {
+          [op.and]: [
+            {
+              started_at: {
+                [op.gte]: date,
+              },
+            },
+            {
+              finished_at: {
+                [op.lte]: date_end,
+              },
+            },
+          ],
+        },
+      });
+      resolve(data);
+    } catch (error) {
+      reject(error);
+    }
   });
 };
