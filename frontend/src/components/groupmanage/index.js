@@ -5,6 +5,7 @@ import styled1 from "styled-components";
 import { styled, makeStyles } from "@material-ui/styles";
 import { Divider } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
+import Create from "../challengecreate";
 const columns = [
   {
     field: "id",
@@ -193,6 +194,7 @@ const Joinbtn = styled1.button`
   background-color: #a3cca3;
   border:none;
   color: white;
+  z-index:1;
   &:hover{
     background-color: #69a569;
   }
@@ -257,30 +259,31 @@ const Groupinput = styled1.input`
 `;
 const Groupmanage = (props) => {
   const [isleader, setIsleader] = useState(true);
-  const {id} = props
-  console.log(id)
+  const [createopen, setCreateopen] = useState(false);
+
+  const openCreateModal = () => {
+    setCreateopen(true);
+  };
+
+  const closeCreateModal = () => {
+    setCreateopen(false);
+  };
+  const { id } = props;
+  console.log(id);
   return (
     <div style={{ padding: "24px 0" }}>
       {isleader ? (
         <Wrapper>
           <Grouptitlediv>
-            <Challengebtn onClick = {() => window.location.replace("/group")}>뒤로 가기</Challengebtn>
+            <Challengebtn onClick={() => window.location.replace("/group")}>
+              뒤로 가기
+            </Challengebtn>
             <GroupNamediv>JBJ와 함께하는 Electron</GroupNamediv>
-            <Challengebtn>챌린지 만들기</Challengebtn>
+            <Challengebtn onClick={openCreateModal}>챌린지 만들기</Challengebtn>
           </Grouptitlediv>
           <Joineddiv>
             <Availablediv>그룹 구성원</Availablediv>
-            <div
-              style={{ width: "25%", display: "flex", alignItems: "center" }}
-            >
-              <Groupinput dir="rtl"></Groupinput>
-              <Searchbtn>
-                <SearchIcon
-                  fontSize="large"
-                  style={{ color: "#a3cca3" }}
-                ></SearchIcon>
-              </Searchbtn>
-            </div>
+            <Create open={createopen} close={closeCreateModal} />
           </Joineddiv>
           <div style={{ height: 400, width: "100%" }}>
             <Muidatagrid

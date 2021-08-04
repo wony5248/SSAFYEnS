@@ -4,7 +4,7 @@ import Wrapper from "./styles";
 
 const Topdiv = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   height: 51px;
@@ -71,6 +71,7 @@ const Secondleftdiv = styled.div`
   border-radius: 20px;
   height: 500px;
   border: 1px solid #a3cca3;
+  overflow: auto;
 `;
 const Secondrightdiv = styled.div`
   display: flex;
@@ -99,7 +100,6 @@ const Challengetitlediv = styled.div`
   height: 51px;
 `;
 const Summarydiv = styled.div`
-  display: flex;
   justify-content: center;
   align-self: flex-end;
   align-items: center;
@@ -112,7 +112,6 @@ const Summarydiv = styled.div`
   height: 104px;
 `;
 const Progressdiv = styled.div`
-  display: flex;
   justify-content: center;
   align-items: center;
   width: 480px;
@@ -139,20 +138,59 @@ const Challengeaddbtn = styled.button`
     background-color: #69a569;
   }
 `;
+const Backbtn = styled.button`
+  width: 140px;
+  height: 100%;
+  border-radius: 20px;
+  font-size: 16px;
+  background-color: #a3cca3;
+  align-content: flex-end;
+
+  border: none;
+  color: white;
+  &:hover {
+    background-color: #69a569;
+  }
+`;
+const Summarybardiv = styled.div`
+  height: 20px;
+  width: 140px;
+  display: flex;
+  justify-content: space-between;
+  min-height: 20px;
+  margin-top: 8px;
+  margin-left: 8px;
+  align-items: center;
+`;
+const Progressbardiv = styled.div`
+  height: 40px;
+  width: 300px;
+  display: flex;
+  justify-content: flex-start;
+  min-height: 20px;
+  margin-top: 8px;
+  margin-left: 8px;
+  align-items: center;
+`;
 const Groupinfo = (props) => {
   const { id } = props;
   console.log(props);
   const [ismember, setIsmember] = useState(true);
   return (
     <div style={{ padding: "24px 0" }}>
+      {" "}
       {ismember ? (
         <Wrapper>
           <Topdiv>
-            <Namediv>CS 스터디</Namediv>
-          </Topdiv>
+            <Backbtn onClick={() => window.location.replace("/group")}>
+              뒤로 가기{" "}
+            </Backbtn>{" "}
+            <Namediv> CS 스터디 </Namediv>{" "}
+            <div style={{ width: "200px" }}> </div>{" "}
+          </Topdiv>{" "}
           <Seconddiv>
             <Secondcontent>
-              <Titlediv>현재 진행중인 챌린지</Titlediv>
+              <Titlediv> 현재 진행중인 챌린지 </Titlediv>{" "}
               <Secondleftdiv>
                 <div
                   style={{
@@ -161,7 +199,7 @@ const Groupinfo = (props) => {
                     alignItems: "center",
                   }}
                 >
-                  <Challengetitlediv>이산 수학 마스터 하기</Challengetitlediv>
+                  <Challengetitlediv> 이산 수학 마스터 하기 </Challengetitlediv>{" "}
                   <Challengeaddbtn>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -171,32 +209,188 @@ const Groupinfo = (props) => {
                       <path
                         d="M 14.955 7.909 C 14.955 7.407 15.362 7 15.864 7 L 23.136 7 C 23.638 7 24.045 7.407 24.045 7.909 L 24.045 14.955 L 31.091 14.955 C 31.593 14.955 32 15.362 32 15.864 L 32 23.136 C 32 23.638 31.593 24.045 31.091 24.045 L 24.045 24.045 L 24.045 31.091 C 24.045 31.593 23.638 32 23.136 32 L 15.864 32 C 15.362 32 14.955 31.593 14.955 31.091 L 14.955 24.045 L 7.909 24.045 C 7.407 24.045 7 23.638 7 23.136 L 7 15.864 C 7 15.362 7.407 14.955 7.909 14.955 L 14.955 14.955 Z"
                         fill="rgb(255, 255, 255)"
-                      ></path>
-                    </svg>
-                  </Challengeaddbtn>
-                </div>
-                <Summarydiv></Summarydiv>
-                <Progressdiv></Progressdiv>
-              </Secondleftdiv>
-            </Secondcontent>
+                      ></path>{" "}
+                    </svg>{" "}
+                  </Challengeaddbtn>{" "}
+                </div>{" "}
+                <Summarydiv>
+                  <Summarybardiv>
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "15px",
+                        backgroundColor: "red",
+                      }}
+                    ></div>{" "}
+                    <div> 1 장 </div>{" "}
+                  </Summarybardiv>{" "}
+                  <Summarybardiv>
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "30px",
+                        backgroundColor: "orange",
+                      }}
+                    ></div>{" "}
+                    <div> 2 장 </div>{" "}
+                  </Summarybardiv>{" "}
+                  <Summarybardiv>
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "45px",
+                        backgroundColor: "yellow",
+                      }}
+                    ></div>{" "}
+                    <div> 3 장 </div>{" "}
+                  </Summarybardiv>{" "}
+                  <Summarybardiv>
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "60px",
+                        backgroundColor: "green",
+                      }}
+                    ></div>{" "}
+                    <div> 4 장 </div>{" "}
+                  </Summarybardiv>{" "}
+                  <Summarybardiv>
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "75px",
+                        backgroundColor: "blue",
+                      }}
+                    ></div>{" "}
+                    <div> 5 장 </div>{" "}
+                  </Summarybardiv>{" "}
+                  <Summarybardiv>
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "90px",
+                        backgroundColor: "navy",
+                      }}
+                    ></div>{" "}
+                    <div> 6 장 </div>{" "}
+                  </Summarybardiv>{" "}
+                  <Summarybardiv>
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "100px",
+                        backgroundColor: "purple",
+                      }}
+                    ></div>{" "}
+                    <div> 7 장 </div>{" "}
+                  </Summarybardiv>{" "}
+                </Summarydiv>{" "}
+                <Progressdiv>
+                  <Progressbardiv>
+                    <div> 1 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "30px",
+                        backgroundColor: "red",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 2 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "60px",
+                        backgroundColor: "orange",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 3 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "90px",
+                        backgroundColor: "yellow",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 4 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "120px",
+                        backgroundColor: "green",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 5 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "150px",
+                        backgroundColor: "blue",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 6 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "180px",
+                        backgroundColor: "navy",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                  <Progressbardiv>
+                    <div> 7 장 </div>{" "}
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "210px",
+                        backgroundColor: "purple",
+                        marginLeft: "24px",
+                        borderRadius: "4px"
+                      }}
+                    ></div>{" "}
+                  </Progressbardiv>{" "}
+                </Progressdiv>{" "}
+              </Secondleftdiv>{" "}
+            </Secondcontent>{" "}
             <Secondcontent>
-              <Titlediv>그룹 소개</Titlediv>
+              <Titlediv> 그룹 소개 </Titlediv>{" "}
               <Secondrightdiv>
-                아 ! 죽여줘 하시는 분들의 모임. <br />주 1회 모여서 스터디
-                합니다. <br /> 코딩에 깔려 죽으실꺼 같은 분들 환영입니다.
-              </Secondrightdiv>
-              <Joinbtn>관리하기</Joinbtn>
-            </Secondcontent>
-          </Seconddiv>
+                아!죽여줘 하시는 분들의 모임. <br /> 주 1 회 모여서 스터디
+                합니다. <br /> 코딩에 깔려 죽으실꺼 같은 분들 환영입니다.{" "}
+              </Secondrightdiv>{" "}
+              <Joinbtn> 관리하기 </Joinbtn>{" "}
+            </Secondcontent>{" "}
+          </Seconddiv>{" "}
         </Wrapper>
       ) : (
         <Wrapper>
           <Topdiv>
-            <Namediv>CS 스터디</Namediv>
-          </Topdiv>
+            <Namediv> CS 스터디 </Namediv>{" "}
+          </Topdiv>{" "}
           <Seconddiv>
             <Secondcontent>
-              <Titlediv>현재 진행중인 챌린지</Titlediv>
+              <Titlediv> 현재 진행중인 챌린지 </Titlediv>{" "}
               <Secondleftdiv>
                 <div
                   style={{
@@ -205,23 +399,22 @@ const Groupinfo = (props) => {
                     alignItems: "center",
                   }}
                 >
-                  <Challengetitlediv>이산 수학 마스터 하기</Challengetitlediv>
-                </div>
-                <Summarydiv></Summarydiv>
-                <Progressdiv></Progressdiv>
-              </Secondleftdiv>
-            </Secondcontent>
+                  <Challengetitlediv> 이산 수학 마스터 하기 </Challengetitlediv>{" "}
+                </div>{" "}
+                <Summarydiv> </Summarydiv> <Progressdiv> </Progressdiv>{" "}
+              </Secondleftdiv>{" "}
+            </Secondcontent>{" "}
             <Secondcontent>
-              <Titlediv>그룹 소개</Titlediv>
+              <Titlediv> 그룹 소개 </Titlediv>{" "}
               <Secondrightdiv>
-                아 ! 죽여줘 하시는 분들의 모임. <br />주 1회 모여서 스터디
-                합니다. <br /> 코딩에 깔려 죽으실꺼 같은 분들 환영입니다.
-              </Secondrightdiv>
-              <Joinbtn>가입하기</Joinbtn>
-            </Secondcontent>
-          </Seconddiv>
+                아!죽여줘 하시는 분들의 모임. <br /> 주 1 회 모여서 스터디
+                합니다. <br /> 코딩에 깔려 죽으실꺼 같은 분들 환영입니다.{" "}
+              </Secondrightdiv>{" "}
+              <Joinbtn> 가입하기 </Joinbtn>{" "}
+            </Secondcontent>{" "}
+          </Seconddiv>{" "}
         </Wrapper>
-      )}
+      )}{" "}
     </div>
   );
 };

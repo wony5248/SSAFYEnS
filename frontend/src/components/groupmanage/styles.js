@@ -5,6 +5,7 @@ const Wrapper = styled.div`
   margin-left:2.5%;
   background: #ffffff;
   color: #A3CCA3;
+  z-index:1;
 `;
 
 export default Wrapper;
