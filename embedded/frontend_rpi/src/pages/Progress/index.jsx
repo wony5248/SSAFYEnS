@@ -115,63 +115,68 @@ const Progresslayout = () => {
   const [title, setTitle] = useState("");
   const [goal, setGoal] = useState("");
   const [content, setContent] = useState("");
-  const [istrue, setIstrue] = useState(false);
+  const [istrue, setIstrue] = useState(true);
   useEffect(() => {
     async function loadCalendar() {
       await axios
-        .get("./today.json")
+        .get("http://127.0.0.1:4500/test/schedule")
         .then(({ data }) => {
-          console.log(data.Item)
+          console.log(data.data.title)
+          setStarttime(moment(data.data.started_at).format("HH:mm"))
+          setEndtime(moment(data.data.finished_at).format("HH:mm"))
+          setTitle(data.data.title);
+          setContent(data.data.context);
+          setGoal(moment(data.data.deadline_at).format("HH:mm"));
           // console.log(moment())
           // console.log(data.Item)
-          for (let i = 0; i < data.Item.length; i++) {
-            // console.log(
-            //   Number(data.Item[i].StartTime[0] + data.Item[i].StartTime[1])
-            // );
-            const startTime = Number(
-              data.Item[i].StartTime[0] + data.Item[i].StartTime[1]
-            );
-            const startMin = Number(
-              data.Item[i].StartTime[5] + data.Item[i].StartTime[6]
-            );
-            const endTime = Number(
-              data.Item[i].EndTime[0] + data.Item[i].EndTime[1]
-            );
-            const endMin = Number(
-              data.Item[i].EndTime[5] + data.Item[i].EndTime[6]
-            );
-            const currentTime = Number(moment().format("H"));
-            // console.log(startTime);
-            // console.log(currentTime);
-            // console.log(endTime)
-            const currentMin = Number(moment().format("mm"));
-            // console.log(startMin);
-            // console.log(currentMin);
-            // console.log(endMin)
-            if (startTime < currentTime && currentTime < endTime) {
-              // console.log(data.Item[i].StartTime);
-              setStarttime(data.Item[i].StartTime);
-              setEndtime(data.Item[i].EndTime);
-              setGoal(data.Item[i].Goal);
-              setTitle(data.Item[i].Title);
-              setContent(data.Item[i].Content);
-              setIstrue(true);
-            } else if (currentTime === endTime && currentMin <= endMin) {
-              setStarttime(data.Item[i].StartTime);
-              setEndtime(data.Item[i].EndTime);
-              setGoal(data.Item[i].Goal);
-              setTitle(data.Item[i].Title);
-              setContent(data.Item[i].Content);
-              setIstrue(true);
-            } else if (currentTime === startTime && startMin <= currentMin) {
-              setStarttime(data.Item[i].StartTime);
-              setEndtime(data.Item[i].EndTime);
-              setGoal(data.Item[i].Goal);
-              setTitle(data.Item[i].Title);
-              setContent(data.Item[i].Content);
-              setIstrue(true);
-            }
-          }
+          // for (let i = 0; i < data.Item.length; i++) {
+          //   // console.log(
+          //   //   Number(data.Item[i].StartTime[0] + data.Item[i].StartTime[1])
+          //   // );
+          //   const startTime = Number(
+          //     data.Item[i].StartTime[0] + data.Item[i].StartTime[1]
+          //   );
+          //   const startMin = Number(
+          //     data.Item[i].StartTime[5] + data.Item[i].StartTime[6]
+          //   );
+          //   const endTime = Number(
+          //     data.Item[i].EndTime[0] + data.Item[i].EndTime[1]
+          //   );
+          //   const endMin = Number(
+          //     data.Item[i].EndTime[5] + data.Item[i].EndTime[6]
+          //   );
+          //   const currentTime = Number(moment().format("H"));
+          //   // console.log(startTime);
+          //   // console.log(currentTime);
+          //   // console.log(endTime)
+          //   const currentMin = Number(moment().format("mm"));
+          //   // console.log(startMin);
+          //   // console.log(currentMin);
+          //   // console.log(endMin)
+          //   if (startTime < currentTime && currentTime < endTime) {
+          //     // console.log(data.Item[i].StartTime);
+          //     setStarttime(data.Item[i].StartTime);
+          //     setEndtime(data.Item[i].EndTime);
+          //     setGoal(data.Item[i].Goal);
+          //     setTitle(data.Item[i].Title);
+          //     setContent(data.Item[i].Content);
+          //     setIstrue(true);
+          //   } else if (currentTime === endTime && currentMin <= endMin) {
+          //     setStarttime(data.Item[i].StartTime);
+          //     setEndtime(data.Item[i].EndTime);
+          //     setGoal(data.Item[i].Goal);
+          //     setTitle(data.Item[i].Title);
+          //     setContent(data.Item[i].Content);
+          //     setIstrue(true);
+          //   } else if (currentTime === startTime && startMin <= currentMin) {
+          //     setStarttime(data.Item[i].StartTime);
+          //     setEndtime(data.Item[i].EndTime);
+          //     setGoal(data.Item[i].Goal);
+          //     setTitle(data.Item[i].Title);
+          //     setContent(data.Item[i].Content);
+          //     setIstrue(true);
+          //   }
+          // }
           // console.log(
           //   data.Item[0].StartTime[0] +
           //     data.Item[0].StartTime[1] +
@@ -189,7 +194,7 @@ const Progresslayout = () => {
     loadCalendar();
     setInterval(() => {
       loadCalendar();
-    }, 10000);
+    }, 60000);
   }, []);
   return (
     <Progresscontainer>

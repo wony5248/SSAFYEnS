@@ -6,22 +6,41 @@ var sensorData = [];
 /*DB 에서 가져올 센서 값*/
 router.get("/sensor", function (req, res, next) {
   //   res.send({ "temp": "36", "humid": "56", "noise": "168", "light": "32" });
-  res.json({"temp" : `${sensorData[0]}`, "humid" : `${sensorData[1]}`, "noise" : `${sensorData[2]}`, "light" : `${sensorData[3]}`});
-
-  
+  res.json({
+    temp: `${sensorData[0]}`,
+    humid: `${sensorData[1]}`,
+    noise: `${sensorData[2]}`,
+    light: `${sensorData[3]}`,
+  });
 });
 
 router.post("/sensor", function (req, res, next) {
   //   res.send("DB로 보낼 센서값");
-  sensorData = []
+  sensorData = [];
   sensorData.push(req.body["temp"]);
   sensorData.push(req.body["humid"]);
   sensorData.push(req.body["noise"]);
   sensorData.push(req.body["light"]);
   console.log(sensorData);
-  res.json(sensorData);
+  res.json(req.body);
 });
-
+router.get("/schedule", async function (req, res, next) {
+  //   res.send("DB로 보낼 센서값");
+  
+  await axios
+    .get("http://127.0.0.1:8079/schedule/6")
+    .then((response) => {
+      res.send(response.data);
+      console.log(11111);
+    })
+    .catch(function (error) {
+      res.send(error);
+      console.log(error);
+      console.log(222222);
+    });
+  console.log(sensorData);
+  res.json(req.body);
+});
 router.post("/timer", function (req, res, next) {
   //   res.send("2");
   res.json(req.body);
