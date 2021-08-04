@@ -58,11 +58,12 @@ exports.post = function (body) {
         console.error(error);
         return reject("schedules 인스턴스를 생성하는데 오류가 발생했습니다.");
       });
+
     console.log(started_at);
-    date = moment(started_at).format("YYYY-MM-DD");
-    const day = moment(started_at).format("DD");
-    const month = moment(started_at).format("MM");
-    const year = moment(started_at).format("YY");
+    date = moment(started_at).startOf("day");
+    const day = moment(started_at).day();
+    const month = moment(started_at).month();
+    const year = moment(started_at).year();
     const week = moment(started_at).isoWeek();
     console.log(date);
 

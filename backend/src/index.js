@@ -13,6 +13,13 @@ const env = process.env;
 
 // content-type - application/json
 app.use(express.json());
+const moment = require("moment");
+const date = moment("2021-01-23 4:5:6");
+console.log(date);
+console.log(date.utc());
+console.log(date.toDate());
+console.log(date.utc().toDate());
+console.log(date.startOf("days"));
 
 // content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
