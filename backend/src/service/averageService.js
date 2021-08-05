@@ -1,3 +1,37 @@
+const moment = require("moment");
+const db = require("../models");
+const op = require("sequelize").Op;
+exports.get_daily = function (date) {
+  return new Promise(async function (resolve, reject) {
+    try {
+      const today = date;
+      const today_end = moment(date).add(1, "days").toDate();
+
+      console.log(`${today}의 날짜를 조회합니다`, today, today_end);
+      const data = await db["schedules"].findAll({
+        where: {
+          [op.and]: [
+            {
+              started_at: {
+                [op.gte]: today,
+              },
+            },
+            {
+              finished_at: {
+                [op.lte]: today_end,
+              },
+            },
+          ],
+        },
+      });
+      console.log(data);
+      resolve(data);
+    } catch (error) {
+      reject("db 에서 daily 조회 중 문제가 발생했습니다.");
+    }
+  });
+};
+
 exports.post_submit = function (body) {
   return new Promise(async function (resolve, reject) {
     const { date, point, context, user_id, month, year, week } = body;
@@ -91,31 +125,73 @@ exports.post_submit = function (body) {
     resolve({ result: "put" });
   });
 };
-
-exports.post_daily = function (body) {
+exports.get_week = function (date) {
   return new Promise(async function (resolve, reject) {
-    try {
-      const { date } = body;
-      const date_end = moment(date).add(1, "days").toDate();
-      const data = await db["schedules"].findAll({
+    const week = moment(date).startOf("week");
+
+    const start = moment(week).startOf("week").toDate();
+    const end = moment(week).add(1, "week").toDate();
+
+    console.log(` weekly schedule을 조회합니다`, start, end);
+    const data = await db["schedules"]
+      .findAll({
         where: {
-          [op.and]: [
-            {
-              started_at: {
-                [op.gte]: date,
-              },
-            },
+          [op.or]: [
             {
               finished_at: {
-                [op.lte]: date_end,
+                [op.gt]: start,
+              },
+              started_at: {
+                [op.lt]: end,
               },
             },
           ],
         },
+      })
+      .then((result) => {
+        return resolve(result);
+      })
+      .catch((error) => {
+        console.log(error);
+        return reject("db error");
       });
-      resolve(data);
-    } catch (error) {
-      reject(error);
-    }
+  });
+};
+
+exports.get_month = function (date) {
+  return new Promise(async function (resolve, reject) {
+    const month = moment(date).startOf("month");
+
+    const standard1 = moment(month).toDate();
+    const standard2 = moment(month)
+      .add(1, "months")
+      .subtract(1, "days")
+      .toDate();
+
+    console.log(`${month} 월을 조회합니다`, standard1, standard2);
+    const data = await db["schedules"]
+      .findAll({
+        where: {
+          [op.or]: [
+            {
+              finished_at: {
+                [op.gt]: standard1,
+              },
+              started_at: {
+                [op.lt]: standard2,
+              },
+            },
+          ],
+        },
+      })
+      .then((result) => {
+        // console.log("답 : ", result);
+        resolve(result);
+      })
+      .catch((error) => {
+        console.log(error);
+        reject("db error");
+      });
+    // reject("db instance not finded");
   });
 };
