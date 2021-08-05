@@ -48,7 +48,7 @@ const Header = props=>{
                     <Grid style ={{justifyContent:'space-between'}}>
                         {islogin?(
                             <div>
-                                <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}}>God애리님 환영합니다</Button>
+                                <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}}>jbj님 환영합니다</Button>
                                 <Button size = "large" style={{color:'#A3CCA3', fontWeight:'bold'}} onClick={handleLogout}>로그아웃</Button>
                             </div>
                         ):(

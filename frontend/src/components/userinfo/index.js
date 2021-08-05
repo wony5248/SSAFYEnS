@@ -6,6 +6,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import trophyImg from '../../images/trophy_test.png'
 
 const Userinfo = () =>{
     const BorderLinearProgress = withStyles((theme) => ({
@@ -65,7 +66,7 @@ const Userinfo = () =>{
                 <Grid container direction="row" >
                     <div>
                         <Grid container direction="column" alignItems = "center">
-                            <Typography variant="h3">김싸피</Typography>
+                            <Typography variant="h3">장범진</Typography>
                             <Grid container direction="row">
                                 <Button>정보수정</Button>
                                 <Button>내 통계</Button>
@@ -84,15 +85,18 @@ const Userinfo = () =>{
             {/* trophy */}
             <div style={{margin:'15px'}}>
                 <Typography variant="overline" style={{fontSize: 30}}>MY TROPHY</Typography>
-                <Grid style={{height:'300px'}}>
+                <Grid style={{height:'350px'}}>
                     <Slider {...trophySettings}>
                         {trophyList.map(item=>{
                             return(
-                                <div key={item.id}>
-                                    <div style={{width:'150px', height:'200px', background:'#D6E6F5'}}>
-                                        {item.name}
-                                    </div>
-                                </div>
+                                <Card key={item.id} variant="outlined" style={{alignItems: 'center', justifyContent: 'center'}}>
+                                    <CardContent style={{alignItems: 'center', justifyContent: 'center'}}>
+                                        <div style={{width:'200px', height:'250px'}}>
+                                            <img src={trophyImg} alt="main" width="100%"></img>
+                                            <div style={{textAlign:'center', marginTop:'15px'}}>{item.name}</div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
                             );
                         })}
                     </Slider>
