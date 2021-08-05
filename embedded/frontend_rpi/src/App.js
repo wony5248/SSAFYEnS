@@ -6,6 +6,7 @@ import Timer from './pages/Timer/';
 import Today from './pages/Today/';
 import Change from './pages/Change/';
 import Changecalendar from './pages/Changecalendar'
+import Create from './pages/Create'
 // const theme = createTheme({
 //   typography: {
 //     fontFamily: ['Noto Sans KR'].join(','),
@@ -36,6 +37,7 @@ function App() {
             <Route exact path="/" component={Progress} />
             <Route exact path="/Progress" component={Progress} />
             <Route exact path="/Rating/:id" component={Rating} />
+            <Route exact path="/Create" component={Create} />
             <Route exact path="/Timer" component={Timer} />
             <Route exact path="/Today" component={Today} />
             <Route exact path="/Change" component={Change} />

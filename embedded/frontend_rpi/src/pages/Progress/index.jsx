@@ -111,6 +111,7 @@ const Progresslayout = () => {
   const [title, setTitle] = useState("");
   const [goal, setGoal] = useState("");
   const [content, setContent] = useState("");
+  const [id, setId] = useState("");
   const [istrue, setIstrue] = useState(false);
   useEffect(() => {
     async function loadCalendar() {
@@ -125,6 +126,7 @@ const Progresslayout = () => {
           // console.log(data.data[0].title);
           // console.log(data.data[0].context);
           // console.log(moment(data.data[0].deadline_at).format("HH:mm"));
+          console.log(data.data);
           for (let i = 0; i < data.data.length; i++) {
             // console.log(
             //   Number(data.data[i].started_at[0] + data.data[i].started_at[1])
@@ -153,26 +155,35 @@ const Progresslayout = () => {
               // console.log(data.data[i].started_at);
               setStarttime(moment(data.data[i].started_at).format("HH : mm"));
               setEndtime(moment(data.data[i].finished_at).format("HH : mm"));
-              setGoal(moment(data.data[i].deadline_at).format("YYYY.MM.DD HH : mm"));
+              setGoal(
+                moment(data.data[i].deadline_at).format("YYYY.MM.DD HH : mm")
+              );
               setTitle(data.data[i].title);
               setContent(data.data[i].context);
               setNotitime(moment(data.data[i].notification).format("HH : mm"));
+              setId(data.data[i].id);
               setIstrue(true);
             } else if (currentTime === endTime && currentMin <= endMin) {
               setStarttime(moment(data.data[i].started_at).format("HH : mm"));
               setEndtime(moment(data.data[i].finished_at).format("HH : mm"));
-              setGoal(moment(data.data[i].deadline_at).format("YYYY.MM.DD HH : mm"))
+              setGoal(
+                moment(data.data[i].deadline_at).format("YYYY.MM.DD HH : mm")
+              );
               setTitle(data.data[i].title);
               setContent(data.data[i].context);
+              setId(data.data[i].id);
               setNotitime(moment(data.data[i].notification).format("HH : mm"));
               setIstrue(true);
             } else if (currentTime === startTime && startMin <= currentMin) {
               setStarttime(moment(data.data[i].started_at).format("HH : mm"));
               setEndtime(moment(data.data[i].finished_at).format("HH : mm"));
-              setGoal(moment(data.data[i].deadline_at).format("YYYY.MM.DD HH : mm"));
+              setGoal(
+                moment(data.data[i].deadline_at).format("YYYY.MM.DD HH : mm")
+              );
               setTitle(data.data[i].title);
               setContent(data.data[i].context);
               setNotitime(moment(data.data[i].notification).format("HH : mm"));
+              setId(data.data[i].id);
               setIstrue(true);
             }
           }
@@ -231,7 +242,7 @@ const Progresslayout = () => {
             <Progresscontent>{content}</Progresscontent>
             <Btndiv>
               <Completebtn
-                onClick={() => window.location.replace(`/Rating/${starttime}`)}
+                onClick={() => window.location.replace(`/Rating/${id}`)}
               >
                 완료
               </Completebtn>

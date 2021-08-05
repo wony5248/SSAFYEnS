@@ -24,8 +24,57 @@ router.post("/sensor", function (req, res, next) {
   console.log(sensorData);
   res.json(req.body);
 });
+
+
+// 일정 추가
+router.post("/schedule", async function (req, res, next) {
+
+  await axios
+    .post("http://127.0.0.1:8079/schedule", {
+      "date" : req.body.date,
+      "started_at" : req.body.started_at,
+      "finished_at" : req.body.finished_at,
+      "deadline_at" : req.body.deadline_at,
+      "notification" : req.body.notification,
+      "is_finished" : req.body.is_finished,
+      "month" : req.body.deadline_at,
+      "year" : req.body.notification,
+      "week" : req.body.is_finished,
+      "point" : req.body.point,
+      "user_id" : req.body.user_id
+    })
+    .then((response) => {
+      res.send(response.data);
+      console.log(11111);
+    })
+    .catch(function (error) {
+      res.send(error);
+      console.log(error);
+      console.log(222222);
+    });
+  console.log(sensorData);
+  res.json(req.body);
+});
+
+// 일정 삭제
+router.get("/schedule/:id", async function (req, res, next) {
+  console.log(req)
+  console.log(req.body);
+  await axios
+    .get(`http://127.0.0.1:8079/schedule/${req.params.date}`)
+    .then((response) => {
+      res.send(response.data);
+      console.log(response.data);
+      console.log(22222);
+    })
+    .catch(function (error) {
+      res.send(error);
+      console.log(11111);
+      console.log(error);
+    });
+});
+// test용
 router.get("/schedule", async function (req, res, next) {
-  //   res.send("DB로 보낼 센서값");
 
   await axios
     .get("http://127.0.0.1:8079/schedule/6")
@@ -41,15 +90,17 @@ router.get("/schedule", async function (req, res, next) {
   console.log(sensorData);
   res.json(req.body);
 });
-router.post("/timer", function (req, res, next) {
-  //   res.send("2");
-  res.json(req.body);
-});
-router.post("/stopwatch", function (req, res, next) {
-  //   res.send("3");
-  res.json(req.body);
-});
 
+// router.post("/timer", function (req, res, next) {
+//   //   res.send("2");
+//   res.json(req.body);
+// });
+// router.post("/stopwatch", function (req, res, next) {
+//   //   res.send("3");
+//   res.json(req.body);
+// });
+
+// 하루일정 가져오기
 router.get("/getdaily/:date", async function (req, res, next) {
   console.log("여기야여기")
   console.log(req)
@@ -69,6 +120,7 @@ router.get("/getdaily/:date", async function (req, res, next) {
     });
 });
 
+//일정 가져오기
 router.get("/:id", async function (req, res, next) {
   console.log("여기야여기")
   console.log(req)
@@ -88,6 +140,7 @@ router.get("/:id", async function (req, res, next) {
     });
 });
 
+//일정 변경하기
 router.put("/:id", async function (req, res, next) {
   console.log("여기")
   console.log("저기")
