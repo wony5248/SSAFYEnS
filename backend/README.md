@@ -80,8 +80,8 @@ $ npx nodemon index.js
 >
 
 # URL
-![image](./../../S05P13A109/docs/openapi.png)
-restAPI에 따르는 URL 경로와 payload 명세는 [Swagger openAPI](./../../S05P13A109/docs/openapi.yaml)를 참고해 주세요
+![image](./../docs/openapi.png)
+restAPI에 따르는 URL 경로와 payload 명세는 [Swagger openAPI](./../docs/openapi.yaml)를 참고해 주세요
 # ERROR
 <div style="text-align:right">Ubuntu 20.04 LTS</div>
 Get it start 를 따라했을 때 아래의 에러가 나는 경우
