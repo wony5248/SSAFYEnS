@@ -152,7 +152,7 @@ const Progressbardiv = styled.div`
 const Groupinfo = (props) => {
   const { id } = props;
   console.log(props);
-  const [ismember, setIsmember] = useState(true);
+  const [ismember, setIsmember] = useState(false);
   const [joinopen, setJoinopen] = useState(false);
   const openCreateModal = () => {
     setJoinopen(true);
@@ -385,7 +385,7 @@ const Groupinfo = (props) => {
               </Secondrightdiv>{" "}
               <Joinbtn onClick={openCreateModal}> 가입 하기 </Joinbtn>{" "}
             </Secondcontent>{" "}
-          </Seconddiv></div>)
+          </Seconddiv></div>
         </Wrapper>
       ) : (
         <Wrapper>

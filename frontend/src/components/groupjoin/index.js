@@ -71,7 +71,7 @@ const Closebtn = styled.button`
 const Textcontent = styled.textarea`
     height:85%;
     resize: none;
-    width: 510px;
+    width: 80%;
     border-radius:45px;
     display: flex;
     justify-content: space-between;
