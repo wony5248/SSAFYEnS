@@ -32,7 +32,7 @@ exports.get_daily = function (date) {
   });
 };
 
-exports.post_submit = function (body) {
+exports.post_daily = function (body) {
   return new Promise(async function (resolve, reject) {
     const { date, point, context, user_id, month, year, week } = body;
 
@@ -160,25 +160,52 @@ exports.get_week = function (date) {
 
 exports.get_month = function (date) {
   return new Promise(async function (resolve, reject) {
-    const month = moment(date).startOf("month");
+    const start = moment(date).startOf("month").toDate();
+    const end = moment(start).add(1, "month").toDate();
 
-    const standard1 = moment(month).toDate();
-    const standard2 = moment(month)
-      .add(1, "months")
-      .subtract(1, "days")
-      .toDate();
-
-    console.log(`${month} 월을 조회합니다`, standard1, standard2);
+    console.log(`${start} 월을 조회합니다`, start, end);
     const data = await db["schedules"]
       .findAll({
         where: {
           [op.or]: [
             {
-              finished_at: {
-                [op.gt]: standard1,
-              },
               started_at: {
-                [op.lt]: standard2,
+                [op.gte]: start,
+              },
+              finished_at: {
+                [op.lte]: end,
+              },
+            },
+          ],
+        },
+      })
+      .then((result) => {
+        // console.log("답 : ", result);
+        resolve(result);
+      })
+      .catch((error) => {
+        console.log(error);
+        reject("db error");
+      });
+    // reject("db instance not finded");
+  });
+};
+exports.get_year = function (date) {
+  return new Promise(async function (resolve, reject) {
+    const start = moment(date).startOf("year");
+    const end = moment(start).add(1, "year").toDate();
+
+    console.log(`${start} 년을 조회합니다`, start, end);
+    const data = await db["schedules"]
+      .findAll({
+        where: {
+          [op.or]: [
+            {
+              started_at: {
+                [op.gte]: start,
+              },
+              finished_at: {
+                [op.lte]: end,
               },
             },
           ],

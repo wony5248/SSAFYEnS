@@ -24,7 +24,7 @@ router.get("/daily/:date", validation.date, (req, res) => {
 //comment on daily
 //todo url post /average/daily/{date}
 router.post(
-  "/daily/:date",
+  "/daily/",
   validation.date,
   validation.month,
   validation.year,
@@ -36,7 +36,7 @@ router.post(
       res.status("400").json({ result });
     } else {
       service
-        .post_submit(req.body)
+        .post_daily(req.body)
         .then((data) => {
           res.json({ data });
         })
@@ -79,6 +79,24 @@ router.get("/month/:date", validation.date, (req, res) => {
   } else {
     service
       .get_month(req.params.date)
+      .then((data) => {
+        res.json({ data });
+      })
+      .catch((error) => {
+        res.status("405").json({ error });
+      });
+  }
+});
+//Get yearly information
+//todo url get /average/year/{month}
+router.get("/year/:date", validation.date, (req, res) => {
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    console.log(validationResult(req));
+    res.status("400").json({ result });
+  } else {
+    service
+      .get_year(req.params.date)
       .then((data) => {
         res.json({ data });
       })
