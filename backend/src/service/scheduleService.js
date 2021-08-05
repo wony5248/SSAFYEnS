@@ -236,7 +236,7 @@ exports.post_daily = function (payload) {
       });
       resolve(data);
     } catch (error) {
-      reject(error);
+      reject("error");
     }
   });
 };

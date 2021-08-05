@@ -45,8 +45,6 @@ exports.post_daily = function (payload) {
       //update할 일자 정보가 없음.
       if (dailyResult == null) {
         console.log("Daily를 생성합니다");
-        let data_daily = ({} = payload);
-        console.log("??");
 
         db["daily"].create({
           user_id,
@@ -136,7 +134,7 @@ exports.post_daily = function (payload) {
       resolve({ result: "put" });
     } catch (error) {
       console.log(error);
-      reject(error);
+      reject("error");
     }
   });
 };
