@@ -19,7 +19,8 @@ exports.started_at = check("started_at") //req에 있는 key 중 started_at를 �
       moment(started_at).isSame(finished_at, "day") &&
       moment(started_at).diff(finished_at, "second") <= 0;
 
-    console.log("here : ", result);
+    // console.log("here : ", moment(started_at).isSame(finished_at, "day"));
+    // console.log("here : ", moment(started_at).diff(finished_at, "second") <= 0);
     if (!result)
       throw new Error(
         "started_at과 end_at이 다른 날짜로 작성되었거나 started_at이 finished_at보다 늦게 설정되었습니다."

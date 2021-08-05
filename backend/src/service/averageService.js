@@ -37,20 +37,32 @@ exports.post_daily = function (payload) {
     try {
       const { date, point, context, user_id, month, year, week } = payload;
 
-      const dailyResult = await db["daily"].update(
-        {
-          context,
-          point,
+      const dailyResult = await db["daily"].findOne({
+        where: {
+          [op.and]: [{ user_id }, { date }],
         },
-        {
-          where: {
-            date,
-          },
-        }
-      );
+      });
       //update할 일자 정보가 없음.
-      if (dailyResult == null || dailyResult[0] == 0)
-        return reject("해당 일자를 찾을 수 없습니다.");
+      if (dailyResult == null) {
+        console.log("Daily를 생성합니다");
+        let data_daily = ({} = payload);
+        console.log("??");
+
+        db["daily"].create({
+          user_id,
+          date,
+          month,
+          year,
+          week,
+          avgpoint: point,
+          context,
+          cntschedule: 1,
+        });
+      } else {
+        dailyResult.avgpoint += point;
+        dailyResult.context = context;
+        dailyResult.cntschedule += 1;
+      }
 
       //weekly 확인
       const weeklyResult = await db["weekly"].findOne({
@@ -68,7 +80,7 @@ exports.post_daily = function (payload) {
 
       if (weeklyResult == null) {
         //weekly가 해당 존재하지않음
-        console.log(`week ${week}가 존재하지 않습니다.`);
+        console.log(`week ${week}를 생성합니다`);
         db["weekly"].create({
           week,
           month,
@@ -87,7 +99,7 @@ exports.post_daily = function (payload) {
       });
 
       if (monthlyResult == null) {
-        console.log(`month ${month}가 존재하지 않습니다.`);
+        console.log(`month ${month}를 생성합니다`);
         db["monthly"].create({
           month,
           year,
@@ -108,7 +120,7 @@ exports.post_daily = function (payload) {
       );
 
       if (yearlyResult == null) {
-        console.log(`year ${week}가 존재하지 않습니다.`);
+        console.log(`year ${week}를 생성합니다`);
         db["yearly"].create({
           year,
           user_id,
@@ -117,7 +129,7 @@ exports.post_daily = function (payload) {
       } else {
         yearlyResult.avgpoint += point;
       }
-      // if (dailyResult != null) dailyResult.save();
+      if (dailyResult != null) dailyResult.save();
       if (weeklyResult != null) weeklyResult.save();
       if (monthlyResult != null) monthlyResult.save();
       if (yearlyResult != null) yearlyResult.save();

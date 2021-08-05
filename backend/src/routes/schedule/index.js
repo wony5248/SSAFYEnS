@@ -88,15 +88,18 @@ router.delete("/:schedule_id", (req, res) => {
       res.status("405").json({ error });
     });
 });
+//Get all schedules of user of specific month
 //todo url 변경 /schedule/month/{month}
-router.post("/month", validation.date, (req, res) => {
+router.get("/month/:date", validation.date, (req, res) => {
   const result = validationResult(req);
+  const payload = { ...req.body, ...req.params };
+  console.log("payload :", payload);
   if (!result.isEmpty()) {
     console.log(validationResult(req));
     res.status("400").json({ result });
   } else {
     service
-      .get_month(req.body.date)
+      .get_month(payload)
       .then((data) => {
         res.json({ data });
       })
@@ -105,18 +108,21 @@ router.post("/month", validation.date, (req, res) => {
       });
   }
 });
-//Get all schedules of user of specific month
-//todo
+
+//unspceified
 
 //get all scheudle of day
-router.post("/daily", validation.date, (req, res) => {
+router.get("/daily/:date", validation.date, (req, res) => {
+  const payload = { ...req.body, ...req.params };
+  console.log("payload 22:", payload);
+
   const result = validationResult(req);
   if (!result.isEmpty()) {
     console.log(validationResult(req));
     res.status("400").json({ result });
   } else {
     service
-      .post_daily(req.body)
+      .post_daily(payload)
       .then((data) => {
         res.json({ data });
       })
@@ -145,23 +151,6 @@ router.post("/daily", validation.date, (req, res) => {
 //   }
 // });
 
-// Get monthly schedule
-router.get("/month/:date", validation.date, (req, res) => {
-  const result = validationResult(req);
-  if (!result.isEmpty()) {
-    console.log(validationResult(req));
-    res.status("400").json({ result });
-  } else {
-    service
-      .get_month(req.params.date)
-      .then((data) => {
-        res.json({ data });
-      })
-      .catch((error) => {
-        res.status("405").json({ error });
-      });
-  }
-});
 // Get yearly schedule
 router.get("/year/:date", validation.date, (req, res) => {
   const result = validationResult(req);

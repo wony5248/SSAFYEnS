@@ -2,8 +2,8 @@ const router = require("express").Router();
 const { validationResult } = require("express-validator");
 const service = require("../../service/averageService");
 const validation = require("../../validation/averageValidation");
+
 //Get daily information
-//todo uml get /average/daily/{date}
 router.get(
   "/daily/:date",
   validation.date,
@@ -13,6 +13,7 @@ router.get(
   (req, res) => {
     payload = { ...req.params, ...req.body };
     console.log("payload : ", payload);
+
     const result = validationResult(req);
     if (!result.isEmpty()) {
       console.log(validationResult(req));
@@ -62,7 +63,6 @@ router.post(
 // todo delete ​/average​/daily​/{date}
 
 // Get weekly information
-// todo url ​/average​/weekly​/{week}
 router.get(
   "/week/:date",
   validation.date,
@@ -92,7 +92,6 @@ router.get(
 );
 
 // Get monthly information
-//todo url get /average/monthly/{month}
 router.get(
   "/month/:date",
   validation.date,
@@ -119,7 +118,6 @@ router.get(
   }
 );
 //Get yearly information
-//todo url get /average/year/{month}
 router.get(
   "/year/:date",
   validation.date,

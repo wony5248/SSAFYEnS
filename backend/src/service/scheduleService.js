@@ -4,11 +4,13 @@ const Sequelize = require("sequelize");
 const op = Sequelize.Op;
 const db = require("../models");
 const router = require("../routes/schedule");
+//url 구현 전 임시 코드
 exports.unimplemented = function () {
   return new Promise(async function (resolve, reject) {
     reject("Not yet");
   });
 };
+
 exports.post = function (body) {
   return new Promise(async function (resolve, reject) {
     console.log(body.week);
@@ -22,33 +24,31 @@ exports.post = function (body) {
     });
 
     //daily 생성에 필요한 date 객체 생성
-    let data_daily = ({ standard_at, user_id, date, month, year, week } = body);
-    data_daily = {
-      ...data_daily,
-      avgpoint: body.point,
-      cntschedule: 1,
-      context: body.context + "n",
-    };
+    // let data_daily = ({ standard_at, user_id, date, month, year, week } = body);
+    // data_daily = {
+    //   ...data_daily,
+    //   cntschedule: 1,
+    // };
 
-    var db_daily = await db["daily"].findOne({
-      where: {
-        date: moment(body.started_at).startOf("day").toDate(),
-      },
-    });
+    // var db_daily = await db["daily"].findOne({
+    //   where: {
+    //     date: moment(body.started_at).startOf("day").toDate(),
+    //   },
+    // });
 
     //아래부터 트랜잭션 일괄적용
     db_schedules.save();
-    if (db_daily == null) {
-      console.log("해당 Daily를 생성합니다");
-      var db_daily2 = db["daily"].build(data_daily);
-      db_daily2.save();
-    } else {
-      console.log("해당 Daily를 수정합니다");
-      db_daily.context = db_daily.context + body.context + "\n";
-      db_daily.cntschedule = db_daily.cntschedule + 1 + "\n";
-      db_daily.avgpoint = db_daily.avgpoint + body.point;
-      db_daily.save();
-    }
+    // if (db_daily == null) {
+    // console.log("해당 Daily를 생성합니다");
+    // var db_daily2 = db["daily"].build(data_daily);
+    // db_daily2.save();
+    // } else {
+    // console.log("해당 Daily를 수정합니다");
+    // db_daily.context = db_daily.context + body.context + "\n";
+    // db_daily.cntschedule = db_daily.cntschedule + 1 + "\n";
+    // db_daily.avgpoint = db_daily.avgpoint + body.point;
+    // db_daily.save();
+    // }
     return resolve({ result: "post" });
   });
 };
@@ -119,44 +119,6 @@ exports.delete_$schedule_id$ = function (data) {
     // reject("db instance not finded");
   });
 };
-exports.get_month = function (date) {
-  return new Promise(async function (resolve, reject) {
-    const month = moment(date).startOf("month");
-
-    const standard1 = moment(month).toDate();
-    const standard2 = moment(month)
-      .add(1, "months")
-      .subtract(1, "days")
-      .toDate();
-
-    console.log(`${month} 월을 조회합니다`, standard1, standard2);
-    const data = await db["schedules"]
-      .findAll({
-        where: {
-          [op.or]: [
-            {
-              finished_at: {
-                [op.gt]: standard1,
-              },
-              started_at: {
-                [op.lt]: standard2,
-              },
-            },
-          ],
-        },
-      })
-      .then((result) => {
-        // console.log("답 : ", result);
-        resolve(result);
-      })
-      .catch((error) => {
-        console.log(error);
-        reject("db error");
-      });
-    // reject("db instance not finded");
-  });
-};
-
 exports.post_submit = function (body) {
   return new Promise(async function (resolve, reject) {
     const { date, point, context, user_id, month, year, week } = body;
@@ -251,10 +213,10 @@ exports.post_submit = function (body) {
   });
 };
 
-exports.post_daily = function (body) {
+exports.post_daily = function (payload) {
   return new Promise(async function (resolve, reject) {
     try {
-      const { date } = body;
+      const { date } = payload;
       const date_end = moment(date).add(1, "days").toDate();
       const data = await db["schedules"].findAll({
         where: {
@@ -311,23 +273,28 @@ exports.get_week = function (date) {
       });
   });
 };
-
-exports.get_month = function (date) {
+exports.get_month = function (payload) {
   return new Promise(async function (resolve, reject) {
-    const start = moment(date).startOf("month").toDate();
-    const end = moment(start).add(1, "month").toDate();
+    console.log("hi: ", payload);
+    const month = moment(payload.date).startOf("month");
 
-    console.log(`${start} 월을 조회합니다`, start, end);
+    const standard1 = moment(month).toDate();
+    const standard2 = moment(month)
+      .add(1, "months")
+      .subtract(1, "days")
+      .toDate();
+
+    console.log(`${month} 월을 조회합니다`, standard1, standard2);
     const data = await db["schedules"]
       .findAll({
         where: {
           [op.or]: [
             {
-              started_at: {
-                [op.gte]: start,
-              },
               finished_at: {
-                [op.lte]: end,
+                [op.gt]: standard1,
+              },
+              started_at: {
+                [op.lt]: standard2,
               },
             },
           ],
