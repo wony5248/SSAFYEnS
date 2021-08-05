@@ -185,10 +185,14 @@ exports.logout = function (req, res, next) {
       req.headers["access_token"],
       config.secret || 'secret',
       (err, decoded) => { // https://www.npmjs.com/package/jsonwebtoken
-        console.log("[TEST]This is jwt err:",err)
-        console.log("[TEST]This is jwt decoded:",decoded)
+        if (err) {
+          console.log("[TEST]This is jwt err:",err)
+          return reject(err)
+        } else {
+          console.log("[TEST]This is jwt decoded:",decoded)
+          return resolve(decoded)
+        }
       })
-    return resolve(payload)
     // 이게 필요한가?? 컨설턴트님이 말씀하신 경우 아니라면 FE에서 storage 삭제할 일
     // 컨설턴트님 말한거처럼 whitelist 운영을 위해 남겨놓겠습니다...
   });
