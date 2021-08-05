@@ -2,6 +2,7 @@ const router = require("express").Router();
 const validation = require("../../validation/scheduleValidation");
 const service = require("../../service/scheduleService");
 const { validationResult } = require("express-validator");
+// Add a new schedule to user
 router.post(
   "/",
   validation.date,
@@ -33,6 +34,7 @@ router.post(
     }
   }
 );
+///schedule/{schedule_id}
 router.get("/:schedule_id", (req, res) => {
   const errors = validationResult(req);
   console.log("error : ", errors);
@@ -45,6 +47,8 @@ router.get("/:schedule_id", (req, res) => {
       res.status("405").send(error);
     });
 });
+//Updates a schedule with JSON data
+//todo 파라미터 추가
 router.put(
   "/:schedule_id",
   validation.started_at,
@@ -72,6 +76,7 @@ router.put(
     }
   }
 );
+//Deletes a schedule
 router.delete("/:schedule_id", (req, res) => {
   service
     .delete_$schedule_id$({ id: req.params.schedule_id })
@@ -100,30 +105,10 @@ router.post("/month", validation.date, (req, res) => {
       });
   }
 });
-//아래는 average로 이동 예정
-router.post(
-  "/submit",
-  validation.date,
-  validation.month,
-  validation.year,
-  validation.week,
-  (req, res) => {
-    const result = validationResult(req);
-    if (!result.isEmpty()) {
-      console.log(validationResult(req));
-      res.status("400").json({ result });
-    } else {
-      service
-        .post_submit(req.body)
-        .then((data) => {
-          res.json({ data });
-        })
-        .catch((error) => {
-          res.status("405").json({ error });
-        });
-    }
-  }
-);
+//Get all schedules of user of specific month
+//todo
+
+//get all scheudle of day
 router.post("/daily", validation.date, (req, res) => {
   const result = validationResult(req);
   if (!result.isEmpty()) {
@@ -140,4 +125,30 @@ router.post("/daily", validation.date, (req, res) => {
       });
   }
 });
+
+//아래는 average로 이동 예정
+// router.post(
+//   "/submit",
+//   validation.date,
+//   validation.month,
+//   validation.year,
+//   validation.week,
+//   (req, res) => {
+//     const result = validationResult(req);
+//     if (!result.isEmpty()) {
+//       console.log(validationResult(req));
+//       res.status("400").json({ result });
+//     } else {
+//       service
+//         .post_submit(req.body)
+//         .then((data) => {
+//           res.json({ data });
+//         })
+//         .catch((error) => {
+//           res.status("405").json({ error });
+//         });
+//     }
+//   }
+// );
+
 module.exports = router;
