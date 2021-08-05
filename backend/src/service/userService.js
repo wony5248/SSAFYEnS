@@ -14,34 +14,25 @@ exports.createUser = function (req) {
       // 비밀번호 암호화 과정
       let userinfo = { ...req.body, password: bcrypt.hashSync(req.body.password, 8) };
       // console.log("This is createUser userinfo:",userinfo)
-      const createdUser = await db["users"].create(userinfo)
-      /**{
-            "user_id": "honggildong4!",
-            "name": "홍길동1!",
-            "email": "hong@korea2.kr",
-            "cellphone": "010-1234-5676",
-            "password": "$2b$08$Sov7P5Rvor6DNcQLynmo1.Gy5btB/wjCzT6Pb0teoY4EvDFxQ1M32",
-            "updated_at": "2021-08-03T05:02:35.597Z"
-          }
-       */
-      const data = await db["users"].findOne({
-        where: {
-          user_id: userinfo.user_id,
-        }
-      })
-      /**{
-            "user_id": "honggildong6!",
-            "name": "홍길동1!",
-            "email": "hong@korea6.kr",
-            "cellphone": "010-127354-5676",
-            "password": "$2b$08$Sov7P5Rvor6DNcQLynmo1.Gy5btB/wjCzT6Pb0teoY4EvDFxQ1M32",
-            "exp": 0,
-            "is_admin": false,
-            "created_at": "2021-08-03T05:06:02.000Z"
-        } */
-      resolve(data);
+      const data = await db["users"].create(userinfo)
+      // 테스트 케이스 테스트
+      // 1-1. 1개씩 - 하나씩만 보내면 컷
+      // 1-2. 2개씩 - 두개씩만 보내면 컷
+      // 아 너무 오래 걸림 아마 5개 다 안보내면 안될거임 암튼 안될거임
+      // 
+      // 2-1. 5개, 이메일 이미 존재 - 컷
+      // 2-2. 5개, 전화번호 이미 존재 - 컷
+      // 2-3. 5개, 유저_아이디 이미 존재 - 컷
+      
+      // 보낸 정보 + created_at 만 돌려줄지
+      // 예전 코드처럼 openAPI로 돌려줄지(SQL 조회 1회 더 필요)
+      return resolve(data);
     } catch (error) {
-      reject(error);
+      // console.log("Number of occured errors:",error.errors.length);
+      // for (e of error.errors) {
+      //   console.log("Error Message:", e.message)
+      // }
+      return reject(error);
     }
   });
 }
@@ -54,13 +45,22 @@ exports.findId = function (req) {
         name: req.query.name,
         email: req.query.email,
       }
-      const data = await db["users"].findOne({
+      const data = await db["users"].findAll({
         attributes: ['user_id'],
         where: where
       });
-      resolve(data);
+      if (!data.length) { // if no user
+        console.log("No user found")
+        return resolve({})
+      }
+      return resolve(data);
     } catch (error) {
-      resolve(error);
+      // 에러 발생할 일이 없음? required가 아니라서 그런가봄
+      // console.log("Number of occured errors:",error.errors.length);
+      // for (e of error.errors) {
+      //   console.log("Error Message:", e.message)
+      // }
+      return resolve(error);
     }
   });
 }
@@ -74,17 +74,22 @@ exports.validatePasswordRenew = function (req, res) {
         user_id: req.query.user_id,
         email: req.query.email,
       }
-      const result = await db["users"].findOne({
+      const data = await db["users"].findOne({
         where: where
       });
-      console.log("This is validatePasswordRenew result:",result)
-      // 결과를 어떻게 전달할지 미정
-      // result: { ... }
-      // result: null
-
-      resolve(data);
+      console.log("This is validatePasswordRenew data:",data)
+      // 정보에 해당하는 회원이 없는 경우
+      if (!data){
+        // console.log(error)
+        return reject(error)  // catch로 넘어가는 것으로 보임
+      }
+      return resolve(data);
     } catch (error) {
-      resolve(error);
+      // console.log("Number of occured errors:",error.errors.length);
+      // for (e of error.errors) {
+      //   console.log("Error Message:", e.message)
+      // }
+      return reject(error);
     }
   });
 }
@@ -97,24 +102,34 @@ exports.updatePassword = function (req, res) {
       const where = {
         user_id: req.body.user_id,
       }
+      // 기존 비밀번호와 똑같으면 못하게 막을까요??
+      
       const data = await db["users"].update(
         {
           password: bcrypt.hashSync(req.body.password, 8),
         },
         {
           where: where
-        });
-        /**
-         [
-           1 // 변경된 instance 갯수로 보임
-          ]
-          */
-         resolve(data);
-        } catch (error) {
-          resolve(error);
         }
-      });
+      );
+      // data에는 변경된 instance의 개수가 나타남
+      // user_id가 정상이라면 [1]을(hash해서 무조건 바뀌게됨),
+      // 존재하지 않는 user_id라면 [0]을 반환함
+      console.log("This is updatePassword data:",data)
+      if (data[0]){
+        return resolve({result: 'Password has been updated'})
+      } else {
+        return reject({result: 'Incorrect user_id given'});
+      }
+    } catch (error) {
+      // console.log("Number of occured errors:",error.errors.length);
+      // for (e of error.errors) {
+      //   console.log("Error Message:", e.message)
+      // }
+      return reject(error);
     }
+  });
+}
     
 exports.login = function (req, res) {
   return new Promise(async function (resolve, reject) {
@@ -129,7 +144,7 @@ exports.login = function (req, res) {
       // 해당 user_id 없으면 에러
       if (user == null) {
         console.log("User not found")
-        reject()
+        return reject(error)
       }
       const passwordIsValid = bcrypt.compareSync(
         req.body.password,
@@ -139,12 +154,12 @@ exports.login = function (req, res) {
       // password 결과 안 맞으면 에러 내용 필요
       if (!passwordIsValid) {
         console.log("Password is not valid")
-        reject()
+        return reject(error)
       };
       const token = jsonwebtoken.sign(
         { user_id: user.user_id },  // payload
         config.secret || 'secret',  // secretkey // config 작동 안하는 것으로 확인
-        { expiresIn: config.expiresIn || 86400 }
+        { expiresIn: config.expiresIn || 86400 }  // 유효기간 정함. 해당 시간이 넘으면 나중에 verify할 때 오류 발생
       );
       console.log("This is login token:",token)
       const data = {
@@ -152,19 +167,54 @@ exports.login = function (req, res) {
         access_token: token,
       }
       console.log("This is login data:",data)
-      resolve(data);
+      return resolve(data);
     } catch (error) {
-      resolve(error);
+      return reject(error);
     }
   });
 }
 
+// 
+
 exports.logout = function (req, res, next) {
   return new Promise(async function (resolve, reject) {
+    // swagger에서 실험한 결과입니다
     console.log(req.headers["x-access-token"]) // undefined
     console.log(req.headers["access_token"])  // swagger 기준 실제 jwt 값 나옴
+    const payload = jsonwebtoken.verify(
+      req.headers["access_token"],
+      config.secret || 'secret',
+      (err, decoded) => { // https://www.npmjs.com/package/jsonwebtoken
+        console.log("[TEST]This is jwt err:",err)
+        console.log("[TEST]This is jwt decoded:",decoded)
+      })
+    return resolve(payload)
     // 이게 필요한가?? 컨설턴트님이 말씀하신 경우 아니라면 FE에서 storage 삭제할 일
+    // 컨설턴트님 말한거처럼 whitelist 운영을 위해 남겨놓겠습니다...
   });
+}
+
+// openAPI 설계엔 없었지만 추가...
+exports.getUserAll = function (req, res, next) {
+  return new Promise(async function (resolve, reject) {
+    // jwt 인증 확인 필요
+
+    db["users"]
+      .findAll()
+      .then((data) => {
+        console.log("This is getUserAll data:", data)
+        if (data == null) {
+          // 401 에러로 올릴 필요
+          console.log("No User")
+          return reject(error)
+        }
+        return resolve(data)
+      })
+      .catch((error) => {
+        console.log("Unknown Error", error)
+        return reject(error)
+      })
+  })
 }
 
 exports.getUserById = function (req, res, next) {
@@ -183,13 +233,13 @@ exports.getUserById = function (req, res, next) {
         if (data == null) {
           // 401 에러로 올릴 필요
           console.log("User not found")
-          reject()
+          return reject(error)
         }
-        resolve(data)
+        return resolve(data)
       })
       .catch((error) => {
         console.log("Unknown Error", error)
-        reject()
+        return reject(error)
       })
   })
 }
@@ -218,22 +268,22 @@ exports.updateUserById = function (req, res, next) {
       db["users"].findOne({where: { user_id }})
       .then((data) => {
         console.log(data)
-        resolve(data)
+        return resolve(data)
       })
-      .catch((err) => {
-        console.log(err)
-        reject(err)
+      .catch((error) => {
+        console.log(error)
+        return reject(error)
       })
     })
     .catch((error) => {
       console.log(error)
-      reject(error)
+      return reject(error)
     })
 
   })
 }
 
-// 작동하기는 하나, resolve(data)로 index.js로 넘어갈때 JSON대신 integer만 가서 주의 표시 뜨며, FE에 error를 보냄
+// 작동하기는 하나, return resolve(data)로 index.js로 넘어갈때 JSON대신 integer만 가서 주의 표시 뜨며, FE에 error를 보냄
 exports.deleteUserById = function (req, res, next) {
   return new Promise(async function (resolve, reject) {
     // jwt 인증 확인 필요
@@ -252,11 +302,11 @@ exports.deleteUserById = function (req, res, next) {
     .then((data) => {
       console.log(data)
       // 1
-      resolve(data)
+      return resolve(data)
     })
     .catch((error) => {
       console.log(error)
-      reject(error)
+      return reject(error)
     })
   })
 }

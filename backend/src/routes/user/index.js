@@ -9,7 +9,7 @@ router.post("/", (req, res) => {
       res.status(200).send(data);
     })
     .catch((error) => {
-      res.status(400).send("error");
+      res.status(400).send(error);
     });
 });
 
@@ -20,9 +20,21 @@ router.get("/id", (req, res) => {
       res.status(200).send(data);
     })
     .catch((error) => {
-      res.status(400).send("error");
+      res.status(400).send(error);
     });
 });
+
+router.get("/password", (req, res) => {
+  user
+    .validatePasswordRenew(req, res)
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((error) => {
+      res.status(400).send(error);
+    });
+});
+
 
 router.put("/password", (req, res) => {
   user
@@ -31,7 +43,7 @@ router.put("/password", (req, res) => {
       res.status(200).send(data);
     })
     .catch((error) => {
-      res.status(400).send("error");
+      res.status(400).send(error);
     });
 });
 
@@ -42,7 +54,7 @@ router.post("/login", (req, res) => {
       res.status(200).send(data);
     })
     .catch((error) => {
-      res.status(400).send("error");
+      res.status(400).send(error);
     });
 });
 
@@ -53,7 +65,18 @@ router.get("/logout", (req, res) => {
       res.status(200).send(data);
     })
     .catch((error) => {
-      res.status(400).send("error");
+      res.status(400).send(error);
+    });
+});
+
+router.get("/all", (req, res) => {
+  user
+    .getUserAll(req)
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((error) => {
+      res.status(400).send(error);
     });
 });
 
@@ -64,7 +87,7 @@ router.get("/:user_id", (req, res) => {
       res.status(200).send(data);
     })
     .catch((error) => {
-      res.status(400).send("error");
+      res.status(400).send(error);
     });
 });
 
@@ -75,7 +98,7 @@ router.put("/:user_id", (req, res) => {
       res.status(200).send(data);
     })
     .catch((error) => {
-      res.status(400).send("error");
+      res.status(400).send(error);
     });
 });
 
@@ -86,7 +109,7 @@ router.delete("/:user_id", (req, res) => {
       res.status(200).send(data);
     })
     .catch((error) => {
-      res.status(400).send("error");
+      res.status(400).send(error);
     });
 });
 
