@@ -2,6 +2,42 @@ const router = require("express").Router();
 
 const user = require("../../service/userService");
 
+router.get("/duplicatecheckid/:user_id", (req, res) => {
+  user
+    .getDuplicateCheckById(req)
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((error) => {
+      res.status(400).send(error);
+    });
+});
+
+router.get("/duplicatecheckemail/:email", (req, res) => {
+  user
+    .getDuplicateCheckByEmail(req)
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((error) => {
+      res.status(400).send(error);
+    });
+});
+
+router.get("/duplicatecheckcellphone/:cellphone", (req, res) => {
+  user
+    .getDuplicateCheckByCellphone(req)
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((error) => {
+      res.status(400).send(error);
+    });
+});
+
+
+
+
 router.post("/", (req, res) => {
   user
     .createUser(req)
