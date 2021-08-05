@@ -34,7 +34,7 @@ const Sensor = () => {
     loadSensor();
     setInterval(() => {
       loadSensor();
-    }, 10000);
+    }, 60000);
   }, []);
   return (
     <Fulldiv>

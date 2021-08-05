@@ -35,11 +35,11 @@ function App() {
           <Switch>
             <Route exact path="/" component={Progress} />
             <Route exact path="/Progress" component={Progress} />
-            <Route exact path="/Rating/:time" component={Rating} />
+            <Route exact path="/Rating/:id" component={Rating} />
             <Route exact path="/Timer" component={Timer} />
             <Route exact path="/Today" component={Today} />
             <Route exact path="/Change" component={Change} />
-            <Route exact path="/Changecalendar" component={Changecalendar} />
+            <Route exact path="/Change/:id" component={Changecalendar} />
             <Redirect to="/" />
           </Switch>
         </BrowserRouter>

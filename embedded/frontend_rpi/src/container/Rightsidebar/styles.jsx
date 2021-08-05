@@ -4,6 +4,7 @@ const Rightsidecontainer = styled.div`
   display: flex-row;
   width: 16%;
   margin: 0px;
+  height: 99%;
   color: #121212;
   font-size: 20px;
 `;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
 import styled1 from "styled-components";
 import Ratingstar from "@material-ui/lab/Rating";
@@ -9,6 +9,7 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
+import axios from "axios";
 const StyledRating = withStyles({
   iconFilled: {
     color: "#f6f924",
@@ -152,27 +153,82 @@ const Changeendtext = styled1.div`
   background-color: #a3cca3;
 `;
 
-const Confirm = () => {
-  if (window.confirm("정말 완료하시겠 습니까?")) {
-    window.location.replace(`/Today`);
-  } else {
-    console.log("변화 없음");
-  }
-};
-
-const Cancel = () => {
-  if (window.confirm("정말 취소하시겠 습니까?")) {
-    window.location.replace(`/Today`);
-  } else {
-    console.log("변화 없음");
-  }
-};
-
 const Ratinglayout = (props) => {
   const [selectedValue1, setSelectedValue1] = React.useState("1");
   const [selectedValue2, setSelectedValue2] = React.useState("1");
   const [selectedValue3, setSelectedValue3] = React.useState("1");
   const [selectedValue4, setSelectedValue4] = React.useState("1");
+  const [starttime, setStarttime] = useState("");
+  const [deadline, setDeadline] = useState("");
+  const [manageid, setManageid] = useState("");
+  const [rating, setRating] = useState("");
+  const { id } = props;
+  console.log(id);
+
+  const Confirm = async () => {
+    if (window.confirm("정말 완료하시겠 습니까?")) {
+      await axios
+        .put(`http://127.0.0.1:4500/test/${id}`, {
+          "started_at" : starttime,
+          "finished_at" : moment().format("YYYYMMDD HHmm"),
+          "deadline_at" : deadline,
+          "notification" : moment().format("YYYYMMDD HHmm"),
+          "is_finished" : true
+        })
+        .then(({ data }) => {
+          console.log(data.data);
+          // setItemList(data.data);
+          // console.log(data.data);
+          setStarttime(moment(data.data.started_at).format("YYYYMMDD HHmm"));
+          setManageid(data.data.id);
+          setRating(
+            (Number(selectedValue1) +
+              Number(selectedValue2) +
+              Number(selectedValue3) +
+              Number(selectedValue4)) /
+              4
+          );
+          console.log(rating);
+        })
+        .catch((e) => {});
+      window.location.replace(`/Today`);
+    } else {
+      console.log("변화 없음");
+    }
+  };
+
+  const Cancel = () => {
+    if (window.confirm("정말 취소하시겠 습니까?")) {
+      window.location.replace(`/Today`);
+    } else {
+      console.log("변화 없음");
+    }
+  };
+
+  useEffect(() => {
+    async function loadCalendar() {
+      await axios
+        .get(`http://127.0.0.1:4500/test/${id}`)
+        .then(({ data }) => {
+          console.log(data.data);
+          // setItemList(data.data);
+          // console.log(data.data);
+          setStarttime(moment(data.data.started_at).format("YYYYMMDD HHmm"));
+          setDeadline(moment(data.data.deadline_at).format("YYYYMMDD HHmm"))
+          setManageid(data.data.id);
+          setRating(
+            (Number(selectedValue1) +
+              Number(selectedValue2) +
+              Number(selectedValue3) +
+              Number(selectedValue4)) /
+              4
+          );
+          console.log(rating);
+        })
+        .catch((e) => {});
+    }
+    loadCalendar();
+  }, []);
   const handleChange1 = (event) => {
     setSelectedValue1(event.target.value);
     console.log(event.target.value);
@@ -189,15 +245,14 @@ const Ratinglayout = (props) => {
     setSelectedValue4(event.target.value);
     console.log(event.target.value);
   };
-  const { time } = props;
   // console.log(time[0] + time[1]);
   // console.log(moment().format("H"));
-  console.log((Number(selectedValue1) + Number(selectedValue2) + Number(selectedValue3) + Number(selectedValue4)) /4)
+
   return (
     <Ratingcon>
       <Starttime>
         <Changestarttext>일정 시작 시간</Changestarttext>
-        <Changestarttext>{time}</Changestarttext>
+        <Changestarttext>{moment(starttime).format("HH : mm")}</Changestarttext>
       </Starttime>
       <Endtime>
         <Changeendtext>일정 종료 시간</Changeendtext>
@@ -351,7 +406,13 @@ const Ratinglayout = (props) => {
         <Ratingstarcon>
           <StyledRating
             name="customized-empty"
-            value={(Number(selectedValue1) + Number(selectedValue2) + Number(selectedValue3) + Number(selectedValue4)) /4}
+            value={
+              (Number(selectedValue1) +
+                Number(selectedValue2) +
+                Number(selectedValue3) +
+                Number(selectedValue4)) /
+              4
+            }
             size="large"
             precision={0.25}
             readOnly
@@ -366,8 +427,8 @@ const Ratinglayout = (props) => {
   );
 };
 const Rating = ({ match }) => {
-  const { time } = match.params;
-  return <Layout pages={Ratinglayout({ time })}></Layout>;
+  const { id } = match.params;
+  return <Layout pages={Ratinglayout({ id })}></Layout>;
 };
 
 export default Rating;

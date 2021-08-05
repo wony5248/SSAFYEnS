@@ -28,14 +28,13 @@ const Progresstitlenamecon = styled.div`
   margin: 0px 16px;
   padding-top: 4px;
 `;
-const Progressgoal = styled.div`
+const Progressdeadline_at = styled.div`
   width: auto;
   height: 30%;
   color: white;
   display: flex;
   align-items: center;
   margin: 0px 16px;
-  font-size: 20px;
   padding-top: 4px;
 `;
 
@@ -43,7 +42,6 @@ const Progresstitlename = styled.div`
   width: auto;
   height: 30%;
   color: white;
-  font-size: 20px;
   padding-top: 4px;
 `;
 
@@ -51,7 +49,6 @@ const Progresstitletime = styled.div`
   width: auto;
   height: auto;
   color: white;
-  font-size: 20px;
   padding-top: 4px;
 `;
 
@@ -76,12 +73,10 @@ const Progresscontenttitle = styled.div`
   background-color: #a3cca3;
   padding: 0px;
   margin-bottom: 14px;
-  font-size: 20px;
 `;
 
 const Progresscontent = styled.div`
   overflow: auto;
-  font-size: 20px;
   width: auto;
   height: 76%;
   color: #a3cca3;
@@ -119,70 +114,68 @@ const Progresslayout = () => {
   useEffect(() => {
     async function loadCalendar() {
       await axios
-        .get("http://127.0.0.1:4500/test/schedule")
+        .post("http://127.0.0.1:4500/test/getdaily", {"date" : `${moment().format("YYYYMMDD")}`})
         .then(({ data }) => {
-          console.log(data.data.title)
-          setStarttime(moment(data.data.started_at).format("HH:mm"))
-          setEndtime(moment(data.data.finished_at).format("HH:mm"))
-          setTitle(data.data.title);
-          setContent(data.data.context);
-          setGoal(moment(data.data.deadline_at).format("HH:mm"));
-          // console.log(moment())
-          // console.log(data.Item)
-          // for (let i = 0; i < data.Item.length; i++) {
-          //   // console.log(
-          //   //   Number(data.Item[i].StartTime[0] + data.Item[i].StartTime[1])
-          //   // );
-          //   const startTime = Number(
-          //     data.Item[i].StartTime[0] + data.Item[i].StartTime[1]
-          //   );
-          //   const startMin = Number(
-          //     data.Item[i].StartTime[5] + data.Item[i].StartTime[6]
-          //   );
-          //   const endTime = Number(
-          //     data.Item[i].EndTime[0] + data.Item[i].EndTime[1]
-          //   );
-          //   const endMin = Number(
-          //     data.Item[i].EndTime[5] + data.Item[i].EndTime[6]
-          //   );
-          //   const currentTime = Number(moment().format("H"));
-          //   // console.log(startTime);
-          //   // console.log(currentTime);
-          //   // console.log(endTime)
-          //   const currentMin = Number(moment().format("mm"));
-          //   // console.log(startMin);
-          //   // console.log(currentMin);
-          //   // console.log(endMin)
-          //   if (startTime < currentTime && currentTime < endTime) {
-          //     // console.log(data.Item[i].StartTime);
-          //     setStarttime(data.Item[i].StartTime);
-          //     setEndtime(data.Item[i].EndTime);
-          //     setGoal(data.Item[i].Goal);
-          //     setTitle(data.Item[i].Title);
-          //     setContent(data.Item[i].Content);
-          //     setIstrue(true);
-          //   } else if (currentTime === endTime && currentMin <= endMin) {
-          //     setStarttime(data.Item[i].StartTime);
-          //     setEndtime(data.Item[i].EndTime);
-          //     setGoal(data.Item[i].Goal);
-          //     setTitle(data.Item[i].Title);
-          //     setContent(data.Item[i].Content);
-          //     setIstrue(true);
-          //   } else if (currentTime === startTime && startMin <= currentMin) {
-          //     setStarttime(data.Item[i].StartTime);
-          //     setEndtime(data.Item[i].EndTime);
-          //     setGoal(data.Item[i].Goal);
-          //     setTitle(data.Item[i].Title);
-          //     setContent(data.Item[i].Content);
-          //     setIstrue(true);
-          //   }
-          // }
-          // console.log(
-          //   data.Item[0].StartTime[0] +
-          //     data.Item[0].StartTime[1] +
-          //     data.Item[0].StartTime[5] +
-          //     data.Item[0].StartTime[6]
-          // );
+          console.log(data.data)
+          console.log(moment(data.data[0].started_at).format("HH:mm"))
+          console.log(moment(data.data[0].finished_at).format("HH:mm"))
+          console.log(data.data[0].title);
+          console.log(data.data[0].context);
+          console.log(moment(data.data[0].deadline_at).format("HH:mm"));
+          for (let i = 0; i < data.data.length; i++) {
+            // console.log(
+            //   Number(data.data[i].started_at[0] + data.data[i].started_at[1])
+            // );
+            const startTime = Number(
+              moment(data.data[i].started_at).format("HH")
+            );
+            const startMin = Number(
+              moment(data.data[i].started_at).format("mm")
+            );
+            const endTime = Number(
+              moment(data.data[i].finished_at).format("HH")
+            );
+            const endMin = Number(
+              moment(data.data[i].finished_at).format("mm")
+            );
+            const currentTime = Number(moment().format("H"));
+            // console.log(started_at);
+            // console.log(currentTime);
+            // console.log(finished_at)
+            const currentMin = Number(moment().format("mm"));
+            // console.log(startMin);
+            // console.log(currentMin);
+            // console.log(endMin)
+            if (startTime < currentTime && currentTime < endTime) {
+              // console.log(data.data[i].started_at);
+              setStarttime(`${moment(data.data[i].started_at).format("HH : mm")}`);
+              setEndtime(`${moment(data.data[i].finished_at).format("HH : mm")}`);
+              setGoal(`${moment(data.data[i].deadline_at).format("YYYY.MM.DD HH : mm")}`);
+              setTitle(data.data[i].title);
+              setContent(data.data[i].context);
+              setIstrue(true);
+            } else if (currentTime === endTime && currentMin <= endMin) {
+              setStarttime(`${moment(data.data[i].started_at).format("HH : mm")}`);
+              setEndtime(`${moment(data.data[i].finished_at).format("HH : mm")}`);
+              setGoal(`${moment(data.data[i].deadline_at).format("YYYY.MM.DD HH : mm")}`);
+              setTitle(data.data[i].title);
+              setContent(data.data[i].context);
+              setIstrue(true);
+            } else if (currentTime === startTime && startMin <= currentMin) {
+              setStarttime(`${moment(data.data[i].started_at).format("HH : mm")}`);
+              setEndtime(`${moment(data.data[i].finished_at).format("HH : mm")}`);
+              setGoal(`${moment(data.data[i].deadline_at).format("YYYY.MM.DD HH : mm")}`);
+              setTitle(data.data[i].title);
+              setContent(data.data[i].context);
+              setIstrue(true);
+            }
+          }
+          console.log(
+            data.data[0].started_at[0] +
+              data.data[0].started_at[1] +
+              data.data[0].started_at[5] +
+              data.data[0].started_at[6]
+          );
         })
         .catch((e) => {
           console.error(e);
@@ -192,9 +185,6 @@ const Progresslayout = () => {
       // console.log(Number(moment().format("mm")));
     }
     loadCalendar();
-    setInterval(() => {
-      loadCalendar();
-    }, 60000);
   }, []);
   return (
     <Progresscontainer>
@@ -207,8 +197,8 @@ const Progresslayout = () => {
                 {starttime} ~ {endtime}
               </Progresstitletime>
             </Progresstitlenamecon>
-            <Progressgoal>일정 목표</Progressgoal>
-            <Progressgoal>{goal}</Progressgoal>
+            <Progressdeadline_at>일정 데드라인</Progressdeadline_at>
+            <Progressdeadline_at>{goal}</Progressdeadline_at>
           </Progresstitle>
           <Progresscontentcon>
             <Progresscontenttitle>일정 내용</Progresscontenttitle>

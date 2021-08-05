@@ -6,9 +6,10 @@ import styled from "styled-components";
 const Timercon = styled.div`
   border-radius: 4px;
   width: auto;
-  height: 100%;
+  height: 99.8%;
   color: #121212;
   font-size: 40px;
+  border: 1px solid #a3cca3;
 `;
 
 const Timerlayout = () => {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../../layout";
 import styled from "styled-components";
 import axios from "axios"
-
+import moment from "moment";
 const Changecontainer = styled.div`
   overflow: auto;
   width: auto;
@@ -98,35 +98,37 @@ const Changelayout = () => {
   const [itemList, setItemList] = useState([]);
   useEffect(() => {
     async function loadCalendar() {
+      console.log(moment().format("YYYYMMDD"))
       await axios
-        .get("./today.json")
+        .post("http://127.0.0.1:4500/test/getdaily", {
+          "date" : `${moment().format("YYYYMMDD")}`
+        })
         .then(({ data }) => {
-          setItemList(data.Item);
-          console.log(data.Item);
+          console.log(data)
+          setItemList(data.data);
+          // console.log(data.data);
+          console.log(itemList)
         })
         .catch((e) => {
-          console.error(e);
         });
     }
     loadCalendar();
     setInterval(() => {
       loadCalendar();
-    }, 10000);
+    }, 60000);
   }, []);
   return (
     <Changecontainer>
       {itemList.map((item) => (
         <Changetitle>
         <Changetitlenamecon>
-          <Changetitlename>{item.Title}</Changetitlename>
-          <Changetitletime>{item.StartTime} ~ {item.EndTime}</Changetitletime>
+          <Changetitlename>일정 제목</Changetitlename>
+          <Changetitletime>{moment(item.started_at).format("HH:mm")} ~ {moment(item.finished_at).format("HH:mm")}</Changetitletime>
         </Changetitlenamecon>
-        <Changegoal>{item.Goal}</Changegoal>
+        <Changegoal>{item.title}</Changegoal>
         <Changechangecon>
-          <Changetitlename>{item.Content}</Changetitlename>
-          <Changechangebtn
-            onClick={() => window.location.replace(`/Changecalendar`)}
-          >
+          <Changetitlename>{item.context}</Changetitlename>
+          <Changechangebtn onClick={() => window.location.replace(`/Change/${item.id}`)}>
             변경
           </Changechangebtn>
         </Changechangecon>

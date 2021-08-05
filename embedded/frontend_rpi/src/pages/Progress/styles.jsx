@@ -10,6 +10,7 @@ const Progresscontainer = styled.div`
   background-color: white;
   margin: 0px;
   border : 1px solid #a3cca3;
+  font-size: 24px;
   padding-top: 14px;
   padding-right:12px;
   padding-left: 12px;

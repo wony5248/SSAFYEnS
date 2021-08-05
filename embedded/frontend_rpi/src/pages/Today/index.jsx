@@ -2,19 +2,20 @@ import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
 import axios from "axios";
 import styled from "styled-components";
+import moment from "moment";
 
 const Todaycontainer = styled.div`
   overflow: auto;
   width: auto;
-  height: 98.2%;
+  height: 97.4%;
   color: #a3cca3;
   background-color: white;
   border: 1px solid #a3cca3;
   margin: 0px;
-  padding-top: 14px;
+  padding-top: 1%;
   padding-right: 12px;
   padding-left: 12px;
-  padding-bot: 14px;
+  padding-bottom: 1%;
 `;
 const Todaytitle = styled.div`
   display: flex-row;
@@ -97,11 +98,16 @@ const Todaylayout = () => {
   const [itemList, setItemList] = useState([]);
   useEffect(() => {
     async function loadCalendar() {
+      console.log(moment().format("YYYYMMDD"))
       await axios
-        .get("./today.json")
+        .post("http://127.0.0.1:4500/test/getdaily", {
+          "date" : `${moment().format("YYYYMMDD")}`
+        })
         .then(({ data }) => {
-          setItemList(data.Item);
-          console.log(data.Item);
+          console.log(data)
+          setItemList(data.data);
+          // console.log(data.data);
+          console.log(itemList)
         })
         .catch((e) => {
         });
@@ -109,7 +115,7 @@ const Todaylayout = () => {
     loadCalendar();
     setInterval(() => {
       loadCalendar();
-    }, 10000);
+    }, 60000);
   }, []);
 
   return (
@@ -117,13 +123,13 @@ const Todaylayout = () => {
       {itemList.map((item) => (
         <Todaytitle>
         <Todaytitlenamecon>
-          <Todaytitlename>{item.Title}</Todaytitlename>
-          <Todaytitletime>{item.StartTime} ~ {item.EndTime}</Todaytitletime>
+          <Todaytitlename>일정 제목</Todaytitlename>
+          <Todaytitletime>{moment(item.started_at).format("HH:mm")} ~ {moment(item.finished_at).format("HH:mm")}</Todaytitletime>
         </Todaytitlenamecon>
-        <Todaygoal>{item.Goal}</Todaygoal>
+        <Todaygoal>{item.title}</Todaygoal>
         <Todaychangecon>
-          <Todaytitlename>{item.Content}</Todaytitlename>
-          <Todaychangebtn onClick={() => window.location.replace(`/Rating/${item.StartTime}`)}>
+          <Todaytitlename>{item.context}</Todaytitlename>
+          <Todaychangebtn onClick={() => window.location.replace(`/Rating/${item.id}`)}>
             완료
           </Todaychangebtn>
         </Todaychangecon>

@@ -26,7 +26,7 @@ router.post("/sensor", function (req, res, next) {
 });
 router.get("/schedule", async function (req, res, next) {
   //   res.send("DB로 보낼 센서값");
-  
+
   await axios
     .get("http://127.0.0.1:8079/schedule/6")
     .then((response) => {
@@ -48,6 +48,71 @@ router.post("/timer", function (req, res, next) {
 router.post("/stopwatch", function (req, res, next) {
   //   res.send("3");
   res.json(req.body);
+});
+
+router.post("/getdaily", async function (req, res, next) {
+  console.log("여기야여기")
+  console.log(req)
+  console.log("저기야저기")
+  console.log(req.body);
+  await axios
+    .post("http://127.0.0.1:8079/schedule/daily", {
+        "date" : `${req.body.date}`
+    })
+    .then((response) => {
+      res.send(response.data);
+      console.log(response.data);
+      console.log(22222);
+    })
+    .catch(function (error) {
+      res.send(error);
+      console.log(11111);
+      console.log(error);
+    });
+});
+
+router.get("/:id", async function (req, res, next) {
+  console.log("여기야여기")
+  console.log(req)
+  console.log("저기야저기")
+  console.log(req.params);
+  await axios
+    .get(`http://127.0.0.1:8079/schedule/${req.params.id}`)
+    .then((response) => {
+      res.send(response.data);
+      console.log(response.data);
+      console.log(22222);
+    })
+    .catch(function (error) {
+      res.send(error);
+      console.log(11111);
+      console.log(error);
+    });
+});
+
+router.put("/:id", async function (req, res, next) {
+  console.log("여기")
+  console.log("저기")
+  console.log(req.params);
+  console.log(req.body)
+  await axios
+    .put(`http://127.0.0.1:8079/schedule/${req.params.id}`, {
+      "started_at" : req.body.started_at,
+      "finished_at" : req.body.finished_at,
+      "deadline_at" : req.body.deadline_at,
+      "notification" : req.body.notification,
+      "is_finished" : req.body.is_finished
+    })
+    .then((response) => {
+      res.send(response.data);
+      console.log(response.data);
+      console.log(22222);
+    })
+    .catch(function (error) {
+      res.send(error);
+      console.log(11111);
+      console.log(error);
+    });
 });
 // router.post('/getModule', function(req, res, next) {
 //     console.log("1" + req.headers["x-access-token"]);
