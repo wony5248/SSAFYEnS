@@ -49,11 +49,11 @@ exports.month = check("month").customSanitizer(
 );
 
 exports.week = check("week").customSanitizer((value, { req }) =>
-  moment(body.started_at).isoWeek()
+  moment(req.body.started_at).isoWeek()
 );
 
 exports.year = check("year").customSanitizer((value, { req }) =>
-  moment(body.started_at).year()
+  moment(req.body.started_at).year()
 );
 exports.point = check("point").customSanitizer((value, { req }) => 0);
 exports.user_id = check("user_id").default("jbj");

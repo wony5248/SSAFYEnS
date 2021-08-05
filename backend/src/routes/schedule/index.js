@@ -126,29 +126,57 @@ router.post("/daily", validation.date, (req, res) => {
   }
 });
 
-//아래는 average로 이동 예정
-// router.post(
-//   "/submit",
-//   validation.date,
-//   validation.month,
-//   validation.year,
-//   validation.week,
-//   (req, res) => {
-//     const result = validationResult(req);
-//     if (!result.isEmpty()) {
-//       console.log(validationResult(req));
-//       res.status("400").json({ result });
-//     } else {
-//       service
-//         .post_submit(req.body)
-//         .then((data) => {
-//           res.json({ data });
-//         })
-//         .catch((error) => {
-//           res.status("405").json({ error });
-//         });
-//     }
+//get all scheudle of day
+// router.get("/week/:date", validation.date, (req, res) => {
+//   const result = validationResult(req);
+//   if (!result.isEmpty()) {
+//     console.log(validationResult(req));
+//     res.status("400").json({ result });
+//   } else {
+//     console.log(req.params);
+//     service
+//       .get_week(req.params.date)
+//       .then((data) => {
+//         res.json({ data });
+//       })
+//       .catch((error) => {
+//         res.status("405").json({ error });
+//       });
 //   }
-// );
+// });
 
+// Get monthly schedule
+router.get("/month/:date", validation.date, (req, res) => {
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    console.log(validationResult(req));
+    res.status("400").json({ result });
+  } else {
+    service
+      .get_month(req.params.date)
+      .then((data) => {
+        res.json({ data });
+      })
+      .catch((error) => {
+        res.status("405").json({ error });
+      });
+  }
+});
+// Get yearly schedule
+router.get("/year/:date", validation.date, (req, res) => {
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    console.log(validationResult(req));
+    res.status("400").json({ result });
+  } else {
+    service
+      .get_year(req.params.date)
+      .then((data) => {
+        res.json({ data });
+      })
+      .catch((error) => {
+        res.status("405").json({ error });
+      });
+  }
+});
 module.exports = router;
