@@ -14,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
   schedules.init(
     {
       user_id: DataTypes.STRING,
+      month: DataTypes.STRING,
+      year: DataTypes.STRING,
+      week: DataTypes.STRING,
       date: DataTypes.DATE,
       title: DataTypes.STRING,
       context: DataTypes.STRING,
