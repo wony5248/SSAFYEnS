@@ -277,3 +277,102 @@ exports.post_daily = function (body) {
     }
   });
 };
+
+exports.get_week = function (date) {
+  return new Promise(async function (resolve, reject) {
+    const week = moment(date).startOf("week");
+
+    const start = moment(week).startOf("week").toDate();
+    const end = moment(week).add(1, "week").toDate();
+
+    console.log(` weekly schedule을 조회합니다`, start, end);
+    const data = await db["schedules"]
+      .findAll({
+        where: {
+          [op.or]: [
+            {
+              finished_at: {
+                [op.gt]: start,
+              },
+              started_at: {
+                [op.lt]: end,
+              },
+            },
+          ],
+        },
+      })
+      .then((result) => {
+        return resolve(result);
+      })
+      .catch((error) => {
+        console.log(error);
+        return reject("db error");
+      });
+  });
+};
+
+exports.get_month = function (date) {
+  return new Promise(async function (resolve, reject) {
+    const start = moment(date).startOf("month").toDate();
+    const end = moment(start).add(1, "month").toDate();
+
+    console.log(`${start} 월을 조회합니다`, start, end);
+    const data = await db["schedules"]
+      .findAll({
+        where: {
+          [op.or]: [
+            {
+              started_at: {
+                [op.gte]: start,
+              },
+              finished_at: {
+                [op.lte]: end,
+              },
+            },
+          ],
+        },
+      })
+      .then((result) => {
+        // console.log("답 : ", result);
+        resolve(result);
+      })
+      .catch((error) => {
+        console.log(error);
+        reject("db error");
+      });
+    // reject("db instance not finded");
+  });
+};
+
+exports.get_year = function (date) {
+  return new Promise(async function (resolve, reject) {
+    const start = moment(date).startOf("year");
+    const end = moment(start).add(1, "year").toDate();
+
+    console.log(`${start} 년을 조회합니다`, start, end);
+    const data = await db["schedules"]
+      .findAll({
+        where: {
+          [op.or]: [
+            {
+              started_at: {
+                [op.gte]: start,
+              },
+              finished_at: {
+                [op.lte]: end,
+              },
+            },
+          ],
+        },
+      })
+      .then((result) => {
+        // console.log("답 : ", result);
+        resolve(result);
+      })
+      .catch((error) => {
+        console.log(error);
+        reject("db error");
+      });
+    // reject("db instance not finded");
+  });
+};
