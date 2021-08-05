@@ -11,6 +11,7 @@ exports.unimplemented = function () {
 };
 exports.post = function (body) {
   return new Promise(async function (resolve, reject) {
+    console.log(body.week);
     console.log("body : ", body);
     //유효성 검사 => schedule => daily 순으로 생성
     //유효성검사. validation에서 두 속성(started_at, finished_at)에 대한 조건 거는법을 몰라서 service에 작성

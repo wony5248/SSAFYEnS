@@ -1,4 +1,10 @@
-const { validationResult, check, oneOf, body } = require("express-validator");
+const {
+  validationResult,
+  check,
+  oneOf,
+  body,
+  param,
+} = require("express-validator");
 const { isEmpty } = require("lodash");
 const moment = require("moment");
 moment.tz.setDefault("Asia/Seoul");
@@ -45,15 +51,15 @@ exports.is_finished = check("is_finished").isIn([null, true, false]);
 //   .custom((value, { req }) => [null, true, false].indexOf(value) != -1)
 
 exports.month = check("month").customSanitizer(
-  (value, { req }) => moment(req.body.started_at).month() + 1
+  (value, { req }) => moment(req.body.date || req.params.date).month() + 1
 );
 
 exports.week = check("week").customSanitizer((value, { req }) =>
-  moment(req.body.started_at).isoWeek()
+  moment(req.body.date || req.params.date).isoWeek()
 );
 
 exports.year = check("year").customSanitizer((value, { req }) =>
-  moment(req.body.started_at).year()
+  moment(req.body.date || req.params.date).year()
 );
 exports.point = check("point").customSanitizer((value, { req }) => 0);
 exports.user_id = check("user_id").default("jbj");

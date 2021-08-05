@@ -14,9 +14,15 @@ exports.started_at = check("started_at") //req에 있는 key 중 started_at를 �
   .notEmpty() //(validation) empty 값 null, "", false 이면 req에 에러 추가
   .custom((value, { req }) => moment(value).isValid()) // (validation) 반환값이 false면 req에 에러추가
   .custom((value, { req }) => {
-    if (moment(req.body.finished_at).diff(moment(value), "minute") > 1440)
+    let { started_at, finished_at } = req.body;
+    const result =
+      moment(started_at).isSame(finished_at, "day") &&
+      moment(started_at).diff(finished_at, "second") <= 0;
+
+    console.log("here : ", result);
+    if (!result)
       throw new Error(
-        "started_at과 end_at이 다른 날짜로 작성되었습니다. 같은 날짜만 지원하도록 구현되어 있습니다"
+        "started_at과 end_at이 다른 날짜로 작성되었거나 started_at이 finished_at보다 늦게 설정되었습니다."
       );
     else return true;
   }) //started_at과 finished_at 차이가 하루 이상이면 에러
@@ -49,11 +55,11 @@ exports.month = check("month").customSanitizer(
 );
 
 exports.week = check("week").customSanitizer((value, { req }) =>
-  moment(body.started_at).isoWeek()
+  moment(req.body.started_at).isoWeek()
 );
 
 exports.year = check("year").customSanitizer((value, { req }) =>
-  moment(body.started_at).year()
+  moment(req.body.started_at).year()
 );
 exports.point = check("point").customSanitizer((value, { req }) => 0);
 exports.user_id = check("user_id").default("jbj");
