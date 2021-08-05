@@ -7,7 +7,7 @@ import moment from "moment";
 const Todaycontainer = styled.div`
   overflow: auto;
   width: auto;
-  height: 97.4%;
+  height: 97.1%;
   color: #a3cca3;
   background-color: white;
   border: 1px solid #a3cca3;
@@ -75,7 +75,7 @@ const Todaychangecon = styled.div`
   height: 40%;
   display: flex;
   justify-content: space-between;
-  align-items:center;
+  align-items: center;
   color: white;
   background-color: #a3cca3;
   margin: 0px 16px;
@@ -87,8 +87,8 @@ const Todaychangebtn = styled.button`
   border-radius: 8px;
   border: 0px;
   color: white;
-  display:flex;
-  align-items:center;
+  display: flex;
+  align-items: center;
   justify-content: center;
   background-color: #69a569;
   padding: 4px;
@@ -98,19 +98,18 @@ const Todaylayout = () => {
   const [itemList, setItemList] = useState([]);
   useEffect(() => {
     async function loadCalendar() {
-      console.log(moment().format("YYYYMMDD"))
+      console.log(moment().format("YYYYMMDD"));
       await axios
-        .post("http://127.0.0.1:4500/test/getdaily", {
-          "date" : `${moment().format("YYYYMMDD")}`
-        })
+        .get(
+          `http://127.0.0.1:4500/test/getdaily/${moment().format("YYYYMMDD")}`
+        )
         .then(({ data }) => {
-          console.log(data)
+          console.log(data);
           setItemList(data.data);
           // console.log(data.data);
-          console.log(itemList)
+          console.log(itemList);
         })
-        .catch((e) => {
-        });
+        .catch((e) => {});
     }
     loadCalendar();
     setInterval(() => {
@@ -120,21 +119,32 @@ const Todaylayout = () => {
 
   return (
     <Todaycontainer>
-      {itemList.map((item) => (
-        <Todaytitle>
-        <Todaytitlenamecon>
-          <Todaytitlename>일정 제목</Todaytitlename>
-          <Todaytitletime>{moment(item.started_at).format("HH:mm")} ~ {moment(item.finished_at).format("HH:mm")}</Todaytitletime>
-        </Todaytitlenamecon>
-        <Todaygoal>{item.title}</Todaygoal>
-        <Todaychangecon>
-          <Todaytitlename>{item.context}</Todaytitlename>
-          <Todaychangebtn onClick={() => window.location.replace(`/Rating/${item.id}`)}>
-            완료
-          </Todaychangebtn>
-        </Todaychangecon>
-      </Todaytitle>
-      ))}
+      {itemList.length !== 0 ? (
+        <div style={{height: "100%"}}>
+          {itemList.map((item) => (
+            <Todaytitle>
+              <Todaytitlenamecon>
+                <Todaytitlename>일정 제목</Todaytitlename>
+                <Todaytitletime>
+                  {moment(item.started_at).format("HH:mm")} ~{" "}
+                  {moment(item.finished_at).format("HH:mm")}
+                </Todaytitletime>
+              </Todaytitlenamecon>
+              <Todaygoal>{item.title}</Todaygoal>
+              <Todaychangecon>
+                <Todaytitlename>{item.context}</Todaytitlename>
+                <Todaychangebtn
+                  onClick={() => window.location.replace(`/Rating/${item.id}`)}
+                >
+                  완료
+                </Todaychangebtn>
+              </Todaychangecon>
+            </Todaytitle>
+          ))}
+        </div>
+      ) : (
+        <div style={{height: "100%", display:"flex", justifyContent:"center", alignItems:"center",fontSize:"40px", color:"#121212"}}>등록된 오늘 일정이 없습니다.</div>
+      )}
     </Todaycontainer>
   );
 };

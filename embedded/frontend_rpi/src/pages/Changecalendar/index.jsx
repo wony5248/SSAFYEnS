@@ -21,8 +21,9 @@ const Changeoption = styled1.option`
 `;
 const Changecalcon = styled1.div`
   width: auto;
-  height: 98.8%;
+  height: 99.8%;
   display: flex-row;
+  border : 1px solid #a3cca3;
   flex-wrap: nowrap;
   color: #a3cca3;
   background-color: white;

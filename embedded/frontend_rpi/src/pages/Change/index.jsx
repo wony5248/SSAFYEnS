@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../../layout";
 import styled from "styled-components";
-import axios from "axios"
+import axios from "axios";
 import moment from "moment";
 const Changecontainer = styled.div`
   overflow: auto;
   width: auto;
-  height: 98.2%;
+  height: 97.9%;
   color: #a3cca3;
   background-color: white;
   border: 1px solid #a3cca3;
@@ -74,12 +74,11 @@ const Changechangecon = styled.div`
   height: 40%;
   display: flex;
   justify-content: space-between;
-  align-items:center;
+  align-items: center;
   color: white;
   background-color: #a3cca3;
   margin: 0px 16px;
 `;
-
 
 const Changechangebtn = styled.button`
   width: 78px;
@@ -88,7 +87,7 @@ const Changechangebtn = styled.button`
   border: 0px;
   color: white;
   display: flex;
-  align-items:center;
+  align-items: center;
   justify-content: center;
   background-color: #69a569;
   padding: 4px;
@@ -98,19 +97,18 @@ const Changelayout = () => {
   const [itemList, setItemList] = useState([]);
   useEffect(() => {
     async function loadCalendar() {
-      console.log(moment().format("YYYYMMDD"))
+      console.log(moment().format("YYYYMMDD"));
       await axios
-        .post("http://127.0.0.1:4500/test/getdaily", {
-          "date" : `${moment().format("YYYYMMDD")}`
-        })
+        .get(
+          `http://127.0.0.1:4500/test/getdaily/${moment().format("YYYYMMDD")}`
+        )
         .then(({ data }) => {
-          console.log(data)
+          console.log(data);
           setItemList(data.data);
           // console.log(data.data);
-          console.log(itemList)
+          console.log(itemList);
         })
-        .catch((e) => {
-        });
+        .catch((e) => {});
     }
     loadCalendar();
     setInterval(() => {
@@ -119,21 +117,44 @@ const Changelayout = () => {
   }, []);
   return (
     <Changecontainer>
-      {itemList.map((item) => (
-        <Changetitle>
-        <Changetitlenamecon>
-          <Changetitlename>일정 제목</Changetitlename>
-          <Changetitletime>{moment(item.started_at).format("HH:mm")} ~ {moment(item.finished_at).format("HH:mm")}</Changetitletime>
-        </Changetitlenamecon>
-        <Changegoal>{item.title}</Changegoal>
-        <Changechangecon>
-          <Changetitlename>{item.context}</Changetitlename>
-          <Changechangebtn onClick={() => window.location.replace(`/Change/${item.id}`)}>
-            변경
-          </Changechangebtn>
-        </Changechangecon>
-      </Changetitle>
-      ))}
+      {itemList.length !== 0 ? (
+        <div style={{height: "100%"}}>
+          {" "}
+          {itemList.map((item) => (
+            <Changetitle>
+              <Changetitlenamecon>
+                <Changetitlename>일정 제목</Changetitlename>
+                <Changetitletime>
+                  {moment(item.started_at).format("HH:mm")} ~{" "}
+                  {moment(item.finished_at).format("HH:mm")}
+                </Changetitletime>
+              </Changetitlenamecon>
+              <Changegoal>{item.title}</Changegoal>
+              <Changechangecon>
+                <Changetitlename>{item.context}</Changetitlename>
+                <Changechangebtn
+                  onClick={() => window.location.replace(`/Change/${item.id}`)}
+                >
+                  변경
+                </Changechangebtn>
+              </Changechangecon>
+            </Changetitle>
+          ))}
+        </div>
+      ) : (
+        <div
+          style={{
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: "40px",
+            color: "#121212",
+          }}
+        >
+          등록된 오늘 일정이 없습니다.
+        </div>
+      )}
     </Changecontainer>
   );
 };

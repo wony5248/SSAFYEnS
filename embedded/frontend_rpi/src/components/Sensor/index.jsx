@@ -10,6 +10,7 @@ import SettingsVoiceIcon from '@material-ui/icons/SettingsVoice';
 const Fulldiv = styled.div`
   height: 100%;
   width: 100%;
+  font-size: 24px;
 `;
 
 const Sensor = () => {

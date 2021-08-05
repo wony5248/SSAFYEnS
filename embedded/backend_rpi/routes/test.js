@@ -50,15 +50,13 @@ router.post("/stopwatch", function (req, res, next) {
   res.json(req.body);
 });
 
-router.post("/getdaily", async function (req, res, next) {
+router.get("/getdaily/:date", async function (req, res, next) {
   console.log("여기야여기")
   console.log(req)
   console.log("저기야저기")
   console.log(req.body);
   await axios
-    .post("http://127.0.0.1:8079/schedule/daily", {
-        "date" : `${req.body.date}`
-    })
+    .get(`http://127.0.0.1:8079/schedule/daily/${req.params.date}`)
     .then((response) => {
       res.send(response.data);
       console.log(response.data);

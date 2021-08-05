@@ -127,7 +127,7 @@ const Ratingstarcon = styled1.div`
 const Ratingcon = styled1.div`
   width: auto;
   font-size: 20px;
-  height: 100%;
+  height: 99.8%;
   display: flex-row;
   flex-wrap: nowrap;
   color: #a3cca3;
@@ -135,6 +135,7 @@ const Ratingcon = styled1.div`
   margin: 0px;
   padding-left:12px;
   padding-right:12px;
+  border: 1px solid #a3cca3;
   overflow: auto;
 `;
 
