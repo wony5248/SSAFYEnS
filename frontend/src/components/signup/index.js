@@ -1,8 +1,11 @@
 import React, {useState} from 'react';
 import {Grid, Button, TextField} from '@material-ui/core';
 import Wrapper from './styles';
+import { useHistory } from 'react-router-dom';
+import {userAPI} from '../../utils/axios';
 
 const SignUp = () =>{
+    let history = useHistory();
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
     const [check_password, setCheckPassword] = useState('');
@@ -56,13 +59,12 @@ const SignUp = () =>{
         setEmailLabel(true);
     };
 
-    const submit = () => {
-        alert(`ID : ${id}
-        passwd : ${password}
-        passwdcheck : ${check_password}
-        name : ${name}
-        email : ${email}
-        phone-number : ${number}`);
+    const addUserSignUp = async () => {
+        const result = await userAPI.addUser(id, name, email, number, password);
+        console.log(result);
+        if (result.status==200){
+            history.push('/');
+        }
     };
 
     return (
@@ -179,7 +181,7 @@ const SignUp = () =>{
                             </Grid>
                             <Grid container justifyContent= 'center' style={{marginTop:'50px'}}>
                                 <Button size = "large" style={{width:'120px', height:'60px', fontSize:20, marginTop:'5px', background:'#A3CCA3', fontWeight:'bold', color:'#ffffff'}}
-                                onClick={submit}>등록하기</Button>
+                                onClick={addUserSignUp}>등록하기</Button>
                             </Grid>
                         </form>
                     </div>

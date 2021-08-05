@@ -16,4 +16,12 @@ export const scheduleAPI = {
             , started_at, finished_at : '2021-08-31', deadline_at, point : 10, is_finished : false
         })
     }
-}
+};
+
+export const userAPI = {
+    addUser:(id, name, email, number, passwd)=>{
+        return request.post('/user', {
+            user_id:id, name, email, cellphone:number, password:passwd
+        })
+    }
+};
