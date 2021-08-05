@@ -9,6 +9,5 @@
 ### start
     npm start
 
-### Todo
-    db 연동 값 가져오기
+
 
