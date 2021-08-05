@@ -7,6 +7,91 @@ const config = require("../config/config.js");
 const jsonwebtoken = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+exports.getDuplicateCheckById = function (req, res, next) {
+  return new Promise(async function (resolve, reject) {
+    // jwt 인증 확인 필요
+
+    const { user_id } = req.params;
+    db["users"]
+      .findOne({
+        where: { 
+          user_id: user_id
+        }
+      })
+      .then((data) => {
+        console.log("This is getDuplicateCheckById data:", data)
+        if (data == null) {
+          // 못 찾은게 정상
+          console.log("Id is available")
+          return resolve(data)
+        }
+        // 찾은게 에러
+        return reject()
+      })
+      .catch((error) => {
+        console.log("Unknown Error", error)
+        return reject(error)
+      })
+  })
+}
+
+exports.getDuplicateCheckByEmail = function (req, res, next) {
+  return new Promise(async function (resolve, reject) {
+    // jwt 인증 확인 필요
+
+    const { email } = req.params;
+    db["users"]
+      .findOne({
+        where: { 
+          email: email
+        }
+      })
+      .then((data) => {
+        console.log("This is getDuplicateCheckByEmail data:", data)
+        if (data == null) {
+          // 못 찾은게 정상
+          console.log("email is available")
+          return resolve(data)
+        }
+        // 찾은게 에러
+        return reject()
+      })
+      .catch((error) => {
+        console.log("Unknown Error", error)
+        return reject(error)
+      })
+  })
+}
+
+exports.getDuplicateCheckByCellphone = function (req, res, next) {
+  return new Promise(async function (resolve, reject) {
+    // jwt 인증 확인 필요
+
+    const { cellphone } = req.params;
+    db["users"]
+      .findOne({
+        where: { 
+          cellphone: cellphone
+        }
+      })
+      .then((data) => {
+        console.log("This is getDuplicateCheckByCellphone data:", data)
+        if (data == null) {
+          // 못 찾은게 정상
+          console.log("cellphone is available")
+          return resolve(data)
+        }
+        // 찾은게 에러
+        return reject()
+      })
+      .catch((error) => {
+        console.log("Unknown Error", error)
+        return reject(error)
+      })
+  })
+}
+
+
 exports.createUser = function (req) {
   return new Promise(async function (resolve, reject) {
     try {
