@@ -1463,7 +1463,21 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/group'
+
     
+    400jwt:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              name:
+                type: string
+                example: "JsonWebTokenError"
+              message:
+                type: string
+                example: "invalid signature"
+
             
     400:
       description: Bad Request
