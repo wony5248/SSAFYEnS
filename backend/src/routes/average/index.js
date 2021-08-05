@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const validation = require("../../validation/averageValidation");
 router.post(
   "/submit",
   validation.date,
@@ -38,3 +39,5 @@ router.post("/daily", validation.date, (req, res) => {
       });
   }
 });
+
+module.exports = router;
