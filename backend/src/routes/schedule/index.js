@@ -14,6 +14,7 @@ router.post(
   validation.year,
   validation.week,
   validation.point,
+  validation.user_id,
   (req, res) => {
     //validation middleware에서 에러 발생시 req에 에러 관련 객체 담김.
     const result = validationResult(req);
@@ -82,6 +83,7 @@ router.delete("/:schedule_id", (req, res) => {
       res.status("405").json({ error });
     });
 });
+//todo url 변경 /schedule/month/{month}
 router.post("/month", validation.date, (req, res) => {
   const result = validationResult(req);
   if (!result.isEmpty()) {
@@ -98,6 +100,7 @@ router.post("/month", validation.date, (req, res) => {
       });
   }
 });
+//아래는 average로 이동 예정
 router.post(
   "/submit",
   validation.date,
