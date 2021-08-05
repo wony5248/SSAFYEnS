@@ -12,6 +12,7 @@ import Find from './pages/find';
 import Groupmanage from './pages/groupmanage'
 import MyPage from './pages/mypage'
 import Groupinfo from './pages/groupinfo';
+import DailyEvaluate from './pages/dailyevaluate';
 
 const App = () =>{
   return (
@@ -28,6 +29,7 @@ const App = () =>{
         <Route exact path = "/group" component={Group}/>
         <Route exact path = "/find" component={Find}/>
         <Route exact path = "/mypage" component={MyPage}/>
+        <Route exact path = "/dailyevaluate" component={DailyEvaluate}/>
       </Switch>
     </BrowserRouter>
   );
