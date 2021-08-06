@@ -5,16 +5,26 @@
 ### start
     npm start
 
-### POST test (sensor -> Rpi -> AWS)
-    post 127.0.0.1:3000/test/sensor
+### Sensor
+    POST 127.0.0.1:4500/test/sensor
     body = {"temp" : "27", "humid" : "50", "noise" : "132", "light" : "22"}
 
-### GET test (FE -> Rpi -> AWS)
-    GET 127.0.0.1:3000/test/sensor
+    GET 127.0.0.1:4500/test/sensor
     body = {"temp" : "27", "humid" : "50", "noise" : "132", "light" : "22"}
 
-### result
-    req.body 출력
+### 일정 추가
+    POST 127.0.0.1:4500/test/schedule
 
-### TO DO
-    db에 값 보내고 db에서 값 가져오는 API TEST
+### 일정 완료 및 변경
+    PUT 127.0.0.1:4500/test/:id
+
+일정 삭제
+    DELETE 127.0.0.1:4500/test/schedule/:id
+
+### 일정 가져오기
+    GET 127.0.0.1:4500/test/:id
+
+### 하루일정 갖져오기
+    GET 127.0.0.1:4500/test/getdaily/:date
+
+
