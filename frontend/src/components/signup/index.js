@@ -13,6 +13,9 @@ const SignUp = () =>{
     const [email, setEmail] = useState('');
     const [number, setNumber] = useState('');
     const [check, setCheck] = useState('');
+    const [checkemail, setCheckEmail] = useState('');
+    const [checkid, setCheckId] = useState('');
+    const [checknumber, setCheckNumber] = useState('');
 
     const [idLabel, setIdLabel] = useState(false);
     const [emailLabel, setEmailLabel] = useState(false);
@@ -28,7 +31,8 @@ const SignUp = () =>{
 
     const handleCheckPassword = (event) =>{
         setCheckPassword(event.target.value);
-        if (password.length === check_password.length && password===check_password){
+
+        if (password === event.target.value){
             setCheck("비밀번호가 일치합니다.");
         }else{
             setCheck("비밀번호가 일치하지 않습니다.");
@@ -47,16 +51,34 @@ const SignUp = () =>{
         setNumber(event.target.value);
     };
 
-    const handleIdLabel = () => {
-        setIdLabel(true);
+    const handleIdLabel = async () => {
+        try {
+            const result = await userAPI.checkUserId(id);
+            setIdLabel(true);
+            setCheckId('사용 가능한 아이디입니다.');
+        } catch (error) {
+            setCheckId('ID가 이미 존재합니다.');
+        }
     };
 
-    const handleNumberLabel = () => {
-        setNumberLabel(true);
+    const handleNumberLabel = async () => {
+        try{    
+            const result = await userAPI.checkUserPhone(number);
+            setNumberLabel(true);
+            setCheckNumber('사용 가능한 전화번호입니다.');
+        }catch (error){
+            setCheckNumber('전화번호가 이미 존재합니다.');
+        }
     };
 
-    const handleEmailLabel = () => {
-        setEmailLabel(true);
+    const handleEmailLabel = async () => {
+        try{ 
+            const result = await userAPI.checkUserEmail(email);
+            setEmailLabel(true);
+            setCheckEmail('사용 가능한 email입니다.');
+        }catch (error){
+            setCheckEmail('email이 이미 존재합니다.');
+        }
     };
 
     const addUserSignUp = async () => {
@@ -101,6 +123,9 @@ const SignUp = () =>{
                                         <div style={{marginLeft:'20px', marginTop:'10px'}}>
                                             <Button style={{height:'50px'}} onClick={handleIdLabel}>중복 확인</Button>
                                         </div>
+                                    </Grid>
+                                    <Grid style={{marginTop:'15px', marginLeft:'290px'}}>
+                                        {checkid}
                                     </Grid>
                                     {/* passwd */}
                                     <Grid container direction="row" style={{marginTop:'15px'}}>
@@ -158,6 +183,9 @@ const SignUp = () =>{
                                             <Button style={{height:'50px'}} onClick={handleEmailLabel}>중복 확인</Button>
                                         </div>
                                     </Grid>
+                                    <Grid style={{marginTop:'15px', marginLeft:'290px'}}>
+                                        {checkemail}
+                                    </Grid>
                                     {/* phone */}
                                     <Grid container direction="row" style={{marginTop:'15px'}}>
                                         <div style={{background:'#A3CCA3', width:'200px', height:'50px', textAlign:'center', 
@@ -176,6 +204,9 @@ const SignUp = () =>{
                                         <div style={{marginLeft:'20px', marginTop:'10px'}}>
                                             <Button style={{height:'50px'}} onClick={handleNumberLabel}>중복 확인</Button>
                                         </div>
+                                    </Grid>
+                                    <Grid style={{marginTop:'15px', marginLeft:'290px'}}>
+                                        {checknumber}
                                     </Grid>
                                 </Grid>
                             </Grid>

@@ -23,5 +23,20 @@ export const userAPI = {
         return request.post('/user', {
             user_id:id, name, email, cellphone:number, password:passwd
         })
+    },
+    checkUserId:(id)=>{
+        return request.get(`/user/duplicatecheckid/${id}`,{
+            id
+        })
+    },
+    checkUserEmail:(email)=>{
+        return request.get(`/user/duplicatecheckemail/${email}`,{
+            email
+        })
+    },
+    checkUserPhone:(number)=>{
+        return request.get(`/user/duplicatecheckcellphone/${number}`,{
+            cellphone:number
+        })
     }
 };
