@@ -117,7 +117,7 @@ const Progresslayout = () => {
     async function loadCalendar() {
       await axios
         .get(
-          `http://127.0.0.1:4500/test/getdaily/${moment().format("YYYYMMDD")}`
+          `http://127.0.0.1:4500/schedule/getdaily/${moment().format("YYYYMMDD")}`
         )
         .then(({ data }) => {
           // console.log(data.data);
@@ -143,15 +143,11 @@ const Progresslayout = () => {
             const endMin = Number(
               moment(data.data[i].finished_at).format("mm")
             );
-            const currentTime = Number(moment().format("H"));
-            // console.log(started_at);
-            // console.log(currentTime);
-            // console.log(finished_at)
+            const currentTime = Number(moment().format("HH"));
+
             const currentMin = Number(moment().format("mm"));
-            // console.log(startMin);
-            // console.log(currentMin);
-            // console.log(endMin)
-            if (startTime < currentTime && currentTime < endTime && data.data.is_finished !==0) {
+
+            if (startTime < currentTime && currentTime < endTime && data.data[i].is_finished === false) {
               // console.log(data.data[i].started_at);
               setStarttime(moment(data.data[i].started_at).format("HH : mm"));
               setEndtime(moment(data.data[i].finished_at).format("HH : mm"));
@@ -163,7 +159,7 @@ const Progresslayout = () => {
               setNotitime(moment(data.data[i].notification).format("HH : mm"));
               setId(data.data[i].id);
               setIstrue(true);
-            } else if (currentTime === endTime && currentMin <= endMin && data.data.is_finished !==0) {
+            } else if (currentTime === endTime && currentMin <= endMin && data.data[i].is_finished === false) {
               setStarttime(moment(data.data[i].started_at).format("HH : mm"));
               setEndtime(moment(data.data[i].finished_at).format("HH : mm"));
               setGoal(
@@ -174,7 +170,7 @@ const Progresslayout = () => {
               setId(data.data[i].id);
               setNotitime(moment(data.data[i].notification).format("HH : mm"));
               setIstrue(true);
-            } else if (currentTime === startTime && startMin <= currentMin && data.data.is_finished !==0) {
+            } else if (currentTime === startTime && startMin <= currentMin && data.data[i].is_finished === false) {
               setStarttime(moment(data.data[i].started_at).format("HH : mm"));
               setEndtime(moment(data.data[i].finished_at).format("HH : mm"));
               setGoal(

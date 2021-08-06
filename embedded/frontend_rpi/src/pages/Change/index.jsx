@@ -100,7 +100,7 @@ const Changelayout = () => {
     console.log(id)
     if (window.confirm("정말 삭제하시겠 습니까?")) {
       await axios
-        .delete(`http://127.0.0.1:4500/test/schedule/${id}`)
+        .delete(`http://127.0.0.1:4500/schedule/${id}`)
         .then(({ data }) => {
           console.log(data.data);
         })
@@ -115,7 +115,7 @@ const Changelayout = () => {
       console.log(moment().format("YYYYMMDD"));
       await axios
         .get(
-          `http://127.0.0.1:4500/test/getdaily/${moment().format("YYYYMMDD")}`
+          `http://127.0.0.1:4500/schedule/getdaily/${moment().format("YYYYMMDD")}`
         )
         .then(({ data }) => {
           console.log(data);

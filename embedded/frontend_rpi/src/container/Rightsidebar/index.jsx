@@ -49,7 +49,7 @@ function Rightsidebar() {
   // const Confirm = async () => {
   //   if (window.confirm("정말 완료하시겠 습니까?")) {
   //     await axios
-  //       .post(`http://127.0.0.1:4500/test/`, {
+  //       .post(`http://127.0.0.1:4500/`, {
   //         date : "",
   //         started_at,
   //         finished_at,

@@ -95,13 +95,13 @@ const Todaychangebtn = styled.button`
 `;
 
 const Todaylayout = () => {
-  const [itemList, setItemList] = useState([]);
+  const [itemList, setItemList] = useState(["adsf"]);
   useEffect(() => {
     async function loadCalendar() {
       console.log(moment().format("YYYYMMDD"));
       await axios
         .get(
-          `http://127.0.0.1:4500/test/getdaily/${moment().format("YYYYMMDD")}`
+          `http://127.0.0.1:4500/schedule/getdaily/${moment().format("YYYYMMDD")}`
         )
         .then(({ data }) => {
           console.log(data);

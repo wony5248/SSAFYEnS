@@ -202,7 +202,7 @@ const Changecalendarlayout = (props) => {
     if (window.confirm("정말 완료하시겠 습니까?")) {
       
       await axios
-        .put(`http://127.0.0.1:4500/test/${id}`, {
+        .put(`http://127.0.0.1:4500/schedule/${id}`, {
           started_at: `${moment().format("YYYYMMDD")} ${
             starttime[0] + starttime[1] + starttime[2] + starttime[3]
           }`,
@@ -231,7 +231,7 @@ const Changecalendarlayout = (props) => {
   useEffect(() => {
     async function loadCalendar() {
       await axios
-        .get(`http://127.0.0.1:4500/test/${id}`)
+        .get(`http://127.0.0.1:4500/schedule/${id}`)
         .then(({ data }) => {
           console.log(data.data);
           // setItemList(data.data);
