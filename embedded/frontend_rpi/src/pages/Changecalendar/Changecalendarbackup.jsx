@@ -131,6 +131,8 @@ const Changecalendarlayout = () => {
   const [starttime, setStarttime] = useState("");
   const [endtime, setEndtime] = useState("");
   const [optionarr, setOptionarr] = useState([]);
+  const [title, setTitle] = useState("");
+  const [context, setContext] = useState("");
   const handlestartChange = (event) => {
     setStarttime(event.target.value);
     console.log(event.target.value);
@@ -200,6 +202,7 @@ const Changecalendarlayout = () => {
           multiline
           rows={4}
           placeholder="변경할 일정 내용"
+          defaultValue ={context}
           variant="outlined"
         ></Changecontentinput1>
       </ChangeContent>

@@ -1,0 +1,668 @@
+swagger: "2.0"
+info:
+  description: "여기 적혀있는건 예시입니다. 밑에 API부분만 봐주세요"
+  version: "1.0.0"
+  title: "S05P12A109"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "schedulestore.swagger.io"
+basePath: "/basePath"
+tags:
+- name: "schedule"
+  description: "Everything about your schedules"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+- name: "store"
+  description: "Access to Schedulestore orders"
+- name: "user"
+  description: "Operations about user"
+  externalDocs:
+    description: "Find out more about our store"
+    url: "http://swagger.io"
+schemes:
+- "https"
+- "http"
+paths:
+  /schedule:
+    post:
+      tags:
+      - "schedule"
+      summary: "Add a new schedule to user"
+      description: ""
+      operationId: "addSchedule"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Schedule object that needs to be added to the user"
+        required: true
+        schema:
+          $ref: "#/definitions/schedules"
+      responses:
+        "200":
+          description: "successful operation: 해당 일정의 정보를 돌려줌"
+          schema:
+            items:
+              $ref: "#/definitions/schedules"
+        "405":
+          description: "Invalid input"
+  /schedule/findByStatus:
+    get:
+      tags:
+      - "schedule"
+      summary: "Finds Schedules by status"
+      description: "Multiple status values can be provided with comma separated strings"
+      operationId: "findSchedulesByStatus"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "status"
+        in: "query"
+        description: "Status values that need to be considered for filter"
+        required: true
+        type: "array"
+        items:
+          type: "string"
+          enum:
+          - "available"
+          - "pending"
+          - "sold"
+          default: "available"
+        collectionFormat: "multi"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/schedules"
+        "400":
+          description: "Invalid status value"
+      security:
+      - schedulestore_auth:
+        - "write:schedules"
+        - "read:schedules"
+  /schedule/findByTags:
+    get:
+      tags:
+      - "schedule"
+      summary: "Finds Schedules by tags"
+      description: "Muliple tags can be provided with comma separated strings. Use         tag1, tag2, tag3 for testing."
+      operationId: "findSchedulesByTags"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "tags"
+        in: "query"
+        description: "Tags to filter by"
+        required: true
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/schedules"
+        "400":
+          description: "Invalid tag value"
+      security:
+      - schedulestore_auth:
+        - "write:schedules"
+        - "read:schedules"
+      deprecated: true
+  /schedule/{schedule_id}:
+    get:
+      tags:
+      - "schedule"
+      summary: "Find schedule by ID"
+      description: "Returns a single schedule"
+      operationId: "getScheduleById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "schedule_id"
+        in: "path"
+        description: "ID of schedule to return"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/schedules"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Schedule not found"
+    put:
+      tags:
+      - "schedule"
+      summary: "Updates a schedule with form data"
+      description: ""
+      operationId: "updateScheduleWithForm"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "schedule_id"
+        in: "path"
+        description: "ID of schedule that needs to be updated"
+        required: true
+        type: "integer"
+      - name: "title"
+        in: "formData"
+        description: "Updated name of the schedule"
+        required: false
+        type: "string"
+      - name: "status"
+        in: "formData"
+        description: "Updated status of the schedule"
+        required: false
+        type: "string"
+      - name: "point"
+        in: "formData"
+        description: "Updated point of the schedule"
+        required: false
+        type: "integer"
+      - name: "is_finished"
+        in: "formData"
+        description: "Updated is_finished of the schedule"
+        required: false
+        type: "boolean"
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+      - schedulestore_auth:
+        - "write:schedules"
+        - "read:schedules"
+    delete:
+      tags:
+      - "schedule"
+      summary: "Deletes a schedule"
+      description: ""
+      operationId: "deleteSchedule"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "api_key"
+        in: "header"
+        required: false
+        type: "string"
+      - name: "scheduleId"
+        in: "path"
+        description: "Schedule id to delete"
+        required: true
+        type: "integer"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Schedule not found"
+      security:
+      - schedulestore_auth:
+        - "write:schedules"
+        - "read:schedules"
+  /schedule/{scheduleId}/uploadImage:
+    post:
+      tags:
+      - "schedule"
+      summary: "uploads an image"
+      description: ""
+      operationId: "uploadFile"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "scheduleId"
+        in: "path"
+        description: "ID of schedule to update"
+        required: true
+        type: "integer"
+      - name: "additionalMetadata"
+        in: "formData"
+        description: "Additional data to pass to server"
+        required: false
+        type: "string"
+      - name: "file"
+        in: "formData"
+        description: "file to upload"
+        required: false
+        type: "file"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      security:
+      - schedulestore_auth:
+        - "write:schedules"
+        - "read:schedules"
+  /store/inventory:
+    get:
+      tags:
+      - "store"
+      summary: "Returns schedule inventories by status"
+      description: "Returns a map of status codes to quantities"
+      operationId: "getInventory"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            additionalProperties:
+              type: "integer"
+              format: "int32"
+      security:
+      - api_key: []
+  /store/order:
+    post:
+      tags:
+      - "store"
+      summary: "Place an order for a schedule"
+      description: ""
+      operationId: "placeOrder"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "order placed for purchasing the schedule"
+        required: true
+        schema:
+          $ref: "#/definitions/Order"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Order"
+        "400":
+          description: "Invalid Order"
+  /store/order/{orderId}:
+    get:
+      tags:
+      - "store"
+      summary: "Find purchase order by ID"
+      description: "For valid response try integer IDs with value >= 1 and <= 10.         Other values will generated exceptions"
+      operationId: "getOrderById"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "orderId"
+        in: "path"
+        description: "ID of schedule that needs to be fetched"
+        required: true
+        type: "integer"
+        maximum: 10.0
+        minimum: 1.0
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Order"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Order not found"
+    delete:
+      tags:
+      - "store"
+      summary: "Delete purchase order by ID"
+      description: "For valid response try integer IDs with positive integer value.         Negative or non-integer values will generate API errors"
+      operationId: "deleteOrder"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "orderId"
+        in: "path"
+        description: "ID of the order that needs to be deleted"
+        required: true
+        type: "integer"
+        minimum: 1.0
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Order not found"
+  /user:
+    post:
+      tags:
+      - "user"
+      summary: "Create user"
+      description: "This can only be done by the logged in user."
+      operationId: "createUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created user object"
+        required: true
+        schema:
+          $ref: "#/definitions/users"
+      responses:
+        default:
+          description: "successful operation"
+  /user/createWithArray:
+    post:
+      tags:
+      - "user"
+      summary: "Creates list of users with given input array"
+      description: ""
+      operationId: "createUsersWithArrayInput"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "List of user object"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/users"
+      responses:
+        default:
+          description: "successful operation"
+  /user/createWithList:
+    post:
+      tags:
+      - "user"
+      summary: "Creates list of users with given input array"
+      description: ""
+      operationId: "createUsersWithListInput"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "List of user object"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/users"
+      responses:
+        default:
+          description: "successful operation"
+  /user/login:
+    get:
+      tags:
+      - "user"
+      summary: "Logs user into the system"
+      description: ""
+      operationId: "loginUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "The user name for login"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "The password for login in clear text"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "string"
+          headers:
+            X-Rate-Limit:
+              type: "integer"
+              format: "int32"
+              description: "calls per hour allowed by the user"
+            X-Expires-After:
+              type: "string"
+              format: "date-time"
+              description: "date in UTC when token expires"
+        "400":
+          description: "Invalid username/password supplied"
+  /user/logout:
+    get:
+      tags:
+      - "user"
+      summary: "Logs out current logged in user session"
+      description: ""
+      operationId: "logoutUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters: []
+      responses:
+        default:
+          description: "successful operation"
+  /user/{username}:
+    get:
+      tags:
+      - "user"
+      summary: "Get user by user name"
+      description: ""
+      operationId: "getUserByName"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "The name that needs to be fetched. Use user1 for testing. "
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/users"
+        "400":
+          description: "Invalid username supplied"
+        "404":
+          description: "User not found"
+    put:
+      tags:
+      - "user"
+      summary: "Updated user"
+      description: "This can only be done by the logged in user."
+      operationId: "updateUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "name that need to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated user object"
+        required: true
+        schema:
+          $ref: "#/definitions/users"
+      responses:
+        "400":
+          description: "Invalid user supplied"
+        "404":
+          description: "User not found"
+    delete:
+      tags:
+      - "user"
+      summary: "Delete user"
+      description: "This can only be done by the logged in user."
+      operationId: "deleteUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "The name that needs to be deleted"
+        required: true
+        type: "string"
+      responses:
+        "400":
+          description: "Invalid username supplied"
+        "404":
+          description: "User not found"
+securityDefinitions:
+  schedulestore_auth:
+    type: "oauth2"
+    authorizationUrl: "http://schedulestore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:schedules: "modify schedules in your account"
+      read:schedules: "read your schedules"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  users:
+    type: "object"
+    required: 
+    - "user_id"
+    - "name"
+    - "email"
+    - "cellphone"
+    - "password"
+    properties:
+      user_id:
+        type: "string"
+        format: "varchar(20)"
+      name:
+        type: "string"
+      email:
+        type: "string"
+      cellphone:
+        type: "string"
+      password:
+        type: "string"
+      exp:
+        type: "integer"
+        default: "0"
+      created_at:
+        type: "string"
+        format: "date-time"
+      is_admin:
+        type: "boolean"
+        default: "false"
+        description: "true: admin\nfalse: not admin"
+    xml:
+      name: "User"
+  daily:
+    type: "object"
+    required:
+    - date
+    properties:
+      date:
+        type: "string"
+        format: "date"
+      user_id:
+        $ref: "#/definitions/users/properties/user_id"
+      context:
+        type: "string"
+        format: "text"
+        example: "오늘은 너무 피곤했ㄷr...."
+  notifications:
+    type: "object"
+    required:
+    - datetime
+    properties:
+      datetime:
+        type: "string"
+        format: "datetime"
+      user_id:
+        $ref: "#/definitions/users/properties/user_id"
+      schedule_id:
+        $ref: "#/definitions/schedules/properties/schedules_id"
+  schedules:
+    type: "object"
+    required:
+    - "user_id"
+    properties:
+      schedule_id:
+        type: "integer"
+      user_id:
+        $ref: "#/definitions/users/properties/user_id"
+      date:
+        $ref: "#/definitions/daily/properties/date"
+      title:
+        type: "string"
+        format: "varchar"
+      context:
+        type: "string"
+        format: "text"
+      started_at:
+        type: "string"
+        format: "date-time"
+        description: "이 일정의 시작시간"
+      finished_at:
+        type: "string"
+        format: "date-time"
+      deadline_at:
+        type: "string"
+        format: "date-time"
+      created_at:
+        type: "string"
+        format: "date-time"
+        description: "이 일정이 등록된 시간"
+      updated_at:
+        type: "string"
+        format: "date-time"
+        description: "이 일정이 마지막으로 수정된 시간"
+      point:
+        type: "integer"
+      is_finished:
+        type: "boolean"
+        default: false
+        enum:
+        - true
+        - false
+      notiextend:
+        type: "integer"
+        description: "알림을 연장한 횟수"
+        default: 0
+    xml:
+      name: "schedules"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
