@@ -150,6 +150,7 @@ const Changetitleinput = styled(Input)({
   width: "30%",
   fontSize: "12px",
   paddingLeft: "8px",
+  color: "black",
   marginRight: "2.5%",
 });
 
@@ -166,18 +167,26 @@ const Changecalendarlayout = (props) => {
     setStarttime(event.target.value);
     console.log(event.target.value);
     console.log(
-      `${moment().format("YYYYMMDD")} ` + `${
-        event.target.value[0] + event.target.value[1] + event.target.value[2] + event.target.value[3]
-      }`
+      `${moment().format("YYYYMMDD")} ` +
+        `${
+          event.target.value[0] +
+          event.target.value[1] +
+          event.target.value[2] +
+          event.target.value[3]
+        }`
     );
   };
   const handleendChange = (event) => {
     setEndtime(event.target.value);
     console.log(event.target.value);
     console.log(
-      `${moment().format("YYYYMMDD")} ` + `${
-        event.target.value[0] + event.target.value[1] + event.target.value[2] + event.target.value[3]
-      }`
+      `${moment().format("YYYYMMDD")} ` +
+        `${
+          event.target.value[0] +
+          event.target.value[1] +
+          event.target.value[2] +
+          event.target.value[3]
+        }`
     );
   };
   const Change = async () => {
@@ -192,6 +201,8 @@ const Changecalendarlayout = (props) => {
           }`,
           deadline_at: deadline,
           notification: moment().format("YYYYMMDD HHmm"),
+          title: title,
+          context: context,
           is_finished: true,
         })
         .then(({ data }) => {
@@ -273,7 +284,7 @@ const Changecalendarlayout = (props) => {
       </Changeend>
       <Changetitle>
         <Changetitletext>일정 제목</Changetitletext>
-        <Changetitleinput placeholder="변경할 일정 제목" value={title}></Changetitleinput>
+        <Changetitleinput defaultValue={title}></Changetitleinput>
       </Changetitle>
       <ChangeContent>
         <ChangeContentheader>
@@ -283,7 +294,7 @@ const Changecalendarlayout = (props) => {
         <Changecontentinput1
           multiline
           rows={4}
-          value= {context}
+          defaultValue={context}
           variant="outlined"
         ></Changecontentinput1>
       </ChangeContent>

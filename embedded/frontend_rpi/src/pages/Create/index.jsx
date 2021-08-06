@@ -13,6 +13,15 @@ const Changeselect = styled1.select`
   display: flex;
   align-items: center;
 `;
+const Changeselect2 = styled1.select`
+  width: 25%;
+  border: 0px;
+  font-size: 36px;
+  margin-left: 12px;
+  height: 50%;
+  display: flex;
+  align-items: center;
+`;
 const Changeoption = styled1.option`
   width: 100%;
   height: 100%;
@@ -35,7 +44,7 @@ const Changeend = styled1.div`
   justify-content: space-between;
   width: auto;
   align-items: center;
-  height: 10%;
+  height: 12%;
   color: white;
   background-color: #a3cca3;
   border-radius: 4px;
@@ -78,9 +87,10 @@ const Changecalendarlayout = () => {
   const [starttime, setStarttime] = useState("");
   const [endtime, setEndtime] = useState("");
   const [deadline, setDeadline] = useState("");
-  const [optionarr, setOptionarr] = useState([]);
   const [notitime, setNotitime] = useState("");
   const [isfinish, setIsfinish] = useState(false);
+  const [title, setTitle] = useState("");
+  const [context, setContext] = useState("");
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [week, setWeek] = useState("");
@@ -88,77 +98,88 @@ const Changecalendarlayout = () => {
   const [userid, setUserid] = useState("");
   const [manageid, setManageid] = useState("");
   const [istrue, setIstrue] = useState(false);
+  const [startarr, setStartarr] = useState([]);
+  const [endarr, setEndarr] = useState([]);
+  const [deadarr, setDeadarr] = useState([]);
+  const [notiarr, setNotiarr] = useState([]);
+  const [finisharr, setFinisharr] = useState([]);
+  const [titlearr, setTitlearr] = useState([]);
+  const [contextarr, setContextarr] = useState([])
+
 
   const handlestartChange = (event) => {
     setStarttime(event.target.value);
     console.log(event.target.value);
-    console.log(
-      `${moment().format("YYYYMMDD")} ` +
-        `${
-          event.target.value[0] +
-          event.target.value[1] +
-          event.target.value[2] +
-          event.target.value[3]
-        }`
-    );
+    
   };
   const handleendChange = (event) => {
     setEndtime(event.target.value);
     console.log(event.target.value);
-    console.log(
-      `${moment().format("YYYYMMDD")} ` +
-        `${
-          event.target.value[0] +
-          event.target.value[1] +
-          event.target.value[2] +
-          event.target.value[3]
-        }`
-    );
+      
+  };
+  const handledeadChange = (event) => {
+    setDeadline(event.target.value);
+    console.log(event.target.value);
+    
+  };
+  const handlenotiChange = (event) => {
+    setNotitime(event.target.value);
+    console.log(event.target.value);
+      
+  };
+  const handletitleChange = (event) => {
+    setTitle(event.target.value);
+    console.log(event.target.value);
+      
+  };
+  const handlecontextChange = (event) => {
+    setContext(event.target.value);
+    console.log(event.target.value);
+      
   };
   const Confirm = async () => {
     if (window.confirm("정말 완료하시겠 습니까?")) {
 
-      //   await axios
-      //     .post(`http://127.0.0.1:4500/test/`, {
-      //       date : "",
-      //       started_at,
-      //       finished_at,
-      //       deadline_at,
-      //       notification,
-      //       is_finished,
-      //       month,
-      //       year,
-      //       week,
-      //       point,
-      //       user_id
-      //     })
-      //     .then(({ data }) => {
-      //       console.log(data.data);
-      //       // setItemList(data.data);
-      //       // console.log(data.data);
-      //       setStarttime(moment(data.data.started_at).format("YYYYMMDD HHmm"));
-      //       setManageid(data.data.id);
-      //     })
-      //     .catch((e) => {});
-      //   window.location.replace(`/Today`);
+        await axios
+          .post(`http://127.0.0.1:4500/test/schedule`, {
+            date : `${moment().format("YYYYMMDD")}`,
+            started_at  : `${moment().format("YYYYMMDD")} ${
+              starttime[0] + starttime[1] + starttime[2] + starttime[3]
+            }`,
+            finished_at : `${moment().format("YYYYMMDD")} ${
+              endtime[0] + endtime[1] + endtime[2] + endtime[3]
+            }`,
+            deadline_at : `${moment().format("YYYYMMDD")} ${
+              deadline[0] + deadline[1] + deadline[2] + deadline[3]
+            }`,
+            notification : `${moment().format("YYYYMMDD")} ${
+              notitime[0] + notitime[1] + notitime[2] + notitime[3]
+            }`,
+            is_finished : false,
+            month : `${moment().format("MM")}`,
+            year : `${moment().format("YYYY")}`,
+            week : "1",
+            point : 0,
+            user_id : "wony5248",
+            title : title,
+            context: context,
+          })
+          .then(({ data }) => {
+            console.log(data.data);
+            // setItemList(data.data);
+            // console.log(data.data);
+            setStarttime(moment(data.data.started_at).format("YYYYMMDD HHmm"));
+            setManageid(data.data.id);
+          })
+          .catch((e) => {});
+        window.location.replace(`/Today`);
     } else {
-      //   console.log("변화 없음");
+        console.log("변화 없음");
     }
   };
   useEffect(() => {
-    async function loadCalendar() {
-      await axios
-        .get(`http://127.0.0.1:4500/test}`)
-        .then(({ data }) => {
-          console.log(data.data);
-          // setItemList(data.data);
-          // console.log(data.data);
-          setDeadline(moment(data.data.deadline_at).format("YYYYMMDD HHmm"));
-          setManageid(data.data.id);
-        })
-        .catch((e) => {});
-    }
-    loadCalendar();
+    setContextarr(["식사 하기", "공부 하기", "영화 보기", "휴식 하기", "운동 하기", "수면 하기", "여가 생활 즐기기", "미팅 하기"])
+    setTitlearr(["식사", "공부", "영화", "휴식", "운동", "수면", "여가", "미팅"])
     const rendering = () => {
       const result = [];
       for (let i = 0; i < 24; i++) {
@@ -170,7 +191,7 @@ const Changecalendarlayout = () => {
           result.push(`${i}:30`);
         }
       }
-      setOptionarr(result);
+      setStartarr(result);
       console.log(result);
     };
 
@@ -183,10 +204,10 @@ const Changecalendarlayout = () => {
         <Changeselect
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={endtime}
+          value={starttime}
           onChange={handlestartChange}
         >
-          {optionarr.map((item) => (
+          {startarr.map((item) => (
             <Changeoption value={item[0] + item[1] + item[3] + item[4]}>
               {item}
             </Changeoption>
@@ -201,7 +222,7 @@ const Changecalendarlayout = () => {
           value={endtime}
           onChange={handleendChange}
         >
-          {optionarr.map((item) => (
+          {startarr.map((item) => (
             <Changeoption value={item[0] + item[1] + item[3] + item[4]}>
               {item}
             </Changeoption>
@@ -213,10 +234,10 @@ const Changecalendarlayout = () => {
         <Changeselect
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={endtime}
-          onChange={handleendChange}
+          value={deadline}
+          onChange={handledeadChange}
         >
-          {optionarr.map((item) => (
+          {startarr.map((item) => (
             <Changeoption value={item[0] + item[1] + item[3] + item[4]}>
               {item}
             </Changeoption>
@@ -228,25 +249,10 @@ const Changecalendarlayout = () => {
         <Changeselect
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={endtime}
-          onChange={handleendChange}
+          value={notitime}
+          onChange={handlenotiChange}
         >
-          {optionarr.map((item) => (
-            <Changeoption value={item[0] + item[1] + item[3] + item[4]}>
-              {item}
-            </Changeoption>
-          ))}
-        </Changeselect>
-      </Changeend>
-      <Changeend>
-        <Changeendtext>일정 완료 여부</Changeendtext>
-        <Changeselect
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={endtime}
-          onChange={handleendChange}
-        >
-          {optionarr.map((item) => (
+          {startarr.map((item) => (
             <Changeoption value={item[0] + item[1] + item[3] + item[4]}>
               {item}
             </Changeoption>
@@ -258,11 +264,11 @@ const Changecalendarlayout = () => {
         <Changeselect
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={endtime}
-          onChange={handleendChange}
+          value={title}
+          onChange={handletitleChange}
         >
-          {optionarr.map((item) => (
-            <Changeoption value={item[0] + item[1] + item[3] + item[4]}>
+          {titlearr.map((item) => (
+            <Changeoption value={item}>
               {item}
             </Changeoption>
           ))}
@@ -270,18 +276,18 @@ const Changecalendarlayout = () => {
       </Changeend>
       <Changeend>
         <Changeendtext>일정 내용</Changeendtext>
-        <Changeselect
+        <Changeselect2
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={endtime}
-          onChange={handleendChange}
+          value={context}
+          onChange={handlecontextChange}
         >
-          {optionarr.map((item) => (
-            <Changeoption value={item[0] + item[1] + item[3] + item[4]}>
+          {contextarr.map((item) => (
+            <Changeoption value={item}>
               {item}
             </Changeoption>
           ))}
-        </Changeselect>
+        </Changeselect2>
       </Changeend>
       <Btndiv><Addbtn onClick = {() => Confirm()}>추가하기</Addbtn></Btndiv>
     </Changecalcon>

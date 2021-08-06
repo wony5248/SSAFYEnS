@@ -57,11 +57,11 @@ router.post("/schedule", async function (req, res, next) {
 });
 
 // 일정 삭제
-router.get("/schedule/:id", async function (req, res, next) {
+router.delete("/schedule/:id", async function (req, res, next) {
   console.log(req)
   console.log(req.body);
   await axios
-    .get(`http://127.0.0.1:8079/schedule/${req.params.date}`)
+    .delete(`http://127.0.0.1:8079/schedule/${req.params.id}`)
     .then((response) => {
       res.send(response.data);
       console.log(response.data);

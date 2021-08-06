@@ -95,6 +95,21 @@ const Changechangebtn = styled.button`
 
 const Changelayout = () => {
   const [itemList, setItemList] = useState([]);
+  const Delete = async (props) => {
+    const id = props
+    console.log(id)
+    if (window.confirm("정말 삭제하시겠 습니까?")) {
+      await axios
+        .delete(`http://127.0.0.1:4500/test/schedule/${id}`)
+        .then(({ data }) => {
+          console.log(data.data);
+        })
+        .catch((e) => {});
+      window.location.replace(`/Change`);
+    } else {
+      console.log("변화 없음");
+    }
+  };
   useEffect(() => {
     async function loadCalendar() {
       console.log(moment().format("YYYYMMDD"));
@@ -118,7 +133,7 @@ const Changelayout = () => {
   return (
     <Changecontainer>
       {itemList.length !== 0 ? (
-        <div style={{height: "100%"}}>
+        <div style={{ height: "100%" }}>
           {" "}
           {itemList.map((item) => (
             <Changetitle>
@@ -132,11 +147,20 @@ const Changelayout = () => {
               <Changegoal>{item.title}</Changegoal>
               <Changechangecon>
                 <Changetitlename>{item.context}</Changetitlename>
-                <Changechangebtn
-                  onClick={() => window.location.replace(`/Change/${item.id}`)}
-                >
-                  변경
-                </Changechangebtn>
+                <div style= {{display: "flex", height:"100%", alignItems:"center", width:"180px", justifyContent:"space-between"}}>
+                  <Changechangebtn
+                    onClick={() => Delete(item.id)}
+                  >
+                    삭제
+                  </Changechangebtn>
+                  <Changechangebtn
+                    onClick={() =>
+                      window.location.replace(`/Change/${item.id}`)
+                    }
+                  >
+                    변경
+                  </Changechangebtn>
+                </div>
               </Changechangecon>
             </Changetitle>
           ))}
