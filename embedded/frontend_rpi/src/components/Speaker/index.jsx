@@ -1,9 +1,9 @@
 import React from "react";
-import Mannerbtn from "./styles";
+import Speakerbtn from "./styles";
 import SwitchStyle from "./switch";
 import styled from "styled-components";
-import MicOffIcon from '@material-ui/icons/MicOff';
-const Mannerdiv = styled.div`
+import MicIcon from '@material-ui/icons/Mic';
+const Speakerdiv = styled.div`
   height: 19%;
   padding: 0 8px;
   display: flex;
@@ -17,10 +17,10 @@ const Button = (props) => {
   const { btnName } = props;
 
   return (
-    <Mannerbtn>
-      <Mannerdiv><MicOffIcon />{btnName}</Mannerdiv>
+    <Speakerbtn>
+      <Speakerdiv><MicIcon />{btnName}</Speakerdiv>
         <SwitchStyle></SwitchStyle>
-    </Mannerbtn>
+    </Speakerbtn>
   );
 };
 export default Button;

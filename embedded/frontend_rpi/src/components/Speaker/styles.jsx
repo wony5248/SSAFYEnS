@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const Mannerbtn = styled.div`
+const Speakerbtn = styled.div`
   height: 13%;
   color: #121212;
   background-color: white;
@@ -13,4 +13,4 @@ const Mannerbtn = styled.div`
   border: 1px solid #a3cca3;
 `;
 
-export default Mannerbtn;
+export default Speakerbtn;
