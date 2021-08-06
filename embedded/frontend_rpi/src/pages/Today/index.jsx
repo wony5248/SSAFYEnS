@@ -134,7 +134,7 @@ const Todaylayout = () => {
               
                 {item.is_finished ? (
                   <Todaychangecon>
-                    <Todaytitlename>{item.context}</Todaytitlename>
+                    <Todaytitlename style={{width:"500px"}}>{item.context}</Todaytitlename>
                     <Todaytitlename>
                       이미 완료된 일정입니다.
                     </Todaytitlename>

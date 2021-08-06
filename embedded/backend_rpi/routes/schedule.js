@@ -55,6 +55,34 @@ router.delete("/:id", async function (req, res, next) {
       console.log(error);
     });
 });
+
+router.put("/:id", async function (req, res, next) {
+  console.log("여기")
+  console.log("저기")
+  console.log(req.params);
+  console.log(req.body)
+  await axios
+    .put(`http://127.0.0.1:8079/schedule/${req.params.id}`, {
+      "started_at" : req.body.started_at,
+      "finished_at" : req.body.finished_at,
+      "deadline_at" : req.body.deadline_at,
+      "notification" : req.body.notification,
+      "is_finished" : req.body.is_finished,
+      "title" : req.body.title,
+      "point" : req.body.point,
+      "context" : req.body.context
+    })
+    .then((response) => {
+      res.send(response.data);
+      console.log(response.data);
+      console.log(22222);
+    })
+    .catch(function (error) {
+      res.send(error);
+      console.log(11111);
+      console.log(error);
+    });
+});
 // test용
 router.get("/", async function (req, res, next) {
 
@@ -123,33 +151,7 @@ router.get("/:id", async function (req, res, next) {
 });
 
 //일정 변경하기
-router.put("/:id", async function (req, res, next) {
-  console.log("여기")
-  console.log("저기")
-  console.log(req.params);
-  console.log(req.body)
-  await axios
-    .put(`http://127.0.0.1:8079/schedule/${req.params.id}`, {
-      "started_at" : req.body.started_at,
-      "finished_at" : req.body.finished_at,
-      "deadline_at" : req.body.deadline_at,
-      "notification" : req.body.notification,
-      "is_finished" : req.body.is_finished,
-      "title" : req.body.title,
-      "point" : req.body.point,
-      "context" : req.body.context
-    })
-    .then((response) => {
-      res.send(response.data);
-      console.log(response.data);
-      console.log(22222);
-    })
-    .catch(function (error) {
-      res.send(error);
-      console.log(11111);
-      console.log(error);
-    });
-});
+
 // router.post('/getModule', function(req, res, next) {
 //     console.log("1" + req.headers["x-access-token"]);
 //     axios.post('http://127.0.0.1:4500/auth/getModule', {

@@ -162,6 +162,7 @@ const Changecalendarlayout = (props) => {
   const [title, setTitle] = useState("");
   const [context, setContext] = useState("");
   const [manageid, setManageid] = useState("");
+  const [isfinished, setIsfinished] = useState(false);
   const [point, setPoint] = useState(0)
   const { id } = props;
   const handlestartChange = (event) => {
@@ -214,7 +215,7 @@ const Changecalendarlayout = (props) => {
           title: title,
           context: context,
           point: point,
-          is_finished: true,
+          is_finished: isfinished,
         })
         .then(({ data }) => {
           console.log(data.data);
@@ -240,6 +241,7 @@ const Changecalendarlayout = (props) => {
           setManageid(data.data.id);
           setTitle(data.data.title);
           setContext(data.data.context);
+          setIsfinished(data.data.is_finished)
           setPoint(data.data.point)
         })
         .catch((e) => {});

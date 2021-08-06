@@ -52,8 +52,9 @@ const Changegoal = styled.div`
 `;
 
 const Changetitlename = styled.div`
-  width: auto;
+  width: 500px;
   height: 100%;
+  overflow: auto;
   color: white;
   display: flex;
   align-items: center;
