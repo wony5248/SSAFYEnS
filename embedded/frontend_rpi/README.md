@@ -9,7 +9,7 @@
 ### start
     npm start
 
-### Browser로 이용하고 싶을 시 localhost:3000 접속
+    Browser로 이용하고 싶을 시 localhost:3000 접속
 
 ### TODO
     음성 데이터 처리
