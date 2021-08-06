@@ -37,9 +37,11 @@ router.post("/schedule", async function (req, res, next) {
       "deadline_at" : req.body.deadline_at,
       "notification" : req.body.notification,
       "is_finished" : req.body.is_finished,
-      "month" : req.body.deadline_at,
-      "year" : req.body.notification,
-      "week" : req.body.is_finished,
+      "title" : req.body.title,
+      "context" : req.body.context,
+      "month" : req.body.month,
+      "year" : req.body.year,
+      "week" : req.body.week,
       "point" : req.body.point,
       "user_id" : req.body.user_id
     })
@@ -152,7 +154,9 @@ router.put("/:id", async function (req, res, next) {
       "finished_at" : req.body.finished_at,
       "deadline_at" : req.body.deadline_at,
       "notification" : req.body.notification,
-      "is_finished" : req.body.is_finished
+      "is_finished" : req.body.is_finished,
+      "title" : req.body.title,
+      "context" : req.body.context
     })
     .then((response) => {
       res.send(response.data);

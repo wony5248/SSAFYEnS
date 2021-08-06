@@ -189,6 +189,12 @@ const Changecalendarlayout = (props) => {
         }`
     );
   };
+  const handleContext = (e) => {
+    setContext(e.target.value)
+  }
+  const handleTitle = (e) => {
+    setTitle(e.target.value)
+  }
   const Change = async () => {
     if (window.confirm("정말 완료하시겠 습니까?")) {
       await axios
@@ -284,7 +290,7 @@ const Changecalendarlayout = (props) => {
       </Changeend>
       <Changetitle>
         <Changetitletext>일정 제목</Changetitletext>
-        <Changetitleinput defaultValue={title}></Changetitleinput>
+        <Changetitleinput value={title} onChange= {handleTitle}></Changetitleinput>
       </Changetitle>
       <ChangeContent>
         <ChangeContentheader>
@@ -294,7 +300,8 @@ const Changecalendarlayout = (props) => {
         <Changecontentinput1
           multiline
           rows={4}
-          defaultValue={context}
+          value={context}
+          onChange = {handleContext}
           variant="outlined"
         ></Changecontentinput1>
       </ChangeContent>

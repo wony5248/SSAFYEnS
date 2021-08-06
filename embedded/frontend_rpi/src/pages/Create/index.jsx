@@ -88,21 +88,11 @@ const Changecalendarlayout = () => {
   const [endtime, setEndtime] = useState("");
   const [deadline, setDeadline] = useState("");
   const [notitime, setNotitime] = useState("");
-  const [isfinish, setIsfinish] = useState(false);
   const [title, setTitle] = useState("");
   const [context, setContext] = useState("");
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState("");
-  const [week, setWeek] = useState("");
-  const [point, setPoint] = useState(0);
-  const [userid, setUserid] = useState("");
-  const [manageid, setManageid] = useState("");
   const [istrue, setIstrue] = useState(false);
   const [startarr, setStartarr] = useState([]);
-  const [endarr, setEndarr] = useState([]);
-  const [deadarr, setDeadarr] = useState([]);
-  const [notiarr, setNotiarr] = useState([]);
-  const [finisharr, setFinisharr] = useState([]);
+
   const [titlearr, setTitlearr] = useState([]);
   const [contextarr, setContextarr] = useState([])
 
@@ -169,7 +159,6 @@ const Changecalendarlayout = () => {
             // setItemList(data.data);
             // console.log(data.data);
             setStarttime(moment(data.data.started_at).format("YYYYMMDD HHmm"));
-            setManageid(data.data.id);
           })
           .catch((e) => {});
         window.location.replace(`/Today`);
