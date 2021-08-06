@@ -161,35 +161,46 @@ const Ratinglayout = (props) => {
   const [selectedValue4, setSelectedValue4] = React.useState("1");
   const [starttime, setStarttime] = useState("");
   const [deadline, setDeadline] = useState("");
+  const [context, setContext] = useState("");
   const [manageid, setManageid] = useState("");
-  const [rating, setRating] = useState("");
   const { id } = props;
   console.log(id);
 
   const Confirm = async () => {
+    console.log(context);
+    const string = `집중점수 :${Number(selectedValue1) * 20} 점 진행점수 :${
+      Number(selectedValue2) * 20
+    } 점 달성점수 :${Number(selectedValue3) * 20} 점 환경점수 :${
+      Number(selectedValue4) * 20
+    } 점`;
+    console.log(
+      ((Number(selectedValue1) +
+        Number(selectedValue2) +
+        Number(selectedValue3) +
+        Number(selectedValue4)) /
+        4) *
+        20
+    );
     if (window.confirm("정말 완료하시겠 습니까?")) {
       await axios
         .put(`http://127.0.0.1:4500/test/${id}`, {
-          "started_at" : starttime,
-          "finished_at" : moment().format("YYYYMMDD HHmm"),
-          "deadline_at" : deadline,
-          "notification" : moment().format("YYYYMMDD HHmm"),
-          "is_finished" : true
-        })
-        .then(({ data }) => {
-          console.log(data.data);
-          // setItemList(data.data);
-          // console.log(data.data);
-          setStarttime(moment(data.data.started_at).format("YYYYMMDD HHmm"));
-          setManageid(data.data.id);
-          setRating(
-            (Number(selectedValue1) +
+          started_at: starttime,
+          finished_at: moment().format("YYYYMMDD HHmm"),
+          deadline_at: deadline,
+          notification: moment().format("YYYYMMDD HHmm"),
+          is_finished: true,
+          context: `${context} ${string}`,
+          point: `${
+            ((Number(selectedValue1) +
               Number(selectedValue2) +
               Number(selectedValue3) +
               Number(selectedValue4)) /
-              4
-          );
-          console.log(rating);
+              4) *
+            20
+          }`,
+        })
+        .then(({ data }) => {
+          console.log(data.data);
         })
         .catch((e) => {});
       window.location.replace(`/Today`);
@@ -215,16 +226,9 @@ const Ratinglayout = (props) => {
           // setItemList(data.data);
           // console.log(data.data);
           setStarttime(moment(data.data.started_at).format("YYYYMMDD HHmm"));
-          setDeadline(moment(data.data.deadline_at).format("YYYYMMDD HHmm"))
+          setDeadline(moment(data.data.deadline_at).format("YYYYMMDD HHmm"));
           setManageid(data.data.id);
-          setRating(
-            (Number(selectedValue1) +
-              Number(selectedValue2) +
-              Number(selectedValue3) +
-              Number(selectedValue4)) /
-              4
-          );
-          console.log(rating);
+          setContext(data.data.context);
         })
         .catch((e) => {});
     }

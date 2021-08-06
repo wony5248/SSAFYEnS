@@ -162,6 +162,7 @@ const Changecalendarlayout = (props) => {
   const [title, setTitle] = useState("");
   const [context, setContext] = useState("");
   const [manageid, setManageid] = useState("");
+  const [point, setPoint] = useState(0)
   const { id } = props;
   const handlestartChange = (event) => {
     setStarttime(event.target.value);
@@ -191,12 +192,15 @@ const Changecalendarlayout = (props) => {
   };
   const handleContext = (e) => {
     setContext(e.target.value)
+    console.log(e.target.value)
   }
   const handleTitle = (e) => {
     setTitle(e.target.value)
   }
   const Change = async () => {
+    console.log(context)
     if (window.confirm("정말 완료하시겠 습니까?")) {
+      
       await axios
         .put(`http://127.0.0.1:4500/test/${id}`, {
           started_at: `${moment().format("YYYYMMDD")} ${
@@ -209,6 +213,7 @@ const Changecalendarlayout = (props) => {
           notification: moment().format("YYYYMMDD HHmm"),
           title: title,
           context: context,
+          point: point,
           is_finished: true,
         })
         .then(({ data }) => {
@@ -235,12 +240,14 @@ const Changecalendarlayout = (props) => {
           setManageid(data.data.id);
           setTitle(data.data.title);
           setContext(data.data.context);
+          setPoint(data.data.point)
         })
         .catch((e) => {});
     }
     loadCalendar();
     const rendering = () => {
       const result = [];
+      result.push("시간")
       for (let i = 0; i < 24; i++) {
         if (i < 10) {
           result.push(`0${i}:00`);

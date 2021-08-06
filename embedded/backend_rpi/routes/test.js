@@ -156,6 +156,7 @@ router.put("/:id", async function (req, res, next) {
       "notification" : req.body.notification,
       "is_finished" : req.body.is_finished,
       "title" : req.body.title,
+      "point" : req.body.point,
       "context" : req.body.context
     })
     .then((response) => {

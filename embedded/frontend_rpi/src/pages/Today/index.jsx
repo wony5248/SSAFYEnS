@@ -120,7 +120,7 @@ const Todaylayout = () => {
   return (
     <Todaycontainer>
       {itemList.length !== 0 ? (
-        <div style={{height: "100%"}}>
+        <div style={{ height: "100%" }}>
           {itemList.map((item) => (
             <Todaytitle>
               <Todaytitlenamecon>
@@ -131,19 +131,42 @@ const Todaylayout = () => {
                 </Todaytitletime>
               </Todaytitlenamecon>
               <Todaygoal>{item.title}</Todaygoal>
-              <Todaychangecon>
-                <Todaytitlename>{item.context}</Todaytitlename>
-                <Todaychangebtn
-                  onClick={() => window.location.replace(`/Rating/${item.id}`)}
-                >
-                  완료
-                </Todaychangebtn>
-              </Todaychangecon>
+              
+                {item.is_finished ? (
+                  <Todaychangecon>
+                    <Todaytitlename>{item.context}</Todaytitlename>
+                    <Todaytitlename>
+                      이미 완료된 일정입니다.
+                    </Todaytitlename>
+                  </Todaychangecon>
+                ) : (
+                  <Todaychangecon>
+                    <Todaytitlename>{item.context}</Todaytitlename>
+                    <Todaychangebtn
+                      onClick={() =>
+                        window.location.replace(`/Rating/${item.id}`)
+                      }
+                    >
+                      완료
+                    </Todaychangebtn>
+                  </Todaychangecon>
+                )}
             </Todaytitle>
           ))}
         </div>
       ) : (
-        <div style={{height: "100%", display:"flex", justifyContent:"center", alignItems:"center",fontSize:"40px", color:"#121212"}}>등록된 오늘 일정이 없습니다.</div>
+        <div
+          style={{
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: "40px",
+            color: "#121212",
+          }}
+        >
+          등록된 오늘 일정이 없습니다.
+        </div>
       )}
     </Todaycontainer>
   );

@@ -151,7 +151,7 @@ const Progresslayout = () => {
             // console.log(startMin);
             // console.log(currentMin);
             // console.log(endMin)
-            if (startTime < currentTime && currentTime < endTime) {
+            if (startTime < currentTime && currentTime < endTime && data.data.is_finished !==0) {
               // console.log(data.data[i].started_at);
               setStarttime(moment(data.data[i].started_at).format("HH : mm"));
               setEndtime(moment(data.data[i].finished_at).format("HH : mm"));
@@ -163,7 +163,7 @@ const Progresslayout = () => {
               setNotitime(moment(data.data[i].notification).format("HH : mm"));
               setId(data.data[i].id);
               setIstrue(true);
-            } else if (currentTime === endTime && currentMin <= endMin) {
+            } else if (currentTime === endTime && currentMin <= endMin && data.data.is_finished !==0) {
               setStarttime(moment(data.data[i].started_at).format("HH : mm"));
               setEndtime(moment(data.data[i].finished_at).format("HH : mm"));
               setGoal(
@@ -174,7 +174,7 @@ const Progresslayout = () => {
               setId(data.data[i].id);
               setNotitime(moment(data.data[i].notification).format("HH : mm"));
               setIstrue(true);
-            } else if (currentTime === startTime && startMin <= currentMin) {
+            } else if (currentTime === startTime && startMin <= currentMin && data.data.is_finished !==0) {
               setStarttime(moment(data.data[i].started_at).format("HH : mm"));
               setEndtime(moment(data.data[i].finished_at).format("HH : mm"));
               setGoal(

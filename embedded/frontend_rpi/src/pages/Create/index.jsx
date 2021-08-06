@@ -14,7 +14,7 @@ const Changeselect = styled1.select`
   align-items: center;
 `;
 const Changeselect2 = styled1.select`
-  width: 25%;
+  width: 15%;
   border: 0px;
   font-size: 36px;
   margin-left: 12px;
@@ -128,11 +128,10 @@ const Changecalendarlayout = () => {
       
   };
   const Confirm = async () => {
-    if (window.confirm("정말 완료하시겠 습니까?")) {
-
+    if (window.confirm("생성하시겠 습니까?")) {
         await axios
           .post(`http://127.0.0.1:4500/test/schedule`, {
-            date : `${moment().format("YYYYMMDD")}`,
+            date : `${moment().format("MMDD")}`,
             started_at  : `${moment().format("YYYYMMDD")} ${
               starttime[0] + starttime[1] + starttime[2] + starttime[3]
             }`,
@@ -167,10 +166,11 @@ const Changecalendarlayout = () => {
     }
   };
   useEffect(() => {
-    setContextarr(["식사 하기", "공부 하기", "영화 보기", "휴식 하기", "운동 하기", "수면 하기", "여가 생활 즐기기", "미팅 하기"])
-    setTitlearr(["식사", "공부", "영화", "휴식", "운동", "수면", "여가", "미팅"])
+    setContextarr(["제목", "식사 하기", "공부 하기", "영화 보기", "휴식 하기", "운동 하기", "수면 하기", "여가 생활 즐기기", "미팅 하기"])
+    setTitlearr(["내용", "식사", "공부", "영화", "휴식", "운동", "수면", "여가", "미팅"])
     const rendering = () => {
       const result = [];
+      result.push("시간")
       for (let i = 0; i < 24; i++) {
         if (i < 10) {
           result.push(`0${i}:00`);
