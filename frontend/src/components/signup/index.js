@@ -82,10 +82,17 @@ const SignUp = () =>{
     };
 
     const addUserSignUp = async () => {
-        const result = await userAPI.addUser(id, name, email, number, password);
-        console.log(result);
-        if (result.status==200){
-            history.push('/');
+        if (idLabel==='false' || emailLabel==='false' || numberLabel==='false' ){
+            alert('중복확인을 해주세요.');
+        }
+        else{
+            try{
+                const result = await userAPI.addUser(id, name, email, number, password);
+                alert("회원가입을 축하합니다!");
+                history.push('/');
+            }catch(error){
+                alert("회원가입에 실패했습니다.");
+            }
         }
     };
 
