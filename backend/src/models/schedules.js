@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const { user_id } = require("../validation/averageValidation");
 module.exports = (sequelize, DataTypes) => {
   class schedules extends Model {
     /**
@@ -9,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      models.schedules.hasMany(models.users, { foreignKey: "user_id" });
     }
   }
   schedules.init(
