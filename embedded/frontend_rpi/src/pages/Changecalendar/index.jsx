@@ -162,6 +162,7 @@ const Changecalendarlayout = (props) => {
   const [title, setTitle] = useState("");
   const [context, setContext] = useState("");
   const [manageid, setManageid] = useState("");
+  const [isfinished, setIsfinished] = useState(false);
   const [point, setPoint] = useState(0)
   const { id } = props;
   const handlestartChange = (event) => {
@@ -202,7 +203,7 @@ const Changecalendarlayout = (props) => {
     if (window.confirm("정말 완료하시겠 습니까?")) {
       
       await axios
-        .put(`http://127.0.0.1:4500/test/${id}`, {
+        .put(`http://127.0.0.1:4500/schedule/${id}`, {
           started_at: `${moment().format("YYYYMMDD")} ${
             starttime[0] + starttime[1] + starttime[2] + starttime[3]
           }`,
@@ -214,7 +215,7 @@ const Changecalendarlayout = (props) => {
           title: title,
           context: context,
           point: point,
-          is_finished: true,
+          is_finished: isfinished,
         })
         .then(({ data }) => {
           console.log(data.data);
@@ -231,7 +232,7 @@ const Changecalendarlayout = (props) => {
   useEffect(() => {
     async function loadCalendar() {
       await axios
-        .get(`http://127.0.0.1:4500/test/${id}`)
+        .get(`http://127.0.0.1:4500/schedule/${id}`)
         .then(({ data }) => {
           console.log(data.data);
           // setItemList(data.data);
@@ -240,6 +241,7 @@ const Changecalendarlayout = (props) => {
           setManageid(data.data.id);
           setTitle(data.data.title);
           setContext(data.data.context);
+          setIsfinished(data.data.is_finished)
           setPoint(data.data.point)
         })
         .catch((e) => {});

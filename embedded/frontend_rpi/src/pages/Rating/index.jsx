@@ -183,7 +183,7 @@ const Ratinglayout = (props) => {
     );
     if (window.confirm("정말 완료하시겠 습니까?")) {
       await axios
-        .put(`http://127.0.0.1:4500/test/${id}`, {
+        .put(`http://127.0.0.1:4500/schedule/${id}`, {
           started_at: starttime,
           finished_at: moment().format("YYYYMMDD HHmm"),
           deadline_at: deadline,
@@ -220,7 +220,7 @@ const Ratinglayout = (props) => {
   useEffect(() => {
     async function loadCalendar() {
       await axios
-        .get(`http://127.0.0.1:4500/test/${id}`)
+        .get(`http://127.0.0.1:4500/schedule/${id}`)
         .then(({ data }) => {
           console.log(data.data);
           // setItemList(data.data);

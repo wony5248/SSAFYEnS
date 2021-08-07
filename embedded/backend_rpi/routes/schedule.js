@@ -3,31 +3,11 @@ var router = express.Router();
 const axios = require("axios");
 var fs = require("fs");
 var sensorData = [];
-/*DB 에서 가져올 센서 값*/
-router.get("/sensor", function (req, res, next) {
-  //   res.send({ "temp": "36", "humid": "56", "noise": "168", "light": "32" });
-  res.json({
-    temp: `${sensorData[0]}`,
-    humid: `${sensorData[1]}`,
-    noise: `${sensorData[2]}`,
-    light: `${sensorData[3]}`,
-  });
-});
 
-router.post("/sensor", function (req, res, next) {
-  //   res.send("DB로 보낼 센서값");
-  sensorData = [];
-  sensorData.push(req.body["temp"]);
-  sensorData.push(req.body["humid"]);
-  sensorData.push(req.body["noise"]);
-  sensorData.push(req.body["light"]);
-  console.log(sensorData);
-  res.json(req.body);
-});
 
 
 // 일정 추가
-router.post("/schedule", async function (req, res, next) {
+router.post("/", async function (req, res, next) {
 
   await axios
     .post("http://127.0.0.1:8079/schedule", {
@@ -59,7 +39,7 @@ router.post("/schedule", async function (req, res, next) {
 });
 
 // 일정 삭제
-router.delete("/schedule/:id", async function (req, res, next) {
+router.delete("/:id", async function (req, res, next) {
   console.log(req)
   console.log(req.body);
   await axios
@@ -76,8 +56,38 @@ router.delete("/schedule/:id", async function (req, res, next) {
     });
 });
 
+<<<<<<< HEAD:embedded/backend_rpi/routes/test.js
+=======
+router.put("/:id", async function (req, res, next) {
+  console.log("여기")
+  console.log("저기")
+  console.log(req.params);
+  console.log(req.body)
+  await axios
+    .put(`http://127.0.0.1:8079/schedule/${req.params.id}`, {
+      "started_at" : req.body.started_at,
+      "finished_at" : req.body.finished_at,
+      "deadline_at" : req.body.deadline_at,
+      "notification" : req.body.notification,
+      "is_finished" : req.body.is_finished,
+      "title" : req.body.title,
+      "point" : req.body.point,
+      "context" : req.body.context
+    })
+    .then((response) => {
+      res.send(response.data);
+      console.log(response.data);
+      console.log(22222);
+    })
+    .catch(function (error) {
+      res.send(error);
+      console.log(11111);
+      console.log(error);
+    });
+});
+>>>>>>> fcb0156d8666e8c7c3bc7e4a31c464f0ce7c6d7e:embedded/backend_rpi/routes/schedule.js
 // test용
-router.get("/schedule", async function (req, res, next) {
+router.get("/", async function (req, res, next) {
 
   await axios
     .get("http://127.0.0.1:8079/schedule/6")
@@ -144,33 +154,7 @@ router.get("/:id", async function (req, res, next) {
 });
 
 //일정 변경하기
-router.put("/:id", async function (req, res, next) {
-  console.log("여기")
-  console.log("저기")
-  console.log(req.params);
-  console.log(req.body)
-  await axios
-    .put(`http://127.0.0.1:8079/schedule/${req.params.id}`, {
-      "started_at" : req.body.started_at,
-      "finished_at" : req.body.finished_at,
-      "deadline_at" : req.body.deadline_at,
-      "notification" : req.body.notification,
-      "is_finished" : req.body.is_finished,
-      "title" : req.body.title,
-      "point" : req.body.point,
-      "context" : req.body.context
-    })
-    .then((response) => {
-      res.send(response.data);
-      console.log(response.data);
-      console.log(22222);
-    })
-    .catch(function (error) {
-      res.send(error);
-      console.log(11111);
-      console.log(error);
-    });
-});
+
 // router.post('/getModule', function(req, res, next) {
 //     console.log("1" + req.headers["x-access-token"]);
 //     axios.post('http://127.0.0.1:4500/auth/getModule', {

@@ -20,7 +20,7 @@ const Sensor = () => {
   const [light, setLight] = useState("");
   async function loadSensor() {
     await axios
-      .get("http://127.0.0.1:4500/test/sensor")
+      .get("http://127.0.0.1:4500/sensor")
       .then(({ data }) => {
         setTemp(data.temp);
         setNoise(data.noise);
