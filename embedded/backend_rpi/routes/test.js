@@ -75,6 +75,7 @@ router.delete("/schedule/:id", async function (req, res, next) {
       console.log(error);
     });
 });
+
 // test용
 router.get("/schedule", async function (req, res, next) {
 
