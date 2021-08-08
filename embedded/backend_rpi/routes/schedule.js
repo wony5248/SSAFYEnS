@@ -3,6 +3,7 @@ var router = express.Router();
 const axios = require("axios");
 var fs = require("fs");
 var sensorData = [];
+var moment = require("moment")
 
 
 
@@ -113,13 +114,18 @@ router.get("/", async function (req, res, next) {
 // 하루일정 가져오기
 router.get("/getdaily/:date", async function (req, res, next) {
   console.log("여기야여기")
+
   console.log(req)
   console.log("저기야저기")
   console.log(req.body);
   await axios
     .get(`http://127.0.0.1:8079/schedule/daily/${req.params.date}`)
     .then((response) => {
-      res.send(response.data);
+      const arr =  response.data.data
+      arr.sort(function(a, b){
+        return Number(moment(a.started_at).format("HHmm")) - Number(moment(b.started_at).format("HHmm"))
+      })
+      res.send(arr);
       console.log(response.data);
       console.log(22222);
     })

@@ -124,7 +124,7 @@ const Changelayout = () => {
         )
         .then(({ data }) => {
           console.log(data);
-          setItemList(data.data);
+          setItemList(data);
           // console.log(data.data);
           console.log(itemList);
         })
@@ -140,7 +140,7 @@ const Changelayout = () => {
       {itemList.length !== 0 ? (
         <div style={{ height: "100%" }}>
           {" "}
-          {itemList.sort(function(a, b) {return Number(moment(a.started_at).format("HHmm")) - Number(moment(b.started_at).format("HHmm"))}).map((item) => (
+          {itemList.map((item) => (
             <Changetitle>
               <Changetitlenamecon>
                 <Changetitlename>일정 제목</Changetitlename>
