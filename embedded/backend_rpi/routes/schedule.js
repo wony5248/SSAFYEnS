@@ -56,8 +56,6 @@ router.delete("/:id", async function (req, res, next) {
     });
 });
 
-<<<<<<< HEAD:embedded/backend_rpi/routes/test.js
-=======
 router.put("/:id", async function (req, res, next) {
   console.log("여기")
   console.log("저기")
@@ -85,7 +83,6 @@ router.put("/:id", async function (req, res, next) {
       console.log(error);
     });
 });
->>>>>>> fcb0156d8666e8c7c3bc7e4a31c464f0ce7c6d7e:embedded/backend_rpi/routes/schedule.js
 // test용
 router.get("/", async function (req, res, next) {
 

@@ -96,9 +96,10 @@ const Changechangebtn = styled.button`
 
 const Changelayout = () => {
   const [itemList, setItemList] = useState([]);
+  const [isnoti, setIsnoti] = useState(0);
   const Delete = async (props) => {
-    const id = props
-    console.log(id)
+    const id = props;
+    console.log(id);
     if (window.confirm("정말 삭제하시겠 습니까?")) {
       await axios
         .delete(`http://127.0.0.1:4500/schedule/${id}`)
@@ -112,11 +113,14 @@ const Changelayout = () => {
     }
   };
   useEffect(() => {
+
     async function loadCalendar() {
       console.log(moment().format("YYYYMMDD"));
       await axios
         .get(
-          `http://127.0.0.1:4500/schedule/getdaily/${moment().format("YYYYMMDD")}`
+          `http://127.0.0.1:4500/schedule/getdaily/${moment().format(
+            "YYYYMMDD"
+          )}`
         )
         .then(({ data }) => {
           console.log(data);
@@ -136,22 +140,28 @@ const Changelayout = () => {
       {itemList.length !== 0 ? (
         <div style={{ height: "100%" }}>
           {" "}
-          {itemList.map((item) => (
+          {itemList.sort(function(a, b) {return Number(moment(a.started_at).format("HHmm")) - Number(moment(b.started_at).format("HHmm"))}).map((item) => (
             <Changetitle>
               <Changetitlenamecon>
                 <Changetitlename>일정 제목</Changetitlename>
                 <Changetitletime>
-                  {moment(item.started_at).format("HH:mm")} ~{" "}
+                  {moment(item.started_at).format("HH:mm")} ~
                   {moment(item.finished_at).format("HH:mm")}
                 </Changetitletime>
               </Changetitlenamecon>
               <Changegoal>{item.title}</Changegoal>
               <Changechangecon>
                 <Changetitlename>{item.context}</Changetitlename>
-                <div style= {{display: "flex", height:"100%", alignItems:"center", width:"180px", justifyContent:"space-between"}}>
-                  <Changechangebtn
-                    onClick={() => Delete(item.id)}
-                  >
+                <div
+                  style={{
+                    display: "flex",
+                    height: "100%",
+                    alignItems: "center",
+                    width: "180px",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Changechangebtn onClick={() => Delete(item.id)}>
                     삭제
                   </Changechangebtn>
                   <Changechangebtn

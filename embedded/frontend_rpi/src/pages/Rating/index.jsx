@@ -181,31 +181,48 @@ const Ratinglayout = (props) => {
         4) *
         20
     );
-    if (window.confirm("정말 완료하시겠 습니까?")) {
-      await axios
-        .put(`http://127.0.0.1:4500/schedule/${id}`, {
-          started_at: starttime,
-          finished_at: moment().format("YYYYMMDD HHmm"),
-          deadline_at: deadline,
-          notification: moment().format("YYYYMMDD HHmm"),
-          is_finished: true,
-          context: `${context} ${string}`,
-          point: `${
-            ((Number(selectedValue1) +
-              Number(selectedValue2) +
-              Number(selectedValue3) +
-              Number(selectedValue4)) /
-              4) *
-            20
-          }`,
-        })
-        .then(({ data }) => {
-          console.log(data.data);
-        })
-        .catch((e) => {});
-      window.location.replace(`/Today`);
-    } else {
-      console.log("변화 없음");
+    const starthour = Number(`${starttime[9]}${starttime[10]}`);
+    const startmin = Number(`${starttime[11]}${starttime[12]}`);
+    const endhour = Number(
+      `${moment().format("YYYYMMDD HHmm")[9]}${
+        moment().format("YYYYMMDD HHmm")[10]
+      }`
+    );
+    const endmin = Number(
+      `${moment().format("YYYYMMDD HHmm")[11]}${
+        moment().format("YYYYMMDD HHmm")[12]
+      }`
+    );
+    if (starthour <= endhour && startmin <= endmin) {
+      if (window.confirm("정말 완료하시겠 습니까?")) {
+        await axios
+          .put(`http://127.0.0.1:4500/schedule/${id}`, {
+            started_at: starttime,
+            finished_at: moment().format("YYYYMMDD HHmm"),
+            deadline_at: deadline,
+            notification: moment().format("YYYYMMDD HHmm"),
+            is_finished: true,
+            context: `${context} ${string}`,
+            point: `${
+              ((Number(selectedValue1) +
+                Number(selectedValue2) +
+                Number(selectedValue3) +
+                Number(selectedValue4)) /
+                4) *
+              20
+            }`,
+          })
+          .then(({ data }) => {
+            console.log(data.data);
+          })
+          .catch((e) => {});
+        window.location.replace(`/Today`);
+      } else {
+        console.log("변화 없음");
+      }
+    }
+    else {
+      window.alert("일정 종료 시간이 시작시간 보다 빠릅니다. 일정 변경에서 시작시간을 변경하여 주세요")
     }
   };
 

@@ -95,7 +95,7 @@ const Todaychangebtn = styled.button`
 `;
 
 const Todaylayout = () => {
-  const [itemList, setItemList] = useState(["adsf"]);
+  const [itemList, setItemList] = useState([]);
   useEffect(() => {
     async function loadCalendar() {
       console.log(moment().format("YYYYMMDD"));
@@ -121,7 +121,7 @@ const Todaylayout = () => {
     <Todaycontainer>
       {itemList.length !== 0 ? (
         <div style={{ height: "100%" }}>
-          {itemList.map((item) => (
+          {itemList.sort(function(a, b) {return Number(moment(a.started_at).format("HHmm")) - Number(moment(b.started_at).format("HHmm"))}).map((item) => (
             <Todaytitle>
               <Todaytitlenamecon>
                 <Todaytitlename>일정 제목</Todaytitlename>

@@ -163,8 +163,9 @@ const Changecalendarlayout = (props) => {
   const [context, setContext] = useState("");
   const [manageid, setManageid] = useState("");
   const [isfinished, setIsfinished] = useState(false);
-  const [point, setPoint] = useState(0)
+  const [point, setPoint] = useState(0);
   const { id } = props;
+
   const handlestartChange = (event) => {
     setStarttime(event.target.value);
     console.log(event.target.value);
@@ -192,41 +193,49 @@ const Changecalendarlayout = (props) => {
     );
   };
   const handleContext = (e) => {
-    setContext(e.target.value)
-    console.log(e.target.value)
-  }
+    setContext(e.target.value);
+    console.log(e.target.value);
+  };
   const handleTitle = (e) => {
-    setTitle(e.target.value)
-  }
+    setTitle(e.target.value);
+  };
   const Change = async () => {
-    console.log(context)
-    if (window.confirm("정말 완료하시겠 습니까?")) {
-      
-      await axios
-        .put(`http://127.0.0.1:4500/schedule/${id}`, {
-          started_at: `${moment().format("YYYYMMDD")} ${
-            starttime[0] + starttime[1] + starttime[2] + starttime[3]
-          }`,
-          finished_at: `${moment().format("YYYYMMDD")} ${
-            endtime[0] + endtime[1] + endtime[2] + endtime[3]
-          }`,
-          deadline_at: deadline,
-          notification: moment().format("YYYYMMDD HHmm"),
-          title: title,
-          context: context,
-          point: point,
-          is_finished: isfinished,
-        })
-        .then(({ data }) => {
-          console.log(data.data);
-          // setItemList(data.data);
-          // console.log(data.data);
-          setManageid(data.data.id);
-        })
-        .catch((e) => {});
-      window.location.replace(`/Change`);
-    } else {
-      console.log("변화 없음");
+    const starthour = Number(`${starttime[9]}${starttime[10]}`);
+    const startmin = Number(`${starttime[11]}${starttime[12]}`);
+    const endhour = Number(`${endtime[9]}${endtime[10]}`);
+    const endmin = Number(`${endtime[11]}${endtime[12]}`);
+    console.log(context);
+    if (starthour <= endhour && startmin <= endmin) {
+      if (window.confirm("정말 완료하시겠 습니까?")) {
+        await axios
+          .put(`http://127.0.0.1:4500/schedule/${id}`, {
+            started_at: `${moment().format("YYYYMMDD")} ${
+              starttime[0] + starttime[1] + starttime[2] + starttime[3]
+            }`,
+            finished_at: `${moment().format("YYYYMMDD")} ${
+              endtime[0] + endtime[1] + endtime[2] + endtime[3]
+            }`,
+            deadline_at: deadline,
+            notification: moment().format("YYYYMMDD HHmm"),
+            title: title,
+            context: context,
+            point: point,
+            is_finished: isfinished,
+          })
+          .then(({ data }) => {
+            console.log(data.data);
+            // setItemList(data.data);
+            // console.log(data.data);
+            setManageid(data.data.id);
+          })
+          .catch((e) => {});
+        window.location.replace(`/Change`);
+      } else {
+        console.log("변화 없음");
+      }
+    }
+    else {
+      window.alert("일정 시작시간이 일정종료 시간보다 빠르게 설정해 주십시오.")
     }
   };
   useEffect(() => {
@@ -241,15 +250,15 @@ const Changecalendarlayout = (props) => {
           setManageid(data.data.id);
           setTitle(data.data.title);
           setContext(data.data.context);
-          setIsfinished(data.data.is_finished)
-          setPoint(data.data.point)
+          setIsfinished(data.data.is_finished);
+          setPoint(data.data.point);
         })
         .catch((e) => {});
     }
     loadCalendar();
     const rendering = () => {
       const result = [];
-      result.push("시간")
+      result.push("시간");
       for (let i = 0; i < 24; i++) {
         if (i < 10) {
           result.push(`0${i}:00`);
@@ -299,7 +308,10 @@ const Changecalendarlayout = (props) => {
       </Changeend>
       <Changetitle>
         <Changetitletext>일정 제목</Changetitletext>
-        <Changetitleinput value={title} onChange= {handleTitle}></Changetitleinput>
+        <Changetitleinput
+          value={title}
+          onChange={handleTitle}
+        ></Changetitleinput>
       </Changetitle>
       <ChangeContent>
         <ChangeContentheader>
@@ -310,7 +322,7 @@ const Changecalendarlayout = (props) => {
           multiline
           rows={4}
           value={context}
-          onChange = {handleContext}
+          onChange={handleContext}
           variant="outlined"
         ></Changecontentinput1>
       </ChangeContent>
