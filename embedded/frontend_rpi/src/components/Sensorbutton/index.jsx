@@ -1,13 +1,11 @@
 import React, {useContext} from "react";
 import Sensorbtn from "./styles";
-import { Context } from "../../context";
+import { useUserContext } from "../../context";
 
 
 const Button = (props) => {
   const { btnName } = props;
-  const {
-    state: { isDark },
-  } = useContext(Context);
-  return <Sensorbtn isdark = {isDark}>{btnName}</Sensorbtn>;
+  const { isdarked } = useUserContext();
+  return <Sensorbtn isdark = {isdarked}>{btnName}</Sensorbtn>;
 };
 export default Button;

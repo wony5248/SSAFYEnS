@@ -9,14 +9,14 @@ import styled from "styled-components";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import axios from "axios";
 import moment from "moment";
-import { Context } from "../../context";
+import { useUserContext } from "../../context";
 const Datediv = styled.div`
   width: auto;
   height: 20%;
   align-items: center;
   align-content: center;
   margin: 0px;
-  border: ${(props) => (props.isdark ? "1px solid gray" : "1px solid #a3cca3")};
+  border: ${(props) => (props.isdark === true ? "1px solid gray" : "1px solid #a3cca3")};
 `;
 const Addbtn = styled.button`
   width: 100%;
@@ -24,20 +24,18 @@ const Addbtn = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${(props) => (props.isdark ? "white" : "#424242")};
-  background-color: ${(props) => (props.isdark ? "#424242" : "white")};
+  color: ${(props) => (props.isdark === true ? "white" : "#424242")};
+  background-color: ${(props) => (props.isdark === true ? "#424242" : "white")};
   font-size: 20px;
   margin: 0px;
-  border: ${(props) => (props.isdark ? "1px solid gray" : "1px solid #a3cca3")};
+  border: ${(props) => (props.isdark === true ? "1px solid gray" : "1px solid #a3cca3")};
   &:hover {
-    background-color: ${(props) => (props.isdark ? "gray" : "#a3cca3")};
+    background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
     color: white;
   }
 `;
 function Rightsidebar() {
-  const {
-    state: { isDark },
-  } = useContext(Context);
+  const { isdarked } = useUserContext();
   const Confirm = () => {
     if (window.confirm("일정을 생성하시겠습니까?")) {
       window.location.replace(`/Create`);
@@ -46,12 +44,12 @@ function Rightsidebar() {
     }
   };
   return (
-    <Rightsidecontainer isdark={isDark}>
-      <Datediv isdark = {isDark}>{Date()}</Datediv>
-      <Sensorbtn isdark = {isDark} btnName={Sensor()}></Sensorbtn>
-      <MannerBtn isdark = {isDark} btnName="매너모드"></MannerBtn>
-      <SpeakerBtn isdark = {isDark} btnName="다크모드"></SpeakerBtn>
-      <Addbtn isdark={isDark} onClick={() => Confirm()}>
+    <Rightsidecontainer isdark={isdarked}>
+      <Datediv isdark = {isdarked}>{Date()}</Datediv>
+      <Sensorbtn isdark = {isdarked} btnName={Sensor()}></Sensorbtn>
+      <MannerBtn isdark = {isdarked} btnName="매너모드"></MannerBtn>
+      <SpeakerBtn isdark = {isdarked} btnName="다크모드"></SpeakerBtn>
+      <Addbtn isdark={isdarked} onClick={() => Confirm()}>
         <AddBoxIcon></AddBoxIcon>일정 추가
       </Addbtn>
     </Rightsidecontainer>

@@ -4,7 +4,7 @@ import Datediv from "./styles";
 import Logo from "../../assets/ssafyenslogo.png";
 import styled1 from "styled-components";
 import { styled } from "@material-ui/styles";
-import { Context } from "../../context";
+import { useUserContext } from "../../context";
 const Logodiv = styled1.div`
   width: 100%;
 `;
@@ -13,13 +13,9 @@ const Clockdiv = styled(Clock)({
   fontSize: "30px",
 });
 const Date = () => {
-  const {
-    state:{
-      isDark
-    }
-  } = useContext(Context)
+  const { isdarked } = useUserContext();
   return (
-    <Datediv isdark = {isDark}>
+    <Datediv isdark = {isdarked}>
         <Logodiv>
           <Clockdiv
             format={"YYYY.MM.DD"}

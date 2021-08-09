@@ -5,8 +5,8 @@ const Centerlayout = styled.div`
   flex-wrap: nowrap;
   width: 68%;
   height: 98.7%;
-  background-color: ${props => props.isdark ? "#424242" : "white"};
-  border: ${props => props.isdark ? "1px solid gray" : "1px solid #a3cca3"};
+  background-color: ${props => props.isdark ===  true ? "#424242" : "white"};
+  border: ${props => props.isdark === true? "1px solid gray" : "1px solid #a3cca3"};
   align-items: center;
   margin: 0px;
 `;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import Layout from "../../layout";
-import { Context } from "../../context";
+import { useUserContext } from "../../context";
 import styled from "styled-components";
 import axios from "axios";
 import moment from "moment";
@@ -23,7 +23,7 @@ const Changetitle = styled.div`
   color: white;
   width: auto;
   height: 20%;
-  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
+  background-color: ${props => props.isdark === true ? "gray" : "#a3cca3"};
   margin-bottom: 14px;
   padding: 0px;
 `;
@@ -78,7 +78,7 @@ const Changechangebtn = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${props => props.isdark ? "darkgray" : "#69a569"};
+  background-color: ${props => props.isdark === true ? "darkgray" : "#69a569"};
   padding: 4px;
 `;
 
@@ -121,17 +121,16 @@ const Changelayout = () => {
     setInterval(() => {
       loadCalendar();
     }, 60000);
+    console.log(isdarked)
   }, []);
-  const {
-    state: { isDark },
-  } = useContext(Context);
+  const { isdarked } = useUserContext();
   return (
-    <Changecontainer isdark = {isDark}>
+    <Changecontainer isdark = {isdarked}>
       {itemList.length !== 0 ? (
         <div style={{ height: "100%" }}>
           {" "}
           {itemList.map((item) => (
-            <Changetitle isdark = {isDark}>
+            <Changetitle isdark = {isdarked}>
               <Changetitlenamecon>
                 <Changetitlename>일정 제목</Changetitlename>
                 <Changetitletime>
@@ -151,10 +150,10 @@ const Changelayout = () => {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Changechangebtn isdark = {isDark} onClick={() => Delete(item.id)}>
+                  <Changechangebtn isdark = {isdarked} onClick={() => Delete(item.id)}>
                     삭제
                   </Changechangebtn>
-                  <Changechangebtn isdark = {isDark}
+                  <Changechangebtn isdark = {isdarked}
                     onClick={() =>
                       window.location.replace(`/Change/${item.id}`)
                     }

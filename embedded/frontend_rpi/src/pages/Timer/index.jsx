@@ -3,6 +3,7 @@ import Layout from "../../layout";
 import Stopwatch from "./Stopwatch";
 import Timer from "./Timer";
 import styled from "styled-components";
+import { useUserContext } from "../../context";
 const Timercon = styled.div`
   border-radius: 4px;
   width: auto;
@@ -30,12 +31,12 @@ const Timerlayout = () => {
   //   }
   //   loadItem();
   // }, []);
-
+  const { isdarked } = useUserContext();
   return (
     <Timercon>
-      <Stopwatch />
+      <Stopwatch isdark = {isdarked}/>
       <div><hr className="line" /></div>
-      <Timer />
+      <Timer isdark = {isdarked} />
     </Timercon>
   );
 };
