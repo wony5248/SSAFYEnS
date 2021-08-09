@@ -74,7 +74,7 @@ const Addbtn = styled1.button`
     &:hover{
         background-color: #69a569;
     }
-`
+`;
 const Changeendtext = styled1.div`
   width: auto;
   height: auto;
@@ -94,63 +94,61 @@ const Changecalendarlayout = () => {
   const [startarr, setStartarr] = useState([]);
 
   const [titlearr, setTitlearr] = useState([]);
-  const [contextarr, setContextarr] = useState([])
-
+  const [contextarr, setContextarr] = useState([]);
 
   const handlestartChange = (event) => {
     setStarttime(event.target.value);
     console.log(event.target.value);
-    
   };
   const handleendChange = (event) => {
     setEndtime(event.target.value);
     console.log(event.target.value);
-      
   };
   const handledeadChange = (event) => {
     setDeadline(event.target.value);
     console.log(event.target.value);
-    
   };
   const handlenotiChange = (event) => {
     setNotitime(event.target.value);
     console.log(event.target.value);
-      
   };
   const handletitleChange = (event) => {
     setTitle(event.target.value);
     console.log(event.target.value);
-      
   };
   const handlecontextChange = (event) => {
     setContext(event.target.value);
     console.log(event.target.value);
-      
   };
   const Confirm = async () => {
-    if (window.confirm("생성하시겠 습니까?")) {
+    const starthour = Number(`${starttime[0]}${starttime[1]}`);
+    const startmin = Number(`${starttime[2]}${starttime[3]}`);
+    const endhour = Number(`${endtime[0]}${endtime[1]}`);
+    const endmin = Number(`${endtime[2]}${endtime[3]}`);
+    if (starthour <= endhour && startmin <= endmin) {
+      if (window.confirm("생성하시겠 습니까?")) {
         await axios
           .post(`http://127.0.0.1:4500/schedule`, {
-            date : `${moment().format("MMDD")}`,
-            started_at  : `${moment().format("YYYYMMDD")} ${
+            date: `${moment().format("MMDD")}`,
+            started_at: `${moment().format("YYYYMMDD")} ${
               starttime[0] + starttime[1] + starttime[2] + starttime[3]
             }`,
-            finished_at : `${moment().format("YYYYMMDD")} ${
+            finished_at: `${moment().format("YYYYMMDD")} ${
               endtime[0] + endtime[1] + endtime[2] + endtime[3]
             }`,
-            deadline_at : `${moment().format("YYYYMMDD")} ${
+            deadline_at: `${moment().format("YYYYMMDD")} ${
               deadline[0] + deadline[1] + deadline[2] + deadline[3]
             }`,
-            notification : `${moment().format("YYYYMMDD")} ${
+            notification: `${moment().format("YYYYMMDD")} ${
               notitime[0] + notitime[1] + notitime[2] + notitime[3]
             }`,
-            is_finished : false,
-            month : `${moment().format("MM")}`,
-            year : `${moment().format("YYYY")}`,
-            week : "1",
-            point : 0,
-            user_id : "wony5248",
-            title : title,
+            is_finished: false,
+            month: `${moment().format("MM")}`,
+            year: `${moment().format("YYYY")}`,
+            week: "1",
+            point: 0,
+            user_id: "wony5248",
+            title: title,
             context: context,
           })
           .then(({ data }) => {
@@ -161,16 +159,40 @@ const Changecalendarlayout = () => {
           })
           .catch((e) => {});
         window.location.replace(`/Today`);
-    } else {
+      } else {
         console.log("변화 없음");
+      }
+    }
+    else {
+      window.alert("일정 시작시간을 일정 종료시간보다 빠르게 설정해 주세요")
     }
   };
   useEffect(() => {
-    setContextarr(["제목", "식사 하기", "공부 하기", "영화 보기", "휴식 하기", "운동 하기", "수면 하기", "여가 생활 즐기기", "미팅 하기"])
-    setTitlearr(["내용", "식사", "공부", "영화", "휴식", "운동", "수면", "여가", "미팅"])
+    setContextarr([
+      "제목",
+      "식사 하기",
+      "공부 하기",
+      "영화 보기",
+      "휴식 하기",
+      "운동 하기",
+      "수면 하기",
+      "여가 생활 즐기기",
+      "미팅 하기",
+    ]);
+    setTitlearr([
+      "내용",
+      "식사",
+      "공부",
+      "영화",
+      "휴식",
+      "운동",
+      "수면",
+      "여가",
+      "미팅",
+    ]);
     const rendering = () => {
       const result = [];
-      result.push("시간")
+      result.push("시간");
       for (let i = 0; i < 24; i++) {
         if (i < 10) {
           result.push(`0${i}:00`);
@@ -257,9 +279,7 @@ const Changecalendarlayout = () => {
           onChange={handletitleChange}
         >
           {titlearr.map((item) => (
-            <Changeoption value={item}>
-              {item}
-            </Changeoption>
+            <Changeoption value={item}>{item}</Changeoption>
           ))}
         </Changeselect>
       </Changeend>
@@ -272,19 +292,18 @@ const Changecalendarlayout = () => {
           onChange={handlecontextChange}
         >
           {contextarr.map((item) => (
-            <Changeoption value={item}>
-              {item}
-            </Changeoption>
+            <Changeoption value={item}>{item}</Changeoption>
           ))}
         </Changeselect2>
       </Changeend>
-      <Btndiv><Addbtn onClick = {() => Confirm()}>추가하기</Addbtn></Btndiv>
+      <Btndiv>
+        <Addbtn onClick={() => Confirm()}>추가하기</Addbtn>
+      </Btndiv>
     </Changecalcon>
   );
 };
 
 const Create = () => {
-  
   return <Layout pages={Changecalendarlayout()}></Layout>;
 };
 
