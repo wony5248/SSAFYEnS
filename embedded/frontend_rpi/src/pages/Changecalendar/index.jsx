@@ -5,6 +5,7 @@ import { styled } from "@material-ui/core/styles";
 import Input from "@material-ui/core/Input";
 import axios from "axios";
 import moment from "moment";
+import 'moment/locale/ko';
 
 const Changeselect = styled1.select`
   width: 15%;

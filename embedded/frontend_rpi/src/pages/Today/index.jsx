@@ -3,6 +3,7 @@ import Layout from "../../layout";
 import axios from "axios";
 import styled from "styled-components";
 import moment from "moment";
+import 'moment/locale/ko';
 
 const Todaycontainer = styled.div`
   overflow: auto;

@@ -3,6 +3,7 @@ import Layout from "../../layout";
 import styled1 from "styled-components";
 import axios from "axios";
 import moment from "moment";
+import 'moment/locale/ko';
 
 const Changeselect = styled1.select`
   width: 15%;

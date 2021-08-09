@@ -3,6 +3,7 @@ import Layout from "../../layout";
 import styled from "styled-components";
 import axios from "axios";
 import moment from "moment";
+import 'moment/locale/ko';
 const Changecontainer = styled.div`
   overflow: auto;
   width: auto;

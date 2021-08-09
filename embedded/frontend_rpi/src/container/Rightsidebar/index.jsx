@@ -9,6 +9,7 @@ import styled from "styled-components";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import axios from "axios";
 import moment from "moment";
+import 'moment/locale/ko';
 const Datediv = styled.div`
   width: auto;
   height: 25%;
