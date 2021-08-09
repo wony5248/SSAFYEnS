@@ -1,29 +1,26 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Switch from "@material-ui/core/Switch";
 import { useIosSwitchStyles } from "@mui-treasury/styles/switch/ios";
-import { Context } from "../../context";
-import { IS_DARK } from "../../context/actionTypes";
+import { useUserContext } from "../../context";
 const SwitchStyle = () => {
-  const [toggled, setToggled] = React.useState(false);
+  var mode = window.localStorage.getItem("istoggle");
+  mode = JSON.parse(mode);
+  const [toggled, setToggled] = React.useState(mode);
   const switchStyles = useIosSwitchStyles();
-  const {
-    state: { isdark },
-    dispatch,
-  } = useContext(Context);
-  const handleToggle = (e) => {
-    setToggled(e.target.value);
-    dispatch({
-      type: IS_DARK,
-      payload: { isdark: toggled },
-    });
-    console.log(e.target.value)
-  };
+  const { isdarked, setIsdarked } = useUserContext();
   return (
     <div>
       <Switch
         classes={switchStyles}
         checked={toggled}
-        onChange={(e) => handleToggle(e.target.checked)}
+        onChange={(e) => {
+          setToggled(e.target.checked);
+          window.localStorage.setItem("istoggle", e.target.checked);
+          setIsdarked(e.target.checked);
+          console.log(e.target.checked);
+          console.log(isdarked);
+          window.localStorage.setItem("isdark", e.target.checked);
+        }}
       />
     </div>
   );

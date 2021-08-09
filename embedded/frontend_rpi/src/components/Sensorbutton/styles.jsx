@@ -8,7 +8,7 @@ const Sensorbtn = styled.div`
   align-items: center;
   align-content: center;
   margin: 0px;
-  border: ${props => props.isdark ? "1px solid gray" : "1px solid #a3cca3"};
+  border: ${props => props.isdark === true? "1px solid gray" : "1px solid #a3cca3"};
 `;
 
 export default Sensorbtn;

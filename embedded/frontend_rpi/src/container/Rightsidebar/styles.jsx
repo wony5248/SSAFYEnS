@@ -5,8 +5,8 @@ const Rightsidecontainer = styled.div`
   width: 16%;
   margin: 0px;
   height: 99%;
-  color: ${props => props.isdark ? "white" : "#424242"};
-  background-color: ${props => props.isdark ? "#424242" : "white"};
+  color: ${props => props.isdark === true ? "white" : "#424242"};
+  background-color: ${props => props.isdark === true ? "#424242" : "white"};
   font-size: 20px;
 `;
 

@@ -5,7 +5,7 @@ import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import TimerIcon from '@material-ui/icons/Timer';
-import { Context } from "../../context";
+import { useUserContext } from "../../context";
 import { IS_DARK } from "../../context/actionTypes";
 const Leftsidebtn = styled.button`
 
@@ -18,13 +18,13 @@ const Leftsidebtn = styled.button`
   align-items: center;
   text-align: center;
   margin: 0px;
-  color: ${props => props.isdark ? "white":"#424242"};
-  background-color: ${props => props.isdark ? "#424242":"white"};
+  color: ${props => props.isdark === true ? "white":"#424242"};
+  background-color: ${props => props.isdark === true ? "#424242":"white"};
   font-size: 20px;
-  border: ${props => props.isdark ? "1px solid gray":"1px solid #a3cca3"};
+  border: ${props => props.isdark === true ? "1px solid gray":"1px solid #a3cca3"};
   cursor: pointer;
   &:active {
-    background-color: ${props => props.isdark ? "white":"#a3cca3"};
+    background-color: ${props => props.isdark === true ? "white":"#a3cca3"};
     color: white;
   }
  
@@ -33,17 +33,13 @@ const Leftsidebtn = styled.button`
 
 
 function Leftsidebar() {
-  const {
-    state:{
-      isDark
-    }
-  } = useContext(Context)
+  const { isdarked } = useUserContext();
 	return (
 		<Leftsidecontainer>
-			<Leftsidebtn isdark={isDark} onClick = {() => window.location.replace (`/Progress`)}><CalendarTodayIcon fontSize= "large" />진행중인 일정</Leftsidebtn>
-			<Leftsidebtn isdark={isDark} onClick = {() => window.location.replace (`/Today`)}><EventAvailableIcon fontSize="large" />오늘 일정</Leftsidebtn>
-			<Leftsidebtn isdark={isDark} onClick = {() => window.location.replace (`/Change`)}><EventNoteIcon fontSize="large"/>일정 변경</Leftsidebtn>
-			<Leftsidebtn isdark={isDark} onClick = {() => window.location.replace (`/Timer`)}><TimerIcon fontSize="large"/>타이머/ 스탑워치</Leftsidebtn>
+			<Leftsidebtn isdark={isdarked} onClick = {() => window.location.replace (`/Progress`)}><CalendarTodayIcon fontSize= "large" />진행중인 일정</Leftsidebtn>
+			<Leftsidebtn isdark={isdarked} onClick = {() => window.location.replace (`/Today`)}><EventAvailableIcon fontSize="large" />오늘 일정</Leftsidebtn>
+			<Leftsidebtn isdark={isdarked} onClick = {() => window.location.replace (`/Change`)}><EventNoteIcon fontSize="large"/>일정 변경</Leftsidebtn>
+			<Leftsidebtn isdark={isdarked} onClick = {() => window.location.replace (`/Timer`)}><TimerIcon fontSize="large"/>타이머/ 스탑워치</Leftsidebtn>
 		</Leftsidecontainer>
 	);
 }

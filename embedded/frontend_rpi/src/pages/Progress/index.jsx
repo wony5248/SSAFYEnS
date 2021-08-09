@@ -4,7 +4,7 @@ import Progresscontainer from "./styles";
 import styled from "styled-components";
 import axios from "axios";
 import moment from "moment";
-import { Context } from "../../context";
+import { useUserContext } from "../../context";
 const Progresstitle = styled.div`
   display: flex;
   flex-direction: column;
@@ -14,7 +14,7 @@ const Progresstitle = styled.div`
   width: auto;
   height: 30%;
   color: white;
-  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
+  background-color: ${props => props.isdark === true ? "gray" : "#a3cca3"};
   padding: 0px;
 `;
 const Progresstitlenamecon = styled.div`
@@ -53,7 +53,7 @@ const Progresscontentcon = styled.div`
   width: auto;
   height: 63%;
   color: white;
-  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
+  background-color: ${props => props.isdark === true ? "gray" : "#a3cca3"};
   margin-top: 14px;
   padding: 14px 28px;
 `;
@@ -73,7 +73,7 @@ const Progresscontent = styled.div`
   width: auto;
   height: 66%;
   color: #121212;
-  background-color: ${props => props.isdark ? "#c9c9c9" : "white"};
+  background-color: ${props => props.isdark === true ? "#c9c9c9" : "white"};
   padding: 16px;
 `;
 const Fulldiv = styled.div`
@@ -84,7 +84,7 @@ const Completebtn = styled.button`
   border: none;
   color: white;
   border-radius: 8px;
-  background-color: ${props => props.isdark ? "darkgray" : "#69a569"};
+  background-color: ${props => props.isdark === true ? "darkgray" : "#69a569"};
   padding: 4px;
   height: 70%;
   width: 10%;
@@ -179,14 +179,12 @@ const Progresslayout = () => {
     }
     loadCalendar();
   }, []);
-  const {
-    state: { isDark },
-  } = useContext(Context);
+  const { isdarked } = useUserContext();
   return (
     <Progresscontainer>
       {istrue ? (
         <Fulldiv>
-          <Progresstitle isdark = {isDark}>
+          <Progresstitle isdark = {isdarked}>
             <Progresstitlenamecon>
               <Progresstitlename>{title}</Progresstitlename>
               <Progresstitletime>
@@ -216,12 +214,12 @@ const Progresslayout = () => {
               <Progressdeadline>{goal}</Progressdeadline>
             </div>
           </Progresstitle>
-          <Progresscontentcon isdark = {isDark}>
+          <Progresscontentcon isdark = {isdarked}>
             <Progresscontenttitle>일정 내용</Progresscontenttitle>
-            <Progresscontent isdark = {isDark}>{content}</Progresscontent>
+            <Progresscontent isdark = {isdarked}>{content}</Progresscontent>
             <Btndiv>
               <Completebtn
-                isdark = {isDark}
+                isdark = {isdarked}
                 onClick={() => window.location.replace(`/Rating/${id}`)}
               >
                 완료

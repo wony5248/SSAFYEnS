@@ -10,7 +10,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import axios from "axios";
-import { Context } from "../../context";
+import { useUserContext } from "../../context";
 const StyledRating = withStyles({
   iconFilled: {
     color: "#f6f924",
@@ -21,10 +21,7 @@ const StyledRating = withStyles({
 })(Ratingstar);
 const GreenRadio = withStyles({
   root: {
-    color: green[400],
-    "&$checked": {
-      color: green[600],
-    },
+    color: `${props => props.isdark === true ? "gray" : "#a3cca3"}`,
   },
   checked: {},
 })((props) => <Radio color="default" {...props} />);
@@ -36,7 +33,7 @@ const Starttime = styled1.div`
   width: auto;
   height: 5%;
   color: white;
-  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
+  background-color: ${props => props.isdark === true ? "gray" : "#a3cca3"};
   margin: 12px 0px;
   padding: 4px;
   padding-left:16px;
@@ -50,7 +47,7 @@ const Endtime = styled1.div`
   width: auto;
   height: 5%;
   color: white;
-  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
+  background-color: ${props => props.isdark === true ? "gray" : "#a3cca3"};
   margin: 12px 0px;
   padding: 4px;
   padding-left:16px;
@@ -63,7 +60,7 @@ const Ratingbody = styled1.div`
   width: auto;
   height: 80%;
   color: white;
-  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
+  background-color: ${props => props.isdark === true ? "gray" : "#a3cca3"};
   margin-top: 12px;
   padding: 4px;
   padding-left:16px;
@@ -75,7 +72,7 @@ const Ratingcontent = styled1.div`
   width: auto;
   height: 80%;
   color: black;
-  background-color: ${props => props.isdark ? "#C9C9C9" : "white"};
+  background-color: ${props => props.isdark === true ? "#C9C9C9" : "white"};
   font-size: 20px;
   overflow: auto;
   margin-top: 12px;
@@ -109,7 +106,7 @@ const Ratingbtn = styled1.button`
   border-radius: 8px;
   border: 0px;
   color: white;
-  background-color: ${props => props.isdark ? "darkgray" : "#69a569"};
+  background-color: ${props => props.isdark === true ? "darkgray" : "#69a569"};
   padding: 4px;
   margin-left:16px;
 `;
@@ -149,6 +146,7 @@ const Changeendtext = styled1.div`
   height: auto;
   color: white;
 `;
+
 
 const Ratinglayout = (props) => {
   const [selectedValue1, setSelectedValue1] = React.useState("1");
@@ -263,21 +261,19 @@ const Ratinglayout = (props) => {
   };
   // console.log(time[0] + time[1]);
   // console.log(moment().format("H"));
-  const {
-    state: { isDark },
-  } = useContext(Context);
+  const { isdarked } = useUserContext();
   return (
     <Ratingcon>
-      <Starttime isdark = {isDark}>
+      <Starttime isdark = {isdarked}>
         <Changestarttext>일정 시작 시간</Changestarttext>
         <Changestarttext>{moment(starttime).format("HH : mm")}</Changestarttext>
       </Starttime>
-      <Endtime isdark = {isDark}>
+      <Endtime isdark = {isdarked}>
         <Changeendtext>일정 종료 시간</Changeendtext>
         <Changeendtext>{moment().format("H : mm")}</Changeendtext>
       </Endtime>
-      <Ratingbody isdark = {isDark}>
-        <Ratingcontent  isdark = {isDark}>
+      <Ratingbody isdark = {isdarked}>
+        <Ratingcontent  isdark = {isdarked}>
           <Ratingquestiontitle>일정 평가</Ratingquestiontitle>
           <Ratingquestion>
             1. 유해물질 탐지 시간이 일정 진행시간의 몇 %인가요?
@@ -290,27 +286,27 @@ const Ratinglayout = (props) => {
             >
               <FormControlLabel
                 value="1"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="80%이상 100%이하"
               />
               <FormControlLabel
                 value="2"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="60% 이상 80% 이하"
               />
               <FormControlLabel
                 value="3"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="40% 이상 60% 이하"
               />
               <FormControlLabel
                 value="4"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="20% 이상 40% 이하"
               />
               <FormControlLabel
                 value="5"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="0% 이상 20% 이하"
               />
             </RadioGroup>
@@ -327,27 +323,27 @@ const Ratinglayout = (props) => {
             >
               <FormControlLabel
                 value="1"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="0%이상 20%이하"
               />
               <FormControlLabel
                 value="2"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="20% 이상 40% 이하"
               />
               <FormControlLabel
                 value="3"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="40% 이상 60% 이하"
               />
               <FormControlLabel
                 value="4"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="60% 이상 80% 이하"
               />
               <FormControlLabel
                 value="5"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="80% 이상 100% 이하"
               />
             </RadioGroup>
@@ -361,27 +357,27 @@ const Ratinglayout = (props) => {
             >
               <FormControlLabel
                 value="1"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="0%이상 20%이하"
               />
               <FormControlLabel
                 value="2"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="20% 이상 40% 이하"
               />
               <FormControlLabel
                 value="3"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="40% 이상 60% 이하"
               />
               <FormControlLabel
                 value="4"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="60% 이상 80% 이하"
               />
               <FormControlLabel
                 value="5"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="80% 이상 100% 이하"
               />
             </RadioGroup>
@@ -395,27 +391,27 @@ const Ratinglayout = (props) => {
             >
               <FormControlLabel
                 value="1"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="매우 별로였다."
               />
               <FormControlLabel
                 value="2"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="별로였다."
               />
               <FormControlLabel
                 value="3"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="그저 그랬다."
               />
               <FormControlLabel
                 value="4"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="좋았다."
               />
               <FormControlLabel
                 value="5"
-                control={<GreenRadio />}
+                control={<GreenRadio isdark = {isdarked} />}
                 label="매우 좋았다."
               />
             </RadioGroup>
@@ -436,8 +432,8 @@ const Ratinglayout = (props) => {
             readOnly
           />
           <Ratingbtncon>
-            <Ratingbtn isdark = {isDark} onClick={() => Cancel()}>취소</Ratingbtn>
-            <Ratingbtn isdark = {isDark} onClick={() => Confirm()}>완료</Ratingbtn>
+            <Ratingbtn isdark = {isdarked} onClick={() => Cancel()}>취소</Ratingbtn>
+            <Ratingbtn isdark = {isdarked} onClick={() => Confirm()}>완료</Ratingbtn>
           </Ratingbtncon>
         </Ratingstarcon>
       </Ratingbody>

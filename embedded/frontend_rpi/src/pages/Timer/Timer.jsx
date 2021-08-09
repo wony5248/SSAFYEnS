@@ -12,6 +12,7 @@ const Countdiv = styled.div`
   align-content: center;
   border-radius: 4px;
   width: auto;
+  color: ${props => props.isdark ? "white" : "#121212s"};
   height: 46.9%;
   margin: 12px 0px;
   font-size: 40px;
@@ -25,7 +26,7 @@ const Countbtn = styled.button`
   width: 20%;
   height: 15%;
   color: white;
-  background-color: #a3cca3;
+  background-color:  ${props => props.isdark ? "darkgray" : "#a3cca3"};
   margin: 12px 0px;
   font-size: 40px;
   padding: 4px;
@@ -47,11 +48,11 @@ const Addbtn = styled.button`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background-color: #a3cca3;
-  color:white;
+  background-color: ${props => props.isdark ? "darkgray" : "#a3cca3"};
+  color: white;
   border: 1px solid black;
   margin-left: 24px;
-  margin-right:24px;
+  margin-right: 24px;
   font-size: 40px;
 `;
 class Countdown extends Component {
@@ -103,9 +104,7 @@ class Countdown extends Component {
     });
   };
   minusTimer = () => {
-    
-    if (this.state.timerTime >= 60000)
-    {
+    if (this.state.timerTime >= 60000) {
       this.setState({
         timerTime: this.state.timerTime - 60000,
       });
@@ -117,8 +116,7 @@ class Countdown extends Component {
     }
   };
   tenminusTimer = () => {
-    if (this.state.timerTime >= 600000)
-    {
+    if (this.state.timerTime >= 600000) {
       this.setState({
         timerTime: this.state.timerTime - 600000,
       });
@@ -130,30 +128,31 @@ class Countdown extends Component {
     }
   };
   render() {
+    const { isdark } = this.props;
     const { timerTime, timerStart, timerOn } = this.state;
     let seconds = ("0" + (Math.floor((timerTime / 1000) % 60) % 60)).slice(-2);
     let minutes = ("0" + Math.floor((timerTime / 60000) % 60)).slice(-2);
     let hours = ("0" + Math.floor((timerTime / 3600000) % 60)).slice(-2);
 
     return (
-      <Countdiv>
+      <Countdiv isdark={isdark}>
         <Titlediv>
           <HourglassTopIcon fontSize="large" />
           Timer
         </Titlediv>
         <Titlediv>
-        <Addbtn onClick={this.tenminusTimer}>
+          <Addbtn isdark={isdark} onClick={this.tenminusTimer}>
             <RemoveIcon fontSize="large" />
             <RemoveIcon fontSize="large" />
           </Addbtn>
-          <Addbtn onClick={this.minusTimer}>
+          <Addbtn isdark = {isdark} onClick={this.minusTimer}>
             <RemoveIcon fontSize="large" />
           </Addbtn>
           {hours} : {minutes} : {seconds}{" "}
-          <Addbtn onClick={this.plusTimer}>
+          <Addbtn isdark = {isdark} onClick={this.plusTimer}>
             <AddIcon fontSize="large" />
           </Addbtn>
-          <Addbtn onClick={this.tenplusTimer}>
+          <Addbtn isdark = {isdark} onClick={this.tenplusTimer}>
             <AddIcon fontSize="large" />
             <AddIcon fontSize="large" />
           </Addbtn>
@@ -161,23 +160,22 @@ class Countdown extends Component {
 
         {timerOn === false &&
           (timerStart === 0 || timerTime === timerStart) && (
-            <Countbtn onClick={this.startTimer}>Start</Countbtn>
+            <Countbtn isdark = {isdark} onClick={this.startTimer}>Start</Countbtn>
           )}
         {timerOn === true && timerTime >= 1000 && (
-          <Countbtn onClick={this.stopTimer}>Stop</Countbtn>
+          <Countbtn isdark = {isdark} onClick={this.stopTimer}>Stop</Countbtn>
         )}
         {timerOn === false &&
           timerStart !== 0 &&
           timerStart !== timerTime &&
           timerTime !== 0 && (
-            <Countbtn onClick={this.startTimer}>Resume</Countbtn>
+            <Countbtn isdark = {isdark} onClick={this.startTimer}>Resume</Countbtn>
           )}
 
         {(timerOn === false || timerTime < 1000) &&
           timerStart !== timerTime &&
           timerStart > 0 && (
-
-            <Countbtn onClick={this.resetTimer}>Reset</Countbtn>
+            <Countbtn isdark = {isdark} onClick={this.resetTimer}>Reset</Countbtn>
           )}
       </Countdiv>
     );

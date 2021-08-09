@@ -5,7 +5,7 @@ import { styled } from "@material-ui/core/styles";
 import Input from "@material-ui/core/Input";
 import axios from "axios";
 import moment from "moment";
-import { Context } from "../../context";
+import { useUserContext } from "../../context";
 const Changeselect = styled1.select`
   width: 15%;
   border: 0px;
@@ -38,7 +38,7 @@ const Changestart = styled1.div`
   width: auto;
   height: 10%;
   color: white;
-  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
+  background-color: ${props => props.isdark === true ? "gray" : "#a3cca3"};
   margin: 12px 0px;
   padding: 4px;
   padding-right: 3.5%;
@@ -51,7 +51,7 @@ const Changeend = styled1.div`
   align-items: center;
   height: 10%;
   color: white;
-  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
+  background-color: ${props => props.isdark === true ? "gray" : "#a3cca3"};
   border-radius: 4px;
   margin: 12px 0px;
   padding: 4px;
@@ -77,7 +77,7 @@ const Changetitle = styled1.div`
   color: white;
   padding:4px;
   padding-right: 12px;
-  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
+  background-color: ${props => props.isdark === true ? "gray" : "#a3cca3"};
 `;
 const Changetitletext = styled1.div`
   width: auto;
@@ -93,7 +93,7 @@ const Changebtn = styled1.button`
   border:0px;
   color: white;
   margin-right: 0.5%;
-  background-color: ${props => props.isdark ? "darkgray" : "#69a569"};
+  background-color: ${props => props.isdark === true ? "darkgray" : "#69a569"};
   padding: 4px;
 `;
 
@@ -105,7 +105,7 @@ const ChangeContent = styled1.div`
   height: 60%;
   color: white;
   padding:4px;
-  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
+  background-color: ${props => props.isdark === true ? "gray" : "#a3cca3"};
   margin-top:12px;
 `;
 const ChangeContentheader = styled1.div`
@@ -118,7 +118,7 @@ const ChangeContentheader = styled1.div`
   margin-right: 2%;
 `;
 const Changecontentinput1 = styled1.textarea`
-    background-color: ${props => props.isdark ? "#c9c9c9" : "white"};
+    background-color: ${props => props.isdark === true ? "#c9c9c9" : "white"};
     border-radius: 4px;
     height: 80%;
     width: 92%;
@@ -133,7 +133,7 @@ const Changecontentinput1 = styled1.textarea`
     outline: none;
 `;
 const Changetitleinput = styled1.textarea`
-    background-color : ${props => props.isdark ? "#c9c9c9" : "white"};
+    background-color : ${props => props.isdark === true ? "#c9c9c9" : "white"};
     height: 48.8%;
     width: 30%;
     padding-top: 1.3%;
@@ -265,12 +265,10 @@ const Changecalendarlayout = (props) => {
 
     rendering();
   }, []);
-  const {
-    state: { isDark },
-  } = useContext(Context);
+  const { isdarked } = useUserContext();
   return (
     <Changecalcon>
-      <Changestart isdark = {isDark}>
+      <Changestart isdark = {isdarked}>
         <Changestarttext>변경할 시작 시간</Changestarttext>
         <Changeselect
           labelId="demo-simple-select-label"
@@ -285,7 +283,7 @@ const Changecalendarlayout = (props) => {
           ))}
         </Changeselect>
       </Changestart>
-      <Changeend isdark = {isDark}>
+      <Changeend isdark = {isdarked}>
         <Changeendtext>변경할 종료 시간</Changeendtext>
         <Changeselect
           labelId="demo-simple-select-label"
@@ -300,21 +298,21 @@ const Changecalendarlayout = (props) => {
           ))}
         </Changeselect>
       </Changeend>
-      <Changetitle isdark = {isDark}>
+      <Changetitle isdark = {isdarked}>
         <Changetitletext>일정 제목</Changetitletext>
         <Changetitleinput
-          isdark = {isDark}
+          isdark = {isdarked}
           value={title}
           onChange={handleTitle}
         ></Changetitleinput>
       </Changetitle>
-      <ChangeContent isdark = {isDark}>
+      <ChangeContent isdark = {isdarked}>
         <ChangeContentheader>
           <Changetitletext>일정 내용</Changetitletext>
-          <Changebtn isdark = {isDark} onClick={() => Change()}>변경</Changebtn>
+          <Changebtn isdark = {isdarked} onClick={() => Change()}>변경</Changebtn>
         </ChangeContentheader>
         <Changecontentinput1
-          isdark = {isDark}
+          isdark = {isdarked}
           multiline
           rows={4}
           value={context}

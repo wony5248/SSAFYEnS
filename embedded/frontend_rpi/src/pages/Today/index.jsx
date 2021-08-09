@@ -3,7 +3,7 @@ import Layout from "../../layout";
 import axios from "axios";
 import styled from "styled-components";
 import moment from "moment";
-import { Context } from "../../context";
+import { useUserContext } from "../../context";
 const Todaycontainer = styled.div`
   overflow: auto;
   width: auto;
@@ -24,7 +24,7 @@ const Todaytitle = styled.div`
   width: auto;
   color: white;
   height: 20%;
-  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
+  background-color: ${props => props.isdark === true ? "gray" : "#a3cca3"};
   margin-bottom: 14px;
   padding: 0px;
 `;
@@ -76,7 +76,7 @@ const Todaychangebtn = styled.button`
   border: 0px;
   display: flex;
   align-items: center;
-  background-color: ${props => props.isdark ? "darkgray" : "#69a569"};
+  background-color: ${props => props.isdark === true ? "darkgray" : "#69a569"};
   color: white;
   justify-content: center;
   padding: 4px;
@@ -84,6 +84,7 @@ const Todaychangebtn = styled.button`
 
 const Todaylayout = () => {
   const [itemList, setItemList] = useState([]);
+  const { isdarked } = useUserContext();
   useEffect(() => {
     async function loadCalendar() {
       console.log(moment().format("YYYYMMDD"));
@@ -101,17 +102,18 @@ const Todaylayout = () => {
     loadCalendar();
     setInterval(() => {
       loadCalendar();
-    }, 60000);
+    }, 600000);
+    console.log(isdarked)
+    console.log(window.localStorage.getItem("isdark"))
+    console.log(window.localStorage.getItem("istoggle"))
   }, []);
-  const {
-    state: { isDark },
-  } = useContext(Context);
+  
   return (
     <Todaycontainer>
       {itemList.length !== 0 ? (
         <div style={{ height: "100%" }}>
           {itemList.map((item) => (
-            <Todaytitle isdark = {isDark}>
+            <Todaytitle isdark = {isdarked}>
               <Todaytitlenamecon>
                 <Todaytitlename>일정 제목</Todaytitlename>
                 <Todaytitletime>
@@ -132,7 +134,7 @@ const Todaylayout = () => {
                   <Todaychangecon>
                     <Todaytitlename>{item.context}</Todaytitlename>
                     <Todaychangebtn
-                      isdark = {isDark}
+                      isdark = {isdarked}
                       onClick={() =>
                         window.location.replace(`/Rating/${item.id}`)
                       }

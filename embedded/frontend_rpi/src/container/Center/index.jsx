@@ -1,16 +1,12 @@
 import React, {useContext} from "react";
-import { Context } from "../../context";
+import { useUserContext } from "../../context";
 import Centerlayout from "./styles";
 
 function Center(props) {
 	const {pages} = props
-	const {
-		state:{
-		  isDark
-		}
-	  } = useContext(Context)
+	const { isdarked } = useUserContext();
 	return (
-		<Centerlayout isdark = {isDark}>
+		<Centerlayout isdark = {isdarked}>
 		{pages}
 		</Centerlayout>
 	);
