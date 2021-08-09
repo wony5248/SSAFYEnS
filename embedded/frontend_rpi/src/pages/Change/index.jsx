@@ -7,12 +7,8 @@ import moment from "moment";
 const Changecontainer = styled.div`
   overflow: auto;
   width: auto;
-  height: 98.1%;
+  height: 100%;
   margin: 0px;
-  padding-top: 14px;
-  padding-right: 12px;
-  padding-left: 12px;
-  padding-bot: 14px;
   font-size: 20px;
 `;
 const Changetitle = styled.div`
@@ -23,7 +19,7 @@ const Changetitle = styled.div`
   color: white;
   width: auto;
   height: 20%;
-  background-color: ${props => props.isdark === true ? "gray" : "#a3cca3"};
+  background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
   margin-bottom: 14px;
   padding: 0px;
 `;
@@ -78,8 +74,12 @@ const Changechangebtn = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${props => props.isdark === true ? "#424242" : "#69a569"};
+  background-color: ${(props) =>
+    props.isdark === true ? "#424242" : "#69a569"};
   padding: 4px;
+`;
+const Nodiv = styled.div`
+  color : ${props => props.isdark ? "white" : "#121212"}; 
 `;
 
 const Changelayout = () => {
@@ -101,7 +101,6 @@ const Changelayout = () => {
     }
   };
   useEffect(() => {
-
     async function loadCalendar() {
       console.log(moment().format("YYYYMMDD"));
       await axios
@@ -121,16 +120,16 @@ const Changelayout = () => {
     setInterval(() => {
       loadCalendar();
     }, 60000);
-    console.log(isdarked)
+    console.log(isdarked);
   }, []);
   const { isdarked } = useUserContext();
   return (
-    <Changecontainer isdark = {isdarked}>
+    <Changecontainer isdark={isdarked}>
       {itemList.length !== 0 ? (
         <div style={{ height: "100%" }}>
           {" "}
           {itemList.map((item) => (
-            <Changetitle isdark = {isdarked}>
+            <Changetitle isdark={isdarked}>
               <Changetitlenamecon>
                 <Changetitlename>일정 제목</Changetitlename>
                 <Changetitletime>
@@ -150,10 +149,14 @@ const Changelayout = () => {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Changechangebtn isdark = {isdarked} onClick={() => Delete(item.id)}>
+                  <Changechangebtn
+                    isdark={isdarked}
+                    onClick={() => Delete(item.id)}
+                  >
                     삭제
                   </Changechangebtn>
-                  <Changechangebtn isdark = {isdarked}
+                  <Changechangebtn
+                    isdark={isdarked}
                     onClick={() =>
                       window.location.replace(`/Change/${item.id}`)
                     }
@@ -166,18 +169,18 @@ const Changelayout = () => {
           ))}
         </div>
       ) : (
-        <div
+        <Nodiv
+          isdark={isdarked}
           style={{
             height: "100%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             fontSize: "40px",
-            color: "#121212",
           }}
         >
           등록된 오늘 일정이 없습니다.
-        </div>
+        </Nodiv>
       )}
     </Changecontainer>
   );

@@ -2,7 +2,7 @@ import React, {useContext} from "react";
 import Speakerbtn from "./styles";
 import SwitchStyle from "./switch";
 import styled from "styled-components";
-import MicIcon from '@material-ui/icons/Mic';
+import Brightness2Icon from '@material-ui/icons/Brightness2';
 import { useUserContext } from "../../context";
 import { IS_DARK } from "../../context/actionTypes";
 const Speakerdiv = styled.div`
@@ -21,7 +21,7 @@ const Button = (props) => {
   
   return (
     <Speakerbtn isdark = {isdarked}>
-      <Speakerdiv ><MicIcon />{btnName}</Speakerdiv>
+      <Speakerdiv ><Brightness2Icon />{btnName}</Speakerdiv>
       <SwitchStyle></SwitchStyle>
     </Speakerbtn>
   );

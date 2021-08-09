@@ -97,6 +97,9 @@ const Btndiv = styled.div`
   justify-content: flex-end;
   align-items: center;
 `;
+const Nodiv = styled.div`
+  color : ${props => props.isdark ? "white" : "#121212"};
+`;
 const Progresslayout = () => {
   const [starttime, setStarttime] = useState("");
   const [notitime, setNotitime] = useState("");
@@ -181,7 +184,7 @@ const Progresslayout = () => {
   }, []);
   const { isdarked } = useUserContext();
   return (
-    <Progresscontainer>
+    <Progresscontainer isdark = {isdarked}>
       {istrue ? (
         <Fulldiv>
           <Progresstitle isdark = {isdarked}>
@@ -228,18 +231,18 @@ const Progresslayout = () => {
           </Progresscontentcon>
         </Fulldiv>
       ) : (
-        <div
+        <Nodiv
+          isdark = {isdarked}
           style={{
             height: "100%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             fontSize: "40px",
-            color: "#121212",
           }}
         >
           현재 일정이 없습니다.
-        </div>
+        </Nodiv>
       )}
     </Progresscontainer>
   );

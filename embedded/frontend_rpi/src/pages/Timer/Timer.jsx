@@ -137,7 +137,7 @@ class Countdown extends Component {
     return (
       <Countdiv isdark={isdark}>
         <Titlediv>
-          <HourglassTopIcon fontSize="large" />
+        <svg width="40px" height="40px"><HourglassTopIcon fontSize = "small"/></svg>
           Timer
         </Titlediv>
         <Titlediv>
