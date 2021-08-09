@@ -11,7 +11,7 @@ const Stopwatchdiv = styled.div`
   border-radius: 4px;
   width: auto;
   height: 45.4%;
-  color: ${props => props.isdark ? "white" : "#121212s"};
+  color: ${props => props.isdark ? "white" : "#121212"};
   margin: 12px 0px;
   font-size: 40px;
   padding: 4px;

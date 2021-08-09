@@ -12,7 +12,7 @@ const Countdiv = styled.div`
   align-content: center;
   border-radius: 4px;
   width: auto;
-  color: ${props => props.isdark ? "white" : "#121212s"};
+  color: ${props => props.isdark ? "white" : "#121212"};
   height: 46.9%;
   margin: 12px 0px;
   font-size: 40px;
