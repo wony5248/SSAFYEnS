@@ -13,7 +13,6 @@ const Countdiv = styled.div`
   border-radius: 4px;
   width: auto;
   height: 46.9%;
-  color: #121212;
   margin: 12px 0px;
   font-size: 40px;
   padding: 4px;

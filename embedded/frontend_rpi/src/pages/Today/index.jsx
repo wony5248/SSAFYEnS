@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import Layout from "../../layout";
 import axios from "axios";
 import styled from "styled-components";
 import moment from "moment";
-
+import { Context } from "../../context";
 const Todaycontainer = styled.div`
   overflow: auto;
   width: auto;
   height: 97.1%;
   color: #a3cca3;
-  background-color: white;
-  border: 1px solid #a3cca3;
   margin: 0px;
   padding-top: 1%;
   padding-right: 12px;
@@ -24,9 +22,9 @@ const Todaytitle = styled.div`
   border-radius: 4px;
   justify-content: space-around;
   width: auto;
+  color: white;
   height: 20%;
-  color: #a3cca3;
-  background-color: #a3cca3;
+  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
   margin-bottom: 14px;
   padding: 0px;
 `;
@@ -36,8 +34,6 @@ const Todaytitlenamecon = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white;
-  background-color: #a3cca3;
   margin: 0px 16px;
   padding-top: 4px;
 `;
@@ -46,8 +42,6 @@ const Todaygoal = styled.div`
   height: 20%;
   display: flex;
   align-items: center;
-  color: white;
-  background-color: #a3cca3;
   margin: 0px 16px;
   padding-top: 4px;
 `;
@@ -55,18 +49,14 @@ const Todaygoal = styled.div`
 const Todaytitlename = styled.div`
   width: auto;
   height: 100%;
-  color: white;
   display: flex;
   align-items: center;
-  background-color: #a3cca3;
   padding-top: 4px;
 `;
 
 const Todaytitletime = styled.div`
   width: auto;
   height: 100%;
-  color: white;
-  background-color: #a3cca3;
   padding-top: 4px;
 `;
 
@@ -76,8 +66,6 @@ const Todaychangecon = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white;
-  background-color: #a3cca3;
   margin: 0px 16px;
 `;
 
@@ -86,11 +74,11 @@ const Todaychangebtn = styled.button`
   height: 60%;
   border-radius: 8px;
   border: 0px;
-  color: white;
   display: flex;
   align-items: center;
+  background-color: ${props => props.isdark ? "darkgray" : "#69a569"};
+  color: white;
   justify-content: center;
-  background-color: #69a569;
   padding: 4px;
 `;
 
@@ -106,7 +94,6 @@ const Todaylayout = () => {
         .then(({ data }) => {
           console.log(data);
           setItemList(data);
-          // console.log(data.data);
           console.log(itemList);
         })
         .catch((e) => {});
@@ -116,13 +103,15 @@ const Todaylayout = () => {
       loadCalendar();
     }, 60000);
   }, []);
-
+  const {
+    state: { isDark },
+  } = useContext(Context);
   return (
     <Todaycontainer>
       {itemList.length !== 0 ? (
         <div style={{ height: "100%" }}>
           {itemList.map((item) => (
-            <Todaytitle>
+            <Todaytitle isdark = {isDark}>
               <Todaytitlenamecon>
                 <Todaytitlename>일정 제목</Todaytitlename>
                 <Todaytitletime>
@@ -143,6 +132,7 @@ const Todaylayout = () => {
                   <Todaychangecon>
                     <Todaytitlename>{item.context}</Todaytitlename>
                     <Todaychangebtn
+                      isdark = {isDark}
                       onClick={() =>
                         window.location.replace(`/Rating/${item.id}`)
                       }

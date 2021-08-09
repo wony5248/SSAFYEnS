@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Layout from "../../layout";
 import styled1 from "styled-components";
 import Ratingstar from "@material-ui/lab/Rating";
@@ -10,6 +10,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import axios from "axios";
+import { Context } from "../../context";
 const StyledRating = withStyles({
   iconFilled: {
     color: "#f6f924",
@@ -35,7 +36,7 @@ const Starttime = styled1.div`
   width: auto;
   height: 5%;
   color: white;
-  background-color: #a3cca3;
+  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
   margin: 12px 0px;
   padding: 4px;
   padding-left:16px;
@@ -49,7 +50,7 @@ const Endtime = styled1.div`
   width: auto;
   height: 5%;
   color: white;
-  background-color: #a3cca3;
+  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
   margin: 12px 0px;
   padding: 4px;
   padding-left:16px;
@@ -62,7 +63,7 @@ const Ratingbody = styled1.div`
   width: auto;
   height: 80%;
   color: white;
-  background-color: #a3cca3;
+  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
   margin-top: 12px;
   padding: 4px;
   padding-left:16px;
@@ -74,7 +75,7 @@ const Ratingcontent = styled1.div`
   width: auto;
   height: 80%;
   color: black;
-  background-color: white;
+  background-color: ${props => props.isdark ? "#C9C9C9" : "white"};
   font-size: 20px;
   overflow: auto;
   margin-top: 12px;
@@ -108,7 +109,7 @@ const Ratingbtn = styled1.button`
   border-radius: 8px;
   border: 0px;
   color: white;
-  background-color: #69a569;
+  background-color: ${props => props.isdark ? "darkgray" : "#69a569"};
   padding: 4px;
   margin-left:16px;
 `;
@@ -119,7 +120,6 @@ const Ratingstarcon = styled1.div`
   width: auto;
   height: auto;
   color: white;
-  background-color: #a3cca3;
   margin-top: 4%;
   padding: 4px;
 `;
@@ -131,11 +131,9 @@ const Ratingcon = styled1.div`
   display: flex-row;
   flex-wrap: nowrap;
   color: #a3cca3;
-  background-color: white;
   margin: 0px;
   padding-left:12px;
   padding-right:12px;
-  border: 1px solid #a3cca3;
   overflow: auto;
 `;
 
@@ -144,14 +142,12 @@ const Changestarttext = styled1.div`
   height: auto;
   color: white;
   align-items: center;
-  background-color: #a3cca3;
 `;
 
 const Changeendtext = styled1.div`
   width: auto;
   height: auto;
   color: white;
-  background-color: #a3cca3;
 `;
 
 const Ratinglayout = (props) => {
@@ -269,19 +265,21 @@ const Ratinglayout = (props) => {
   };
   // console.log(time[0] + time[1]);
   // console.log(moment().format("H"));
-
+  const {
+    state: { isDark },
+  } = useContext(Context);
   return (
     <Ratingcon>
-      <Starttime>
+      <Starttime isdark = {isDark}>
         <Changestarttext>일정 시작 시간</Changestarttext>
         <Changestarttext>{moment(starttime).format("HH : mm")}</Changestarttext>
       </Starttime>
-      <Endtime>
+      <Endtime isdark = {isDark}>
         <Changeendtext>일정 종료 시간</Changeendtext>
         <Changeendtext>{moment().format("H : mm")}</Changeendtext>
       </Endtime>
-      <Ratingbody>
-        <Ratingcontent>
+      <Ratingbody isdark = {isDark}>
+        <Ratingcontent  isdark = {isDark}>
           <Ratingquestiontitle>일정 평가</Ratingquestiontitle>
           <Ratingquestion>
             1. 유해물질 탐지 시간이 일정 진행시간의 몇 %인가요?
@@ -440,8 +438,8 @@ const Ratinglayout = (props) => {
             readOnly
           />
           <Ratingbtncon>
-            <Ratingbtn onClick={() => Cancel()}>취소</Ratingbtn>
-            <Ratingbtn onClick={() => Confirm()}>완료</Ratingbtn>
+            <Ratingbtn isdark = {isDark} onClick={() => Cancel()}>취소</Ratingbtn>
+            <Ratingbtn isdark = {isDark} onClick={() => Confirm()}>완료</Ratingbtn>
           </Ratingbtncon>
         </Ratingstarcon>
       </Ratingbody>

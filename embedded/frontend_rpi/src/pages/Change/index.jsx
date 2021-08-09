@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Layout from "../../layout";
+import { Context } from "../../context";
 import styled from "styled-components";
 import axios from "axios";
 import moment from "moment";
 const Changecontainer = styled.div`
   overflow: auto;
   width: auto;
-  height: 97.9%;
-  color: #a3cca3;
-  background-color: white;
-  border: 1px solid #a3cca3;
+  height: 98.1%;
   margin: 0px;
   padding-top: 14px;
   padding-right: 12px;
@@ -22,10 +20,10 @@ const Changetitle = styled.div`
   flex-wrap: no-wrap;
   border-radius: 4px;
   justify-content: space-around;
+  color: white;
   width: auto;
   height: 20%;
-  color: #a3cca3;
-  background-color: #a3cca3;
+  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
   margin-bottom: 14px;
   padding: 0px;
 `;
@@ -35,8 +33,6 @@ const Changetitlenamecon = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white;
-  background-color: #a3cca3;
   margin: 0px 16px;
   padding-top: 4px;
 `;
@@ -45,8 +41,6 @@ const Changegoal = styled.div`
   height: 20%;
   display: flex;
   align-items: center;
-  color: white;
-  background-color: #a3cca3;
   margin: 0px 16px;
   padding-top: 4px;
 `;
@@ -55,18 +49,14 @@ const Changetitlename = styled.div`
   width: 500px;
   height: 100%;
   overflow: auto;
-  color: white;
   display: flex;
   align-items: center;
-  background-color: #a3cca3;
   padding-top: 4px;
 `;
 
 const Changetitletime = styled.div`
   width: auto;
   height: 100%;
-  color: white;
-  background-color: #a3cca3;
   padding-top: 4px;
 `;
 
@@ -76,8 +66,6 @@ const Changechangecon = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white;
-  background-color: #a3cca3;
   margin: 0px 16px;
 `;
 
@@ -90,7 +78,7 @@ const Changechangebtn = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #69a569;
+  background-color: ${props => props.isdark ? "darkgray" : "#69a569"};
   padding: 4px;
 `;
 
@@ -135,13 +123,16 @@ const Changelayout = () => {
       loadCalendar();
     }, 60000);
   }, []);
+  const {
+    state: { isDark },
+  } = useContext(Context);
   return (
-    <Changecontainer>
+    <Changecontainer isdark = {isDark}>
       {itemList.length !== 0 ? (
         <div style={{ height: "100%" }}>
           {" "}
           {itemList.map((item) => (
-            <Changetitle>
+            <Changetitle isdark = {isDark}>
               <Changetitlenamecon>
                 <Changetitlename>일정 제목</Changetitlename>
                 <Changetitletime>
@@ -161,10 +152,10 @@ const Changelayout = () => {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Changechangebtn onClick={() => Delete(item.id)}>
+                  <Changechangebtn isdark = {isDark} onClick={() => Delete(item.id)}>
                     삭제
                   </Changechangebtn>
-                  <Changechangebtn
+                  <Changechangebtn isdark = {isDark}
                     onClick={() =>
                       window.location.replace(`/Change/${item.id}`)
                     }

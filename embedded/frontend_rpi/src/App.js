@@ -7,6 +7,7 @@ import Today from './pages/Today/';
 import Change from './pages/Change/';
 import Changecalendar from './pages/Changecalendar'
 import Create from './pages/Create'
+import {Provider} from "./context"
 // const theme = createTheme({
 //   typography: {
 //     fontFamily: ['Noto Sans KR'].join(','),
@@ -32,7 +33,8 @@ import Create from './pages/Create'
 
 function App() {
   return (
-        <BrowserRouter>
+        <Provider>
+          <BrowserRouter>
           <Switch>
             <Route exact path="/" component={Progress} />
             <Route exact path="/Progress" component={Progress} />
@@ -45,6 +47,7 @@ function App() {
             <Redirect to="/" />
           </Switch>
         </BrowserRouter>
+        </Provider>
   );
 }
 

@@ -10,7 +10,6 @@ const Stopwatchdiv = styled.div`
   border-radius: 4px;
   width: auto;
   height: 45.4%;
-  color: #121212;
   margin: 12px 0px;
   font-size: 40px;
   padding: 4px;
@@ -18,7 +17,6 @@ const Stopwatchdiv = styled.div`
   padding-right:16px;
 `;
 const Stopwatchbtn = styled.button`
-
 border-radius: 4px;
 width: 20%;
 height: 15%;
@@ -68,7 +66,7 @@ class Stopwatch extends Component {
       timerTime: 0,
     });
   };
-
+  
   render() {
     const { timerTime } = this.state;
 

@@ -18,8 +18,6 @@ const Changecalcon = styled1.div`
   height: 310px;
   display: flex-row;
   flex-wrap: nowrap;
-  color: #a3cca3;
-  background-color: white;
   margin: 0px;
   padding-left:12px;
   padding-right:12px;

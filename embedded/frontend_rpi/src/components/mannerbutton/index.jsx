@@ -14,10 +14,10 @@ const Mannerdiv = styled.div`
 `;
 
 const Button = (props) => {
-  const { btnName } = props;
+  const { btnName, isdark } = props;
 
   return (
-    <Mannerbtn>
+    <Mannerbtn isdark = {isdark}>
       <Mannerdiv><MicOffIcon />{btnName}</Mannerdiv>
         <SwitchStyle></SwitchStyle>
     </Mannerbtn>

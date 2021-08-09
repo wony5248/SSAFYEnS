@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Layout from "../../layout";
 import styled1 from "styled-components";
 import { styled } from "@material-ui/core/styles";
 import Input from "@material-ui/core/Input";
 import axios from "axios";
 import moment from "moment";
-
+import { Context } from "../../context";
 const Changeselect = styled1.select`
   width: 15%;
   border: 0px;
@@ -23,10 +23,7 @@ const Changecalcon = styled1.div`
   width: auto;
   height: 99.8%;
   display: flex-row;
-  border : 1px solid #a3cca3;
   flex-wrap: nowrap;
-  color: #a3cca3;
-  background-color: white;
   margin: 0px;
   font-size: 20px;
   padding-left:12px;
@@ -41,7 +38,7 @@ const Changestart = styled1.div`
   width: auto;
   height: 10%;
   color: white;
-  background-color: #a3cca3;
+  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
   margin: 12px 0px;
   padding: 4px;
   padding-right: 3.5%;
@@ -54,7 +51,7 @@ const Changeend = styled1.div`
   align-items: center;
   height: 10%;
   color: white;
-  background-color: #a3cca3;
+  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
   border-radius: 4px;
   margin: 12px 0px;
   padding: 4px;
@@ -64,18 +61,13 @@ const Changeend = styled1.div`
 const Changestarttext = styled1.div`
   width: auto;
   text-align: center;
-  color: white;
-  background-color: #a3cca3;
 `;
 const Changeendtext = styled1.div`
   width: auto;
   height: auto;
-  color: white;
-  background-color: #a3cca3;
 `;
 
 const Changetitle = styled1.div`
-  
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -85,16 +77,14 @@ const Changetitle = styled1.div`
   color: white;
   padding:4px;
   padding-right: 12px;
-  background-color: #a3cca3;
+  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
 `;
 const Changetitletext = styled1.div`
   width: auto;
   height: auto;
-  color: white;
   margin-left: 3.5%;
   display: flex;
   align-items: center;
-  background-color: #a3cca3;
 `;
 const Changebtn = styled1.button`
   width: 78px;
@@ -103,7 +93,7 @@ const Changebtn = styled1.button`
   border:0px;
   color: white;
   margin-right: 0.5%;
-  background-color: #69a569;
+  background-color: ${props => props.isdark ? "darkgray" : "#69a569"};
   padding: 4px;
 `;
 
@@ -115,7 +105,7 @@ const ChangeContent = styled1.div`
   height: 60%;
   color: white;
   padding:4px;
-  background-color: #a3cca3;
+  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
   margin-top:12px;
 `;
 const ChangeContentheader = styled1.div`
@@ -124,13 +114,11 @@ const ChangeContentheader = styled1.div`
   justify-content: space-between;
   width: auto;
   height: 8%;
-  color: white;
   padding:4px;
   margin-right: 2%;
-  background-color: #a3cca3;
 `;
 const Changecontentinput1 = styled1.textarea`
-    background-color: white;
+    background-color: ${props => props.isdark ? "#c9c9c9" : "white"};
     border-radius: 4px;
     height: 80%;
     width: 92%;
@@ -144,15 +132,18 @@ const Changecontentinput1 = styled1.textarea`
     overflow: auto;
     outline: none;
 `;
-const Changetitleinput = styled(Input)({
-  backgroundColor: "white",
-  height: "50%",
-  width: "30%",
-  fontSize: "12px",
-  paddingLeft: "8px",
-  color: "black",
-  marginRight: "2.5%",
-});
+const Changetitleinput = styled1.textarea`
+    background-color : ${props => props.isdark ? "#c9c9c9" : "white"};
+    height: 48.8%;
+    width: 30%;
+    padding-top: 1.3%;
+    font-size: 20px;
+    padding-left: 8px;
+    vertical-align: middle;
+    color: black;
+    margin-right: 2.5%;
+`
+
 
 const Changecalendarlayout = (props) => {
   const [starttime, setStarttime] = useState("");
@@ -274,9 +265,12 @@ const Changecalendarlayout = (props) => {
 
     rendering();
   }, []);
+  const {
+    state: { isDark },
+  } = useContext(Context);
   return (
     <Changecalcon>
-      <Changestart>
+      <Changestart isdark = {isDark}>
         <Changestarttext>변경할 시작 시간</Changestarttext>
         <Changeselect
           labelId="demo-simple-select-label"
@@ -291,7 +285,7 @@ const Changecalendarlayout = (props) => {
           ))}
         </Changeselect>
       </Changestart>
-      <Changeend>
+      <Changeend isdark = {isDark}>
         <Changeendtext>변경할 종료 시간</Changeendtext>
         <Changeselect
           labelId="demo-simple-select-label"
@@ -306,19 +300,21 @@ const Changecalendarlayout = (props) => {
           ))}
         </Changeselect>
       </Changeend>
-      <Changetitle>
+      <Changetitle isdark = {isDark}>
         <Changetitletext>일정 제목</Changetitletext>
         <Changetitleinput
+          isdark = {isDark}
           value={title}
           onChange={handleTitle}
         ></Changetitleinput>
       </Changetitle>
-      <ChangeContent>
+      <ChangeContent isdark = {isDark}>
         <ChangeContentheader>
           <Changetitletext>일정 내용</Changetitletext>
-          <Changebtn onClick={() => Change()}>변경</Changebtn>
+          <Changebtn isdark = {isDark} onClick={() => Change()}>변경</Changebtn>
         </ChangeContentheader>
         <Changecontentinput1
+          isdark = {isDark}
           multiline
           rows={4}
           value={context}

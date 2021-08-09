@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import Sensorbtn from "./styles";
 import axios from "axios";
 import styled  from "styled-components";
@@ -6,7 +6,6 @@ import {Thermometer} from "react-feather"
 import OpacityIcon from '@material-ui/icons/Opacity';
 import WbIncandescentIcon from '@material-ui/icons/WbIncandescent';
 import SettingsVoiceIcon from '@material-ui/icons/SettingsVoice';
-
 const Fulldiv = styled.div`
   height: 100%;
   width: 100%;

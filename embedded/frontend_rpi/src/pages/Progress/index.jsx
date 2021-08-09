@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Layout from "../../layout";
 import Progresscontainer from "./styles";
 import styled from "styled-components";
 import axios from "axios";
 import moment from "moment";
-
+import { Context } from "../../context";
 const Progresstitle = styled.div`
   display: flex;
   flex-direction: column;
@@ -13,8 +13,8 @@ const Progresstitle = styled.div`
   justify-content: flex-start;
   width: auto;
   height: 30%;
-  color: #a3cca3;
-  background-color: #a3cca3;
+  color: white;
+  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
   padding: 0px;
 `;
 const Progresstitlenamecon = styled.div`
@@ -23,15 +23,12 @@ const Progresstitlenamecon = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white;
-  background-color: #a3cca3;
   margin: 0px 16px;
   padding-top: 4px;
 `;
 const Progressdeadline = styled.div`
   width: auto;
   height: 30%;
-  color: white;
   display: flex;
   align-items: center;
   margin: 0px 16px;
@@ -41,14 +38,12 @@ const Progressdeadline = styled.div`
 const Progresstitlename = styled.div`
   width: auto;
   height: 30%;
-  color: white;
   padding-top: 4px;
 `;
 
 const Progresstitletime = styled.div`
   width: auto;
   height: auto;
-  color: white;
   padding-top: 4px;
 `;
 
@@ -57,8 +52,8 @@ const Progresscontentcon = styled.div`
   flex-wrap: nowrap;
   width: auto;
   height: 63%;
-  color: #a3cca3;
-  background-color: #a3cca3;
+  color: white;
+  background-color: ${props => props.isdark ? "gray" : "white"};
   margin-top: 14px;
   padding: 14px 28px;
 `;
@@ -66,11 +61,9 @@ const Progresscontentcon = styled.div`
 const Progresscontenttitle = styled.div`
   width: auto;
   height: 10%;
-  color: white;
-  display: flex;
+  color: white;  display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #a3cca3;
   padding: 0px;
   margin-bottom: 14px;
 `;
@@ -80,7 +73,7 @@ const Progresscontent = styled.div`
   width: auto;
   height: 66%;
   color: #121212;
-  background-color: white;
+  background-color: ${props => props.isdark ? "#c9c9c9" : "white"};
   padding: 16px;
 `;
 const Fulldiv = styled.div`
@@ -91,7 +84,7 @@ const Completebtn = styled.button`
   border: none;
   color: white;
   border-radius: 8px;
-  background-color: #69a569;
+  background-color: ${props => props.isdark ? "darkgray" : "#69a569"};
   padding: 4px;
   height: 70%;
   width: 10%;
@@ -120,90 +113,80 @@ const Progresslayout = () => {
           `http://127.0.0.1:4500/schedule/getdaily/${moment().format("YYYYMMDD")}`
         )
         .then(({ data }) => {
-          // console.log(data.data);
-          // console.log(moment(data.data[0].started_at).format("HH:mm"));
-          // console.log(moment(data.data[0].finished_at).format("HH:mm"));
-          // console.log(data.data[0].title);
-          // console.log(data.data[0].context);
-          // console.log(moment(data.data[0].deadline_at).format("HH:mm"));
-          console.log(data.data);
-          for (let i = 0; i < data.data.length; i++) {
-            // console.log(
-            //   Number(data.data[i].started_at[0] + data.data[i].started_at[1])
-            // );
+          console.log(data);
+          for (let i = 0; i < data.length; i++) {
             const startTime = Number(
-              moment(data.data[i].started_at).format("HH")
+              moment(data[i].started_at).format("HH")
             );
             const startMin = Number(
-              moment(data.data[i].started_at).format("mm")
+              moment(data[i].started_at).format("mm")
             );
             const endTime = Number(
-              moment(data.data[i].finished_at).format("HH")
+              moment(data[i].finished_at).format("HH")
             );
             const endMin = Number(
-              moment(data.data[i].finished_at).format("mm")
+              moment(data[i].finished_at).format("mm")
             );
             const currentTime = Number(moment().format("HH"));
 
             const currentMin = Number(moment().format("mm"));
 
-            if (startTime < currentTime && currentTime < endTime && data.data[i].is_finished === false) {
-              // console.log(data.data[i].started_at);
-              setStarttime(moment(data.data[i].started_at).format("HH : mm"));
-              setEndtime(moment(data.data[i].finished_at).format("HH : mm"));
+            if (startTime < currentTime && currentTime < endTime && data[i].is_finished === false) {
+              setStarttime(moment(data[i].started_at).format("HH : mm"));
+              setEndtime(moment(data[i].finished_at).format("HH : mm"));
               setGoal(
-                moment(data.data[i].deadline_at).format("YYYY.MM.DD HH : mm")
+                moment(data[i].deadline_at).format("YYYY.MM.DD HH : mm")
               );
-              setTitle(data.data[i].title);
-              setContent(data.data[i].context);
-              setNotitime(moment(data.data[i].notification).format("HH : mm"));
-              setId(data.data[i].id);
+              setTitle(data[i].title);
+              setContent(data[i].context);
+              setNotitime(moment(data[i].notification).format("HH : mm"));
+              setId(data[i].id);
               setIstrue(true);
-            } else if (currentTime === endTime && currentMin <= endMin && data.data[i].is_finished === false) {
-              setStarttime(moment(data.data[i].started_at).format("HH : mm"));
-              setEndtime(moment(data.data[i].finished_at).format("HH : mm"));
+            } else if (currentTime === endTime && currentMin <= endMin && data[i].is_finished === false) {
+              setStarttime(moment(data[i].started_at).format("HH : mm"));
+              setEndtime(moment(data[i].finished_at).format("HH : mm"));
               setGoal(
-                moment(data.data[i].deadline_at).format("YYYY.MM.DD HH : mm")
+                moment(data[i].deadline_at).format("YYYY.MM.DD HH : mm")
               );
-              setTitle(data.data[i].title);
-              setContent(data.data[i].context);
-              setId(data.data[i].id);
-              setNotitime(moment(data.data[i].notification).format("HH : mm"));
+              setTitle(data[i].title);
+              setContent(data[i].context);
+              setId(data[i].id);
+              setNotitime(moment(data[i].notification).format("HH : mm"));
               setIstrue(true);
-            } else if (currentTime === startTime && startMin <= currentMin && data.data[i].is_finished === false) {
-              setStarttime(moment(data.data[i].started_at).format("HH : mm"));
-              setEndtime(moment(data.data[i].finished_at).format("HH : mm"));
+            } else if (currentTime === startTime && startMin <= currentMin && data[i].is_finished === false) {
+              setStarttime(moment(data[i].started_at).format("HH : mm"));
+              setEndtime(moment(data[i].finished_at).format("HH : mm"));
               setGoal(
-                moment(data.data[i].deadline_at).format("YYYY.MM.DD HH : mm")
+                moment(data[i].deadline_at).format("YYYY.MM.DD HH : mm")
               );
-              setTitle(data.data[i].title);
-              setContent(data.data[i].context);
-              setNotitime(moment(data.data[i].notification).format("HH : mm"));
-              setId(data.data[i].id);
+              setTitle(data[i].title);
+              setContent(data[i].context);
+              setNotitime(moment(data[i].notification).format("HH : mm"));
+              setId(data[i].id);
               setIstrue(true);
             }
           }
           console.log(
-            data.data[0].started_at[0] +
-              data.data[0].started_at[1] +
-              data.data[0].started_at[5] +
-              data.data[0].started_at[6]
+            data[0].started_at[0] +
+              data[0].started_at[1] +
+              data[0].started_at[5] +
+              data[0].started_at[6]
           );
         })
         .catch((e) => {
           console.error(e);
         });
-
-      // console.log(Number(moment().format("H")));
-      // console.log(Number(moment().format("mm")));
     }
     loadCalendar();
   }, []);
+  const {
+    state: { isDark },
+  } = useContext(Context);
   return (
     <Progresscontainer>
       {istrue ? (
         <Fulldiv>
-          <Progresstitle>
+          <Progresstitle isdark = {isDark}>
             <Progresstitlenamecon>
               <Progresstitlename>{title}</Progresstitlename>
               <Progresstitletime>
@@ -233,11 +216,12 @@ const Progresslayout = () => {
               <Progressdeadline>{goal}</Progressdeadline>
             </div>
           </Progresstitle>
-          <Progresscontentcon>
+          <Progresscontentcon isdark = {isDark}>
             <Progresscontenttitle>일정 내용</Progresscontenttitle>
-            <Progresscontent>{content}</Progresscontent>
+            <Progresscontent isdark = {isDark}>{content}</Progresscontent>
             <Btndiv>
               <Completebtn
+                isdark = {isDark}
                 onClick={() => window.location.replace(`/Rating/${id}`)}
               >
                 완료

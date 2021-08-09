@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Layout from "../../layout";
 import styled1 from "styled-components";
 import axios from "axios";
 import moment from "moment";
+import { Context } from "../../context";
 
 const Changeselect = styled1.select`
   width: 15%;
@@ -11,6 +12,7 @@ const Changeselect = styled1.select`
   margin-left: 12px;
   height: 50%;
   display: flex;
+  background-color: ${(props) => (props.isdark ? "#c9c9c9" : "")};
   align-items: center;
 `;
 const Changeselect2 = styled1.select`
@@ -20,10 +22,12 @@ const Changeselect2 = styled1.select`
   margin-left: 12px;
   height: 50%;
   display: flex;
+  background-color: ${(props) => (props.isdark ? "#c9c9c9" : "")};
   align-items: center;
 `;
 const Changeoption = styled1.option`
   width: 100%;
+  background-color: ${(props) => (props.isdark ? "#c9c9c9" : "")};
   height: 100%;
 `;
 const Changecalcon = styled1.div`
@@ -32,7 +36,6 @@ const Changecalcon = styled1.div`
   border : 1px solid #a3cca3;
   flex-wrap: nowrap;
   color: #a3cca3;
-  background-color: white;
   margin: 0px;
   font-size: 20px;
   padding-left:12px;
@@ -46,7 +49,7 @@ const Changeend = styled1.div`
   align-items: center;
   height: 12%;
   color: white;
-  background-color: #a3cca3;
+  background-color: ${(props) => (props.isdark ? "gray" : "#a3cca3")};
   border-radius: 4px;
   margin: 12px 0px;
   padding: 4px;
@@ -66,20 +69,19 @@ const Btndiv = styled1.div`
 `;
 const Addbtn = styled1.button`
     background-color: #a3cca3;
+    background-color: ${(props) => (props.isdark ? "darkgray" : "#a3cca3")};
     color: white;
     border: none;
     border-radius: 8px;
     height:100%;
     width: 100px;
     &:hover{
-        background-color: #69a569;
+        background-color: ${(props) => (props.isdark ? "#c9c9c9" : "#69a569")};
     }
 `;
 const Changeendtext = styled1.div`
   width: auto;
   height: auto;
-  color: white;
-  background-color: #a3cca3;
 `;
 
 const Changecalendarlayout = () => {
@@ -125,7 +127,42 @@ const Changecalendarlayout = () => {
     const startmin = Number(`${starttime[2]}${starttime[3]}`);
     const endhour = Number(`${endtime[0]}${endtime[1]}`);
     const endmin = Number(`${endtime[2]}${endtime[3]}`);
-    if (starthour <= endhour && startmin <= endmin) {
+    if (starthour < endhour) {
+      if (window.confirm("생성하시겠 습니까?")) {
+        await axios
+          .post(`http://127.0.0.1:4500/schedule`, {
+            date: `${moment().format("MMDD")}`,
+            started_at: `${moment().format("YYYYMMDD")} ${
+              starttime[0] + starttime[1] + starttime[2] + starttime[3]
+            }`,
+            finished_at: `${moment().format("YYYYMMDD")} ${
+              endtime[0] + endtime[1] + endtime[2] + endtime[3]
+            }`,
+            deadline_at: `${moment().format("YYYYMMDD")} ${
+              deadline[0] + deadline[1] + deadline[2] + deadline[3]
+            }`,
+            notification: `${moment().format("YYYYMMDD")} ${
+              notitime[0] + notitime[1] + notitime[2] + notitime[3]
+            }`,
+            is_finished: false,
+            month: `${moment().format("MM")}`,
+            year: `${moment().format("YYYY")}`,
+            week: "1",
+            point: 0,
+            user_id: "wony5248",
+            title: title,
+            context: context,
+          })
+          .then(({ data }) => {
+            console.log(data.data);
+            setStarttime(moment(data.data.started_at).format("YYYYMMDD HHmm"));
+          })
+          .catch((e) => {});
+        window.location.replace(`/Today`);
+      } else {
+        console.log("변화 없음");
+      }
+    } else if (starthour == endhour && startmin <= endmin) {
       if (window.confirm("생성하시겠 습니까?")) {
         await axios
           .post(`http://127.0.0.1:4500/schedule`, {
@@ -162,9 +199,8 @@ const Changecalendarlayout = () => {
       } else {
         console.log("변화 없음");
       }
-    }
-    else {
-      window.alert("일정 시작시간을 일정 종료시간보다 빠르게 설정해 주세요")
+    } else {
+      window.alert("일정 시작시간을 일정 종료시간보다 빠르게 설정해 주세요");
     }
   };
   useEffect(() => {
@@ -208,96 +244,123 @@ const Changecalendarlayout = () => {
 
     rendering();
   }, []);
+  const {
+    state: { isDark },
+  } = useContext(Context);
   return (
     <Changecalcon>
-      <Changeend>
+      <Changeend isdark={isDark}>
         <Changeendtext>일정 시작 시간</Changeendtext>
         <Changeselect
+          isdark={isDark}
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={starttime}
           onChange={handlestartChange}
         >
           {startarr.map((item) => (
-            <Changeoption value={item[0] + item[1] + item[3] + item[4]}>
+            <Changeoption
+              isdark={isDark}
+              value={item[0] + item[1] + item[3] + item[4]}
+            >
               {item}
             </Changeoption>
           ))}
         </Changeselect>
       </Changeend>
-      <Changeend>
+      <Changeend isdark={isDark}>
         <Changeendtext>일정 종료 시간</Changeendtext>
         <Changeselect
+          isdark={isDark}
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={endtime}
           onChange={handleendChange}
         >
           {startarr.map((item) => (
-            <Changeoption value={item[0] + item[1] + item[3] + item[4]}>
+            <Changeoption
+              isdark={isDark}
+              value={item[0] + item[1] + item[3] + item[4]}
+            >
               {item}
             </Changeoption>
           ))}
         </Changeselect>
       </Changeend>
-      <Changeend>
+      <Changeend isdark={isDark}>
         <Changeendtext>일정 목표 시간</Changeendtext>
         <Changeselect
+          isdark={isDark}
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={deadline}
           onChange={handledeadChange}
         >
           {startarr.map((item) => (
-            <Changeoption value={item[0] + item[1] + item[3] + item[4]}>
+            <Changeoption
+              isdark={isDark}
+              value={item[0] + item[1] + item[3] + item[4]}
+            >
               {item}
             </Changeoption>
           ))}
         </Changeselect>
       </Changeend>
-      <Changeend>
+      <Changeend isdark={isDark}>
         <Changeendtext>일정 알림 시간</Changeendtext>
         <Changeselect
+          isdark={isDark}
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={notitime}
           onChange={handlenotiChange}
         >
           {startarr.map((item) => (
-            <Changeoption value={item[0] + item[1] + item[3] + item[4]}>
+            <Changeoption
+              isdark={isDark}
+              value={item[0] + item[1] + item[3] + item[4]}
+            >
               {item}
             </Changeoption>
           ))}
         </Changeselect>
       </Changeend>
-      <Changeend>
+      <Changeend isdark={isDark}>
         <Changeendtext>일정 제목</Changeendtext>
         <Changeselect
+          isdark={isDark}
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={title}
           onChange={handletitleChange}
         >
           {titlearr.map((item) => (
-            <Changeoption value={item}>{item}</Changeoption>
+            <Changeoption isdark={isDark} value={item}>
+              {item}
+            </Changeoption>
           ))}
         </Changeselect>
       </Changeend>
-      <Changeend>
+      <Changeend isdark={isDark}>
         <Changeendtext>일정 내용</Changeendtext>
         <Changeselect2
+          isdark={isDark}
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={context}
           onChange={handlecontextChange}
         >
           {contextarr.map((item) => (
-            <Changeoption value={item}>{item}</Changeoption>
+            <Changeoption isdark={isDark} value={item}>
+              {item}
+            </Changeoption>
           ))}
         </Changeselect2>
       </Changeend>
       <Btndiv>
-        <Addbtn onClick={() => Confirm()}>추가하기</Addbtn>
+        <Addbtn isdark={isDark} onClick={() => Confirm()}>
+          추가하기
+        </Addbtn>
       </Btndiv>
     </Changecalcon>
   );

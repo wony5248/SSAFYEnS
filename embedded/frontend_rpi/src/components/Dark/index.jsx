@@ -14,10 +14,10 @@ const Speakerdiv = styled.div`
 `;
 
 const Button = (props) => {
-  const { btnName } = props;
+  const { btnName, isdark} = props;
 
   return (
-    <Speakerbtn>
+    <Speakerbtn isdark = {isdark}>
       <Speakerdiv><MicIcon />{btnName}</Speakerdiv>
         <SwitchStyle></SwitchStyle>
     </Speakerbtn>

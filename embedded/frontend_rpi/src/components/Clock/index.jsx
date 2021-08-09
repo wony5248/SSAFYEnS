@@ -1,28 +1,25 @@
-import React from "react";
+import React, {useContext} from "react";
 import Clock from "react-live-clock";
 import Datediv from "./styles";
 import Logo from "../../assets/ssafyenslogo.png";
 import styled1 from "styled-components";
 import { styled } from "@material-ui/styles";
+import { Context } from "../../context";
 const Logodiv = styled1.div`
   width: 100%;
-`;
-const Logobtn = styled1.button`
-  width: 100%;
-  border : none;
-  background-color: white;
 `;
 const Clockdiv = styled(Clock)({
   width: "100%",
   fontSize: "30px",
 });
 const Date = () => {
+  const {
+    state:{
+      isDark
+    }
+  } = useContext(Context)
   return (
-    <Datediv>
-      <Logobtn>
-        <img src={Logo} alt = "logo" width="100%" height="100%" />
-      </Logobtn>
-      <div>
+    <Datediv isdark = {isDark}>
         <Logodiv>
           <Clockdiv
             format={"YYYY.MM.DD"}
@@ -37,7 +34,6 @@ const Date = () => {
             timezone={"Asia/Seoul"}
           />
         </Logodiv>
-      </div>
     </Datediv>
   );
 };
