@@ -5,15 +5,15 @@ const request = axios.create({
 });
 
 export const scheduleAPI = {
-    getMonthly: (year, month)=>{
-        return request.get(`/mvp/getMonthly/${year}/${month}`, {
-            year, month
+    getMonthly: (date)=>{
+        return request.get(`/schedule/month/${date}`, {
+            date
         })
     },
     addSchedule:(title, started_at, deadline_at, date)=>{
-        return request.post('/mvp/addSchedule', {
-            user_id : 'jbj', date , title, context : 'test'
-            , started_at, finished_at : '2021-08-31', deadline_at, point : 10, is_finished : false
+        return request.post('/schedule', {
+            date , title, context : 'test'
+            , started_at, deadline_at, is_finished : false
         })
     }
 };
