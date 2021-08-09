@@ -92,7 +92,7 @@ const Changelayout = () => {
       await axios
         .delete(`http://127.0.0.1:4500/schedule/${id}`)
         .then(({ data }) => {
-          console.log(data.data);
+          console.log(data);
         })
         .catch((e) => {});
       window.location.replace(`/Change`);
@@ -113,7 +113,6 @@ const Changelayout = () => {
         .then(({ data }) => {
           console.log(data);
           setItemList(data);
-          // console.log(data.data);
           console.log(itemList);
         })
         .catch((e) => {});

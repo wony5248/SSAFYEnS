@@ -53,7 +53,7 @@ const Progresscontentcon = styled.div`
   width: auto;
   height: 63%;
   color: white;
-  background-color: ${props => props.isdark ? "gray" : "white"};
+  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
   margin-top: 14px;
   padding: 14px 28px;
 `;

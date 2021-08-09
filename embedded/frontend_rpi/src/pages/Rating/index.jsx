@@ -236,8 +236,6 @@ const Ratinglayout = (props) => {
         .get(`http://127.0.0.1:4500/schedule/${id}`)
         .then(({ data }) => {
           console.log(data.data);
-          // setItemList(data.data);
-          // console.log(data.data);
           setStarttime(moment(data.data.started_at).format("YYYYMMDD HHmm"));
           setDeadline(moment(data.data.deadline_at).format("YYYYMMDD HHmm"));
           setManageid(data.data.id);
