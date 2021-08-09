@@ -6,7 +6,7 @@ import {Grid} from '@material-ui/core';
 
 const Plan = props => {
     return(
-        <div style={{height: '100%'}}>
+        <div style={{height: '100%', display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
             <Header />
             <Grid style={{minHeight:'100%'}}>
                 <PlanList/>

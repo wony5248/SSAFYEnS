@@ -1,3 +1,17 @@
+<<<<<<< HEAD
+embedded/backend/node_modules
+embedded/frontend_rpi/node_modules
+embedded/frontend_rpi/package-lock.json
+
+node_modules/
+node_modules
+.gitignore
+<<<<<<< HEAD
+README.md
+=======
+>>>>>>> embedded-FS-axios
+dist/*
+=======
 # Editor : KJH
 # version : 0.1
 
@@ -7,6 +21,7 @@
 ### Node ###
 # Logs
 logs
+>>>>>>> 2628b5f1da3640605e190ebb46e53576729f4b9a
 *.log
 npm-debug.log*
 yarn-debug.log*

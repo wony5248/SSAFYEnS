@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.12.2",
+    "@material-ui/data-grid": "^4.0.0-alpha.35",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@testing-library/jest-dom": "^5.11.4",
@@ -17,7 +18,9 @@
     "react-feather": "^2.0.9",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "react-slick": "^0.28.1",
     "react-star-ratings": "^2.3.0",
+    "slick-carousel": "^1.8.1",
     "store": "^2.0.12",
     "styled-components": "^5.3.0",
     "web-vitals": "^1.0.1"

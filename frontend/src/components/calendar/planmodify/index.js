@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-import store from 'store';
+import React, {useState, useEffect} from 'react';
 import {useLocation, useHistory} from 'react-router-dom';
 import Wrapper from './styles';
 import {Grid, Checkbox, FormGroup, FormControlLabel, Select
@@ -10,19 +9,50 @@ import WbIncandescentIcon from '@material-ui/icons/WbIncandescent';
 import MicIcon from '@material-ui/icons/Mic';
 import OpacityIcon from '@material-ui/icons/Opacity';
 import {Thermometer} from 'react-feather';
-
+import {scheduleAPI} from '../../../utils/axios';
 
 const PlanModify = () =>{
     let history = useHistory();
     const location = useLocation();
+    const [query, setQuery] = useState('react');
+    const [data, setData] = useState([]);
 
-    let {startMonth, startDay, startHour, startMin, endHour, endMonth, endDay, endMin, title} = location.state || '';
-    startMonth = Number(startMonth);
-    startDay = Number(startDay);
-    endMonth = Number(endMonth);
-    endDay = Number(endDay);
-
+    const idx = location.state.idx;
     const [rating, setRating] = useState(location.state || 0);
+    const [startMonth, setStartMonth] =useState('');
+    const [startDay, setStartDay] =useState('');
+    const [startHour, setStartHour] =useState('');
+    const [startMin, setStartMin] =useState();
+
+    const [endMonth, setEndMonth] =useState('');
+    const [endDay, setEndDay] =useState('');
+    const [endHour, setEndHour] =useState('');
+    const [endMin, setEndMin] =useState();
+    const [title, setTitle] =useState('');
+
+    useEffect(()=>{
+        let completed = false;
+        
+        async function getMonthlySchedule(){
+            const result = await scheduleAPI.getMonthly(moment(location.state.year).format('YYYY'), moment(location.state.month).format('MM'));
+            setData(result.data);
+            setStartMonth(Number(moment(data[idx].started_at).format('MM')));
+            setStartDay(Number(moment(data[idx].started_at).format('DD')));
+            setStartHour(Number(moment(data[idx].started_at).format('HH')));
+            setStartMin(moment(data[idx].started_at).format('mm'));
+
+            setEndMonth(Number(moment(data[idx].deadline_at).format('MM')));
+            setEndDay(Number(moment(data[idx].deadline_at).format('DD')));
+            setEndHour(Number(moment(data[idx].deadline_at).format('HH')));
+            setEndMin(moment(data[idx].deadline_at).format('mm'));
+            setTitle(data[idx].title);
+
+        }
+        getMonthlySchedule();
+        return ()=>{
+            completed = true;
+        };
+    }, [query]);
 
     const [state, setState] = useState({
         alarmYES: true,
@@ -39,8 +69,7 @@ const PlanModify = () =>{
 
     const [timer, setTimer] = useState('');
 
-    const [setStartMonth, setStartDay, setStartHour, setStartMin
-        , setEndMonth, setEndDay, setEndHour, setEndMin, setTitle] =useState('');
+    
 
     const handleAlarm = (event) => {
         setState({...state, [event.target.name]: event.target.checked});
@@ -155,42 +184,14 @@ const PlanModify = () =>{
 
     const minArr = () =>{
         let result = [];
-        for (let i = 0; i <=30 ; i+=30){
-            result = result.concat(<MenuItem value ={i}>{i}</MenuItem>);
-        }
+        result = result.concat(<MenuItem value ={'00'}>00</MenuItem>);
+        result = result.concat(<MenuItem value ={'30'}>30</MenuItem>);
         return result;
     };
 
-    const onClickRedirectPathHandler = name => e =>{
-        window.scrollTo(0, 0);
-        if ( name === '/planlist'){
-            if(history.location.pathname === name){
-                history.goBack();
-                store.remove('planlist');
-            }else{
-                history.push(name);
-            }
-        }
-    };
-
     const modify = () =>{
-        if (startMonth===endMonth && startDay===endDay && startHour>endHour || startHour===endHour && startDay>endDay){
-            alert("시작시간이 마감시간보다 느립니다.");
-        }
-        else if(startMonth>endMonth){
-            alert("시작일이 마감일보다 느립니다.");
-        }
-        else if(startMonth===endMonth && startDay>endDay) {
-            alert("시작일이 마감일보다 느립니다.");
-        
-        }    
-        else{
-            alert(`start month : ${startMonth}월 ${startDay}일 ${startHour}시 ${startMin}분
-        end Date : ${endMonth}월 ${endDay}일 ${endHour}시 ${endMin}분
-        Plan : ${title}`);
-            
-        }
-        onClickRedirectPathHandler('/planlist');
+        // 수정시 axios로 수정보내기
+        console.log('modify');
     };
 
 

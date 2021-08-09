@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const Mannerbtn = styled.div`
-  height: 19.7%;
+  height: 13%;
   color: #121212;
   background-color: white;
   padding: 0 8px;

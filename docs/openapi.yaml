@@ -836,6 +836,12 @@ paths:
         schema:
           $ref: "#/components/schemas/schedule/properties/year"
       - in: path
+        name: year
+        required: true
+        description: 주 단위의 값은 연도없이 조회가 불가하여 연도를 추가함
+        schema:
+          $ref: "#/components/schemas/schedule/properties/year"
+      - in: path
         name: week
         required: true
         schema:

@@ -1,19 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
-import { Link } from "react-router-dom";
 import styled1 from "styled-components";
-import { makeStyles, styled } from "@material-ui/core/styles";
+import {styled } from "@material-ui/core/styles";
 import Input from "@material-ui/core/Input";
 
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-}));
 
 const Changeselect = styled1.select`
   width: 80px;
@@ -138,10 +128,11 @@ const Changetitleinput = styled(Input)({
 });
 
 const Changecalendarlayout = () => {
-  const classes = useStyles();
   const [starttime, setStarttime] = useState("");
   const [endtime, setEndtime] = useState("");
   const [optionarr, setOptionarr] = useState([]);
+  const [title, setTitle] = useState("");
+  const [context, setContext] = useState("");
   const handlestartChange = (event) => {
     setStarttime(event.target.value);
     console.log(event.target.value);
@@ -156,8 +147,8 @@ const Changecalendarlayout = () => {
       const result = [];
       for (let i = 0; i < 24; i++) {
         if (i < 10) {
-          result.push("0" + `${i}:00`);
-          result.push("0" + `${i}:30`);
+          result.push(`0${i}:00`);
+          result.push(`0${i}:30`);
         } else {
           result.push(`${i}:00`);
           result.push(`${i}:30`);
@@ -211,6 +202,7 @@ const Changecalendarlayout = () => {
           multiline
           rows={4}
           placeholder="변경할 일정 내용"
+          defaultValue ={context}
           variant="outlined"
         ></Changecontentinput1>
       </ChangeContent>
