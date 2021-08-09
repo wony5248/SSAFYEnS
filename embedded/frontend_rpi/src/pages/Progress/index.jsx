@@ -1,10 +1,23 @@
 import React, { useState, useEffect, useContext } from "react";
 import Layout from "../../layout";
-import Progresscontainer from "./styles";
 import styled from "styled-components";
 import axios from "axios";
 import moment from "moment";
 import { useUserContext } from "../../context";
+
+const Progresscontainer = styled.div`
+  overflow: auto;
+  display: flex-row;
+  padding-top: 14px;
+  padding-right: 12px;
+  padding-left: 12px;
+  padding-bot: 14px;
+  flex-wrap: nowrap;
+  width: auto;
+  height: 98.7%;
+  margin: 0px;
+  font-size: 24px;
+`;
 const Progresstitle = styled.div`
   display: flex;
   flex-direction: column;
@@ -88,6 +101,7 @@ const Completebtn = styled.button`
   padding: 4px;
   height: 70%;
   width: 10%;
+  cursor: pointer;
 `;
 
 const Btndiv = styled.div`

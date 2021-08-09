@@ -9,6 +9,10 @@ const Todaycontainer = styled.div`
   width: auto;
   height: 100%;
   color: #a3cca3;
+  padding-top: 14px;
+  padding-right: 12px;
+  padding-left: 12px;
+  padding-bot: 14px;
   margin: 0px;
   padding-bottom: 1%;
 `;
@@ -73,6 +77,7 @@ const Todaychangebtn = styled.button`
   border: 0px;
   display: flex;
   align-items: center;
+  cursor: pointer;
   background-color: ${(props) =>
     props.isdark === true ? "#424242" : "#69a569"};
   color: white;

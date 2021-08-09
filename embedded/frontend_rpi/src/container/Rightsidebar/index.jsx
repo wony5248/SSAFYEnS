@@ -28,6 +28,7 @@ const Addbtn = styled.button`
   background-color: ${(props) => (props.isdark === true ? "#424242" : "white")};
   font-size: 20px;
   margin: 0px;
+  cursor: pointer;
   border: ${(props) => (props.isdark === true ? "1px solid gray" : "1px solid #a3cca3")};
   &:hover {
     background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};

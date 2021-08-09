@@ -24,7 +24,7 @@ const Leftsidebtn = styled.button`
   border: ${props => props.isdark === true ? "1px solid gray":"1px solid #a3cca3"};
   cursor: pointer;
   &:active {
-    background-color: ${props => props.isdark === true ? "white":"#a3cca3"};
+    background-color: ${props => props.isdark === true ? "gray":"#a3cca3"};
     color: white;
   }
  

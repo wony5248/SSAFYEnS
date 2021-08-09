@@ -94,6 +94,7 @@ const Changebtn = styled1.button`
   border-radius:8px;
   border:0px;
   color: white;
+  cursor: pointer;
   margin-right: 0.5%;
   background-color: ${(props) =>
     props.isdark === true ? "#424242" : "#69a569"};

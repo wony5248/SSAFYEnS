@@ -106,6 +106,7 @@ const Ratingbtn = styled1.button`
   height: 60px;
   border-radius: 8px;
   border: 0px;
+  cursor: pointer;
   color: white;
   background-color: ${props => props.isdark === true ? "#424242" : "#69a569"};
   padding: 4px;

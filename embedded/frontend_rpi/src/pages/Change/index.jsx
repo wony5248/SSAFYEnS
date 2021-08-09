@@ -9,6 +9,10 @@ const Changecontainer = styled.div`
   width: auto;
   height: 100%;
   margin: 0px;
+  padding-top: 14px;
+  padding-right: 12px;
+  padding-left: 12px;
+  padding-bot: 14px;
   font-size: 20px;
 `;
 const Changetitle = styled.div`
@@ -73,6 +77,7 @@ const Changechangebtn = styled.button`
   color: white;
   display: flex;
   align-items: center;
+  cursor: pointer;
   justify-content: center;
   background-color: ${(props) =>
     props.isdark === true ? "#424242" : "#69a569"};
