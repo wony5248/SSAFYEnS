@@ -9,6 +9,7 @@ import "slick-carousel/slick/slick-theme.css";
 import trophyImg from '../../images/trophy_test.png'
 
 const Userinfo = () =>{
+    const [select, setSelect] = useState(false);
     const BorderLinearProgress = withStyles((theme) => ({
         root: {
           height: 20,
@@ -68,8 +69,8 @@ const Userinfo = () =>{
                         <Grid container direction="column" alignItems = "center">
                             <Typography variant="h3">장범진</Typography>
                             <Grid container direction="row">
-                                <Button>정보수정</Button>
-                                <Button>내 통계</Button>
+                                <Button onClick={() => window.location.replace (`/checkpassword/1`)}>정보수정</Button>
+                                <Button onClick={() => window.location.replace (`/average`)}>내 통계</Button>
                             </Grid>
                         </Grid>
                     </div>
@@ -118,7 +119,7 @@ const Userinfo = () =>{
                                         <Typography variant="body2" style={{margin:'2px'}}>내 달성률 : {item.my}%</Typography>
                                     </CardContent>
                                     <CardActions>
-                                        <Button size="small">GROUP HOME</Button>
+                                        <Button size="small" onClick={()=>select? window.location.replace(`/group/${item.id}`) : window.location.replace(`/group/${item.id}`) }>GROUP HOME</Button>
                                     </CardActions>
                                 </Card>
                             );

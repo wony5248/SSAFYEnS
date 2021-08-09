@@ -21,10 +21,9 @@ const Month = () => {
 
     async function getMonthlySchedule() {
       const result = await scheduleAPI.getMonthly(
-        today.format("YYYY"),
-        today.format("MM")
+        today.format("YYYY-MM-DD")
       );
-      setData(result.data);
+      setData(result.data.data);
     }
     getMonthlySchedule();
     return () => {
@@ -71,7 +70,6 @@ const Month = () => {
 
   const dayPlan = (date)=>{
     let result = [];
-    // console.log(data);
     for (let i=0; i<data.length; i++){
       if (date.format("MM-DD") === moment(data[i].started_at).format("MM-DD")){
         result = result.concat(
@@ -173,7 +171,6 @@ const Month = () => {
                     <Grid container direction="column">
                       <span>{days.format("D")}</span>
                       {dayPlan(days)}
-                      {/* <span style={{color:'black'}}>title</span> */}
                     </Grid>
                   </td>
                 );

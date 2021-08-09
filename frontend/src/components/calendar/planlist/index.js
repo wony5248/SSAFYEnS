@@ -28,8 +28,8 @@ const PlanList = () => {
         let completed = false;
         
         async function getMonthlySchedule(){
-            const result = await scheduleAPI.getMonthly(today.format('YYYY'), today.format('MM'));
-            setData(result.data);
+            const result = await scheduleAPI.getMonthly( today.format("YYYY-MM-DD"));
+            setData(result.data.data);
         }
         getMonthlySchedule();
         return ()=>{
@@ -78,18 +78,11 @@ const PlanList = () => {
                             ):<div> </div>}
                             <div>
                                 <Button style={{background:'#A3CCA3', color:'#ffffff', height:'40px', marginRight:'20px'}} 
-                                onClick={()=>{history.push({
-                                    pathname:'/planmodify',
-                                    state:{
-                                        year : today.format('YYYY'),
-                                        month: today.format('MM') , 
-                                        day: today.format('DD'),
-                                        idx : i
-                                    }
-                                })}}>
+                                // onClick={window.location.replace(`/planmodify/${today.format('MMDD')}/${i}`)}
+                                >
                                     수정
                                 </Button>
-                                <Button style={{background:'#A3CCA3', color:'#ffffff', height:'40px', marginRight:'30px'}} onClick={deletePlan}>삭제</Button>
+                                <Button style={{background:'#A3CCA3', color:'#ffffff', height:'40px', marginRight:'30px'}}>삭제</Button>
                             </div>
                         </div>
                     </Grid>
