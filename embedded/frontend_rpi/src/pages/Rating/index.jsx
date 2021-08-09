@@ -95,6 +95,7 @@ const Ratingquestion = styled1.div`
 const Ratingbtncon = styled1.div`
   width: auto;
   display: flex;
+  align-items: center;
   height: auto;
   border-radius: 8px;
   border: 0px;
@@ -102,11 +103,11 @@ const Ratingbtncon = styled1.div`
 `;
 const Ratingbtn = styled1.button`
   width: 78px;
-  height: auto;
+  height: 60px;
   border-radius: 8px;
   border: 0px;
   color: white;
-  background-color: ${props => props.isdark === true ? "darkgray" : "#69a569"};
+  background-color: ${props => props.isdark === true ? "#424242" : "#69a569"};
   padding: 4px;
   margin-left:16px;
 `;

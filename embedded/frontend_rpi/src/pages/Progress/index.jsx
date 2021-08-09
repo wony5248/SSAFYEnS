@@ -84,7 +84,7 @@ const Completebtn = styled.button`
   border: none;
   color: white;
   border-radius: 8px;
-  background-color: ${props => props.isdark === true ? "darkgray" : "#69a569"};
+  background-color: ${props => props.isdark === true ? "#424242" : "#69a569"};
   padding: 4px;
   height: 70%;
   width: 10%;

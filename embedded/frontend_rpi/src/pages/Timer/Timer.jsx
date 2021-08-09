@@ -26,7 +26,7 @@ const Countbtn = styled.button`
   width: 20%;
   height: 15%;
   color: white;
-  background-color:  ${props => props.isdark ? "darkgray" : "#a3cca3"};
+  background-color:  ${props => props.isdark ? "gray" : "#a3cca3"};
   margin: 12px 0px;
   font-size: 40px;
   padding: 4px;
@@ -48,7 +48,7 @@ const Addbtn = styled.button`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background-color: ${props => props.isdark ? "darkgray" : "#a3cca3"};
+  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
   color: white;
   border: 1px solid black;
   margin-left: 24px;

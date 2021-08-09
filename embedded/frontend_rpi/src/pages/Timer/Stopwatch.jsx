@@ -24,7 +24,7 @@ border-radius: 4px;
 width: 20%;
 height: 15%;
 color: white;
-background-color: ${props => props.isdark ? "darkgray" : "#a3cca3"};
+background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
 margin: 12px 0px;
 font-size: 40px;
 padding: 4px;
