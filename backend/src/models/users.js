@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      // M:N 관계
+      models.users.belongsToMany(models.groups, { through: models.usersmngroups }) 
     }
   };
   users.init(
@@ -26,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     }, {
       sequelize,
       modelName: 'users',
-      createdAt: 'created_at',
+      createdAt: 'created_at', 
       updatedAt: false
     }
   );
