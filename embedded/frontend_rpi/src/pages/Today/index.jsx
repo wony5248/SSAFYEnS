@@ -76,7 +76,7 @@ const Todaychangebtn = styled.button`
   border: 0px;
   display: flex;
   align-items: center;
-  background-color: ${props => props.isdark === true ? "darkgray" : "#69a569"};
+  background-color: ${props => props.isdark === true ? "#424242" : "#69a569"};
   color: white;
   justify-content: center;
   padding: 4px;

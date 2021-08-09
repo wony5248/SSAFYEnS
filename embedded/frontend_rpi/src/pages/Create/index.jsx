@@ -69,12 +69,12 @@ const Btndiv = styled1.div`
 `;
 const Addbtn = styled1.button`
     background-color: #a3cca3;
-    background-color: ${(props) => (props.isdark === true ? "darkgray" : "#a3cca3")};
+    background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
     color: white;
     border: none;
     border-radius: 8px;
     height:100%;
-    width: 100px;
+    width: 150px;
     &:hover{
         background-color: ${(props) => (props.isdark === true ? "#c9c9c9" : "#69a569")};
     }
