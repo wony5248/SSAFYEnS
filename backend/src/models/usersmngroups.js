@@ -34,7 +34,10 @@ module.exports = (sequelize, DataTypes) => {
         key: 'user_id',
       }
     },
-    is_group_admin: DataTypes.BOOLEAN
+    is_group_admin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    }
   }, {
     sequelize,
     modelName: 'usersmngroups',
