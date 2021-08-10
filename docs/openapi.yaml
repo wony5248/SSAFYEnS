@@ -15,6 +15,7 @@ info:
     * schedule의 내용(context)와 daily의 일간 평가(context)에 혼동이 자주 발생하는 것 같아 daily의 경우 daily_context로 변경하였습니다
     * DELETE /average/daily/{date}는 삭제했습니다. 일간 평가(daily_context)를 지우고자 하는 경우 POST(사실 이거도 PUT이어야...)를 활용하세요.
     * 0809 합의로 schedule notification은 일정 시작 전의 알림으로 간주합니다.
+    * 마이페이지에서 "얻을 수 있는 트로피" 페이지 같은게 있으면 좋을 것 같습니다???
   # termsOfService: http://swagger.io/terms/
   # contact:
   #   email: apiteam@swagger.io
@@ -39,6 +40,8 @@ tags:
 #   description: Access to Schedules
 - name: user
   description: Operations about user
+- name: trophy
+  description: Operations about trophy
 - name: average
   description: 통계를 위한 내용입니다
 - name: group
@@ -836,12 +839,6 @@ paths:
         schema:
           $ref: "#/components/schemas/schedule/properties/year"
       - in: path
-        name: year
-        required: true
-        description: 주 단위의 값은 연도없이 조회가 불가하여 연도를 추가함
-        schema:
-          $ref: "#/components/schemas/schedule/properties/year"
-      - in: path
         name: week
         required: true
         schema:
@@ -1210,7 +1207,11 @@ paths:
       - group
       summary: search group
       operationId: getGroupsBySearch
-      description: 검색 내용을 보내면 해당되는 그룹들을 반환한다. url경로로 한글, 특수문자도 전달되면 그냥 get, query parameter로 받아도 될 것 같은데 확인 필요. 그리고 response에서 그룹 목록>그룹멤버>유저>가입한그룹>그룹멤버> .... 재귀형태가 일어날 것 같은데 확인 필요
+      description: |-
+        * 검색 내용을 보내면 해당되는 그룹들을 반환한다. 
+        * 이때 검색하는 대상은 name, context로 한다. (이외에 찾을게 있나요???)
+        * url경로로 한글, 특수문자도 전달되면 그냥 get, query parameter로 받아도 될 것 같은데 확인 필요.
+        * response에서 그룹의 멤버도 검색했을 때 필요할까요???
       requestBody:
         description: "검색어"
         content:
@@ -1260,6 +1261,191 @@ paths:
       security:
       - JWT: []          
       
+  /group/{group_id}/applicant:
+    get:
+      tags:
+      - group
+      summary: get applicants to specific group(for group_admin)
+      description: |-
+        * group_id에 해당하는 그룹에 가입신청을 한 가입신청자를 반환합니다(그룹 관리자용 화면)
+        * 해당 그룹의 관리자인지 확인합니다.
+      parameters:
+      - in: path
+        required: true
+        name: group_id
+        schema:
+          $ref: '#/components/schemas/group/properties/group_id'
+      responses:
+        200:
+          description: 'Successful'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                    - $ref: '#/components/schemas/user'
+                    - type: object
+                      properties:
+                        applied_at:
+                          type: string
+                          format: date-time
+                        reason:
+                          type: string
+                          example: 'IoT하고 싶어요...'
+        400:
+          description: 'Bad request'
+      security:
+      - JWT: []          
+          
+    post:
+      tags:
+      - group
+      summary: applicant asks to join specific group(for applicant)
+      description: |-
+        * group_id에 해당하는 그룹에 회원이 가입신청을 합니다
+        * 가입신청이 되었다는 뜻으로 200을, 오류 발생시 400을 반환합니다.
+      parameters:
+      - in: path
+        required: true
+        name: group_id
+        schema:
+          $ref: '#/components/schemas/group/properties/group_id'
+      responses:
+        200:
+          description: 'Successful'
+        400:
+          description: 'Bad request'
+      security:
+      - JWT: []          
+      
+    delete:
+      tags:
+      - group
+      summary: applicant retrieves application to join specific group(for applicant)
+      description: |-
+        * group_id에 해당하는 그룹에 회원이 가입신청 했던 것을 취소합니다.
+        * 가입신청 취소가 되었다는 뜻으로 200을, 오류 발생시(신청한 적 없다던지) 400을 반환합니다.
+      parameters:
+      - in: path
+        required: true
+        name: group_id
+        schema:
+          $ref: '#/components/schemas/group/properties/group_id'
+      responses:
+        200:
+          description: 'Successful'
+        400:
+          description: 'Bad request'
+      security:
+      - JWT: []
+      
+  /group/{group_id}/applicant/{user_id}:
+  
+    post:
+      tags:
+      - group
+      summary: approves applicant (for group admin)
+      description: |-
+        * group_id에 해당하는 그룹에 가입신청한 회원을 승인합니다.
+        * 승인이 되었다(가입신청자 명단에서 삭제)는 뜻으로 200을, 오류 발생시 400을 반환합니다.
+        * `BE` applicant테이블에서 삭제하고, usersmngroups에 추가합니다.
+      parameters:
+      - in: path
+        required: true
+        name: group_id
+        schema:
+          $ref: '#/components/schemas/group/properties/group_id'
+      - in: path
+        required: true
+        name: user_id
+        schema:
+          $ref: '#/components/schemas/user/properties/user_id'
+      responses:
+        200:
+          description: 'Successful'
+        400:
+          description: 'Bad request'
+      security:
+      - JWT: []          
+      
+    delete:
+      tags:
+      - group
+      summary: declines applicant (for group admin)
+      description: |-
+        * group_id에 해당하는 그룹에 가입신청한 회원을 거절합니다.
+        * 거절이 되었다(가입신청자 명단에서 삭제)는 뜻으로 200을, 오류 발생시 400을 반환합니다.
+      parameters:
+      - in: path
+        required: true
+        name: group_id
+        schema:
+          $ref: '#/components/schemas/group/properties/group_id'
+      - in: path
+        required: true
+        name: user_id
+        schema:
+          $ref: '#/components/schemas/user/properties/user_id'
+      responses:
+        200:
+          description: 'Successful'
+        400:
+          description: 'Bad request'
+      security:
+      - JWT: []          
+      
+  /user/{user_id}/trophy:
+  
+    get:
+      summary: gets array of trophy gained by user(user_id)
+      description: |-
+        * user_id에 해당하는 회원이 보유한 트로피들을 반환합니다.
+      parameters:
+      - in: path
+        required: true
+        name: user_id
+        schema:
+          $ref: '#/components/schemas/user/properties/user_id'
+      responses:
+        200:
+          description: 'Successful'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/mytrophy'
+        400:
+          description: 'Bad Request'
+      security:
+      - JWT: []
+      
+  /user/{user_id}/trophy/{trophy_id}:
+      
+    post:
+      summary: adds trophy to user(user_id)
+      description: |-
+        * user_id에 해당하는 회원이 trophy_id에 해당하는 트로피를 얻습니다.
+        * 성공적으로 추가된 경우 200, 오류 발생시 400 코드를 반환합니다.
+      parameters:
+      - in: path
+        required: true
+        name: user_id
+        schema:
+          $ref: '#/components/schemas/user/properties/user_id'
+      - in: path
+        required: true
+        name: trophy_id
+        schema:
+          $ref: '#/components/schemas/trophy/properties/trophy_id'
+      responses:
+        200:
+          description: 'Successful'
+        400:
+          description: 'Bad Request'
+      security:
+      - JWT: []
       
 components:
 
