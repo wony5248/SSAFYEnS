@@ -14,7 +14,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-      models.usersmngroups.hasMany(models.groups)
+      // belongsToMany에서만 하고 여기 junction model에서는 안 하는 것 같다
+      // models.usersmngroups.hasMany(models.groups)
+      // models.usersmngroups.hasMany(models.users)
     }
   };
   usersmngroups.init({
@@ -26,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     user_id: {
-      type: Sequelize.STRING,
+      type: DataTypes.INTEGER,
       references: {
         model: 'users',
         key: 'user_id',

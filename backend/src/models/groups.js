@@ -15,14 +15,25 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
 
       // M:N 관계
-      models.groups.belongsToMany(models.users, { through: models.usersmngroups })
+      models.groups.belongsToMany(models.users, {foreignKey:"group_id",through: models.usersmngroups })
     }
   };
   groups.init({
-    group_id: DataTypes.INTEGER,
-    name: DataTypes.STRING,
+    group_id: {
+      type: DataTypes.STRING,
+      autoIncrement: true,
+      allowNull: false,
+      primaryKey: true, // Needed for Sequelize id, https://sequelize.org/master/manual/legacy.html
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     context: DataTypes.STRING,
-    pax: DataTypes.INTEGER,
+    pax: {
+      type: DataTypes.INTEGER,
+      defaultValue: 1,
+    },
     ranking: DataTypes.INTEGER
   }, {
     sequelize,
