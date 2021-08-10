@@ -8,7 +8,7 @@ var moment = require("moment");
 // 일정 추가
 router.post("/", async function (req, res, next) {
   await axios
-    .post("http://127.0.0.1:8079/schedule", {
+    .post("http://i5a109.p.ssafy.io:8079/schedule", {
       date: req.body.date,
       started_at: req.body.started_at,
       finished_at: req.body.finished_at,
@@ -41,7 +41,7 @@ router.delete("/:id", async function (req, res, next) {
   console.log(req);
   console.log(req.body);
   await axios
-    .delete(`http://127.0.0.1:8079/schedule/${req.params.id}`)
+    .delete(`http://i5a109.p.ssafy.io:8079/schedule/${req.params.id}`)
     .then((response) => {
       res.send(response.data);
       console.log(response.data);
@@ -60,7 +60,7 @@ router.put("/:id", async function (req, res, next) {
   console.log(req.params);
   console.log(req.body);
   await axios
-    .put(`http://127.0.0.1:8079/schedule/${req.params.id}`, {
+    .put(`http://i5a109.p.ssafy.io:8079/schedule/${req.params.id}`, {
       started_at: req.body.started_at,
       finished_at: req.body.finished_at,
       deadline_at: req.body.deadline_at,
@@ -84,7 +84,7 @@ router.put("/:id", async function (req, res, next) {
 // test용
 router.get("/", async function (req, res, next) {
   await axios
-    .get("http://127.0.0.1:8079/schedule/6")
+    .get("http://i5a109.p.ssafy.io:8079/schedule/6")
     .then((response) => {
       res.send(response.data);
       console.log(11111);
@@ -110,7 +110,7 @@ router.get("/", async function (req, res, next) {
 // 현재 일정 가져오기
 router.get("/getdaily/:date/current", async function (req, res, next) {
   await axios
-    .get(`http://127.0.0.1:8079/schedule/daily/${req.params.date}`)
+    .get(`http://i5a109.p.ssafy.io:8079/schedule/daily/${req.params.date}`)
     .then((response) => {
       for (let i = 0; i < response.data.data.length; i++) {
         const startTime = Number(
@@ -167,7 +167,7 @@ router.get("/getdaily/:date", async function (req, res, next) {
   console.log("저기야저기");
   console.log(req.body);
   await axios
-    .get(`http://127.0.0.1:8079/schedule/daily/${req.params.date}`)
+    .get(`http://i5a109.p.ssafy.io:8079/schedule/daily/${req.params.date}`)
     .then((response) => {
       const arr = response.data.data;
       arr.sort(function (a, b) {
@@ -194,7 +194,7 @@ router.get("/:id", async function (req, res, next) {
   console.log("저기야저기");
   console.log(req.params);
   await axios
-    .get(`http://127.0.0.1:8079/schedule/${req.params.id}`)
+    .get(`http://i5a109.p.ssafy.io:8079/schedule/${req.params.id}`)
     .then((response) => {
       res.send(response.data);
       console.log(response.data);
