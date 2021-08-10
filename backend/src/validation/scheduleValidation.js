@@ -18,9 +18,6 @@ exports.started_at = check("started_at") //req에 있는 key 중 started_at를 �
     const result =
       moment(started_at).isSame(finished_at, "day") &&
       moment(started_at).diff(finished_at, "second") <= 0;
-
-    // console.log("here : ", moment(started_at).isSame(finished_at, "day"));
-    // console.log("here : ", moment(started_at).diff(finished_at, "second") <= 0);
     if (!result)
       throw new Error(
         "started_at과 end_at이 다른 날짜로 작성되었거나 started_at이 finished_at보다 늦게 설정되었습니다."
@@ -62,5 +59,14 @@ exports.week = check("week").customSanitizer((value, { req }) =>
 exports.year = check("year").customSanitizer((value, { req }) =>
   moment(req.body.started_at).year()
 );
-exports.point = check("point").customSanitizer((value, { req }) => 0);
+exports.cnt_schedule = check("cnt_schedule").default(0);
+exports.point = check("point").default(0);
 exports.user_id = check("user_id").default("honggildong1!");
+
+//environment
+exports.humidity = check("humidity").default(0);
+exports.illuminance = check("illuminance").default(0);
+exports.noise = check("noise").default(0);
+exports.temperature = check("temperature").customSanitizer(
+  (value, { req }) => 0
+);

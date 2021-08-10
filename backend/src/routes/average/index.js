@@ -33,12 +33,13 @@ router.get(
 
 //comment on daily
 //todo url post /average/daily/{date} context 기능 수정
-router.post(
+router.put(
   "/daily/",
   validation.date,
   validation.month,
   validation.year,
   validation.week,
+  validation.daily_context,
   (req, res) => {
     payload = { ...req.params, ...req.body };
     console.log("payload : ", payload);
@@ -49,7 +50,7 @@ router.post(
       res.status("400").json({ result });
     } else {
       service
-        .post_daily(payload)
+        .put_daily(payload)
         .then((data) => {
           res.json({ data });
         })

@@ -5,13 +5,16 @@ exports.get_daily = function (params) {
   return new Promise(async function (resolve, reject) {
     try {
       console.log(params);
-      const { year, month, week } = params;
+      const { user_id, year, month, week } = params;
       // console.log(date, year, month, week, day);
 
       // console.log(`${today}의 날짜를 조회합니다`, today, today_end);
       const data = await db["daily"].findAll({
         where: {
           [op.and]: [
+            {
+              user_id,
+            },
             {
               year,
             },
@@ -32,34 +35,55 @@ exports.get_daily = function (params) {
   });
 };
 
-exports.post_daily = function (payload) {
+exports.put_daily = function (payload) {
   return new Promise(async function (resolve, reject) {
+    //daily 평가 기능
     try {
-      const { date, point, context, user_id, month, year, week } = payload;
+      const { date, daily_context, user_id, month, year, week } = payload;
 
+      //해당 일에 합산할 point를 알아내기 위해 당일 스케쥴을 검색
+      const started_at = date;
+      const finished_at = moment(date).add(1, "days").toDate();
+      const dailySchedules = await db["schedules"].findAll({
+        where: {
+          [op.and]: [
+            {
+              started_at: {
+                [op.gte]: started_at,
+              },
+            },
+            {
+              finished_at: {
+                [op.lte]: finished_at,
+              },
+            },
+            { user_id },
+          ],
+        },
+      });
+
+      const sum_point = dailySchedules.reduce((acc, cur) => {
+        return acc + cur.dataValues.point;
+      }, 0);
+      let prev_sum_point = 0;
+      let isExist = false;
+
+      //sum_point 값을 적용
       const dailyResult = await db["daily"].findOne({
         where: {
           [op.and]: [{ user_id }, { date }],
         },
       });
-      //update할 일자 정보가 없음.
       if (dailyResult == null) {
-        console.log("Daily를 생성합니다");
-
-        db["daily"].create({
-          user_id,
-          date,
-          month,
-          year,
-          week,
-          avgpoint: point,
-          context,
-          cntschedule: 1,
-        });
+        return reject("존재하지 않는 daily입니다");
       } else {
-        dailyResult.avgpoint += point;
-        dailyResult.context = context;
-        dailyResult.cntschedule += 1;
+        isExist = dailyResult.daily_context == null;
+        console.log(isExist);
+        prev_sum_point = dailyResult.sum_point;
+
+        dailyResult.daily_context = daily_context;
+        dailyResult.sum_point = sum_point;
+        dailyResult.cnt_schedule += isExist;
       }
 
       //weekly 확인
@@ -77,16 +101,11 @@ exports.post_daily = function (payload) {
       });
 
       if (weeklyResult == null) {
-        //weekly가 해당 존재하지않음
-        console.log(`week ${week}를 생성합니다`);
-        db["weekly"].create({
-          week,
-          month,
-          year,
-          user_id,
-          avgpoint: point,
-        });
-      } else weeklyResult.avgpoint += point;
+        return reject("존재하지 않는 week입니다");
+      } else {
+        weeklyResult.sum_point += sum_point - prev_sum_point;
+        weeklyResult.cnt_schedule += 1;
+      }
 
       //monthly
       const monthlyResult = await db["monthly"].findOne({
@@ -97,15 +116,10 @@ exports.post_daily = function (payload) {
       });
 
       if (monthlyResult == null) {
-        console.log(`month ${month}를 생성합니다`);
-        db["monthly"].create({
-          month,
-          year,
-          user_id,
-          avgpoint: point,
-        });
+        return reject(`존재하지 않는 month입니다`);
       } else {
-        monthlyResult.avgpoint += point;
+        monthlyResult.sum_point += sum_point - prev_sum_point;
+        monthlyResult.cnt_schedule += 1;
       }
 
       const yearlyResult = await db["yearly"].findOne(
@@ -118,23 +132,24 @@ exports.post_daily = function (payload) {
       );
 
       if (yearlyResult == null) {
-        console.log(`year ${week}를 생성합니다`);
-        db["yearly"].create({
-          year,
-          user_id,
-          avgpoint: point,
-        });
+        return reject(`존재하지 않는 year입니다.`);
       } else {
-        yearlyResult.avgpoint += point;
+        yearlyResult.sum_point += sum_point;
+        yearlyResult.cnt_schedule += 1;
       }
-      if (dailyResult != null) dailyResult.save();
-      if (weeklyResult != null) weeklyResult.save();
-      if (monthlyResult != null) monthlyResult.save();
-      if (yearlyResult != null) yearlyResult.save();
-      resolve({ result: "put" });
+      try {
+        if (dailyResult != null) dailyResult.save();
+        if (weeklyResult != null) weeklyResult.save();
+        if (monthlyResult != null) monthlyResult.save();
+        if (yearlyResult != null) yearlyResult.save();
+      } catch (error) {
+        console.log(error);
+        reject("error");
+      }
+      return resolve({ result: "put" });
     } catch (error) {
       console.log(error);
-      reject("error");
+      return reject("error");
     }
   });
 };

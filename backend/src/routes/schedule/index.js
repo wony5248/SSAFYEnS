@@ -15,16 +15,22 @@ router.post(
   validation.year,
   validation.week,
   validation.point,
+  validation.cnt_schedule,
   validation.user_id,
+  validation.humidity,
+  validation.illuminance,
+  validation.noise,
+  validation.temperature,
   (req, res) => {
     //validation middleware에서 에러 발생시 req에 에러 관련 객체 담김.
+    payload = { ...req.body, ...req.params };
     const result = validationResult(req);
     if (!result.isEmpty()) {
       console.log(validationResult(req));
       res.status("400").json({ result });
     } else {
       service
-        .post(req.body)
+        .post(payload)
         .then((data) => {
           res.json({ data });
         })
@@ -34,7 +40,6 @@ router.post(
     }
   }
 );
-///schedule/{schedule_id}
 router.get("/:schedule_id", (req, res) => {
   const errors = validationResult(req);
   console.log("error : ", errors);
@@ -57,6 +62,7 @@ router.put(
   validation.notification,
   validation.is_finished,
   (req, res) => {
+    const payload = { ...req.body };
     const result = validationResult(req);
     if (!result.isEmpty()) {
       console.log(validationResult(req));
@@ -78,8 +84,9 @@ router.put(
 );
 //Deletes a schedule
 router.delete("/:schedule_id", (req, res) => {
+  const payload = { ...req.body };
   service
-    .delete_$schedule_id$({ id: req.params.schedule_id })
+    .delete_$schedule_id$(payload)
     .then((result) => {
       console.log(result);
       res.status(200).json({ result });

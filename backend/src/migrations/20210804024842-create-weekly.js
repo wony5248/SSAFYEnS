@@ -1,39 +1,45 @@
-'use strict';
+"use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('weeklies', {
-      id: {
+    await queryInterface.createTable("weeklies", {
+      //id
+      weekly_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
-      week: {
-        type: Sequelize.STRING
-      },
-      month: {
-        type: Sequelize.STRING
-      },
-      year: {
-        type: Sequelize.STRING
-      },
-      user_id: {
-        type: Sequelize.STRING
-      },
-      avgpoint: {
-        type: Sequelize.INTEGER
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
+
+      //date
+      week: Sequelize.STRING,
+      month: Sequelize.STRING,
+      year: Sequelize.STRING,
+      user_id: Sequelize.STRING,
+
+      //statics
+      cnt_schedule: Sequelize.INTEGER,
+      sum_point: Sequelize.INTEGER,
+
+      //tail
+      // created_at: {
+      //   allowNull: false,
+      //   type: Sequelize.DATE,
+      //   defaultValue: Sequelize.literal(`CURRENT_TIMESTAMP`),
+      // },
+      // updated_at: {
+      //   allowNull: false,
+      //   type: Sequelize.DATE,
+      //   defaultValue: Sequelize.literal(`CURRENT_TIMESTAMP`),
+      // },
+
+      //environment 추가
+      sum_humidity: Sequelize.INTEGER,
+      sum_illuminance: Sequelize.INTEGER,
+      sum_noise: Sequelize.INTEGER,
+      sum_temperature: Sequelize.INTEGER,
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('weeklies');
-  }
+    await queryInterface.dropTable("weeklies");
+  },
 };
