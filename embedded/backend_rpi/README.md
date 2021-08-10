@@ -35,15 +35,78 @@
 ### 일정 삭제
     DELETE 127.0.0.1:4500/schedule/:id
 
-### 일정 가져오기
+### 특정 일정 가져오기
     GET 127.0.0.1:4500/schedule/:id
 
+### 현재 일정 가져오기
+    GET 127.0.0.1:4500/schedule/getdaily/:date/current
+    date 형식 => 20210810
+    return : {
+    "id": 47,
+    "user_id": "wony5248",
+    "month": "8",
+    "year": "2021",
+    "week": "32",
+    "date": "0809-12-31T15:32:08.000Z",
+    "title": "공부",
+    "context": "공부 하기",
+    "started_at": "2021-08-09T15:00:00.000Z",
+    "finished_at": "2021-08-10T08:00:00.000Z",
+    "deadline_at": "2021-08-10T09:00:00.000Z",
+    "point": 0,
+    "is_finished": false,
+    "notification": "2021-08-10T07:30:00.000Z",
+    "noti_extend": 0,
+    "challenge_id": null,
+    "createdAt": "2021-08-10T04:21:45.000Z",
+    "updatedAt": "2021-08-10T04:21:45.000Z"
+    }
 ### 하루일정 갖져오기
     GET 127.0.0.1:4500/schedule/getdaily/:date
     date 형식 => 20210810
     return : [
     {
-        "id": 42,
+        "id": 47,
+        "user_id": "wony5248",
+        "month": "8",
+        "year": "2021",
+        "week": "32",
+        "date": "0809-12-31T15:32:08.000Z",
+        "title": "공부",
+        "context": "공부 하기",
+        "started_at": "2021-08-09T15:00:00.000Z",
+        "finished_at": "2021-08-10T08:00:00.000Z",
+        "deadline_at": "2021-08-10T09:00:00.000Z",
+        "point": 0,
+        "is_finished": false,
+        "notification": "2021-08-10T07:30:00.000Z",
+        "noti_extend": 0,
+        "challenge_id": null,
+        "createdAt": "2021-08-10T04:21:45.000Z",
+        "updatedAt": "2021-08-10T04:21:45.000Z"
+    },
+    {
+        "id": 46,
+        "user_id": "wony5248",
+        "month": "8",
+        "year": "2021",
+        "week": "32",
+        "date": "0809-12-31T15:32:08.000Z",
+        "title": "공부",
+        "context": "공부 하기",
+        "started_at": "2021-08-10T08:00:00.000Z",
+        "finished_at": "2021-08-10T10:00:00.000Z",
+        "deadline_at": "2021-08-10T11:30:00.000Z",
+        "point": 0,
+        "is_finished": false,
+        "notification": "2021-08-10T09:30:00.000Z",
+        "noti_extend": 0,
+        "challenge_id": null,
+        "createdAt": "2021-08-10T04:19:54.000Z",
+        "updatedAt": "2021-08-10T04:19:54.000Z"
+    },
+    {
+        "id": 44,
         "user_id": "wony5248",
         "month": "8",
         "year": "2021",
@@ -51,16 +114,36 @@
         "date": "0809-12-31T15:32:08.000Z",
         "title": "수면",
         "context": "수면 하기",
-        "started_at": "2021-08-09T15:00:00.000Z",
-        "finished_at": "2021-08-10T08:00:00.000Z",
-        "deadline_at": "2021-08-09T23:30:00.000Z",
+        "started_at": "2021-08-10T10:00:00.000Z",
+        "finished_at": "2021-08-10T12:00:00.000Z",
+        "deadline_at": "2021-08-10T13:00:00.000Z",
         "point": 0,
         "is_finished": false,
-        "notification": "2021-08-10T00:56:00.000Z",
+        "notification": "2021-08-10T11:30:00.000Z",
         "noti_extend": 0,
         "challenge_id": null,
-        "createdAt": "2021-08-09T16:36:13.000Z",
-        "updatedAt": "2021-08-10T00:56:14.000Z"
+        "createdAt": "2021-08-10T04:18:54.000Z",
+        "updatedAt": "2021-08-10T04:18:54.000Z"
+    },
+    {
+        "id": 45,
+        "user_id": "wony5248",
+        "month": "8",
+        "year": "2021",
+        "week": "32",
+        "date": "0809-12-31T15:32:08.000Z",
+        "title": "운동",
+        "context": "운동 하기",
+        "started_at": "2021-08-10T12:00:00.000Z",
+        "finished_at": "2021-08-10T14:30:00.000Z",
+        "deadline_at": "2021-08-10T14:30:00.000Z",
+        "point": 0,
+        "is_finished": false,
+        "notification": "2021-08-10T14:00:00.000Z",
+        "noti_extend": 0,
+        "challenge_id": null,
+        "createdAt": "2021-08-10T04:19:13.000Z",
+        "updatedAt": "2021-08-10T04:19:13.000Z"
     }
     ]
     시간 순서대로 옴
