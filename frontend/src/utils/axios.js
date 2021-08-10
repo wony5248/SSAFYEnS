@@ -40,3 +40,32 @@ export const userAPI = {
         })
     }
 };
+
+export const groupAPI = {
+    addGroup:(name, context)=>{
+        return request.post('/group', {
+             name, context, 
+        })
+    },
+    checkGroupId:(name)=>{
+        return request.post(`/group/namevalidation`,{
+            name
+        })
+    },
+    getGroup:(id)=>{
+        return request.get(`/group/${id}`)
+    },
+    updateGroup:(id)=>{
+        return request.put(`/group/${id}`,{
+        })
+    },
+    deleteGroup:(id)=>{
+        return request.delete(`/group/${id}`,{
+        })
+    },
+    searchGroup:(question)=>{
+        return request.porst(`/group/search`,{
+            q:question
+        })
+    },
+}

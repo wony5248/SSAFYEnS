@@ -13,6 +13,9 @@ import Groupmanage from './pages/groupmanage'
 import MyPage from './pages/mypage'
 import Groupinfo from './pages/groupinfo';
 import DailyEvaluate from './pages/dailyevaluate';
+import ModifyUserInfo from './pages/modifyuserinfo';
+import CheckPw from './pages/checkpasswd';
+import Average from './pages/average';
 
 const App = () =>{
   return (
@@ -21,7 +24,7 @@ const App = () =>{
         <Route exact path = "/" component={Main}/>
         <Route exact path = "/plan" component={Plan}/>
         <Route exact path = "/planlist" component={PlanList}/>
-        <Route exact path = "/planmodify" component={PlanModify}/>
+        <Route exact path = "/planmodify/:date/:id" component={PlanModify}/>
         <Route exact path = "/login" component={LogIn}/>
         <Route exact path = "/signup" component={Signup}/>
         <Route exact path = "/group/:id/manage" component = {Groupmanage}/>
@@ -30,6 +33,9 @@ const App = () =>{
         <Route exact path = "/find" component={Find}/>
         <Route exact path = "/mypage" component={MyPage}/>
         <Route exact path = "/dailyevaluate" component={DailyEvaluate}/>
+        <Route exact path = "/modifyuserinfo/:id" component={ModifyUserInfo}/>
+        <Route exact path = "/checkpassword/:id" component={CheckPw}/>
+        <Route exact path = "/average" component={Average}/>
       </Switch>
     </BrowserRouter>
   );

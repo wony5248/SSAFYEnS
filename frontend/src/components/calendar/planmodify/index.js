@@ -11,7 +11,10 @@ import OpacityIcon from '@material-ui/icons/Opacity';
 import {Thermometer} from 'react-feather';
 import {scheduleAPI} from '../../../utils/axios';
 
-const PlanModify = () =>{
+const PlanModify = (props) =>{
+    const {date, id} = props;
+    console.log(date);
+    console.log(id);
     let history = useHistory();
     const location = useLocation();
     const [query, setQuery] = useState('react');

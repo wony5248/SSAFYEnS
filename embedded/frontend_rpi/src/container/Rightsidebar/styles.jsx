@@ -4,7 +4,9 @@ const Rightsidecontainer = styled.div`
   display: flex-row;
   width: 16%;
   margin: 0px;
-  color: #121212;
+  height: 99%;
+  color: ${props => props.isdark === true ? "white" : "#424242"};
+  background-color: ${props => props.isdark === true ? "#424242" : "white"};
   font-size: 20px;
 `;
 
