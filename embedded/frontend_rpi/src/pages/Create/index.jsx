@@ -132,7 +132,7 @@ const Changecalendarlayout = () => {
       if (window.confirm("생성하시겠 습니까?")) {
         await axios
           .post(`http://127.0.0.1:4500/schedule`, {
-            date: `${moment().format("MMDD")}`,
+            date: `${moment().format("YYYYMMDD")}`,
             started_at: `${moment().format("YYYYMMDD")} ${
               starttime[0] + starttime[1] + starttime[2] + starttime[3]
             }`,

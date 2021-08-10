@@ -9,6 +9,7 @@ var moment = require("moment");
 router.post("/", async function (req, res, next) {
   await axios
     .post("http://i5a109.p.ssafy.io:8079/schedule", {
+      
       date: req.body.date,
       started_at: req.body.started_at,
       finished_at: req.body.finished_at,
@@ -53,7 +54,7 @@ router.delete("/:id", async function (req, res, next) {
       console.log(error);
     });
 });
-
+// 일정 변경 및 완료
 router.put("/:id", async function (req, res, next) {
   console.log("여기");
   console.log("저기");
@@ -113,6 +114,12 @@ router.get("/getdaily/:date/current", async function (req, res, next) {
     .get(`http://i5a109.p.ssafy.io:8079/schedule/daily/${req.params.date}`)
     .then((response) => {
       for (let i = 0; i < response.data.data.length; i++) {
+
+        response.data.data[i].date = moment(response.data.data[i].date).format("YYYYMMDD")
+        response.data.data[i].started_at = moment(response.data.data[i].started_at).format("YYYYMMDD HHmm")
+        response.data.data[i].finished_at = moment(response.data.data[i].finished_at).format("YYYYMMDD HHmm")
+        response.data.data[i].deadline_at = moment(response.data.data[i].deadline_at).format("YYYYMMDD HHmm")
+        response.data.data[i].notification = moment(response.data.data[i].notification).format("YYYYMMDD HHmm")
         const startTime = Number(
           moment(response.data.data[i].started_at).format("HH")
         );
@@ -158,14 +165,37 @@ router.get("/getdaily/:date/current", async function (req, res, next) {
       console.log(error);
     });
 });
+// 하루일정 가져오기 음성비서용
+router.get("/getdaily/secretary/:date", async function (req, res, next) {
+  await axios
+    .get(`http://i5a109.p.ssafy.io:8079/schedule/daily/${req.params.date}`)
+    .then((response) => {
+      const arr = response.data.data;
+      arr.sort(function (a, b) {
+        return (
+          Number(moment(a.started_at).format("HHmm")) -
+          Number(moment(b.started_at).format("HHmm"))
+        );
+      });
+      for (let i =0; i < arr.length; i++){
+        arr[i].date = moment(arr[i].date).format("YYYYMMDD")
+        arr[i].started_at = moment(arr[i].started_at).format("YYYYMMDD HHmm")
+        arr[i].finished_at = moment(arr[i].finished_at).format("YYYYMMDD HHmm")
+        arr[i].deadline_at = moment(arr[i].deadline_at).format("YYYYMMDD HHmm")
+        arr[i].notification = moment(arr[i].notification).format("YYYYMMDD HHmm")
+      }
+      res.send(arr);
+      console.log(22222);
+    })
+    .catch(function (error) {
+      res.send(error);
+      console.log(11111);
+      console.log(error);
+    });
+});
 
 // 하루일정 가져오기
 router.get("/getdaily/:date", async function (req, res, next) {
-  console.log("여기야여기");
-
-  console.log(req);
-  console.log("저기야저기");
-  console.log(req.body);
   await axios
     .get(`http://i5a109.p.ssafy.io:8079/schedule/daily/${req.params.date}`)
     .then((response) => {
