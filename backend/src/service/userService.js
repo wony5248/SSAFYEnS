@@ -266,6 +266,7 @@ exports.logout = function (req, res, next) {
     // swagger에서 실험한 결과입니다
     console.log(req.headers["x-access-token"]) // undefined
     console.log(req.headers["access_token"])  // swagger 기준 실제 jwt 값 나옴
+    
     const payload = jsonwebtoken.verify(
       req.headers["access_token"],
       config.secret || 'secret',
@@ -278,6 +279,7 @@ exports.logout = function (req, res, next) {
           return resolve(decoded)
         }
       })
+      
     // 이게 필요한가?? 컨설턴트님이 말씀하신 경우 아니라면 FE에서 storage 삭제할 일
     // 컨설턴트님 말한거처럼 whitelist 운영을 위해 남겨놓겠습니다...
   });
