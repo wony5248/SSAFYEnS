@@ -16,6 +16,7 @@
     POST 127.0.0.1:4500/schedule
     data : {
             date: 20210810 1640,
+            started_at: 20210810 1640,
             finished_at: 20210810 1840 ,
             deadline_at: 20210810 2040,
             notification: 20210810 1830,
@@ -37,6 +38,7 @@
 
 ### 특정 일정 가져오기
     GET 127.0.0.1:4500/schedule/:id
+
 
 ### 현재 일정 가져오기
     GET 127.0.0.1:4500/schedule/getdaily/:date/current
@@ -61,7 +63,11 @@
     "createdAt": "2021-08-10T04:21:45.000Z",
     "updatedAt": "2021-08-10T04:21:45.000Z"
     }
-### 하루일정 갖져오기
+
+### 하루 일정 가져오기 음성비서용
+    GET 127.0.0.1:4500/schedule/getdaily/secretary/:date
+
+### 하루일정 가져오기
     GET 127.0.0.1:4500/schedule/getdaily/:date
     date 형식 => 20210810
     return : [
