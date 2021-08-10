@@ -4,6 +4,8 @@ import axios from "axios";
 import styled from "styled-components";
 import moment from "moment";
 import { useUserContext } from "../../context";
+import 'moment/locale/ko';
+
 const Todaycontainer = styled.div`
   overflow: auto;
   width: auto;

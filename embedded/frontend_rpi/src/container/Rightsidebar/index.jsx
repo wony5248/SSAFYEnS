@@ -10,6 +10,7 @@ import AddBoxIcon from "@material-ui/icons/AddBox";
 import axios from "axios";
 import moment from "moment";
 import { useUserContext } from "../../context";
+import 'moment/locale/ko';
 const Datediv = styled.div`
   width: auto;
   height: 20%;

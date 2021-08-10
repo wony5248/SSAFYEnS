@@ -6,6 +6,8 @@ import Input from "@material-ui/core/Input";
 import axios from "axios";
 import moment from "moment";
 import { useUserContext } from "../../context";
+import 'moment/locale/ko';
+
 const Changeselect = styled1.select`
   width: 15%;
   border: 0px;

@@ -4,6 +4,7 @@ import styled from "styled-components";
 import axios from "axios";
 import moment from "moment";
 import { useUserContext } from "../../context";
+import 'moment/locale/ko';
 
 const Progresscontainer = styled.div`
   overflow: auto;

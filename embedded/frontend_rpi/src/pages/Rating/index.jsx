@@ -4,6 +4,7 @@ import styled1 from "styled-components";
 import Ratingstar from "@material-ui/lab/Rating";
 import { withStyles } from "@material-ui/core/styles";
 import moment from "moment";
+import 'moment/locale/ko';
 import { green } from "@material-ui/core/colors";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -155,6 +156,7 @@ const Ratinglayout = (props) => {
   const [selectedValue2, setSelectedValue2] = React.useState("1");
   const [selectedValue3, setSelectedValue3] = React.useState("1");
   const [selectedValue4, setSelectedValue4] = React.useState("1");
+  const [isnoti, setIsnoti] = useState(0)
   const [starttime, setStarttime] = useState("");
   const [deadline, setDeadline] = useState("");
   const [context, setContext] = useState("");
