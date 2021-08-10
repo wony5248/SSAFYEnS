@@ -1,3 +1,6 @@
+embedded/backend/node_modules
+embedded/frontend_rpi/node_modules
+embedded/frontend_rpi/package-lock.json
 # Editor : KJH
 # version : 0.1
 

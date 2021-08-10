@@ -1,5 +1,43 @@
 import React, { Component } from "react";
+import styled from "styled-components";
+import TimerIcon from '@material-ui/icons/Timer';
+import { useUserContext } from "../../context";
+const Stopwatchdiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  border-radius: 4px;
+  width: auto;
+  height: 45.4%;
+  color: ${props => props.isdark ? "white" : "#121212"};
+  margin: 12px 0px;
+  font-size: 40px;
+  padding: 4px;
+  padding-left:16px;
+  padding-right:16px;
+`;
+const Stopwatchbtn = styled.button`
 
+border-radius: 4px;
+width: 20%;
+height: 15%;
+color: white;
+background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
+margin: 12px 0px;
+font-size: 40px;
+padding: 4px;
+padding-left:16px;
+padding-right:16px;
+`;
+
+const Titlediv = styled.div`
+
+display:flex;
+align-items: center;
+justify-content: space-around;
+`;
 class Stopwatch extends Component {
   state = {
     timerOn: false,
@@ -8,6 +46,7 @@ class Stopwatch extends Component {
   };
 
   startTimer = () => {
+    
     this.setState({
       timerOn: true,
       timerTime: this.state.timerTime,
@@ -34,33 +73,32 @@ class Stopwatch extends Component {
 
   render() {
     const { timerTime } = this.state;
-
+    const {isdark} = this.props;
     let seconds = ("0" + (Math.floor(timerTime / 1000) % 60)).slice(-2);
     let minutes = ("0" + (Math.floor(timerTime / 60000) % 60)).slice(-2);
     let hours = ("0" + Math.floor(timerTime / 3600000)).slice(-2);
     return (
-      <div>
-        <div>Stopwatch</div>
-        <div>Hours : Minutes : Seconds</div>
+      <Stopwatchdiv isdark = {isdark}>
+        <Titlediv><TimerIcon fontSize = "100%"/>Stopwatch</Titlediv>
         <div>
           {hours} : {minutes} : {seconds}
         </div>
 
         {this.state.timerOn === false && this.state.timerTime === 0 && (
-          <button onClick={this.startTimer}>Start</button>
+          <Stopwatchbtn isdark = {isdark} onClick={this.startTimer}>Start</Stopwatchbtn>
         )}
         {this.state.timerOn === true && (
-          <button onClick={this.stopTimer}>Stop</button>
+          <Stopwatchbtn isdark = {isdark} onClick={this.stopTimer}>Stop</Stopwatchbtn>
         )}
         {this.state.timerOn === false && this.state.timerTime > 0 && (
-          <button onClick={this.startTimer}>Resume</button>
+          <Stopwatchbtn isdark = {isdark} onClick={this.startTimer}>Resume</Stopwatchbtn>
         )}
         {this.state.timerOn === false && this.state.timerTime > 0 && (
-          <button onClick={this.resetTimer}>Reset</button>
+          <Stopwatchbtn isdark = {isdark} onClick={this.resetTimer}>Reset</Stopwatchbtn>
         )}
-      </div>
+      </Stopwatchdiv>
     );
   }
-}
+}Stopwatch.contextType = useUserContext
 
 export default Stopwatch;

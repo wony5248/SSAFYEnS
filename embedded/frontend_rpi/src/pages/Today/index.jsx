@@ -1,21 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import Layout from "../../layout";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
-
+import moment from "moment";
+import { useUserContext } from "../../context";
 const Todaycontainer = styled.div`
   overflow: auto;
   width: auto;
-  height: 98.2%;
+  height: 97.1%;
   color: #a3cca3;
-  background-color: white;
-  border: 1px solid #a3cca3;
   margin: 0px;
-  padding-top: 14px;
+  padding-top: 1%;
   padding-right: 12px;
   padding-left: 12px;
-  padding-bot: 14px;
+  padding-bottom: 1%;
 `;
 const Todaytitle = styled.div`
   display: flex-row;
@@ -24,9 +22,9 @@ const Todaytitle = styled.div`
   border-radius: 4px;
   justify-content: space-around;
   width: auto;
+  color: white;
   height: 20%;
-  color: #a3cca3;
-  background-color: #a3cca3;
+  background-color: ${props => props.isdark === true ? "gray" : "#a3cca3"};
   margin-bottom: 14px;
   padding: 0px;
 `;
@@ -36,8 +34,6 @@ const Todaytitlenamecon = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white;
-  background-color: #a3cca3;
   margin: 0px 16px;
   padding-top: 4px;
 `;
@@ -46,8 +42,6 @@ const Todaygoal = styled.div`
   height: 20%;
   display: flex;
   align-items: center;
-  color: white;
-  background-color: #a3cca3;
   margin: 0px 16px;
   padding-top: 4px;
 `;
@@ -55,18 +49,14 @@ const Todaygoal = styled.div`
 const Todaytitlename = styled.div`
   width: auto;
   height: 100%;
-  color: white;
   display: flex;
   align-items: center;
-  background-color: #a3cca3;
   padding-top: 4px;
 `;
 
 const Todaytitletime = styled.div`
   width: auto;
   height: 100%;
-  color: white;
-  background-color: #a3cca3;
   padding-top: 4px;
 `;
 
@@ -75,19 +65,8 @@ const Todaychangecon = styled.div`
   height: 40%;
   display: flex;
   justify-content: space-between;
-  align-items:center;
-  color: white;
-  background-color: #a3cca3;
+  align-items: center;
   margin: 0px 16px;
-`;
-
-const Todaycontenttitle = styled.div`
-  width: auto;
-  height: auto;
-  color: white;
-  background-color: #a3cca3;
-  padding: 0px;
-  margin-bottom: 14px;
 `;
 
 const Todaychangebtn = styled.button`
@@ -95,60 +74,92 @@ const Todaychangebtn = styled.button`
   height: 60%;
   border-radius: 8px;
   border: 0px;
+  display: flex;
+  align-items: center;
+  background-color: ${props => props.isdark === true ? "#424242" : "#69a569"};
   color: white;
-  display:flex;
-  align-items:center;
   justify-content: center;
-  background-color: #69a569;
   padding: 4px;
 `;
-{/* <ul>
-{itemList.map((item) => (
-  <li key = {item.Title}>
-      {item.Content}
-  </li>
-))}
-</ul> */}
+
 const Todaylayout = () => {
-  const [loading, setLoading] = useState(false);
   const [itemList, setItemList] = useState([]);
+  const { isdarked } = useUserContext();
   useEffect(() => {
     async function loadCalendar() {
-      const result = await axios
-        .get("./today.json")
+      console.log(moment().format("YYYYMMDD"));
+      await axios
+        .get(
+          `http://127.0.0.1:4500/schedule/getdaily/${moment().format("YYYYMMDD")}`
+        )
         .then(({ data }) => {
-          setLoading(true);
-          setItemList(data.Item);
-          console.log(data.Item);
+          console.log(data);
+          setItemList(data);
+          console.log(itemList);
         })
-        .catch((e) => {
-          console.error(e);
-          setLoading(false);
-        });
+        .catch((e) => {});
     }
     loadCalendar();
-    const interval = setInterval(() => {
+    setInterval(() => {
       loadCalendar();
-    }, 10000);
+    }, 600000);
+    console.log(isdarked)
+    console.log(window.localStorage.getItem("isdark"))
+    console.log(window.localStorage.getItem("istoggle"))
   }, []);
-
+  
   return (
     <Todaycontainer>
-      {itemList.map((item) => (
-        <Todaytitle>
-        <Todaytitlenamecon>
-          <Todaytitlename>{item.Title}</Todaytitlename>
-          <Todaytitletime>{item.StartTime} ~ {item.EndTime}</Todaytitletime>
-        </Todaytitlenamecon>
-        <Todaygoal>{item.Goal}</Todaygoal>
-        <Todaychangecon>
-          <Todaytitlename>{item.Content}</Todaytitlename>
-          <Todaychangebtn onClick={() => window.location.replace(`/Rating/${item.StartTime}`)}>
-            완료
-          </Todaychangebtn>
-        </Todaychangecon>
-      </Todaytitle>
-      ))}
+      {itemList.length !== 0 ? (
+        <div style={{ height: "100%" }}>
+          {itemList.map((item) => (
+            <Todaytitle isdark = {isdarked}>
+              <Todaytitlenamecon>
+                <Todaytitlename>일정 제목</Todaytitlename>
+                <Todaytitletime>
+                  {moment(item.started_at).format("HH:mm")} ~{" "}
+                  {moment(item.finished_at).format("HH:mm")}
+                </Todaytitletime>
+              </Todaytitlenamecon>
+              <Todaygoal>{item.title}</Todaygoal>
+              
+                {item.is_finished ? (
+                  <Todaychangecon>
+                    <Todaytitlename style={{width:"500px"}}>{item.context}</Todaytitlename>
+                    <Todaytitlename>
+                      이미 완료된 일정입니다.
+                    </Todaytitlename>
+                  </Todaychangecon>
+                ) : (
+                  <Todaychangecon>
+                    <Todaytitlename>{item.context}</Todaytitlename>
+                    <Todaychangebtn
+                      isdark = {isdarked}
+                      onClick={() =>
+                        window.location.replace(`/Rating/${item.id}`)
+                      }
+                    >
+                      완료
+                    </Todaychangebtn>
+                  </Todaychangecon>
+                )}
+            </Todaytitle>
+          ))}
+        </div>
+      ) : (
+        <div
+          style={{
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: "40px",
+            color: "#121212",
+          }}
+        >
+          등록된 오늘 일정이 없습니다.
+        </div>
+      )}
     </Todaycontainer>
   );
 };

@@ -1,33 +1,133 @@
 import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { AppBar, Toolbar, Typography } from "@material-ui/core";
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardContent from "@material-ui/core/CardContent";
+import { styled } from "@material-ui/core/styles";
+import Clock from "react-live-clock";
+import Logo from "../../assets/ssafyenslogo.png";
+import Progressimg from "../../assets/Progress.jpg";
+import Grid from "@material-ui/core/Grid";
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+    height: "40%",
+  },
+  title: {
+    flexGrow: 1,
+  },
+  grid: {
+    padding: "24px",
+  },
+}));
+const MuiToolbar = styled(Toolbar)({
+  display: "flex",
+  alignItems: "center",
+  fontSize: "20px",
+});
+const MuiAppbar = styled(AppBar)({
+  backgroundColor: "#a3cca3",
+  display: "flex",
+  justifyContent: "center",
+});
 
-import Layout from "../../layout";
-import { Link } from "react-router-dom";
-
-const Homelayout = () => {
-  return (
-        <div>
-          <div>Home</div>
-          <Link to="/">Home</Link>
-          <br></br>
-          <Link to="/Progress">Progress</Link>
-          <br></br>
-          <Link to="/Change">Change</Link>
-          <br></br>
-          <Link to="/Rating">Rating</Link>
-          <br></br>
-          <Link to="/Timer">Timer</Link>
-          <br></br>
-          <Link to="/Today">Today</Link>
-          
-        </div>
-  );
-};
+const MuiTypo = styled(Typography)({
+  display: "flex",
+  alignItems: "center",
+});
 
 const HOME = () => {
+  const classes = useStyles();
   return (
-    <Layout
-      pages={Homelayout()}
-    ></Layout>
+    <div>
+      <MuiAppbar position="static">
+        <MuiToolbar>
+          <MuiTypo variant="h6" className={classes.title}>
+            <img src={Logo} alt="logo" width="20%" />
+          </MuiTypo>
+          <Clock
+            format={"YYYY년MM월DD일 hh시mm분ss초"}
+            ticking={true}
+            timezone={"Asia/Seoul"}
+          />
+        </MuiToolbar>
+      </MuiAppbar>
+      <Grid className={classes.grid} container spacing={3}>
+        <Grid item xs={5}>
+          <Card className={classes.root}>
+            <CardActionArea>
+              <img src={Progressimg} alt="progress" width="40%"></img>
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  Progress
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Lizards are a widespread group of squamate reptiles, with over
+                  6,000 species, ranging across all continents except Antarctica
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        </Grid>
+        <Grid item xs={5}>
+          <Card className={classes.root}>
+            <CardActionArea>
+              <img src={Progressimg} alt="progress" width="40%"></img>
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  Today
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Lizards are a widespread group of squamate reptiles, with over
+                  6,000 species, ranging across all continents except Antarctica
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        </Grid>
+        <Grid item xs={4}>
+          <Card className={classes.root}>
+            <CardActionArea>
+              <img src={Progressimg} alt="progress" width="40%"></img>
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  Change
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Lizards are a widespread group of squamate reptiles, with over
+                  6,000 species, ranging across all continents except Antarctica
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        </Grid>
+        <Grid item xs={4}>
+          <Card className={classes.root}>
+            <CardActionArea>
+              <img src={Progressimg} alt="progress" width="40%"></img>
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  Timer
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Lizards are a widespread group of squamate reptiles, with over
+                  6,000 species, ranging across all continents except Antarctica
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        </Grid>
+      </Grid>
+    </div>
   );
 };
 
