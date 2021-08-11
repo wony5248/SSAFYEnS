@@ -46,6 +46,23 @@ export const userAPI = {
             user_id: id, name, email, cellphone:number, password
         })
     },
+    validateGroupName:(name)=>{
+        return request.post(`/group/namevalidation`,{
+            name
+        })
+    },
+    findAllGroup:()=>{
+        return request.post(`/group/search`,{
+            q : ""
+        })
+    },
+    getGroup:(id)=>{
+        return request.get(`/group/${id}`)
+    },
+    updateGroup:(id)=>{
+        return request.put(`/group/${id}`,{
+        })
+    },
     mypage: (id)=>{
         return request.get(`/user/${id}`,{
             user_id:id

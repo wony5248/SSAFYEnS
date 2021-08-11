@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Wrapper from './styles';
 import CloseIcon from '@material-ui/icons/Close';
-import { TextareaAutosize } from '@material-ui/core';
+
 const Headdiv = styled.div`
     width:100%;
     height:60px;

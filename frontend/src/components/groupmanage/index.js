@@ -6,6 +6,7 @@ import { styled, makeStyles } from "@material-ui/styles";
 import { Divider } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import Create from "../challengecreate";
+import { groupAPI } from "../../utils/axios";
 const columns = [
   {
     field: "id",
@@ -228,7 +229,6 @@ const Challengebtn = styled1.button`
   font-size: 16px;
   background-color: #a3cca3;
   align-content:flex-end;
-
   border:none;
   color: white;
   &:hover{
@@ -261,6 +261,7 @@ const Groupmanage = (props) => {
   const [isleader, setIsleader] = useState(true);
   const [createopen, setCreateopen] = useState(false);
   const [select, setSelect] = useState([]);
+  const [title, setTitle] = useState("")
   const openCreateModal = () => {
     setCreateopen(true);
   };
@@ -271,6 +272,18 @@ const Groupmanage = (props) => {
   const { id } = props;
   console.log(id);
   console.log(select);
+  useEffect(() => {
+    async function loadGroup() {
+      await groupAPI
+        .getGroup(id)
+        .then(({ data }) => {
+          setTitle(data.name)
+        })
+        .catch((e) => {});
+    }
+    loadGroup();
+    
+  }, []);
   return (
     <div style={{ padding: "24px 0" }}>
       {isleader ? (
@@ -279,19 +292,20 @@ const Groupmanage = (props) => {
             <Challengebtn onClick={() => window.location.replace("/group")}>
               뒤로 가기
             </Challengebtn>
-            <GroupNamediv>JBJ와 함께하는 Electron</GroupNamediv>
+            <GroupNamediv>{title}</GroupNamediv>
             <Challengebtn onClick={openCreateModal}>챌린지 만들기</Challengebtn>
           </Grouptitlediv>
           <Joineddiv>
             <Availablediv>그룹 구성원</Availablediv>
             <Create open={createopen} close={closeCreateModal} />
+            <Challengebtn onClick={openCreateModal}>그룹 삭제</Challengebtn>
           </Joineddiv>
           <div style={{ height: 400, width: "100%" }}>
             <Muidatagrid
               rows={possiblegroup}
               columns={columns}
               pageSize={5}
-              onSelectionModelChange={itm => setSelect(itm)}
+              onSelectionModelChange={(itm) => setSelect(itm)}
             />
           </div>
           <Joindiv>
@@ -319,7 +333,7 @@ const Groupmanage = (props) => {
               rows={joinedgroup}
               columns={application}
               pageSize={5}
-              onSelectionModelChange={itm => setSelect(itm)}
+              onSelectionModelChange={(itm) => setSelect(itm)}
             />
           </div>
           <Joindiv>
@@ -337,34 +351,7 @@ const Groupmanage = (props) => {
         </Wrapper>
       ) : (
         <Wrapper>
-          <Grouptitlediv>
-            <div style={{ width: "140px" }}></div>
-            <GroupNamediv>JBJ와 함께하는 Electron</GroupNamediv>
-            <div style={{ width: "140px" }}></div>
-          </Grouptitlediv>
-          <Joineddiv>
-            <Availablediv>그룹 구성원</Availablediv>
-            <div
-              style={{ width: "25%", display: "flex", alignItems: "center" }}
-            >
-              <Groupinput value="장범진" dir="rtl"></Groupinput>
-              <Searchbtn>
-                <SearchIcon
-                  fontSize="large"
-                  style={{ color: "#a3cca3" }}
-                ></SearchIcon>
-              </Searchbtn>
-            </div>
-          </Joineddiv>
-          <div style={{ height: 400, width: "100%" }}>
-            <Muidatagrid
-              rows={possiblegroup2}
-              columns={columns}
-              pageSize={5}
-              checkboxSelection
-              disableSelectionOnClick
-            />
-          </div>
+          그룹장만 관리할 수 있습니다.
         </Wrapper>
       )}
     </div>

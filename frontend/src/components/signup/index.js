@@ -56,6 +56,7 @@ const SignUp = () =>{
     const handleIdLabel = async () => {
         try {
             const result = await userAPI.checkUserId(id);
+            console.log(result)
             setIdLabel(true);
             setCheckId('사용 가능한 아이디입니다.');
         } catch (error) {
