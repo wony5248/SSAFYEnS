@@ -223,7 +223,6 @@ exports.migrate = async (prev_schedule, next_schedule) => {
     });
 
     if (weeklyResult == null) {
-      //weekly가 해당 존재하지않음
       console.log(`week 가 존재하지 않습니다.1`);
       await db["weekly"].create({
         week,
