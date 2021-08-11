@@ -15,7 +15,6 @@ exports.migrate_undo = async (prev_schedule, next_schedule) => {
       temperature,
       user_id,
     } = prev_schedule;
-
     const started_day = moment(prev_schedule.started_at).startOf("day");
 
     const dailyResult = await db["daily"].findOne({
@@ -30,39 +29,29 @@ exports.migrate_undo = async (prev_schedule, next_schedule) => {
         ],
       },
     });
-    //update할 일자 정보가 없음.
-    console.log("시발:", dailyResult.dataValues.cnt_schedule);
     if (dailyResult == null || dailyResult[0] == 0) {
-      console.log("해당 daily를 찾을 수 없습니다.1");
-      await db["daily"].create({
-        date: started_day,
-        week,
-        month,
-        year,
-        user_id,
-        point,
-        cnt_schedule: 1,
-        is_finished: true,
-      });
+      return reject("해당 daily를 찾을 수 없습니다.1");
+      // await db["daily"].create({
+      //   date: started_day,
+      //   week,
+      //   month,
+      //   year,
+      //   user_id,
+      //   point,
+      //   cnt_schedule: 1,
+      //   is_finished: true,
+      // });
     } else if (dailyResult.dataValues.cnt_schedule == 1) {
       console.log("해당 daily를 제거합니다");
       dailyResult.destroy();
-      // await db["daily"].destroy({
-      //   where: {
-      //     [op.and]: [
-      //       {
-      //         date: started_day,
-      //       },
-      //       {
-      //         user_id,
-      //       },
-      //     ],
-      //   },
-      // });
     } else {
       console.log("해당 daily를 취소합니다");
       dailyResult.sum_point -= point;
       dailyResult.cnt_schedule -= 1;
+      dailyResult.sum_humidity -= humidity;
+      dailyResult.sum_illuminance -= illuminance;
+      dailyResult.sum_noise -= noise;
+      dailyResult.sum_temperature -= temperature;
     }
 
     //weekly 확인
@@ -84,14 +73,7 @@ exports.migrate_undo = async (prev_schedule, next_schedule) => {
 
     if (weeklyResult == null) {
       //weekly가 해당 존재하지않음
-      console.log(`week 가 존재하지 않습니다.1`);
-      db["weekly"].create({
-        week,
-        month,
-        year,
-        user_id,
-        sum_point,
-      });
+      return reject(`week 가 존재하지 않습니다.1`);
     } else if (weeklyResult.dataValues.cnt_schedule == 1) {
       console.log(`week 을 제거합니다.1`);
       await db["weekly"].destroy({
@@ -102,6 +84,11 @@ exports.migrate_undo = async (prev_schedule, next_schedule) => {
     } else {
       weeklyResult.sum_point -= point;
       weeklyResult.cnt_schedule -= 1;
+
+      weeklyResult.sum_humidity -= humidity;
+      weeklyResult.sum_illuminance -= illuminance;
+      weeklyResult.sum_noise -= noise;
+      weeklyResult.sum_temperature -= temperature;
     }
 
     const monthlyResult = await db["monthly"].findOne({
@@ -112,13 +99,7 @@ exports.migrate_undo = async (prev_schedule, next_schedule) => {
     });
 
     if (monthlyResult == null) {
-      console.log(`month 가 존재하지 않습니다.1`);
-      db["monthly"].create({
-        month,
-        year,
-        user_id,
-        sum_point,
-      });
+      return reject(`month 가 존재하지 않습니다.1`);
     } else if (monthlyResult.dataValues.cnt_schedule == 1) {
       console.log("해당 monthly를 제거합니다");
       await db["monthly"].destroy({
@@ -129,6 +110,11 @@ exports.migrate_undo = async (prev_schedule, next_schedule) => {
     } else {
       monthlyResult.sum_point -= point;
       monthlyResult.cnt_schedule -= 1;
+
+      monthlyResult.sum_humidity -= humidity;
+      monthlyResult.sum_illuminance -= illuminance;
+      monthlyResult.sum_noise -= noise;
+      monthlyResult.sum_temperature -= temperature;
     }
 
     const yearlyResult = await db["yearly"].findOne({
@@ -138,12 +124,7 @@ exports.migrate_undo = async (prev_schedule, next_schedule) => {
     });
 
     if (yearlyResult == null) {
-      console.log(`year 가 존재하지 않습니다.1`);
-      db["yearly"].create({
-        year,
-        user_id,
-        sum_point: point,
-      });
+      return reject(`year 가 존재하지 않습니다.1`);
     } else if (yearlyResult.dataValues.cnt_schedule == 1) {
       console.log("해당 yearly를 제거합니다");
       await db["yearly"].destroy({
@@ -154,6 +135,11 @@ exports.migrate_undo = async (prev_schedule, next_schedule) => {
     } else {
       yearlyResult.sum_point -= point;
       yearlyResult.cnt_schedule -= 1;
+
+      yearlyResult.sum_humidity -= humidity;
+      yearlyResult.sum_illuminance -= illuminance;
+      yearlyResult.sum_noise -= noise;
+      yearlyResult.sum_temperature -= temperature;
     }
     resolve([dailyResult, weeklyResult, monthlyResult, yearlyResult]);
   });
@@ -199,10 +185,19 @@ exports.migrate = async (prev_schedule, next_schedule) => {
         sum_point: point,
         cnt_schedule: 1,
         is_finished: false,
+        sum_humidity: humidity,
+        sum_illuminance: illuminance,
+        sum_noise: noise,
+        sum_temperature: temperature,
       });
     } else {
       dailyResult.sum_point += point;
       dailyResult.cnt_schedule += 1;
+
+      dailyResult.sum_humidity = humidity;
+      dailyResult.sum_illuminance = illuminance;
+      dailyResult.sum_noise = noise;
+      dailyResult.sum_temperature = temperature;
     }
 
     //weekly 확인
@@ -232,10 +227,20 @@ exports.migrate = async (prev_schedule, next_schedule) => {
         sum_point: point,
         cnt_schedule: 1,
         is_finished: true,
+
+        sum_humidity: humidity,
+        sum_illuminance: illuminance,
+        sum_noise: noise,
+        sum_temperature: temperature,
       });
     } else {
       weeklyResult.sum_point += point;
       weeklyResult.cnt_schedule += 1;
+
+      weeklyResult.sum_humidity = humidity;
+      weeklyResult.sum_illuminance = illuminance;
+      weeklyResult.sum_noise = noise;
+      weeklyResult.sum_temperature = temperature;
     }
 
     const monthlyResult = await db["monthly"].findOne({
@@ -263,10 +268,20 @@ exports.migrate = async (prev_schedule, next_schedule) => {
         sum_point: point,
         cnt_schedule: 1,
         is_finished: true,
+
+        sum_humidity: humidity,
+        sum_illuminance: illuminance,
+        sum_noise: noise,
+        sum_temperature: temperature,
       });
     } else {
       monthlyResult.sum_point += point;
       monthlyResult.cnt_schedule += 1;
+
+      monthlyResult.sum_humidity = humidity;
+      monthlyResult.sum_illuminance = illuminance;
+      monthlyResult.sum_noise = noise;
+      monthlyResult.sum_temperature = temperature;
     }
 
     const yearlyResult = await db["yearly"].findOne(
@@ -293,10 +308,20 @@ exports.migrate = async (prev_schedule, next_schedule) => {
         sum_point: point,
         cnt_schedule: 1,
         is_finished: true,
+
+        sum_humidity: humidity,
+        sum_illuminance: illuminance,
+        sum_noise: noise,
+        sum_temperature: temperature,
       });
     } else {
       yearlyResult.sum_point += point;
       yearlyResult.cnt_schedule += 1;
+
+      yearlyResult.sum_humidity = humidity;
+      yearlyResult.sum_illuminance = illuminance;
+      yearlyResult.sum_noise = noise;
+      yearlyResult.sum_temperature = temperature;
     }
     return resolve([dailyResult, weeklyResult, monthlyResult, yearlyResult]);
   });

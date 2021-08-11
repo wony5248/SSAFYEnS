@@ -75,7 +75,17 @@ exports.put_daily = function (payload) {
     //daily 평가 기능
     try {
       const { date, daily_context, user_id, month, year, week } = payload;
+      const dailyResult = await db["daily"].findOne({
+        where: {
+          date,
+        },
+      });
 
+      if (dailyResult == null) {
+        reject("해당 일에 대한 정보가 없습니다.");
+      } else {
+        dailyResult.daily_context = daily_context;
+      }
       //해당 일에 합산할 point와 schedule 개수를 알아내기 위해 당일 스케쥴을 검색
       const started_at = date;
       const finished_at = moment(date).add(1, "days").toDate();
@@ -106,6 +116,7 @@ exports.put_daily = function (payload) {
           return Promise.resolve(acc);
         }, Promise.resolve({}));
       }
+      dailyResult.save();
       return resolve({ result: "put" });
     } catch (error) {
       console.log(error);

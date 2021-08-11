@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       daily_context: DataTypes.STRING,
       sum_point: DataTypes.INTEGER,
       cnt_schedule: DataTypes.INTEGER,
-      sum_humanity: DataTypes.INTEGER,
+      sum_humidity: DataTypes.INTEGER,
       sum_illuminance: DataTypes.INTEGER,
       sum_noise: DataTypes.INTEGER,
       sum_temperature: DataTypes.INTEGER,

@@ -32,7 +32,7 @@ module.exports = {
       cnt_schedule: {
         type: Sequelize.INTEGER,
       },
-      sum_humanity: {
+      sum_humidity: {
         type: Sequelize.INTEGER,
       },
       sum_illuminance: {
