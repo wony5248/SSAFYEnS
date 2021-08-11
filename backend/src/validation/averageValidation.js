@@ -63,3 +63,4 @@ exports.year = check("year").customSanitizer((value, { req }) =>
 );
 exports.point = check("point").customSanitizer((value, { req }) => 0);
 exports.user_id = check("user_id").default("jbj");
+exports.daily_context = check("daily_context").notEmpty();

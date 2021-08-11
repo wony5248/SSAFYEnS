@@ -10,7 +10,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+<<<<<<< HEAD
       models.users.belongsTo(models.users, { foreignKey: user_id });
+=======
+
+      // M:N 관계
+      models.users.belongsToMany(models.groups, {foreignKey:"user_id", through: models.usersmngroups}) 
+>>>>>>> backend
     }
   }
   users.init(
@@ -28,9 +34,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
+<<<<<<< HEAD
       modelName: "users",
       createdAt: "created_at",
       updatedAt: false,
+=======
+      modelName: 'users',
+      createdAt: 'created_at', 
+      updatedAt: false
+>>>>>>> backend
     }
   );
   return users;

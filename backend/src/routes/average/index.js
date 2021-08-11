@@ -10,6 +10,7 @@ router.get(
   validation.month,
   validation.year,
   validation.week,
+  validation.user_id,
   (req, res) => {
     payload = { ...req.params, ...req.body };
     console.log("payload : ", payload);
@@ -17,12 +18,12 @@ router.get(
     const result = validationResult(req);
     if (!result.isEmpty()) {
       console.log(validationResult(req));
-      res.status("400").json({ result });
+      res.status("400").json({ error: result });
     } else {
       service
         .get_daily(payload)
         .then((data) => {
-          res.json({ data });
+          res.json(data);
         })
         .catch((error) => {
           res.status("405").json({ error });
@@ -33,12 +34,14 @@ router.get(
 
 //comment on daily
 //todo url post /average/daily/{date} context 기능 수정
-router.post(
+router.put(
   "/daily/",
   validation.date,
   validation.month,
   validation.year,
   validation.week,
+  validation.daily_context,
+  validation.user_id,
   (req, res) => {
     payload = { ...req.params, ...req.body };
     console.log("payload : ", payload);
@@ -46,12 +49,12 @@ router.post(
     const result = validationResult(req);
     if (!result.isEmpty()) {
       console.log(validationResult(req));
-      res.status("400").json({ result });
+      res.status("400").json({ error: result });
     } else {
       service
-        .post_daily(payload)
+        .put_daily(payload)
         .then((data) => {
-          res.json({ data });
+          res.json(data);
         })
         .catch((error) => {
           res.status("405").json({ error });
@@ -77,12 +80,12 @@ router.get(
     const result = validationResult(req);
     if (!result.isEmpty()) {
       console.log(validationResult(req));
-      res.status("400").json({ result });
+      res.status("400").json(result);
     } else {
       service
         .get_week(payload)
         .then((data) => {
-          res.json({ data });
+          res.json(data);
         })
         .catch((error) => {
           res.status("405").json({ error });
@@ -104,12 +107,12 @@ router.get(
     const result = validationResult(req);
     if (!result.isEmpty()) {
       console.log(validationResult(req));
-      res.status("400").json({ result });
+      res.status("400").json({ error: result });
     } else {
       service
         .get_month(payload)
         .then((data) => {
-          res.json({ data });
+          res.json(data);
         })
         .catch((error) => {
           res.status("405").json({ error });
@@ -128,12 +131,12 @@ router.get(
     const result = validationResult(req);
     if (!result.isEmpty()) {
       console.log(validationResult(req));
-      res.status("400").json({ result });
+      res.status("400").json({ error: result });
     } else {
       service
         .get_year(payload)
         .then((data) => {
-          res.json({ data });
+          res.json(data);
         })
         .catch((error) => {
           res.status("405").json({ error });
