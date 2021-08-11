@@ -1,10 +1,9 @@
-import React, {useContext} from "react";
+import React from "react";
 import Speakerbtn from "./styles";
 import SwitchStyle from "./switch";
 import styled from "styled-components";
 import Brightness2Icon from '@material-ui/icons/Brightness2';
 import { useUserContext } from "../../context";
-import { IS_DARK } from "../../context/actionTypes";
 const Speakerdiv = styled.div`
   height: 19%;
   padding: 0 8px;
@@ -16,7 +15,7 @@ const Speakerdiv = styled.div`
 `;
 
 const Button = (props) => {
-  const { btnName, isdark} = props;
+  const { btnName} = props;
   const { isdarked } = useUserContext();
   
   return (

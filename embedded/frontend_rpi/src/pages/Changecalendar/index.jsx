@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
 import styled1 from "styled-components";
-import { styled } from "@material-ui/core/styles";
-import Input from "@material-ui/core/Input";
 import axios from "axios";
 import moment from "moment";
 import { useUserContext } from "../../context";
@@ -159,40 +157,18 @@ const Changecalendarlayout = (props) => {
   const [deadline, setDeadline] = useState("");
   const [title, setTitle] = useState("");
   const [context, setContext] = useState("");
-  const [manageid, setManageid] = useState("");
   const [isfinished, setIsfinished] = useState(false);
   const [point, setPoint] = useState(0);
   const { id } = props;
 
   const handlestartChange = (event) => {
     setStarttime(event.target.value);
-    console.log(event.target.value);
-    console.log(
-      `${moment().format("YYYYMMDD")} ` +
-        `${
-          event.target.value[0] +
-          event.target.value[1] +
-          event.target.value[2] +
-          event.target.value[3]
-        }`
-    );
   };
   const handleendChange = (event) => {
     setEndtime(event.target.value);
-    console.log(event.target.value);
-    console.log(
-      `${moment().format("YYYYMMDD")} ` +
-        `${
-          event.target.value[0] +
-          event.target.value[1] +
-          event.target.value[2] +
-          event.target.value[3]
-        }`
-    );
   };
   const handleContext = (e) => {
     setContext(e.target.value);
-    console.log(e.target.value);
   };
   const handleTitle = (e) => {
     setTitle(e.target.value);
@@ -202,7 +178,6 @@ const Changecalendarlayout = (props) => {
     const startmin = Number(`${starttime[2]}${starttime[3]}`);
     const endhour = Number(`${endtime[0]}${endtime[1]}`);
     const endmin = Number(`${endtime[2]}${endtime[3]}`);
-    console.log(context);
     if (starthour < endhour) {
       if (window.confirm("정말 완료하시겠 습니까?")) {
         await axios
@@ -221,15 +196,11 @@ const Changecalendarlayout = (props) => {
             is_finished: isfinished,
           })
           .then(({ data }) => {
-            console.log(data.data);
-            // setItemList(data.data);
-            // console.log(data.data);
-            setManageid(data.data.id);
           })
           .catch((e) => {});
         window.location.replace(`/Change`);
       } else {
-        console.log("변화 없음");
+        // console.log("변화 없음");
       }
     } else if (starthour === endhour && startmin <= endmin) {
       if (window.confirm("정말 완료하시겠 습니까?")) {
@@ -249,15 +220,11 @@ const Changecalendarlayout = (props) => {
             is_finished: isfinished,
           })
           .then(({ data }) => {
-            console.log(data.data);
-            // setItemList(data.data);
-            // console.log(data.data);
-            setManageid(data.data.id);
           })
           .catch((e) => {});
         window.location.replace(`/Change`);
       } else {
-        console.log("변화 없음");
+        // console.log("변화 없음");
       }
     } else {
       window.alert("일정 시작시간이 일정종료 시간보다 빠르게 설정해 주십시오.");
@@ -268,15 +235,11 @@ const Changecalendarlayout = (props) => {
       await axios
         .get(`http://127.0.0.1:4500/schedule/${id}`)
         .then(({ data }) => {
-          console.log(data.data);
-          // setItemList(data.data);
-          // console.log(data.data);
-          setDeadline(moment(data.data.deadline_at).format("YYYYMMDD HHmm"));
-          setManageid(data.data.id);
-          setTitle(data.data.title);
-          setContext(data.data.context);
-          setIsfinished(data.data.is_finished);
-          setPoint(data.data.point);
+          setDeadline(moment(data.deadline_at).format("YYYYMMDD HHmm"));
+          setTitle(data.title);
+          setContext(data.context);
+          setIsfinished(data.is_finished);
+          setPoint(data.point);
         })
         .catch((e) => {});
     }
@@ -294,7 +257,6 @@ const Changecalendarlayout = (props) => {
         }
       }
       setOptionarr(result);
-      console.log(result);
     };
 
     rendering();

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
 import axios from "axios";
 import styled from "styled-components";
@@ -94,7 +94,6 @@ const Todaylayout = () => {
   const { isdarked } = useUserContext();
   useEffect(() => {
     async function loadCalendar() {
-      console.log(moment().format("YYYYMMDD"));
       await axios
         .get(
           `http://127.0.0.1:4500/schedule/getdaily/${moment().format(
@@ -102,19 +101,14 @@ const Todaylayout = () => {
           )}`
         )
         .then(({ data }) => {
-          console.log(data);
           setItemList(data);
-          console.log(itemList);
         })
         .catch((e) => {});
     }
     loadCalendar();
     setInterval(() => {
       loadCalendar();
-    }, 600000);
-    console.log(isdarked);
-    console.log(window.localStorage.getItem("isdark"));
-    console.log(window.localStorage.getItem("istoggle"));
+    }, 60000);
   }, []);
 
   return (

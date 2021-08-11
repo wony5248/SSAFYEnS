@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
 import styled from "styled-components";
 import axios from "axios";
@@ -118,13 +118,6 @@ const Nodiv = styled.div`
   color: ${(props) => (props.isdark ? "white" : "#121212")};
 `;
 const Progresslayout = () => {
-  const [starttime, setStarttime] = useState("");
-  const [notitime, setNotitime] = useState("");
-  const [endtime, setEndtime] = useState("");
-  const [title, setTitle] = useState("");
-  const [goal, setGoal] = useState("");
-  const [content, setContent] = useState("");
-  const [id, setId] = useState("");
   const [istrue, setIstrue] = useState(false);
   const [calarr, setCalarr] = useState([]);
   const arr = [];
@@ -137,7 +130,7 @@ const Progresslayout = () => {
           )}`
         )
         .then(({ data }) => {
-          console.log(data);
+
           for (let i = 0; i < data.length; i++) {
             const startTime = Number(moment(data[i].started_at).format("HH"));
             const startMin = Number(moment(data[i].started_at).format("mm"));
@@ -171,18 +164,13 @@ const Progresslayout = () => {
             }
           }
           setCalarr(arr);
-          console.log(
-            data[0].started_at[0] +
-              data[0].started_at[1] +
-              data[0].started_at[5] +
-              data[0].started_at[6]
-          );
         })
         .catch((e) => {
           console.error(e);
         });
     }
     loadCalendar();
+    console.log("asdfas")
   }, []);
   const { isdarked } = useUserContext();
   return (
@@ -227,7 +215,7 @@ const Progresslayout = () => {
                 <Btndiv>
                   <Completebtn
                     isdark={isdarked}
-                    onClick={() => window.location.replace(`/Rating/${id}`)}
+                    onClick={() => window.location.replace(`/Rating/${item.id}`)}
                   >
                     완료
                   </Completebtn>

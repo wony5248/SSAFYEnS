@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React from "react";
 import Leftsidecontainer from "./styles";
 import styled from 'styled-components';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
@@ -6,7 +6,6 @@ import EventNoteIcon from '@material-ui/icons/EventNote';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import TimerIcon from '@material-ui/icons/Timer';
 import { useUserContext } from "../../context";
-import { IS_DARK } from "../../context/actionTypes";
 const Leftsidebtn = styled.button`
 
   width: 100%;

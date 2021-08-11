@@ -25,7 +25,7 @@ router.post("/", async function (req, res, next) {
       user_id: req.body.user_id,
     })
     .then((response) => {
-      res.send(response.data);
+      res.send(response.data.data);
       console.log(11111);
     })
     .catch(function (error) {
@@ -33,7 +33,6 @@ router.post("/", async function (req, res, next) {
       console.log(error);
       console.log(222222);
     });
-  console.log(sensorData);
   res.json(req.body);
 });
 
@@ -44,8 +43,8 @@ router.delete("/:id", async function (req, res, next) {
   await axios
     .delete(`http://i5a109.p.ssafy.io:8079/schedule/${req.params.id}`)
     .then((response) => {
-      res.send(response.data);
-      console.log(response.data);
+      res.send(response.data.data);
+      console.log(response.data.data);
       console.log(22222);
     })
     .catch(function (error) {
@@ -72,8 +71,8 @@ router.put("/:id", async function (req, res, next) {
       context: req.body.context,
     })
     .then((response) => {
-      res.send(response.data);
-      console.log(response.data);
+      res.send(response.data.data);
+      console.log(response.data.data);
       console.log(22222);
     })
     .catch(function (error) {
@@ -87,7 +86,7 @@ router.get("/", async function (req, res, next) {
   await axios
     .get("http://i5a109.p.ssafy.io:8079/schedule/6")
     .then((response) => {
-      res.send(response.data);
+      res.send(response.data.data);
       console.log(11111);
     })
     .catch(function (error) {
@@ -95,7 +94,6 @@ router.get("/", async function (req, res, next) {
       console.log(error);
       console.log(222222);
     });
-  console.log(sensorData);
   res.json(req.body);
 });
 
@@ -219,7 +217,6 @@ router.get("/getdaily/:date", async function (req, res, next) {
         );
       });
       res.send(arr);
-      console.log(response.data);
       console.log(22222);
     })
     .catch(function (error) {
@@ -238,8 +235,8 @@ router.get("/:id", async function (req, res, next) {
   await axios
     .get(`http://i5a109.p.ssafy.io:8079/schedule/${req.params.id}`)
     .then((response) => {
-      res.send(response.data);
-      console.log(response.data);
+      res.send(response.data.data);
+      console.log(response.data.data);
       console.log(22222);
     })
     .catch(function (error) {
