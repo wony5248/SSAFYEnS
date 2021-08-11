@@ -10,6 +10,7 @@ router.get(
   validation.month,
   validation.year,
   validation.week,
+  validation.user_id,
   (req, res) => {
     payload = { ...req.params, ...req.body };
     console.log("payload : ", payload);
@@ -22,10 +23,10 @@ router.get(
       service
         .get_daily(payload)
         .then((data) => {
-          res.json({ data });
+          res.json(data);
         })
         .catch((error) => {
-          res.status("405").json({ error });
+          res.status("405").json({ error: "error" });
         });
     }
   }
@@ -40,6 +41,7 @@ router.put(
   validation.year,
   validation.week,
   validation.daily_context,
+  validation.user_id,
   (req, res) => {
     payload = { ...req.params, ...req.body };
     console.log("payload : ", payload);
@@ -52,10 +54,10 @@ router.put(
       service
         .put_daily(payload)
         .then((data) => {
-          res.json({ data });
+          res.json(data);
         })
         .catch((error) => {
-          res.status("405").json({ error });
+          res.status("405").json({ error: "error" });
         });
     }
   }
@@ -78,15 +80,15 @@ router.get(
     const result = validationResult(req);
     if (!result.isEmpty()) {
       console.log(validationResult(req));
-      res.status("400").json({ result });
+      res.status("400").json(result);
     } else {
       service
         .get_week(payload)
         .then((data) => {
-          res.json({ data });
+          res.json(data);
         })
         .catch((error) => {
-          res.status("405").json({ error });
+          res.status("405").json({ error: "error" });
         });
     }
   }
@@ -110,10 +112,10 @@ router.get(
       service
         .get_month(payload)
         .then((data) => {
-          res.json({ data });
+          res.json(data);
         })
         .catch((error) => {
-          res.status("405").json({ error });
+          res.status("405").json({ error: "error" });
         });
     }
   }
@@ -134,10 +136,10 @@ router.get(
       service
         .get_year(payload)
         .then((data) => {
-          res.json({ data });
+          res.json(data);
         })
         .catch((error) => {
-          res.status("405").json({ error });
+          res.status("405").json({ error: "error" });
         });
     }
   }

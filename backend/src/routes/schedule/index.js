@@ -32,10 +32,10 @@ router.post(
       service
         .post(payload)
         .then((data) => {
-          res.json({ data });
+          res.json(data);
         })
         .catch((error) => {
-          res.status("405").send(error);
+          res.status("405").send({ error: "error" });
         });
     }
   }
@@ -46,7 +46,7 @@ router.get("/:schedule_id", (req, res) => {
   service
     .get_$schedule_id$(req.params)
     .then((data) => {
-      res.json({ data });
+      res.json(data);
     })
     .catch((error) => {
       res.status("405").send(error);
@@ -56,13 +56,22 @@ router.get("/:schedule_id", (req, res) => {
 //todo 파라미터 추가
 router.put(
   "/:schedule_id",
+  validation.date,
   validation.started_at,
   validation.finished_at,
   validation.deadline_at,
   validation.notification,
   validation.is_finished,
+  validation.month,
+  validation.year,
+  validation.week,
+  validation.cnt_schedule,
+  validation.user_id,
+  validation.humidity,
+  validation.illuminance,
+  validation.noise,
+  validation.temperature,
   (req, res) => {
-    const payload = { ...req.body };
     const result = validationResult(req);
     if (!result.isEmpty()) {
       console.log(validationResult(req));
@@ -74,7 +83,7 @@ router.put(
           body: req.body,
         })
         .then((data) => {
-          res.json({ data });
+          res.json(data);
         })
         .catch((error) => {
           res.status("405").send(error);
@@ -89,7 +98,7 @@ router.delete("/:schedule_id", (req, res) => {
     .delete_$schedule_id$(payload)
     .then((result) => {
       console.log(result);
-      res.status(200).json({ result });
+      res.status(200).json(result);
     })
     .catch((error) => {
       res.status("405").json({ error });
@@ -108,7 +117,7 @@ router.get("/month/:date", validation.date, (req, res) => {
     service
       .get_month(payload)
       .then((data) => {
-        res.json({ data });
+        res.json(data);
       })
       .catch((error) => {
         res.status("405").json({ error });
@@ -126,15 +135,15 @@ router.get("/daily/:date", validation.date, (req, res) => {
   const result = validationResult(req);
   if (!result.isEmpty()) {
     console.log(validationResult(req));
-    res.status("400").json({ result });
+    res.status("400").json({ error: "error" });
   } else {
     service
       .post_daily(payload)
       .then((data) => {
-        res.json({ data });
+        res.json(data);
       })
       .catch((error) => {
-        res.status("405").json({ error });
+        res.status("405").json({ error: "error" });
       });
   }
 });
@@ -168,10 +177,10 @@ router.get("/year/:date", validation.date, (req, res) => {
     service
       .get_year(req.params.date)
       .then((data) => {
-        res.json({ data });
+        res.json(data);
       })
       .catch((error) => {
-        res.status("405").json({ error });
+        res.status("405").json({ error: "error" });
       });
   }
 });

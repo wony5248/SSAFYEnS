@@ -1,11 +1,13 @@
 // const constraints = require("../constraint/schedule")
-const moment = require("moment");
 const Sequelize = require("sequelize");
+const moment = require("moment");
 const op = Sequelize.Op;
 const db = require("../models");
+
+const { migrate_undo, migrate } = require("../js/schedule_migrate.js");
 const router = require("../routes/schedule");
-const { cnt_schedule } = require("../validation/scheduleValidation");
-//url 구현 전 임시 코드
+const { cnt_schedule, year } = require("../validation/scheduleValidation");
+
 exports.unimplemented = function () {
   return new Promise(async function (resolve, reject) {
     reject("Not yet");
@@ -15,6 +17,7 @@ exports.unimplemented = function () {
 exports.post = function (body) {
   return new Promise(async function (resolve, reject) {
     const { date, point, user_id, month, year, week, started_at } = body;
+    const start_day = moment(started_at).startOf("day");
     const sum_point = 0;
     //schedule이 생성되면 관련된 daily, weekly, monthly,yearly 생성
     const db_schedules = await db["schedules"].build({
@@ -22,21 +25,23 @@ exports.post = function (body) {
     });
     const dailyResult = await db["daily"].findOne({
       where: {
-        user_id,
-        date,
+        [op.and]: [{ user_id }, { date: start_day }],
       },
     });
     //update할 일자 정보가 없음.
     if (dailyResult == null) {
       db["daily"].create({
-        date: moment(started_at).startOf("day"),
+        date: start_day,
         week,
         month,
         year,
         user_id,
         sum_point,
-        cnt_schedule: 0,
+        cnt_schedule: 1,
       });
+    } else {
+      dailyResult.sum_point += point;
+      dailyResult.cnt_schedule += 1;
     }
 
     //weekly 확인
@@ -65,8 +70,11 @@ exports.post = function (body) {
         year,
         user_id,
         sum_point,
-        cnt_schedule: 0,
+        cnt_schedule: 1,
       });
+    } else {
+      weeklyResult.sum_point += point;
+      weeklyResult.cnt_schedule += 1;
     }
 
     //monthly
@@ -93,8 +101,11 @@ exports.post = function (body) {
         year,
         user_id,
         sum_point,
-        cnt_schedule: 0,
+        cnt_schedule: 1,
       });
+    } else {
+      monthlyResult.sum_point += point;
+      monthlyResult.cnt_schedule += 1;
     }
 
     const yearlyResult = await db["yearly"].findOne({
@@ -114,8 +125,11 @@ exports.post = function (body) {
         year,
         user_id,
         sum_point,
-        cnt_schedule: 0,
+        cnt_schedule: 1,
       });
+    } else {
+      yearlyResult.sum_point += point;
+      yearlyResult.cnt_schedule += 1;
     }
     try {
       db_schedules.save();
@@ -154,26 +168,60 @@ exports.get_$schedule_id$ = function (params) {
 };
 exports.put_$schedule_id$ = function (data) {
   return new Promise(async function (resolve, reject) {
-    const { schedule_id, body } = data;
-    let result = await db["schedules"]
-      .update(
-        {
-          ...body,
-        },
-        {
-          where: {
-            schedule_id,
-          },
-        }
-      )
-      .then((data) => {
-        console.log(data);
-        resolve(data);
-      })
-      .catch((error) => {
-        console.log(error);
-        reject("db error");
-      });
+    const schedule_id = data.schedule_id;
+    const next_schedule = data.body;
+
+    const prev_schedule = await db["schedules"].findOne({
+      where: {
+        schedule_id,
+      },
+    });
+
+    //1. 존재하지않을 경우 반환
+    if (prev_schedule == null) return reject("존재하지 않는 스케쥴입니다");
+    //2. 이미 완료된 일정일 경우 반환
+    if (prev_schedule.is_finished == true)
+      return reject("평가 완료된 일정입니다.");
+    //3. 수정하려는 날짜와 이전 날짜가 다르면 반환
+    if (
+      !moment(prev_schedule.started_at)
+        .startOf("day")
+        .isSame(moment(next_schedule.started_at).startOf("day"))
+    )
+      return reject("다른 날짜로는 수정할 수 없습니다");
+
+    //schedule 수정
+
+    //point 수정
+    // const migrate_undo =
+    const migrate_undo_Result = await migrate_undo(
+      prev_schedule,
+      next_schedule
+    );
+    await migrate_undo_Result.reduce(async (promise, cur) => {
+      const acc = await promise.then();
+      console.log(cur);
+      return Promise.resolve(cur.save());
+    }, Promise.resolve({}));
+
+    console.log("2");
+    const migrate_Result = await migrate(prev_schedule, next_schedule);
+
+    await migrate_Result.reduce(async (promise, cur) => {
+      const acc = await promise.then();
+      return Promise.resolve(cur.save());
+    }, Promise.resolve({}));
+    try {
+      prev_schedule.point = next_schedule.point;
+      prev_schedule.save();
+
+      // migrate_Result.map((data) => data.save());
+
+      resolve({ result: "put" });
+    } catch (error) {
+      console.log(error);
+      reject("error");
+    }
   });
 };
 exports.delete_$schedule_id$ = function (data) {
@@ -290,7 +338,9 @@ exports.post_submit = function (body) {
       yearlyResult.cnt_shedule += cnt_schedule;
     }
     try {
-      // if (dailyResult != null) dailyResult.save();
+      prev_schedule.point = point;
+      prev_schedule.save();
+      if (dailyResult != null) dailyResult.save();
       if (weeklyResult != null) weeklyResult.save();
       if (monthlyResult != null) monthlyResult.save();
       if (yearlyResult != null) yearlyResult.save();

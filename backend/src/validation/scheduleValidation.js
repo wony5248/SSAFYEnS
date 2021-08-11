@@ -60,7 +60,7 @@ exports.year = check("year").customSanitizer((value, { req }) =>
   moment(req.body.started_at).year()
 );
 exports.cnt_schedule = check("cnt_schedule").default(0);
-exports.point = check("point").default(0);
+exports.point = check("point").customSanitizer((value, { req }) => 0);
 exports.user_id = check("user_id").default("honggildong1!");
 
 //environment
