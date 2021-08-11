@@ -21,6 +21,8 @@ const SignUp = () =>{
     const [emailLabel, setEmailLabel] = useState(false);
     const [numberLabel, setNumberLabel] = useState(false);
 
+    
+
     const handleId = (event) =>{
         setId(event.target.value);
     };

@@ -17,7 +17,9 @@ import ModifyUserInfo from './pages/modifyuserinfo';
 import CheckPw from './pages/checkpasswd';
 import Average from './pages/average';
 
+
 const App = () =>{
+
   return (
     <BrowserRouter>
       <Switch>

@@ -13,6 +13,7 @@ const PlanList = () => {
     const location = useLocation();
     const [query, setQuery] = useState('react');
     const [data, setData] = useState([]);
+    let select = false;
 
     const StyledRating = withStyles({
         iconFilled: {
@@ -78,7 +79,7 @@ const PlanList = () => {
                             ):<div> </div>}
                             <div>
                                 <Button style={{background:'#A3CCA3', color:'#ffffff', height:'40px', marginRight:'20px'}} 
-                                // onClick={window.location.replace(`/planmodify/${today.format('MMDD')}/${i}`)}
+                                onClick={()=>select?null:window.location.replace(`/planmodify/${today.format('MMDD')}/${i}`)}
                                 >
                                     수정
                                 </Button>

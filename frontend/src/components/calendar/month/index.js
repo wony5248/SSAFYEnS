@@ -23,7 +23,7 @@ const Month = () => {
       const result = await scheduleAPI.getMonthly(
         today.format("YYYY-MM-DD")
       );
-      setData(result.data.data);
+      setData(result.data);
     }
     getMonthlySchedule();
     return () => {
