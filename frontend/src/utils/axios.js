@@ -17,13 +17,15 @@ export const scheduleAPI = {
     }
 };
 
+let token;
+
 export const userAPI = {
     login: (id, password) =>{
         return request.post('/user/login', { 
             user_id:id, password
         }).then(response=>{
             const accessToken = response.data.access_token;
-            window.sessionStorage.setItem("token", `${accessToken}`);
+            token = `${accessToken}`;
         })
     },
     checkUserId: (id)=>{
@@ -46,6 +48,26 @@ export const userAPI = {
             user_id: id, name, email, cellphone:number, password
         })
     },
+    mypage: (id)=>{
+        return request.get(`/user/${id}`,{
+            user_id:id
+        })
+    },
+    logout:()=>{
+        return request.get(`/user/logout`,{
+            headers:{
+                access_token: token
+            }
+        })
+    }
+}
+
+export const groupAPI = {
+    addGroup:(name, context)=>{
+        return request.post('/group', {
+             name, context, 
+        })
+    },
     validateGroupName:(name)=>{
         return request.post(`/group/namevalidation`,{
             name
@@ -63,17 +85,13 @@ export const userAPI = {
         return request.put(`/group/${id}`,{
         })
     },
-    mypage: (id)=>{
-        return request.get(`/user/${id}`,{
-            user_id:id
+    deleteGroup:(id)=>{
+        return request.delete(`/group/${id}`,{
         })
     },
-    logout:()=>{
-        console.log(window.sessionStorage.getItem("token"));
-        return request.get(`/user/logout`,{
-            headers:{
-                access_token: window.sessionStorage.getItem("token")
-            }
+    searchGroup:(question)=>{
+        return request.porst(`/group/search`,{
+            q:question
         })
-    }
+    },
 }
