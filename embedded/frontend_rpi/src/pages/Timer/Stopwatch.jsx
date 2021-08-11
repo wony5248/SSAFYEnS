@@ -79,7 +79,7 @@ class Stopwatch extends Component {
     let hours = ("0" + Math.floor(timerTime / 3600000)).slice(-2);
     return (
       <Stopwatchdiv isdark = {isdark}>
-        <Titlediv><TimerIcon fontSize = "100%"/>Stopwatch</Titlediv>
+        <Titlediv><svg width="40px" height="40px"><TimerIcon fontSize = "small"/></svg>Stopwatch</Titlediv>
         <div>
           {hours} : {minutes} : {seconds}
         </div>

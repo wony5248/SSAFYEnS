@@ -1,7 +1,6 @@
-import React, {useContext} from "react";
+import React from "react";
 import Clock from "react-live-clock";
 import Datediv from "./styles";
-import Logo from "../../assets/ssafyenslogo.png";
 import styled1 from "styled-components";
 import { styled } from "@material-ui/styles";
 import { useUserContext } from "../../context";

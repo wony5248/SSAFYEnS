@@ -1,13 +1,14 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../../layout";
 import { useUserContext } from "../../context";
 import styled from "styled-components";
 import axios from "axios";
 import moment from "moment";
+import 'moment/locale/ko';
 const Changecontainer = styled.div`
   overflow: auto;
   width: auto;
-  height: 98.1%;
+  height: 100%;
   margin: 0px;
   padding-top: 14px;
   padding-right: 12px;
@@ -23,7 +24,7 @@ const Changetitle = styled.div`
   color: white;
   width: auto;
   height: 20%;
-  background-color: ${props => props.isdark === true ? "gray" : "#a3cca3"};
+  background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
   margin-bottom: 14px;
   padding: 0px;
 `;
@@ -77,33 +78,32 @@ const Changechangebtn = styled.button`
   color: white;
   display: flex;
   align-items: center;
+  cursor: pointer;
   justify-content: center;
-  background-color: ${props => props.isdark === true ? "#424242" : "#69a569"};
+  background-color: ${(props) =>
+    props.isdark === true ? "#424242" : "#69a569"};
   padding: 4px;
+`;
+const Nodiv = styled.div`
+  color : ${props => props.isdark ? "white" : "#121212"}; 
 `;
 
 const Changelayout = () => {
   const [itemList, setItemList] = useState([]);
-  const [isnoti, setIsnoti] = useState(0);
   const Delete = async (props) => {
     const id = props;
-    console.log(id);
     if (window.confirm("정말 삭제하시겠 습니까?")) {
       await axios
         .delete(`http://127.0.0.1:4500/schedule/${id}`)
         .then(({ data }) => {
-          console.log(data);
         })
         .catch((e) => {});
       window.location.replace(`/Change`);
     } else {
-      console.log("변화 없음");
     }
   };
   useEffect(() => {
-
     async function loadCalendar() {
-      console.log(moment().format("YYYYMMDD"));
       await axios
         .get(
           `http://127.0.0.1:4500/schedule/getdaily/${moment().format(
@@ -111,9 +111,7 @@ const Changelayout = () => {
           )}`
         )
         .then(({ data }) => {
-          console.log(data);
           setItemList(data);
-          console.log(itemList);
         })
         .catch((e) => {});
     }
@@ -121,16 +119,16 @@ const Changelayout = () => {
     setInterval(() => {
       loadCalendar();
     }, 60000);
-    console.log(isdarked)
+
   }, []);
   const { isdarked } = useUserContext();
   return (
-    <Changecontainer isdark = {isdarked}>
+    <Changecontainer isdark={isdarked}>
       {itemList.length !== 0 ? (
         <div style={{ height: "100%" }}>
           {" "}
           {itemList.map((item) => (
-            <Changetitle isdark = {isdarked}>
+            <Changetitle isdark={isdarked}>
               <Changetitlenamecon>
                 <Changetitlename>일정 제목</Changetitlename>
                 <Changetitletime>
@@ -150,10 +148,14 @@ const Changelayout = () => {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Changechangebtn isdark = {isdarked} onClick={() => Delete(item.id)}>
+                  <Changechangebtn
+                    isdark={isdarked}
+                    onClick={() => Delete(item.id)}
+                  >
                     삭제
                   </Changechangebtn>
-                  <Changechangebtn isdark = {isdarked}
+                  <Changechangebtn
+                    isdark={isdarked}
                     onClick={() =>
                       window.location.replace(`/Change/${item.id}`)
                     }
@@ -166,18 +168,18 @@ const Changelayout = () => {
           ))}
         </div>
       ) : (
-        <div
+        <Nodiv
+          isdark={isdarked}
           style={{
             height: "100%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             fontSize: "40px",
-            color: "#121212",
           }}
         >
           등록된 오늘 일정이 없습니다.
-        </div>
+        </Nodiv>
       )}
     </Changecontainer>
   );

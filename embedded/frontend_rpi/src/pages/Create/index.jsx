@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
 import styled1 from "styled-components";
 import axios from "axios";
 import moment from "moment";
 import { useUserContext } from "../../context";
+import 'moment/locale/ko';
 
 const Changeselect = styled1.select`
   width: 15%;
@@ -85,14 +86,12 @@ const Changeendtext = styled1.div`
 `;
 
 const Changecalendarlayout = () => {
-  const [date, setDate] = useState("");
   const [starttime, setStarttime] = useState("");
   const [endtime, setEndtime] = useState("");
   const [deadline, setDeadline] = useState("");
   const [notitime, setNotitime] = useState("");
   const [title, setTitle] = useState("");
   const [context, setContext] = useState("");
-  const [istrue, setIstrue] = useState(false);
   const [startarr, setStartarr] = useState([]);
 
   const [titlearr, setTitlearr] = useState([]);
@@ -100,27 +99,21 @@ const Changecalendarlayout = () => {
 
   const handlestartChange = (event) => {
     setStarttime(event.target.value);
-    console.log(event.target.value);
   };
   const handleendChange = (event) => {
     setEndtime(event.target.value);
-    console.log(event.target.value);
   };
   const handledeadChange = (event) => {
     setDeadline(event.target.value);
-    console.log(event.target.value);
   };
   const handlenotiChange = (event) => {
     setNotitime(event.target.value);
-    console.log(event.target.value);
   };
   const handletitleChange = (event) => {
     setTitle(event.target.value);
-    console.log(event.target.value);
   };
   const handlecontextChange = (event) => {
     setContext(event.target.value);
-    console.log(event.target.value);
   };
   const Confirm = async () => {
     const starthour = Number(`${starttime[0]}${starttime[1]}`);
@@ -131,7 +124,7 @@ const Changecalendarlayout = () => {
       if (window.confirm("생성하시겠 습니까?")) {
         await axios
           .post(`http://127.0.0.1:4500/schedule`, {
-            date: `${moment().format("MMDD")}`,
+            date: `${moment().format("YYYYMMDD")}`,
             started_at: `${moment().format("YYYYMMDD")} ${
               starttime[0] + starttime[1] + starttime[2] + starttime[3]
             }`,
@@ -154,15 +147,14 @@ const Changecalendarlayout = () => {
             context: context,
           })
           .then(({ data }) => {
-            console.log(data.data);
-            setStarttime(moment(data.data.started_at).format("YYYYMMDD HHmm"));
+            setStarttime(moment(data.started_at).format("YYYYMMDD HHmm"));
           })
           .catch((e) => {});
         window.location.replace(`/Today`);
       } else {
-        console.log("변화 없음");
+        // console.log("변화 없음");
       }
-    } else if (starthour == endhour && startmin <= endmin) {
+    } else if (starthour === endhour && startmin <= endmin) {
       if (window.confirm("생성하시겠 습니까?")) {
         await axios
           .post(`http://127.0.0.1:4500/schedule`, {
@@ -189,15 +181,12 @@ const Changecalendarlayout = () => {
             context: context,
           })
           .then(({ data }) => {
-            console.log(data.data);
-            // setItemList(data.data);
-            // console.log(data.data);
-            setStarttime(moment(data.data.started_at).format("YYYYMMDD HHmm"));
+            setStarttime(moment(data.started_at).format("YYYYMMDD HHmm"));
           })
           .catch((e) => {});
         window.location.replace(`/Today`);
       } else {
-        console.log("변화 없음");
+        // console.log("변화 없음");
       }
     } else {
       window.alert("일정 시작시간을 일정 종료시간보다 빠르게 설정해 주세요");
@@ -239,7 +228,6 @@ const Changecalendarlayout = () => {
         }
       }
       setStartarr(result);
-      console.log(result);
     };
 
     rendering();
