@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import { createTheme, MuiThemeProvider } from '@material-ui/core/styles';
-import Home from './pages/Home/';
 import Progress from './pages/Progress/';
 import Rating from './pages/Rating/';
 import Timer from './pages/Timer/';

@@ -34,7 +34,6 @@ const Changeoption = styled1.option`
 const Changecalcon = styled1.div`
   width: auto;
   height: 99.8%;
-  border : 1px solid #a3cca3;
   flex-wrap: nowrap;
   color: #a3cca3;
   margin: 0px;

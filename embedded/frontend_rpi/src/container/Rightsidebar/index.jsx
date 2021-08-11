@@ -2,9 +2,9 @@ import React from "react";
 import SpeakerBtn from "../../components/Dark";
 import MannerBtn from "../../components/mannerbutton";
 import Rightsidecontainer from "./styles";
-import Sensorbtn from "../../components/Sensorbutton"
-import Date from "../../components/Clock"
-import Sensor from "../../components/Sensor"
+import Sensorbtn from "../../components/Sensorbutton";
+import Date from "../../components/Clock";
+import Sensor from "../../components/Sensor";
 import styled from "styled-components";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { useUserContext } from "../../context";

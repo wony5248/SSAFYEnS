@@ -20,10 +20,11 @@ const Progresscontainer = styled.div`
   font-size: 24px;
 `;
 const Progresstitle = styled.div`
-  display: flex-row;
+  display: flex;
+  flex-direction: column;
   border-radius: 4px;
   flex-wrap: no-wrap;
-  justify-content: space-around;
+  justify-content: flex-start;
   width: auto;
   height: 30%;
   color: white;
@@ -39,13 +40,12 @@ const Progresstitlenamecon = styled.div`
   margin: 0px 16px;
   padding-top: 4px;
 `;
-const Progressgoal = styled.div`
+const Progressdeadline = styled.div`
   width: auto;
   height: 30%;
   display: flex;
   align-items: center;
   margin: 0px 16px;
-  font-size: 20px;
   padding-top: 4px;
 `;
 
@@ -62,7 +62,6 @@ const Progresstitletime = styled.div`
 `;
 
 const Progresscontentcon = styled.div`
-  display: flex-row;
   border-radius: 4px;
   flex-wrap: nowrap;
   width: auto;
@@ -70,24 +69,22 @@ const Progresscontentcon = styled.div`
   color: white;
   background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
   margin-top: 14px;
-  padding: 14px 14px;
+  padding: 14px 28px;
 `;
 
 const Progresscontenttitle = styled.div`
   width: auto;
   height: 10%;
   color: white;
-  display:flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   padding: 0px;
   margin-bottom: 14px;
-  font-size: 20px;
 `;
 
 const Progresscontent = styled.div`
   overflow: auto;
-  font-size: 20px;
   width: auto;
   height: 66%;
   color: #121212;
@@ -170,7 +167,6 @@ const Progresslayout = () => {
         })
         .catch((e) => {
           console.error(e);
-          setLoading(false);
         });
     }
     loadCalendar();
