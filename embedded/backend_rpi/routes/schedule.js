@@ -110,6 +110,7 @@ router.get("/", async function (req, res, next) {
 
 // 현재 일정 가져오기
 router.get("/getdaily/:date/current", async function (req, res, next) {
+  const arr = []
   await axios
     .get(`http://i5a109.p.ssafy.io:8079/schedule/daily/${req.params.date}`)
     .then((response) => {
@@ -141,22 +142,33 @@ router.get("/getdaily/:date/current", async function (req, res, next) {
           currentTime < endTime &&
           response.data.data[i].is_finished === false
         ) {
-          res.send(response.data.data[i]);
+          arr.push(response.data.data[i])
         } else if (
           currentTime === endTime &&
           currentMin <= endMin &&
           response.data.data[i].is_finished === false
         ) {
-          res.send(response.data.data[i]);
+          arr.push(response.data.data[i])
         } else if (
           currentTime === startTime &&
           startMin <= currentMin &&
           response.data.data[i].is_finished === false
         ) {
-          res.send(response.data.data[i]);
+          arr.push(response.data.data[i])
         }
       }
-      res.send("현재 등록된 일정이 없습니다.");
+      arr.sort(function (a, b) {
+        return (
+          Number(moment(a.started_at).format("HHmm")) -
+          Number(moment(b.started_at).format("HHmm"))
+        );
+      });
+      if (arr.length === 0){
+        res.send("현재 등록된 일정이 없습니다.");
+      }
+      else {
+        res.send(arr)
+      }
       console.log(22222);
     })
     .catch(function (error) {
