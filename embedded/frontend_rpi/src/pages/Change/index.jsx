@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Layout from "../../layout";
 import { useUserContext } from "../../context";
 import styled from "styled-components";
@@ -66,8 +67,23 @@ const Changechangecon = styled.div`
   height: 40%;
   display: flex;
   justify-content: space-between;
+<<<<<<< HEAD
   align-items: center;
+=======
+  align-items:center;
+  color: white;
+  background-color: #a3cca3;
+>>>>>>> a921e7def8d93ca4171ccc4a987948df3dd655c4
   margin: 0px 16px;
+`;
+
+const Changecontenttitle = styled.div`
+  width: auto;
+  height: auto;
+  color: white;
+  background-color: #a3cca3;
+  padding: 0px;
+  margin-bottom: 14px;
 `;
 
 const Changechangebtn = styled.button`
@@ -89,6 +105,7 @@ const Nodiv = styled.div`
 `;
 
 const Changelayout = () => {
+  const [loading, setLoading] = useState(false);
   const [itemList, setItemList] = useState([]);
   const Delete = async (props) => {
     const id = props;
@@ -113,10 +130,13 @@ const Changelayout = () => {
         .then(({ data }) => {
           setItemList(data);
         })
-        .catch((e) => {});
+        .catch((e) => {
+          console.error(e);
+          setLoading(false);
+        });
     }
     loadCalendar();
-    setInterval(() => {
+    const interval = setInterval(() => {
       loadCalendar();
     }, 60000);
 

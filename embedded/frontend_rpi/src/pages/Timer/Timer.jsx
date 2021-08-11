@@ -1,7 +1,4 @@
 import React, { Component } from "react";
-import styled from "styled-components";
-import AddIcon from "@material-ui/icons/Add";
-import RemoveIcon from "@material-ui/icons/Remove";
 
 import HourglassTopIcon from "@material-ui/icons/HourglassEmpty";
 const Countdiv = styled.div`
@@ -59,20 +56,20 @@ class Countdown extends Component {
   state = {
     timerOn: false,
     timerStart: 0,
-    timerTime: 300000,
+    timerTime: 300000
   };
 
   startTimer = () => {
     this.setState({
       timerOn: true,
       timerTime: this.state.timerTime,
-      timerStart: this.state.timerTime,
+      timerStart: this.state.timerTime
     });
     this.timer = setInterval(() => {
       const newTime = this.state.timerTime - 10;
       if (newTime >= 0) {
         this.setState({
-          timerTime: newTime,
+          timerTime: newTime
         });
       } else {
         clearInterval(this.timer);
@@ -127,6 +124,7 @@ class Countdown extends Component {
       });
     }
   };
+
   render() {
     const { isdark } = this.props;
     const { timerTime, timerStart, timerOn } = this.state;
@@ -171,6 +169,14 @@ class Countdown extends Component {
           timerTime !== 0 && (
             <Countbtn isdark = {isdark} onClick={this.startTimer}>Resume</Countbtn>
           )}
+          {timerOn === false &&
+            (timerStart !== 0 &&
+              timerStart !== timerTime &&
+              timerTime !== 0) && (
+              <button onClick={this.startTimer}>
+                Resume
+              </button>
+            )}
 
         {(timerOn === false || timerTime < 1000) &&
           timerStart !== timerTime &&

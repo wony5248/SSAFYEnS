@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
+import { Link } from "react-router-dom";
 import styled1 from "styled-components";
 import axios from "axios";
 import moment from "moment";
 import { useUserContext } from "../../context";
 import 'moment/locale/ko';
 
-const Changeselect = styled1.select`
-  width: 15%;
+const Changeselect = styled1.div`
+  width: auto;
+  height: 24px;
+  color: white;
   border: 0px;
-  font-size: 36px;
   margin-left: 12px;
   background-color: ${props => props.isdark ? "#c9c9c9" : "white"};
   height: 50%;
@@ -21,13 +23,13 @@ const Changeoption = styled1.option`
   height: 100%;
   background-color: ${props => props.isdark ? "#c9c9c9" : "white"};
 `;
+
 const Changecalcon = styled1.div`
   width: auto;
-  height: 99.8%;
+  height: 98.8%;
   display: flex-row;
   flex-wrap: nowrap;
   margin: 0px;
-  font-size: 20px;
   padding-left:12px;
   padding-right:12px;
   overflow: auto;
@@ -35,30 +37,24 @@ const Changecalcon = styled1.div`
 const Changestart = styled1.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
   border-radius: 4px;
   width: auto;
-  height: 10%;
+  height: auto;
   color: white;
   background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
   margin: 12px 0px;
   padding: 4px;
-  padding-right: 3.5%;
-  padding-left: 3.5%;
 `;
 const Changeend = styled1.div`
   display: flex;
   justify-content: space-between;
   width: auto;
-  align-items: center;
-  height: 10%;
+  height: auto;
   color: white;
   background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
   border-radius: 4px;
   margin: 12px 0px;
   padding: 4px;
-  padding-right: 3.5%;
-  padding-left: 3.5%;
 `;
 const Changestarttext = styled1.div`
   width: auto;
@@ -72,10 +68,9 @@ const Changeendtext = styled1.div`
 const Changetitle = styled1.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
   border-radius: 4px;
   width: auto;
-  height: 10%;
+  height: auto;
   color: white;
   padding:4px;
   padding-right: 12px;
@@ -90,7 +85,7 @@ const Changetitletext = styled1.div`
 `;
 const Changebtn = styled1.button`
   width: 78px;
-  height: 100%;
+  height: auto;
   border-radius:8px;
   border:0px;
   color: white;
@@ -100,13 +95,31 @@ const Changebtn = styled1.button`
     props.isdark === true ? "#424242" : "#69a569"};
   padding: 4px;
 `;
-
+const Plusbtn = styled1.button`
+  width: 24px;
+  height: 24px;
+  border-radius:8px;
+  border:0px;
+  background-color: #a3cca3;
+  color: white;
+  margin-right : 4px;
+  padding-ringt: 4px;
+`;
+const Minusbtn = styled1.button`
+  width: 24px;
+  height: 24px;
+  border-radius:8px;
+  font-size: 24px;
+  border:0px;
+  background-color: #a3cca3;
+  color: white;
+`;
 const ChangeContent = styled1.div`
   display: flex-row;
   justify-content: space-between;
   border-radius: 4px;
   width: auto;
-  height: 60%;
+  height: auto;
   color: white;
   padding:4px;
   background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
@@ -114,7 +127,6 @@ const ChangeContent = styled1.div`
 `;
 const ChangeContentheader = styled1.div`
   display: flex;
-  margin-top: 1%;
   justify-content: space-between;
   width: auto;
   height: 8%;
@@ -125,14 +137,13 @@ const Changecontentinput1 = styled1.textarea`
     background-color: ${(props) =>
       props.isdark === true ? "#c9c9c9" : "white"};
     border-radius: 4px;
-    height: 80%;
-    width: 92%;
-    font-size: 20px;
-    margin-left: 4%;
-    margin-right: 4%;
+    height: 108px;
+    font-size: 12px;
+    margin-left: 8px;
     margin-bottom: 8px;
-    margin-top: 1.5%;
+    margin-top: 4px;
     padding: 4px;
+    width: 304px;
     border: 0px;
     overflow: auto;
     outline: none;
@@ -323,9 +334,8 @@ const Changecalendarlayout = (props) => {
     </Changecalcon>
   );
 };
-const Changecalendar = ({ match }) => {
-  const { id } = match.params;
-  return <Layout pages={Changecalendarlayout({ id })}></Layout>;
+const Changecalendar = () => {
+  return <Layout pages={Changecalendarlayout()}></Layout>;
 };
 
 export default Changecalendar;

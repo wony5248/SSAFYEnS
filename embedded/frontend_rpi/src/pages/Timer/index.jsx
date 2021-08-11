@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
+import { Link } from "react-router-dom";
+import axios from "axios";
 import Stopwatch from "./Stopwatch";
 import Timer from "./Timer";
 import styled from "styled-components";
@@ -24,7 +26,7 @@ const Timerlayout = () => {
 };
 
 const Today = () => {
-  return <Layout pages={Timerlayout()}></Layout>;
+  return <Layout pages={Todaylayout()}></Layout>;
 };
 
 export default Today;

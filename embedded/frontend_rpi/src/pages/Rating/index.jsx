@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Layout from "../../layout";
 import styled1 from "styled-components";
 import Ratingstar from "@material-ui/lab/Rating";
@@ -13,10 +13,10 @@ import axios from "axios";
 import { useUserContext } from "../../context";
 const StyledRating = withStyles({
   iconFilled: {
-    color: "#f6f924",
+    color: '#f6f924',
   },
   iconHover: {
-    color: "#f6f924",
+    color: '#f6f924',
   },
 })(Ratingstar);
 const GreenRadio = withStyles({
@@ -70,7 +70,7 @@ const Ratingcontent = styled1.div`
   display: flex-row;
   border-radius: 4px;
   width: auto;
-  height: 80%;
+  height: 76%;
   color: black;
   background-color: ${props => props.isdark === true ? "#C9C9C9" : "white"};
   font-size: 20px;
@@ -126,7 +126,7 @@ const Ratingstarcon = styled1.div`
 const Ratingcon = styled1.div`
   width: auto;
   font-size: 20px;
-  height: 99.8%;
+  height: 100%;
   display: flex-row;
   flex-wrap: nowrap;
   color: #a3cca3;
@@ -250,7 +250,7 @@ const Ratinglayout = (props) => {
     <Ratingcon>
       <Starttime isdark = {isdarked}>
         <Changestarttext>일정 시작 시간</Changestarttext>
-        <Changestarttext>{moment(starttime).format("HH : mm")}</Changestarttext>
+        <Changestarttext>{time}</Changestarttext>
       </Starttime>
       <Endtime isdark = {isdarked}>
         <Changeendtext>일정 종료 시간</Changeendtext>
@@ -404,16 +404,12 @@ const Ratinglayout = (props) => {
         <Ratingstarcon>
           <StyledRating
             name="customized-empty"
-            value={
-              (Number(selectedValue1) +
-                Number(selectedValue2) +
-                Number(selectedValue3) +
-                Number(selectedValue4)) /
-              4
-            }
-            size="large"
-            precision={0.25}
-            readOnly
+            value={value}
+            size= "large"
+            precision={0.5}
+            onChange={(event, newValue) => {
+              setValue(newValue);
+            }}
           />
           <Ratingbtncon>
             <Ratingbtn isdark = {isdarked} onClick={() => Cancel()}>취소</Ratingbtn>
@@ -424,9 +420,9 @@ const Ratinglayout = (props) => {
     </Ratingcon>
   );
 };
-const Rating = ({ match }) => {
-  const { id } = match.params;
-  return <Layout pages={Ratinglayout({ id })}></Layout>;
+const Rating = ({match}) => {
+  const {time} = match.params;
+  return <Layout pages={Ratinglayout({time})}></Layout>;
 };
 
 export default Rating;

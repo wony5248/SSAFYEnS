@@ -1,6 +1,15 @@
+
 embedded/backend/node_modules
 embedded/frontend_rpi/node_modules
 embedded/frontend_rpi/package-lock.json
+
+node_modules/
+node_modules
+.gitignore
+README.md
+dist/*
+=======
+>>>>>>> a921e7def8d93ca4171ccc4a987948df3dd655c4
 # Editor : KJH
 # version : 0.1
 
@@ -10,6 +19,7 @@ embedded/frontend_rpi/package-lock.json
 ### Node ###
 # Logs
 logs
+>>>>>>> a921e7def8d93ca4171ccc4a987948df3dd655c4
 *.log
 npm-debug.log*
 yarn-debug.log*

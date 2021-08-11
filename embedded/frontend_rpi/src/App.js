@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { createTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import Home from './pages/Home/';
 import Progress from './pages/Progress/';
 import Rating from './pages/Rating/';
 import Timer from './pages/Timer/';
@@ -36,14 +38,13 @@ function App() {
         <UserContextProvider>
           <BrowserRouter>
           <Switch>
-            <Route exact path="/" component={Progress} />
+            <Route exact path="/" component={Home} />
             <Route exact path="/Progress" component={Progress} />
-            <Route exact path="/Rating/:id" component={Rating} />
-            <Route exact path="/Create" component={Create} />
+            <Route exact path="/Rating/:time" component={Rating} />
             <Route exact path="/Timer" component={Timer} />
             <Route exact path="/Today" component={Today} />
             <Route exact path="/Change" component={Change} />
-            <Route exact path="/Change/:id" component={Changecalendar} />
+            <Route exact path="/Changecalendar" component={Changecalendar} />
             <Redirect to="/" />
           </Switch>
         </BrowserRouter>
