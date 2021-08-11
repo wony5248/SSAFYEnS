@@ -182,37 +182,28 @@ exports.put_$schedule_id$ = function (data) {
     //2. 이미 완료된 일정일 경우 반환
     if (prev_schedule.is_finished == true)
       return reject("평가 완료된 일정입니다.");
-    //3. 수정하려는 날짜와 이전 날짜가 다르면 반환
-    if (
-      !moment(prev_schedule.started_at)
-        .startOf("day")
-        .isSame(moment(next_schedule.started_at).startOf("day"))
-    )
-      return reject("다른 날짜로는 수정할 수 없습니다");
 
     //schedule 수정
 
     //point 수정
-    // const migrate_undo =
-    const migrate_undo_Result = await migrate_undo(
-      prev_schedule,
-      next_schedule
-    );
-    await migrate_undo_Result.reduce(async (promise, cur) => {
-      const acc = await promise.then();
-      console.log(cur);
-      return Promise.resolve(cur.save());
-    }, Promise.resolve({}));
-
-    console.log("2");
-    const migrate_Result = await migrate(prev_schedule, next_schedule);
-
-    await migrate_Result.reduce(async (promise, cur) => {
-      const acc = await promise.then();
-      return Promise.resolve(cur.save());
-    }, Promise.resolve({}));
+    await migrate_undo(prev_schedule, next_schedule).then(async (result) => {
+      await result.reduce(async (promise, cur) => {
+        const acc = await promise.then();
+        cur && cur.save();
+        return Promise.resolve();
+      }, Promise.resolve({}));
+    });
+    await migrate(prev_schedule, next_schedule).then(async (result) => {
+      await result.reduce(async (promise, cur) => {
+        const acc = await promise.then();
+        cur && cur.save();
+        return Promise.resolve();
+      }, Promise.resolve({}));
+    });
     try {
-      prev_schedule.point = next_schedule.point;
+      prev_schedule.update({
+        ...next_schedule,
+      });
       prev_schedule.save();
 
       // migrate_Result.map((data) => data.save());
@@ -338,8 +329,6 @@ exports.post_submit = function (body) {
       yearlyResult.cnt_shedule += cnt_schedule;
     }
     try {
-      prev_schedule.point = point;
-      prev_schedule.save();
       if (dailyResult != null) dailyResult.save();
       if (weeklyResult != null) weeklyResult.save();
       if (monthlyResult != null) monthlyResult.save();

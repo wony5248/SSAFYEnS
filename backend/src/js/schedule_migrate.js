@@ -3,197 +3,302 @@ const Sequelize = require("sequelize");
 const db = require("../models");
 const op = Sequelize.Op;
 exports.migrate_undo = async (prev_schedule, next_schedule) => {
-  const {
-    year,
-    month,
-    week,
-    point,
-    humidity,
-    illuminance,
-    noise,
-    temperature,
-    user_id,
-  } = prev_schedule;
-
-  const started_day = moment(next_schedule.started_at).startOf("day");
-
-  const dailyResult = await db["daily"].findOne({
-    where: {
-      date: started_day,
-    },
-  });
-
-  //update할 일자 정보가 없음.
-  if (dailyResult == null || dailyResult[0] == 0)
-    return reject("해당 daily를 찾을 수 없습니다.1");
-  else {
-    dailyResult.sum_point -= point;
-  }
-
-  //weekly 확인
-  const weeklyResult = await db["weekly"].findOne({
-    where: {
-      [op.and]: [
-        {
-          year,
-        },
-        {
-          week,
-        },
-      ],
-    },
-  });
-
-  if (weeklyResult == null) {
-    //weekly가 해당 존재하지않음
-    console.log(`week 가 존재하지 않습니다.1`);
-    db["weekly"].create({
+  return new Promise(async (resolve, reject) => {
+    const {
+      year,
+      month,
       week,
-      month,
-      year,
+      point,
+      humidity,
+      illuminance,
+      noise,
+      temperature,
       user_id,
-      sum_point,
+    } = prev_schedule;
+
+    const started_day = moment(prev_schedule.started_at).startOf("day");
+
+    const dailyResult = await db["daily"].findOne({
+      where: {
+        [op.and]: [
+          {
+            date: started_day,
+          },
+          {
+            user_id,
+          },
+        ],
+      },
     });
-  } else {
-    weeklyResult.sum_point -= point;
-  }
-
-  const monthlyResult = await db["monthly"].findOne({
-    where: {
-      year,
-      month,
-    },
-  });
-
-  if (monthlyResult == null) {
-    console.log(`month 가 존재하지 않습니다.1`);
-    db["monthly"].create({
-      month,
-      year,
-      user_id,
-      sum_point,
-    });
-  } else {
-    monthlyResult.sum_point -= point;
-  }
-
-  const yearlyResult = await db["yearly"].findOne({
-    where: {
-      year,
-    },
-  });
-
-  if (yearlyResult == null) {
-    console.log(`year 가 존재하지 않습니다.1`);
-    db["yearly"].create({
-      year,
-      user_id,
-      sum_point: point,
-    });
-  } else {
-    yearlyResult.sum_point -= point;
-  }
-  [dailyResult, weeklyResult, monthlyResult, yearlyResult].reduce(
-    (acc, cur) => {
-      return console.log(cur.sum_point);
+    //update할 일자 정보가 없음.
+    console.log("시발:", dailyResult.dataValues.cnt_schedule);
+    if (dailyResult == null || dailyResult[0] == 0) {
+      console.log("해당 daily를 찾을 수 없습니다.1");
+      await db["daily"].create({
+        date: started_day,
+        week,
+        month,
+        year,
+        user_id,
+        point,
+        cnt_schedule: 1,
+        is_finished: true,
+      });
+    } else if (dailyResult.dataValues.cnt_schedule == 1) {
+      console.log("해당 daily를 제거합니다");
+      dailyResult.destroy();
+      // await db["daily"].destroy({
+      //   where: {
+      //     [op.and]: [
+      //       {
+      //         date: started_day,
+      //       },
+      //       {
+      //         user_id,
+      //       },
+      //     ],
+      //   },
+      // });
+    } else {
+      console.log("해당 daily를 취소합니다");
+      dailyResult.sum_point -= point;
+      dailyResult.cnt_schedule -= 1;
     }
-  );
-  console.log("1");
-  return [dailyResult, weeklyResult, monthlyResult, yearlyResult];
-};
 
-exports.migrate = async (prev_schedule, next_schedule) => {
-  const {
-    year,
-    month,
-    week,
-    point,
-    humidity,
-    illuminance,
-    noise,
-    temperature,
-    user_id,
-  } = next_schedule;
-  const started_day = moment(next_schedule.started_at).startOf("day");
-
-  const dailyResult = await db["daily"].findOne({
-    where: {
-      date: started_day,
-    },
-  });
-
-  //update할 일자 정보가 없음.
-  if (dailyResult == null || dailyResult[0] == 0)
-    return reject("해당 daily를 찾을 수 없습니다.1");
-  else {
-    dailyResult.sum_point += point;
-  }
-
-  //weekly 확인
-  const weeklyResult = await db["weekly"].findOne({
-    where: {
-      [op.and]: [
-        {
-          year,
-        },
-        {
-          week,
-        },
-      ],
-    },
-  });
-
-  if (weeklyResult == null) {
-    //weekly가 해당 존재하지않음
-    console.log(`week 가 존재하지 않습니다.1`);
-    db["weekly"].create({
-      week,
-      month,
-      year,
-      user_id,
-      sum_point,
+    //weekly 확인
+    const weeklyResult = await db["weekly"].findOne({
+      where: {
+        [op.and]: [
+          {
+            year,
+          },
+          {
+            week,
+          },
+          {
+            user_id,
+          },
+        ],
+      },
     });
-  } else {
-    weeklyResult.sum_point += point;
-  }
 
-  const monthlyResult = await db["monthly"].findOne({
-    where: {
-      year,
-      month,
-    },
-  });
+    if (weeklyResult == null) {
+      //weekly가 해당 존재하지않음
+      console.log(`week 가 존재하지 않습니다.1`);
+      db["weekly"].create({
+        week,
+        month,
+        year,
+        user_id,
+        sum_point,
+      });
+    } else if (weeklyResult.dataValues.cnt_schedule == 1) {
+      console.log(`week 을 제거합니다.1`);
+      await db["weekly"].destroy({
+        where: {
+          [op.and]: [{ year }, { month }, { week }, { user_id }],
+        },
+      });
+    } else {
+      weeklyResult.sum_point -= point;
+      weeklyResult.cnt_schedule -= 1;
+    }
 
-  if (monthlyResult == null) {
-    console.log(`month 가 존재하지 않습니다.1`);
-    db["monthly"].create({
-      month,
-      year,
-      user_id,
-      sum_point,
+    const monthlyResult = await db["monthly"].findOne({
+      where: {
+        year,
+        month,
+      },
     });
-  } else {
-    monthlyResult.sum_point += point;
-  }
 
-  const yearlyResult = await db["yearly"].findOne(
-    {},
-    {
+    if (monthlyResult == null) {
+      console.log(`month 가 존재하지 않습니다.1`);
+      db["monthly"].create({
+        month,
+        year,
+        user_id,
+        sum_point,
+      });
+    } else if (monthlyResult.dataValues.cnt_schedule == 1) {
+      console.log("해당 monthly를 제거합니다");
+      await db["monthly"].destroy({
+        where: {
+          [op.and]: [{ year }, { month }, { user_id }],
+        },
+      });
+    } else {
+      monthlyResult.sum_point -= point;
+      monthlyResult.cnt_schedule -= 1;
+    }
+
+    const yearlyResult = await db["yearly"].findOne({
       where: {
         year,
       },
-    }
-  );
-
-  if (yearlyResult == null) {
-    console.log(`year 가 존재하지 않습니다.1`);
-    db["yearly"].create({
-      year,
-      user_id,
-      sum_point: point,
     });
-  } else {
-    yearlyResult.sum_point += point;
-  }
-  return [dailyResult, weeklyResult, monthlyResult, yearlyResult];
+
+    if (yearlyResult == null) {
+      console.log(`year 가 존재하지 않습니다.1`);
+      db["yearly"].create({
+        year,
+        user_id,
+        sum_point: point,
+      });
+    } else if (yearlyResult.dataValues.cnt_schedule == 1) {
+      console.log("해당 yearly를 제거합니다");
+      await db["yearly"].destroy({
+        where: {
+          [op.and]: [{ year }, { user_id }],
+        },
+      });
+    } else {
+      yearlyResult.sum_point -= point;
+      yearlyResult.cnt_schedule -= 1;
+    }
+    resolve([dailyResult, weeklyResult, monthlyResult, yearlyResult]);
+  });
+};
+
+exports.migrate = async (prev_schedule, next_schedule) => {
+  return new Promise(async (resolve, reject) => {
+    const {
+      year,
+      month,
+      week,
+      point,
+      humidity,
+      illuminance,
+      noise,
+      temperature,
+      user_id,
+    } = next_schedule;
+    const started_day = moment(next_schedule.started_at).startOf("day");
+
+    const dailyResult = await db["daily"].findOne({
+      where: {
+        [op.and]: [
+          {
+            date: started_day,
+          },
+          {
+            user_id,
+          },
+        ],
+      },
+    });
+
+    //update할 일자 정보가 없음.
+    if (dailyResult == null || dailyResult[0] == 0) {
+      console.log("해당 daily를 생성합니다");
+      const dailyResult = await db["daily"].create({
+        date: started_day,
+        week,
+        month,
+        year,
+        user_id,
+        sum_point: point,
+        cnt_schedule: 1,
+        is_finished: false,
+      });
+    } else {
+      dailyResult.sum_point += point;
+      dailyResult.cnt_schedule += 1;
+    }
+
+    //weekly 확인
+    const weeklyResult = await db["weekly"].findOne({
+      where: {
+        [op.and]: [
+          {
+            year,
+          },
+          {
+            week,
+          },
+          {
+            user_id,
+          },
+        ],
+      },
+    });
+
+    if (weeklyResult == null) {
+      //weekly가 해당 존재하지않음
+      console.log(`week 가 존재하지 않습니다.1`);
+      await db["weekly"].create({
+        week,
+        month,
+        year,
+        user_id,
+        sum_point: point,
+        cnt_schedule: 1,
+        is_finished: true,
+      });
+    } else {
+      weeklyResult.sum_point += point;
+      weeklyResult.cnt_schedule += 1;
+    }
+
+    const monthlyResult = await db["monthly"].findOne({
+      where: {
+        [op.and]: [
+          {
+            year,
+          },
+          {
+            month,
+          },
+          {
+            user_id,
+          },
+        ],
+      },
+    });
+
+    if (monthlyResult == null) {
+      console.log(`month 가 존재하지 않습니다.1`);
+      await db["monthly"].create({
+        month,
+        year,
+        user_id,
+        sum_point: point,
+        cnt_schedule: 1,
+        is_finished: true,
+      });
+    } else {
+      monthlyResult.sum_point += point;
+      monthlyResult.cnt_schedule += 1;
+    }
+
+    const yearlyResult = await db["yearly"].findOne(
+      {},
+      {
+        where: {
+          [op.and]: [
+            {
+              year,
+            },
+            {
+              user_id,
+            },
+          ],
+        },
+      }
+    );
+
+    if (yearlyResult == null) {
+      console.log(`year 가 존재하지 않습니다.1`);
+      await db["yearly"].create({
+        year,
+        user_id,
+        sum_point: point,
+        cnt_schedule: 1,
+        is_finished: true,
+      });
+    } else {
+      yearlyResult.sum_point += point;
+      yearlyResult.cnt_schedule += 1;
+    }
+    return resolve([dailyResult, weeklyResult, monthlyResult, yearlyResult]);
+  });
 };

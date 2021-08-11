@@ -18,7 +18,7 @@ router.get(
     const result = validationResult(req);
     if (!result.isEmpty()) {
       console.log(validationResult(req));
-      res.status("400").json({ result });
+      res.status("400").json({ error: result });
     } else {
       service
         .get_daily(payload)
@@ -26,7 +26,7 @@ router.get(
           res.json(data);
         })
         .catch((error) => {
-          res.status("405").json({ error: "error" });
+          res.status("405").json({ error });
         });
     }
   }
@@ -49,7 +49,7 @@ router.put(
     const result = validationResult(req);
     if (!result.isEmpty()) {
       console.log(validationResult(req));
-      res.status("400").json({ result });
+      res.status("400").json({ error: result });
     } else {
       service
         .put_daily(payload)
@@ -57,7 +57,7 @@ router.put(
           res.json(data);
         })
         .catch((error) => {
-          res.status("405").json({ error: "error" });
+          res.status("405").json({ error });
         });
     }
   }
@@ -88,7 +88,7 @@ router.get(
           res.json(data);
         })
         .catch((error) => {
-          res.status("405").json({ error: "error" });
+          res.status("405").json({ error });
         });
     }
   }
@@ -107,7 +107,7 @@ router.get(
     const result = validationResult(req);
     if (!result.isEmpty()) {
       console.log(validationResult(req));
-      res.status("400").json({ result });
+      res.status("400").json({ error: result });
     } else {
       service
         .get_month(payload)
@@ -115,7 +115,7 @@ router.get(
           res.json(data);
         })
         .catch((error) => {
-          res.status("405").json({ error: "error" });
+          res.status("405").json({ error });
         });
     }
   }
@@ -131,7 +131,7 @@ router.get(
     const result = validationResult(req);
     if (!result.isEmpty()) {
       console.log(validationResult(req));
-      res.status("400").json({ result });
+      res.status("400").json({ error: result });
     } else {
       service
         .get_year(payload)
@@ -139,7 +139,7 @@ router.get(
           res.json(data);
         })
         .catch((error) => {
-          res.status("405").json({ error: "error" });
+          res.status("405").json({ error });
         });
     }
   }

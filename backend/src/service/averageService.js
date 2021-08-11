@@ -96,100 +96,16 @@ exports.put_daily = function (payload) {
           ],
         },
       });
-
-      //새로 반영되어야 할 값
-      // const sum_point = dailySchedules.reduce((acc, cur) => {
-      //   return acc + cur.dataValues.point;
-      // }, 0);
-      // const cnt_schedule = dailySchedules.length;
-
-      // //이전 값
-      // let prev_sum_point = 0;
-      // let prev_cnt_schedule = 0;
-      // let isSubmited = false;
-
-      // //sum_point 값을 적용
-      // const dailyResult = await db["daily"].findOne({
-      //   where: {
-      //     [op.and]: [{ user_id }, { date }],
-      //   },
-      // });
-
-      // if (dailyResult == null) {
-      //   return reject("존재하지 않는 daily입니다");
-      // } else {
-      //   isSubmited = dailyResult.daily_context != null;
-
-      //   if (isSubmited) {
-      //     prev_sum_point = dailyResult.sum_point;
-      //     prev_cnt_schedule = dailySchedules.cnt_schedule;
-      //   }
-      //   dailyResult.daily_context = daily_context;
-      //   dailyResult.sum_point = sum_point;
-      //   dailyResult.cnt_schedule = cnt_schedule;
-      // }
-
-      // //weekly 확인
-      // const weeklyResult = await db["weekly"].findOne({
-      //   where: {
-      //     [op.and]: [
-      //       {
-      //         year,
-      //       },
-      //       {
-      //         week,
-      //       },
-      //     ],
-      //   },
-      // });
-
-      // if (weeklyResult == null) {
-      //   return reject("존재하지 않는 week입니다");
-      // } else {
-      //   console.log(sum_point, prev_sum_point);
-      //   weeklyResult.sum_point += sum_point - prev_sum_point;
-      //   weeklyResult.cnt_schedule += cnt_schedule - prev_cnt_schedule;
-      // }
-
-      // //monthly 확인
-      // const monthlyResult = await db["monthly"].findOne({
-      //   where: {
-      //     year,
-      //     month,
-      //   },
-      // });
-
-      // if (monthlyResult == null) {
-      //   return reject(`존재하지 않는 monthly입니다`);
-      // } else {
-      //   monthlyResult.sum_point += sum_point - prev_sum_point;
-      //   monthlyResult.cnt_schedule += 1;
-      // }
-
-      // const yearlyResult = await db["yearly"].findOne(
-      //   {},
-      //   {
-      //     where: {
-      //       year,
-      //     },
-      //   }
-      // );
-
-      // if (yearlyResult == null) {
-      //   return reject(`존재하지 않는 yearly입니다.`);
-      // } else {
-      //   yearlyResult.sum_point += sum_point;
-      //   yearlyResult.cnt_schedule += 1;
-      // }
-      // try {
-      //   if (dailyResult != null) dailyResult.save();
-      //   if (weeklyResult != null) weeklyResult.save();
-      //   if (monthlyResult != null) monthlyResult.save();
-      //   if (yearlyResult != null) yearlyResult.save();
-      // } catch (error) {
-      //   console.log(error);
-      //   reject("error");
-      // }
+      if (dailySchedules == null) {
+        return reject("해당 일자 스케쥴이 존재하지 않습니다");
+      } else {
+        await dailySchedules.reduce(async (promise, cur) => {
+          const acc = await promise.then();
+          cur.is_finished = true;
+          cur.save();
+          return Promise.resolve(acc);
+        }, Promise.resolve({}));
+      }
       return resolve({ result: "put" });
     } catch (error) {
       console.log(error);
