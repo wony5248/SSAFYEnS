@@ -132,7 +132,8 @@ const Changelayout = () => {
               <Changetitlenamecon>
                 <Changetitlename>일정 제목</Changetitlename>
                 <Changetitletime>
-                  {moment(item.started_at).format("HH:mm")} ~ {moment(item.finished_at).format("HH:mm")}
+                  {moment(item.started_at).format("HH:mm")} ~ 
+                  {moment(item.finished_at).format("HH:mm")}
                 </Changetitletime>
               </Changetitlenamecon>
               <Changegoal>{item.title}</Changegoal>
