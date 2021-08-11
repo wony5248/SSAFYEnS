@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Wrapper from "./styles";
 import Join from "../groupjoin"
+import { groupAPI } from "../../utils/axios";
 const Topdiv = styled.div`
   display: flex;
   justify-content: space-between;
@@ -152,8 +153,10 @@ const Progressbardiv = styled.div`
 const Groupinfo = (props) => {
   const { id } = props;
   console.log(props);
-  const [ismember, setIsmember] = useState(false);
+  const [ismember, setIsmember] = useState(true);
   const [joinopen, setJoinopen] = useState(false);
+  const [title, setTitle] = useState("")
+  const [context, setContext] = useState("")
   const openCreateModal = () => {
     setJoinopen(true);
   };
@@ -161,6 +164,19 @@ const Groupinfo = (props) => {
   const closeCreateModal = () => {
     setJoinopen(false);
   };
+  useEffect(() => {
+    async function loadGroup() {
+      await groupAPI
+        .getGroup(id)
+        .then(({ data }) => {
+          setTitle(data.name)
+          setContext(data.context)
+        })
+        .catch((e) => {});
+    }
+    loadGroup();
+    
+  }, []);
   return (
     <div style={{ padding: "24px 0" }}>
       {" "}
@@ -170,7 +186,7 @@ const Groupinfo = (props) => {
             <Backbtn onClick={() => window.location.replace("/group")}>
               뒤로 가기{" "}
             </Backbtn>{" "}
-            <Namediv> CS 스터디 </Namediv>{" "}
+            <Namediv>{title}</Namediv>{" "}
             <div style={{ width: "200px" }}> </div>{" "}
           </Topdiv><Seconddiv>
           <Secondcontent>
@@ -380,8 +396,7 @@ const Groupinfo = (props) => {
             <Secondcontent>
               <Titlediv> 그룹 소개 </Titlediv>{" "}
               <Secondrightdiv>
-                아!죽여줘 하시는 분들의 모임. <br /> 주 1 회 모여서 스터디
-                합니다. <br /> 코딩에 깔려 죽으실꺼 같은 분들 환영입니다.{" "}
+                {context}
               </Secondrightdiv>{" "}
               <Joinbtn onClick={openCreateModal}> 가입 하기 </Joinbtn>{" "}
             </Secondcontent>{" "}

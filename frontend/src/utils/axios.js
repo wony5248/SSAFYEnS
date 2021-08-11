@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const request = axios.create({
-    baseURL:"http://i5a109.p.ssafy.io:8079"
+    baseURL:"http://127.0.0.1:8079"
 });
 
 export const scheduleAPI = {
@@ -47,9 +47,14 @@ export const groupAPI = {
              name, context, 
         })
     },
-    checkGroupId:(name)=>{
+    validateGroupName:(name)=>{
         return request.post(`/group/namevalidation`,{
             name
+        })
+    },
+    findAllGroup:()=>{
+        return request.post(`/group/search`,{
+            q : ""
         })
     },
     getGroup:(id)=>{
