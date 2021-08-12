@@ -3,8 +3,6 @@ const { isEmpty } = require("lodash");
 const moment = require("moment");
 moment.tz.setDefault("Asia/Seoul");
 
-//example
-
 exports.date = check("date")
   .notEmpty()
   .custom((value, { req }) => moment(value).isValid())
@@ -24,7 +22,6 @@ exports.started_at = check("started_at") //req에 있는 key 중 started_at를 �
       );
     else return true;
   }) //started_at과 finished_at 차이가 하루 이상이면 에러
-
   .customSanitizer((value, { req }) => moment(value).toDate()); //(Sanitization) 입려된 started_at value값을 변조해 반환
 
 exports.finished_at = check("finished_at")
@@ -36,6 +33,7 @@ exports.deadline_at = check("deadline_at")
   .notEmpty()
   .custom((value, { req }) => moment(value).isValid())
   .customSanitizer((value, { req }) => moment(value).toDate());
+
 exports.notification = check("notification").default(null);
 exports.is_finished = check("is_finished").isIn([null, true, false]);
 //   check("isfinished").isBoolean(),);

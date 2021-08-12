@@ -12,15 +12,15 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
 
       // M:N 관계
-<<<<<<< HEAD
       models.users.belongsToMany(models.groups, {
         foreignKey: "user_id",
         through: models.usersmngroups,
       });
-=======
-      models.users.belongsToMany(models.groups, {foreignKey:"user_id", through: models.usersmngroups}) 
-      models.users.belongsToMany(models.groups, {as:"group_id", foreignKey:"user_id", through: models.applicants}) 
->>>>>>> 5e915b603936b2bb4dc66b73f5b5df8a04df681f
+      models.users.belongsToMany(models.groups, {
+        as: "group_id",
+        foreignKey: "user_id",
+        through: models.applicants,
+      });
     }
   }
   users.init(

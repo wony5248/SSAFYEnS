@@ -53,6 +53,7 @@ router.get("/:schedule_id", (req, res) => {
       res.status("405").send(error);
     });
 });
+
 //Updates a schedule with JSON data
 //todo 파라미터 추가
 router.put(

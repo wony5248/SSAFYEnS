@@ -3,7 +3,7 @@ const aaRoutes = require("./aa");
 // const mvpRoutes = require("./mvp");
 const userRoutes = require("./user");
 const groupRoutes = require("./group");
-const middleware = require("../middleware");
+// const middleware = require("../middleware");
 const averageRoutes = require("./average");
 const scheduleRoutes = require("./schedule");
 
