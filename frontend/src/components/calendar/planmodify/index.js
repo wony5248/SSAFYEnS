@@ -212,7 +212,8 @@ const PlanModify = () =>{
         let deadline_at = moment(`${moment().format('YYYY')}-${endMonth}-${endDay} ${endHour}:${endMin}`).format('YYYY-MM-DD HH:mm');
         try{
             await scheduleAPI.modifySchedule(id, moment(data.date).format('YYYYMMDD'), title, state.alarmYES, started_at, deadline_at, moment(data.finished_at).format('YYYY-MM-DD HH:mm'));
-            
+            alert("변경이 완료되었습니다.")
+            window.location.href = "/plan"
         }
         catch (e) {
             alert('수정에 실패했습니다.');
@@ -424,7 +425,7 @@ const PlanModify = () =>{
                 </Grid>
                 {/* footer */}
                 <Grid container justifyContent="center" alignItems="center" style={{marginTop:'30px', display:"flex",}}>
-                <Button type = "submit" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF',marginRight:"32px"}} onClick={()=> window.location.href("/plan")}>뒤로가기</Button>
+                <Button type = "button" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF',marginRight:"32px"}} onClick={()=> window.location.href = "/plan"}>뒤로가기</Button>
                 <Button type = "submit" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF'}} onClick={modify}>수정하기</Button>
                 </Grid>
             </form>

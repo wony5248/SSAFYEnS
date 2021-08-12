@@ -101,41 +101,29 @@ const Createbtn = styled.button`
   }
 `;
 const Join = (props) => {
-  const { open, close } = props;
+  const { open, close, groupid } = props;
+  console.log(props)
   const [title, setTitle] = useState("");
   const [reason, setReason] = useState("");
   const [ischeck, setIscheck] = useState(false);
   const handleReason = (e) => {
-    setTitle(e.target.value);
+    setReason(e.target.value);
+    console.log(e.target.value)
   };
-  const handleCreate = async (e) => {
-    if (ischeck === true) {
-      if (window.confirm("정말 생성하시겠 습니까?")) {
+  const handleJoin = async (e) => {
+
+      if (window.confirm("정말 가입 하시겠습니까?")) {
         await groupAPI
-          .applicantGroup()
-          .then(({ data }) => {})
-          .catch((e) => {});
-        window.location.replace("/group");
+          .applicantGroup(groupid, reason)
+          .then(({ data }) => {
+            console.log(data)
+          })
+          .catch((e) => {console.log(e)});
+        // window.location.href = `/group/${groupid}`;
       } else {
       }
-    } else {
-      window.alert("중복 확인을 진행해 주세요");
-    }
   };
-  const handleDuplicate = async (e) => {
-    await groupAPI
-      .validateGroupName(title)
-      .then(({ data }) => {
-        if (data.found === true) {
-          window.alert("이미 존재하는 그룹명입니다.");
-          setIscheck(false);
-        } else {
-          window.alert("이용 가능한 그룹명입니다.");
-          setIscheck(true);
-        }
-      })
-      .catch((e) => {});
-  };
+
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       {open ? (
@@ -161,7 +149,7 @@ const Join = (props) => {
               ></Textcontent>
             </Contentdiv>
             <Bottomdiv>
-              <Createbtn onClick={close}>생성</Createbtn>
+              <Createbtn onClick={handleJoin}>가입</Createbtn>
             </Bottomdiv>
           </Bodydiv>
         </Wrapper>

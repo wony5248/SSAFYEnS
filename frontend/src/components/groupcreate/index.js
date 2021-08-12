@@ -145,7 +145,7 @@ const Create = (props) => {
           .addGroup(title, context)
           .then(({ data }) => {})
           .catch((e) => {});
-        window.location.replace("/group");
+        window.location.href = "/group";
       }
       else {
 

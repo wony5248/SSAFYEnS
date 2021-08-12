@@ -7,6 +7,7 @@ import { Divider } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import Create from "../challengecreate";
 import { groupAPI } from "../../utils/axios";
+import moment from "moment";
 const columns = [
   {
     field: "id",
@@ -15,18 +16,16 @@ const columns = [
     width: 120,
   },
   {
-    field: "memberName",
+    field: "name",
     headerName: "그룹원 이름",
     headerClassName: "super-app-theme--header",
     width: 500,
-    editable: true,
   },
   {
-    field: "joinDate",
+    field: "joined_at",
     headerName: "가입 날자",
     headerClassName: "super-app-theme--header",
     width: 500,
-    editable: true,
   },
 ];
 const application = [
@@ -37,99 +36,27 @@ const application = [
     width: 120,
   },
   {
-    field: "applierName",
+    field: "name",
     headerName: "지원자 이름",
     headerClassName: "super-app-theme--header",
     width: 200,
-    editable: true,
   },
   {
-    field: "introduction",
+    field: "reason",
     headerName: "가입 문구",
     headerClassName: "super-app-theme--header",
     width: 600,
-    editable: true,
   },
   {
-    field: "applyDate",
+    field: "applied_at",
     headerName: "가입 요청 날자",
     headerClassName: "super-app-theme--header",
     width: 200,
-    editable: true,
-  },
-];
-const possiblegroup2 = [
-  {
-    id: 1,
-    memberName: "장범진",
-    joinDate: "2021.08.03",
-  },
-];
-const possiblegroup = [
-  {
-    id: 1,
-    memberName: "장범진",
-    joinDate: "2021.08.03",
-  },
-  {
-    id: 2,
-    memberName: "이태용",
-    joinDate: "2021.08.03",
-  },
-  {
-    id: 3,
-    memberName: "김지환",
-    joinDate: "2021.08.03",
-  },
-  {
-    id: 4,
-    memberName: "허애리",
-    joinDate: "2021.08.03",
-  },
-  {
-    id: 5,
-    memberName: "신은지",
-    joinDate: "2021.08.03",
-  },
-  {
-    id: 11,
-    memberName: "모두",
-    joinDate: "2021.08.03",
   },
 ];
 
-const joinedgroup = [
-  {
-    id: 1,
-    applierName: "장범진",
-    introduction: "받아만 주신다면 뼈를 묻겠습니다.",
-    applyDate: "2021.08.03",
-  },
-  {
-    id: 2,
-    applierName: "이태용",
-    introduction: "좋은 말로 할때 받아주시죠",
-    applyDate: "2021.08.03",
-  },
-  {
-    id: 3,
-    applierName: "신은지",
-    introduction: "제가 곧 임베디드고 임베디드가 곧 나이다.",
-    applyDate: "2021.08.03",
-  },
-  {
-    id: 4,
-    applierName: "허애리",
-    introduction: "죽여줘",
-    applyDate: "2021.08.03",
-  },
-  {
-    id: 5,
-    applierName: "김지환",
-    introduction: "강알리 등킨드나쓰 무봤나",
-    applyDate: "2021.08.03",
-  },
-];
+
+
 
 // const useStyles = makeStyles({
 //   root: {
@@ -262,6 +189,8 @@ const Groupmanage = (props) => {
   const [createopen, setCreateopen] = useState(false);
   const [select, setSelect] = useState([]);
   const [title, setTitle] = useState("")
+  const [applier, setApplier] = useState([])
+  const [member, setMember] = useState([])
   const openCreateModal = () => {
     setCreateopen(true);
   };
@@ -270,18 +199,42 @@ const Groupmanage = (props) => {
     setCreateopen(false);
   };
   const { id } = props;
-  console.log(id);
-  console.log(select);
+  // console.log(id);
+  // console.log(select);
   useEffect(() => {
-    async function loadGroup() {
+    async function loadMember() {
+      console.log(id)
       await groupAPI
         .getGroup(id)
         .then(({ data }) => {
           setTitle(data.name)
+          setMember(data.members)
+          for (let i =0; i< data.members.length; i++)
+          {
+            data.members[i].id = i+1
+            data.members[i].joined_at = moment(data.members[i].joined_at).format("YYYY년MM월DD일")
+          }
+          console.log(data.members)
         })
-        .catch((e) => {});
+        .catch((e) => {console.log("여기..")});
     }
-    loadGroup();
+    async function loadApplier() {
+      console.log(id)
+      await groupAPI
+        .applicantListGroup(id)
+        .then(({ data }) => {
+          setApplier(data)
+          for (let i =0; i< data.length; i++)
+          {
+            data[i].id = i+1
+            data.members[i].applied_at = moment(data[i].applied_at).format("YYYY년MM월DD일")
+          }
+          console.log(data)
+        })
+        .catch((e) => {console.log("여기..")});
+    }
+    loadMember();
+    // loadApplier();
     
   }, []);
   return (
@@ -289,7 +242,7 @@ const Groupmanage = (props) => {
       {isleader ? (
         <Wrapper>
           <Grouptitlediv>
-            <Challengebtn onClick={() => window.location.replace("/group")}>
+            <Challengebtn onClick={() => window.location.href = "/group"}>
               뒤로 가기
             </Challengebtn>
             <GroupNamediv>{title}</GroupNamediv>
@@ -302,7 +255,7 @@ const Groupmanage = (props) => {
           </Joineddiv>
           <div style={{ height: 400, width: "100%" }}>
             <Muidatagrid
-              rows={possiblegroup}
+              rows={member}
               columns={columns}
               pageSize={5}
               onSelectionModelChange={(itm) => setSelect(itm)}
@@ -330,7 +283,7 @@ const Groupmanage = (props) => {
           </Joineddiv>
           <div style={{ height: 400, width: "100%" }}>
             <Muidatagrid
-              rows={joinedgroup}
+              rows={member}
               columns={application}
               pageSize={5}
               onSelectionModelChange={(itm) => setSelect(itm)}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Wrapper from "./styles";
-import { DataGrid } from "@material-ui/data-grid";
+import { convertGridRowsPropToState, DataGrid } from "@material-ui/data-grid";
 import styled1 from "styled-components";
 import { styled, makeStyles } from "@material-ui/styles";
 import { Divider } from "@material-ui/core";
@@ -19,28 +19,24 @@ const columns = [
     headerName: "그룹 이름",
     headerClassName: "super-app-theme--header",
     width: 460,
-    editable: true,
   },
   {
     field: "context",
     headerName: "그룹 설명",
     headerClassName: "super-app-theme--header",
     width: 460,
-    editable: true,
   },
   {
     field: "pax",
     headerName: "그룹 인원",
     headerClassName: "super-app-theme--header",
     width: 140,
-    editable: true,
   },
   {
     field: "ranking",
     headerName: "그룹 랭킹",
     headerClassName: "super-app-theme--header",
     width: 140,
-    editable: true,
   },
 ];
 
@@ -139,7 +135,7 @@ const Group = () => {
   const [select, setSelect] = useState([]);
   const [select2, setSelect2] = useState([]);
   const [row, setRow] = useState([]);
-  const [isleader, setIsleader] = useState(true);
+  const [isleader, setIsleader] = useState(false);
   const openCreateModal = () => {
     setCreateopen(true);
   };
@@ -147,12 +143,29 @@ const Group = () => {
   const closeCreateModal = () => {
     setCreateopen(false);
   };
-  const handleMove = () => {
-    if (isleader === true) {
-      window.location.replace(`/group/${select2[0]}/manage`)
+  const handleMove = async () => {
+    var a =0
+    await groupAPI
+        .getGroup(select2[0])
+        .then(({ data }) => {
+          for (let i = 0; i < data.members.length; i++) {
+            if (data.members[i].user_id === sessionStorage.getItem("id") && data.members[i].is_group_admin) {
+                setIsleader(true); 
+                console.log("여기")
+                a = 1
+            }
+          }
+
+          console.log(isleader)
+          console.log(a)
+        }
+        )
+        .catch((e) => {});
+    if (a === 1) {
+      window.location.href = `/group/${select2[0]}/manage`
     }
     else{
-      window.location.replace(`/group/${select2[0]}`)
+      window.location.href = `/group/${select2[0]}`
     }
   }
   useEffect(() => {
@@ -160,6 +173,7 @@ const Group = () => {
       await groupAPI
         .findAllGroup()
         .then(({ data }) => {
+          console.log(data)
           for (let i = 0; i < data.length; i++) {
             data[i].id = data[i].group_id;
           }
@@ -191,7 +205,7 @@ const Group = () => {
             onClick={() =>
               window.confirm("선택한 그룹 정보화면으로 이동하시겠습니까?")
                 ? select[0]
-                  ? window.location.replace(`/group/${select[0]}`)
+                  ? window.location.href = `/group/${select[0]}`
                   : window.alert("그룹을 선택해 주세요")
                 : console.log("아무일 없음")
             }
@@ -221,6 +235,7 @@ const Group = () => {
               columns={columns}
               pageSize={5}
               onSelectionModelChange={(itm) => setSelect2(itm)}
+              onRowClick = {(itm) => setSelect2(itm)}
             />
           </div>
           <Joindiv>

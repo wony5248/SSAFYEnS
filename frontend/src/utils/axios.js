@@ -141,17 +141,12 @@ export const groupAPI = {
     // 그룹 가입 신청 목록
     applicantListGroup:(groupid)=>{
         return request.get(`/group/${groupid}/applicant`,{
-            headers:{
-                access_token : window.sessionStorage.getItem('token')
-            }
         })
     },
     // 그룹 가입 신청
-    applicantGroup:(groupid)=>{
+    applicantGroup:(groupid, reas)=>{
         return request.post(`/group/${groupid}/applicant`,{
-            headers:{
-                access_token : window.sessionStorage.getItem('token')
-            }
+            reason : reas
         })
     },
     // 그룹 가입 신청 거절? 취소?
