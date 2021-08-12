@@ -149,6 +149,16 @@ router.delete("/:user_id", (req, res) => {
     });
 });
 
+router.post("/:user_id/exp/:add_exp", (req, res) => {
+  user
+    .addExpById(req)
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((error) => {
+      res.status(400).send(error);
+    });
+});
 
 
 module.exports = router;
