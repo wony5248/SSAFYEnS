@@ -1,11 +1,11 @@
-// npx sequelize model:generate --name usersmngroups --attributes group_id:integer,user_id:string,is_group_admin:boolean
+// npx sequelize model:generate --name applicants --attributes group_id:integer,user_id:string,reason:string
 
 'use strict';
 const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class usersmngroups extends Model {
+  class applicants extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,16 +13,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-
-      // belongsToMany에서만 하고 여기 junction model에서는 안 하는 것 같다
-      // models.usersmngroups.hasMany(models.groups)
-      // models.usersmngroups.hasMany(models.users)
     }
   };
-  usersmngroups.init({
+  applicants.init({
     group_id: {
       type: DataTypes.INTEGER,
-      // primaryKey: true,
       references: {
         model: 'groups',
         key: 'group_id',
@@ -30,21 +25,17 @@ module.exports = (sequelize, DataTypes) => {
     },
     user_id: {
       type: DataTypes.INTEGER,
-      // primaryKey: true,
       references: {
         model: 'users',
         key: 'user_id',
       }
     },
-    is_group_admin: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    }
+    reason: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'usersmngroups',
-    createdAt: 'joined_at',
-    updatedAt: false
+    modelName: 'applicants',
+    createdAt: 'applied_at',
+    updatedAt: false,
   });
-  return usersmngroups;
+  return applicants;
 };
