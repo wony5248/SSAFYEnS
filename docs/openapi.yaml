@@ -630,13 +630,51 @@ paths:
           description: User deletion successful
           content: {}
         400:
-          description: Invalid username supplied
+          description: Invalid user_id supplied
           content: {}
         404:
           description: User not found
           content: {}
       security:
       - JWT: []
+      
+  /user/{user_id}/exp/{addExp}:  
+    
+    post:
+      tags:
+      - user
+      summary: Add exp to user
+      description: |-
+        * This can only be done by the logged in user.
+        * 
+      operationId: addExpById
+      parameters:
+      - name: user_id
+        in: path
+        description: The user that needs exp to be added
+        required: true
+        schema:
+          type: string
+      - name: addExp
+        in: path
+        description: The exp to be added
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Point add successful
+          content: {}
+        400:
+          description: Invalid user_id supplied
+          content: {}
+        404:
+          description: User not found
+          content: {}
+      security:
+      - JWT: []
+      
+    
       
   /average/daily/{date}:
   
@@ -1269,6 +1307,7 @@ paths:
       description: |-
         * group_id에 해당하는 그룹에 가입신청을 한 가입신청자를 반환합니다(그룹 관리자용 화면)
         * 해당 그룹의 관리자인지 확인합니다.
+      operationId: getApplicants
       parameters:
       - in: path
         required: true
@@ -1305,6 +1344,15 @@ paths:
       description: |-
         * group_id에 해당하는 그룹에 회원이 가입신청을 합니다
         * 가입신청이 되었다는 뜻으로 200을, 오류 발생시 400을 반환합니다.
+      operationId: createApplicant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                reason:
+                  type: string
+                  example: 'IoT하고 싶어요...'
       parameters:
       - in: path
         required: true
@@ -1326,6 +1374,7 @@ paths:
       description: |-
         * group_id에 해당하는 그룹에 회원이 가입신청 했던 것을 취소합니다.
         * 가입신청 취소가 되었다는 뜻으로 200을, 오류 발생시(신청한 적 없다던지) 400을 반환합니다.
+      operationId: deleteApplicant
       parameters:
       - in: path
         required: true
@@ -1350,6 +1399,7 @@ paths:
         * group_id에 해당하는 그룹에 가입신청한 회원을 승인합니다.
         * 승인이 되었다(가입신청자 명단에서 삭제)는 뜻으로 200을, 오류 발생시 400을 반환합니다.
         * `BE` applicant테이블에서 삭제하고, usersmngroups에 추가합니다.
+      operationId: createMemberById
       parameters:
       - in: path
         required: true
@@ -1376,6 +1426,7 @@ paths:
       description: |-
         * group_id에 해당하는 그룹에 가입신청한 회원을 거절합니다.
         * 거절이 되었다(가입신청자 명단에서 삭제)는 뜻으로 200을, 오류 발생시 400을 반환합니다.
+      operationId: deleteApplicantById
       parameters:
       - in: path
         required: true
@@ -1398,6 +1449,8 @@ paths:
   /user/{user_id}/trophy:
   
     get:
+      tags:
+      - trophy
       summary: gets array of trophy gained by user(user_id)
       description: |-
         * user_id에 해당하는 회원이 보유한 트로피들을 반환합니다.
@@ -1424,6 +1477,8 @@ paths:
   /user/{user_id}/trophy/{trophy_id}:
       
     post:
+      tags:
+      - trophy    
       summary: adds trophy to user(user_id)
       description: |-
         * user_id에 해당하는 회원이 trophy_id에 해당하는 트로피를 얻습니다.
