@@ -34,7 +34,6 @@ const Changeoption = styled1.option`
 const Changecalcon = styled1.div`
   width: auto;
   height: 99.8%;
-  border : 1px solid #a3cca3;
   flex-wrap: nowrap;
   color: #a3cca3;
   margin: 0px;
@@ -134,7 +133,7 @@ const Changecalendarlayout = () => {
             deadline_at: `${moment().format("YYYYMMDD")} ${
               deadline[0] + deadline[1] + deadline[2] + deadline[3]
             }`,
-            notification: `${moment().format("YYYYMMDD")} ${
+            notificationtime: `${moment().format("YYYYMMDD")} ${
               notitime[0] + notitime[1] + notitime[2] + notitime[3]
             }`,
             is_finished: false,
@@ -168,7 +167,7 @@ const Changecalendarlayout = () => {
             deadline_at: `${moment().format("YYYYMMDD")} ${
               deadline[0] + deadline[1] + deadline[2] + deadline[3]
             }`,
-            notification: `${moment().format("YYYYMMDD")} ${
+            notificationtime: `${moment().format("YYYYMMDD")} ${
               notitime[0] + notitime[1] + notitime[2] + notitime[3]
             }`,
             is_finished: false,

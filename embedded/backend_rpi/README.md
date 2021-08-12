@@ -15,16 +15,13 @@
 ### 일정 추가
     POST 127.0.0.1:4500/schedule
     data : {
-            date: 20210810 1640,
+            date: 20210810,
             started_at: 20210810 1640,
             finished_at: 20210810 1840 ,
             deadline_at: 20210810 2040,
-            notification: 20210810 1830,
+            notification: null,
+            notificationtime: 20210810 1810,
             is_finished: false,
-            month: 08,
-            year: 2021,
-            week: "1",
-            point: 0,
             user_id: "wony5248",
             title: title,
             context: context,

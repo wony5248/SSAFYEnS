@@ -183,10 +183,12 @@ const Ratinglayout = (props) => {
       if (window.confirm("정말 완료하시겠 습니까?")) {
         await axios
           .put(`http://127.0.0.1:4500/schedule/${id}`, {
+            date: `${moment().format("YYYYMMDD")}`,
             started_at: starttime,
             finished_at: moment().format("YYYYMMDD HHmm"),
             deadline_at: deadline,
-            notification: moment().format("YYYYMMDD HHmm"),
+            notificationtime: null,
+            notification: null,
             is_finished: true,
             context: `${context} ${string}`,
             point: `${

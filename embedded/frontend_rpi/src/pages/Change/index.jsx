@@ -8,7 +8,7 @@ import 'moment/locale/ko';
 const Changecontainer = styled.div`
   overflow: auto;
   width: auto;
-  height: 100%;
+  height: 98.4%;
   margin: 0px;
   padding-top: 14px;
   padding-right: 12px;
@@ -92,6 +92,7 @@ const Changelayout = () => {
   const [itemList, setItemList] = useState([]);
   const Delete = async (props) => {
     const id = props;
+    console.log(id)
     if (window.confirm("정말 삭제하시겠 습니까?")) {
       await axios
         .delete(`http://127.0.0.1:4500/schedule/${id}`)
@@ -132,7 +133,7 @@ const Changelayout = () => {
               <Changetitlenamecon>
                 <Changetitlename>일정 제목</Changetitlename>
                 <Changetitletime>
-                  {moment(item.started_at).format("HH:mm")} ~
+                  {moment(item.started_at).format("HH:mm")} ~ 
                   {moment(item.finished_at).format("HH:mm")}
                 </Changetitletime>
               </Changetitlenamecon>
@@ -150,18 +151,23 @@ const Changelayout = () => {
                 >
                   <Changechangebtn
                     isdark={isdarked}
-                    onClick={() => Delete(item.id)}
+                    onClick={() => Delete(item.schedule_id)}
                   >
                     삭제
                   </Changechangebtn>
-                  <Changechangebtn
+                  {item.is_finished ? (<div 
+                    style = {{display:"flex",justifyContent:"flex-end",width: "120px",fontSize:"16px"}}
+                    isdark={isdarked}
+                  >
+                    완료된 일정
+                  </div>) : (<Changechangebtn
                     isdark={isdarked}
                     onClick={() =>
-                      window.location.replace(`/Change/${item.id}`)
+                      window.location.replace(`/Change/${item.schedule_id}`)
                     }
                   >
                     변경
-                  </Changechangebtn>
+                  </Changechangebtn>)}
                 </div>
               </Changechangecon>
             </Changetitle>
