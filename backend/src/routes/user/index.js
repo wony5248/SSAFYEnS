@@ -105,7 +105,7 @@ router.get("/logout", (req, res) => {
     });
 });
 
-router.get("/all", (req, res) => {
+router.get("/", (req, res) => {
   user
     .getUserAll(req)
     .then((data) => {
@@ -159,6 +159,8 @@ router.post("/:user_id/exp/:add_exp", (req, res) => {
       res.status(400).send(error);
     });
 });
+
+
 
 
 module.exports = router;
