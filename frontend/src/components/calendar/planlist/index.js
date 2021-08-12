@@ -117,6 +117,7 @@ const PlanList = () => {
                 </Grid>
             </Grid>
             {/* body */}
+            <div style={{overflow:"auto"}}>
             <Grid container justifyContent='center' style={{width:'100%', height:'50px'}}></Grid>
             <Grid container justifyContent= 'center'>
                 <Grid Container style={{borderTop:'1px solid #A3CCA3', borderLeft:'1px solid #A3CCA3'
@@ -124,6 +125,7 @@ const PlanList = () => {
                     {planListArr()}
                 </Grid>
             </Grid>
+            </div>
         </Wrapper>
     );
 
