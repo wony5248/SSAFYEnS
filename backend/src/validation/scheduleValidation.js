@@ -70,3 +70,6 @@ exports.noise = check("noise").default(0);
 exports.temperature = check("temperature").customSanitizer(
   (value, { req }) => 0
 );
+exports.notificationtime = check("notificationtime").customSanitizer(
+  (value, { req }) => moment(value).toDate()
+);
