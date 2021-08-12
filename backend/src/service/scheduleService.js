@@ -229,7 +229,7 @@ exports.delete_$schedule_id$ = function (payload) {
     }
     migrate_undo(prev_schedule)
       .then((data) => {
-        prev_schedule.destroy().save();
+        prev_schedule.destroy();
         return resolve({ result: "delete" });
       })
       .catch((error) => {
@@ -238,6 +238,7 @@ exports.delete_$schedule_id$ = function (payload) {
       });
   });
 };
+
 exports.post_submit = function (body) {
   return new Promise(async function (resolve, reject) {
     const { date, sum_point, context, user_id, month, year, week } = body;
