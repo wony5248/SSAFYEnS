@@ -267,3 +267,185 @@ exports.getGroupBySearch = function (req, res, next) {
 
   })
 }
+
+
+exports.getApplicants = function (req, res, next) {
+  return new Promise(async function (resolve, reject) {
+    // jwt 인증 확인 필요
+    // jwt를 통해 user_id 필요
+    const user_id = 'test1' // jwt
+    const group_id = req.params.group_id
+
+    // user_id가 group_id의 그룹관리자인지 확인 필요
+    db["usersmngroups"]
+    .findOne({where: {group_id,user_id}})
+    .then((data) => {
+      console.log("This is getApplicants usersmngroups data:", data);
+      if (!data) return reject("Group이 존재하지 않습니다./User가 Group의 회원이 아닙니다/존재하지 않는 user_id입니다");
+      else if (!data.is_group_admin) return reject("Group Admin이 아닙니다.");
+      // user_id가 group_id의 그룹관리자임을 확인함
+
+      db["applicants"]
+      .findAll({where: {group_id}})
+      .then((applicants) => {
+        console.log("This is getApplicants applicants:", applicants)
+        // 가입신청자가 없어도 없는 상태(빈 array)로 200 코드 돌려준다.(정상)
+        return resolve(applicants)
+      })
+      .catch((error) => {
+        console.log(error)
+        return reject(error)
+      })
+
+    })
+    .catch((error) => {
+      return reject(error)
+    })
+
+  })
+}
+
+exports.createApplicant = function (req, res, next) {
+  return new Promise(async function (resolve, reject) {
+    // jwt 인증 확인 필요
+    // jwt를 통해 user_id 필요
+    const user_id = 'test1' // jwt
+    const group_id = req.params.group_id
+    let applicantinfo = { ...req.body, group_id, user_id }
+    console.log(applicantinfo)
+
+    // 이미 가입신청 승인되어 해당 그룹에 소속된 경우도 신청 못하게 막아야됨
+    db["usersmngroups"]
+    .findAll({where: {user_id, group_id}})
+    .then((data) => {
+      console.log("This is createApplicant data:",data)
+      // 0개가 아닌 경우(이미 가입된 경우) 에러 반환
+      if (data.length) return reject("이미 이 그룹 멤버잖아요");
+      // 이미 가입신청 한 경우에 중복 신청 못하게 막아야됨!!!
+      // applicants junction 테이블에 복합키로 할 수 있지만 어려워서 일단 꼼수.
+      db["applicants"]
+      .findAll({
+        attributes: ['user_id', 'group_id'],
+        where: {user_id, group_id}
+      })
+      .then((applicants) => {
+        console.log("This is createApplicant applicants:",applicants)
+        if (applicants.length) return reject("이미 가입신청했어요");
+        // 중복 신청 아니라는 것 확인했으니 가입신청을 넣어줍니다.
+        db["applicants"]
+        .create(applicantinfo)
+        .then((applicant) => {
+          console.log("This is createApplicant applicant:",applicant)
+          // 가입신청 완료!
+          return resolve(applicant)
+        })
+        // 존재하지 않은 group_id면 에러
+        .catch((error) => {
+          return reject(error)
+        })
+
+      })
+      .catch((error) => {
+        return reject(error)
+      })
+      
+    })
+    .catch((error) => {
+      return reject(error)
+    })
+
+  })
+}
+
+exports.deleteApplicant = function (req, res, next) {
+  return new Promise(async function (resolve, reject) {
+    // jwt 인증 확인 필요
+    // jwt를 통해 user_id 필요
+    const user_id = 'test1' // jwt
+    const group_id = req.params.group_id
+
+    db["applicants"]
+    .destroy({
+      where: { group_id, user_id },
+    })
+    // where에 해당하는 모든 (2개 이상도 가능) applicants instance 삭제
+    .then((data) => {
+      console.log("This is deleteApplicant data:",data) // 0 또는 1 이상의 integer
+      if (!data) return reject("Group이 존재하지 않음/해당 그룹에 가입신청한 적 없음/user_id가 존재하지 않음"); // 아무것도 삭제 안한 경우 에러
+      return resolve()  // integer라 인자로 보낼 수 없음
+    })
+    // 존재하지 않은 group_id면 에러
+    .catch((error) => {
+      return reject(error)
+    })
+    
+  })
+}
+
+exports.createMemberById = function (req, res, next) {
+  return new Promise(async function (resolve, reject) {
+    // jwt 인증 확인 필요
+    // jwt를 통해 user_id 필요
+    const user_id = 'test1' // jwt
+    const { group_id } = req.params
+    const applicant_id = req.params.user_id
+    // user_id가 group_id의 그룹관리자인지 확인 필요
+
+    db["applicants"]
+    .destroy({
+      where: { group_id, user_id: applicant_id },
+    })
+    // where에 해당하는 모든 (2개 이상도 가능) applicants instance 삭제
+    .then((data) => {
+      console.log("This is createMemberById data:",data) // 0 또는 1 이상의 integer
+      if (!data) return reject("Group이 존재하지 않음/해당 그룹에 가입신청한 적 없음/user_id가 존재하지 않음"); // 아무것도 삭제 안한 경우 에러
+      // applicants 테이블에서 삭제하고 usersmngroups에 입력해야됨
+      
+      db["usersmngroups"]
+      .create({group_id, user_id: applicant_id})
+      .then((member) => {
+        console.log("This is createMemberById member:",member)
+        // group.pax 에 1명 추가 됐다고 더해줘야할 필요
+        return resolve()
+      })
+      .catch((error) => {
+        console.log(error)
+        return reject(error)
+      })
+
+    })
+    // 존재하지 않은 group_id면 에러
+    .catch((error) => {
+      return reject(error)
+    })
+    
+  })
+}
+
+exports.deleteApplicantById = function (req, res, next) {
+  return new Promise(async function (resolve, reject) {
+    // jwt 인증 확인 필요
+    // jwt를 통해 user_id 필요
+    const user_id = 'test1' // jwt
+    const { group_id } = req.params
+    const applicant_id = req.params.user_id
+    // user_id가 group_id의 그룹관리자인지 확인 필요
+
+    db["applicants"]
+    .destroy({
+      where: { group_id, user_id: applicant_id },
+    })
+    // where에 해당하는 모든 (2개 이상도 가능) applicants instance 삭제
+    .then((data) => {
+      console.log("This is deleteApplicantById data:",data) // 0 또는 1 이상의 integer
+      if (!data) return reject("Group이 존재하지 않음/해당 그룹에 가입신청한 적 없음/user_id가 존재하지 않음"); // 아무것도 삭제 안한 경우 에러
+      // applicants 테이블에서 삭제
+      return resolve()
+    })
+    // 존재하지 않은 group_id면 에러
+    .catch((error) => {
+      return reject(error)
+    })
+    
+  })
+}
