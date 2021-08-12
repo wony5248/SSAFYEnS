@@ -2,7 +2,7 @@ const moment = require("moment");
 const Sequelize = require("sequelize");
 const db = require("../models");
 const op = Sequelize.Op;
-exports.migrate_undo = async (prev_schedule, next_schedule) => {
+exports.migrate_undo = async (prev_schedule) => {
   return new Promise(async (resolve, reject) => {
     const {
       year,

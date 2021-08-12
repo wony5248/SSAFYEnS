@@ -96,7 +96,7 @@ router.put(
 );
 //Deletes a schedule
 router.delete("/:schedule_id", (req, res) => {
-  const payload = { ...req.body };
+  const payload = { ...req.body, ...req.params };
   service
     .delete_$schedule_id$(payload)
     .then((result) => {
