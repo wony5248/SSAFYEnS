@@ -1,9 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {useLocation} from 'react-router-dom';
 import Wrapper from './styles';
-import {Grid, IconButton, Button, Box, withStyles } from '@material-ui/core';
-import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import {Grid, Button, Box, withStyles } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
 import moment from 'moment';
 import {scheduleAPI} from '../../../utils/axios';
@@ -12,7 +10,8 @@ const PlanList = () => {
     const location = useLocation();
     const [query, setQuery] = useState('react');
     const [data, setData] = useState([]);
-    let select = false;
+    const select = false;
+    const deleteSelected = false;
 
     const StyledRating = withStyles({
         iconFilled: {
@@ -20,7 +19,6 @@ const PlanList = () => {
         },
       })(Rating);
 
-    // const [getMoment, setMoment] = useState(moment());
 
     let today = moment(location.pathname.split('/')[2]).format('YYYY-MM-DD');
     
@@ -30,7 +28,6 @@ const PlanList = () => {
         async function getMonthlySchedule(){
             const result = await scheduleAPI.getMonthly(today);
             setData(result.data);
-            console.log(result.data);
         }
         getMonthlySchedule();
         return ()=>{
@@ -82,7 +79,8 @@ const PlanList = () => {
                                 >
                                     수정
                                 </Button>
-                                <Button style={{background:'#A3CCA3', color:'#ffffff', height:'40px', marginRight:'30px'}}>삭제</Button>
+                                <Button style={{background:'#A3CCA3', color:'#ffffff', height:'40px', marginRight:'30px'}}
+                                onClick={()=>deleteSelected?null:deletePlan(data[i].schedule_id)}>삭제</Button>
                             </div>
                         </div>
                     </Grid>
@@ -94,10 +92,17 @@ const PlanList = () => {
         
     };
 
-    const deletePlan = () => {
+    const deletePlan = async (id) => {
         let result = window.confirm("삭제하시겠습니까?");
         if (result){
-            alert("삭제되었습니다.");
+            try{
+                await scheduleAPI.deleteSchedule(id);
+                alert("삭제되었습니다.");
+                window.location.reload();
+            }catch(e){
+                console.log(e);
+                alert('삭제에 실패했습니다.');
+            }
         }else{
             alert("취소되었습니다.");
         }

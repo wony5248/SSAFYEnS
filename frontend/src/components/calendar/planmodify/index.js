@@ -12,11 +12,12 @@ import {Thermometer} from 'react-feather';
 import {scheduleAPI} from '../../../utils/axios';
 
 const PlanModify = () =>{
+    let history = useHistory();
     const location = useLocation();
     const [query, setQuery] = useState('react');
-    const [data, setData] = useState([]);
 
     const id = location.pathname.split('/')[3];
+    const date = location.pathname.split('/')[2];
 
     const [rating, setRating] = useState(0);
     const [startMonth, setStartMonth] =useState('');
@@ -35,28 +36,41 @@ const PlanModify = () =>{
     const [noise, setNoise] = useState(0);
     const [temp, setTemp] = useState(0);
 
+    const [state, setState] = useState({
+        alarmYES: true,
+        completed: false
+    });
+
+    const [timer, setTimer] = useState('');
+    const [data, setData] = useState({});
+
     useEffect(()=>{
         let completed = false;
         
         async function getMonthlySchedule(){
             const result = await scheduleAPI.getSchedule(id);
-            setStartMonth(Number(moment(data.started_at).format('MM')));
-            setStartDay(Number(moment(data.started_at).format('DD')));
-            setStartHour(Number(moment(data.started_at).format('HH')));
-            setStartMin(Number(moment(data.started_at).format('mm')));
-
-            setEndMonth(Number(moment(data.deadline_at).format('MM')));
-            setEndDay(Number(moment(data.deadline_at).format('DD')));
-            setEndHour(Number(moment(data.deadline_at).format('HH')));
-            setEndMin(Number(moment(data.deadline_at).format('mm')));
-            setTitle(data.title);
-            setRating(data.point/20);
-            setHumi(data.humidity);
-            setNoise(data.noise);
-            setIllumi(data.illuminance);
-            setTemp(data.temperature);
+            setData(result.data);
             
-            console.log(startMin);
+            setStartMonth(Number(moment(result.data.started_at).format('MM')));
+            setStartDay(Number(moment(result.data.started_at).format('DD')));
+            setStartHour(Number(moment(result.data.started_at).format('HH')));
+            setStartMin(moment(result.data.started_at).format('mm'));
+
+            setEndMonth(Number(moment(result.data.deadline_at).format('MM')));
+            setEndDay(Number(moment(result.data.deadline_at).format('DD')));
+            setEndHour(Number(moment(result.data.deadline_at).format('HH')));
+            setEndMin(moment(result.data.deadline_at).format('mm'));
+            setTitle(result.data.title);
+            setRating(result.data.point/20);
+            setHumi(result.data.humidity);
+            setNoise(result.data.noise);
+            setIllumi(result.data.illuminance);
+            setTemp(result.data.temperature);
+
+            setState({completed:result.data.is_finished,
+                alarmYES:result.data.notification});
+            
+
         }
         getMonthlySchedule();
         return ()=>{
@@ -64,10 +78,7 @@ const PlanModify = () =>{
         };
     }, [query]);
 
-    const [state, setState] = useState({
-        alarmYES: true,
-        completed: false
-    });
+    
 
     const StyledRating = withStyles({
         iconFilled: {
@@ -76,10 +87,6 @@ const PlanModify = () =>{
       })(Rating);
 
     const thisYear = moment().format('YY');
-
-    const [timer, setTimer] = useState('');
-
-    
 
     const handleAlarm = (event) => {
         setState({...state, [event.target.name]: event.target.checked});
@@ -194,16 +201,25 @@ const PlanModify = () =>{
 
     const minArr = () =>{
         let result = [];
-        for (let i = 0; i <=30;i+=30){
-            result = result.concat(<MenuItem value ={i}>{i}</MenuItem>);
-        }
+        result = result.concat(<MenuItem value ={'00'}>00</MenuItem>);
+        result = result.concat(<MenuItem value ={'30'}>30</MenuItem>);
         
         return result;
     };
 
-    const modify = () =>{
-        // 수정시 axios로 수정보내기
-        console.log('modify');
+    const modify = async () =>{
+        let started_at = moment(`${moment().format('YYYY')}-${startMonth}-${startDay} ${startHour}:${startMin}`).format('YYYY-MM-DD HH:mm');
+        let deadline_at = moment(`${moment().format('YYYY')}-${endMonth}-${endDay} ${endHour}:${endMin}`).format('YYYY-MM-DD HH:mm');
+ 
+        try{
+            await scheduleAPI.modifySchedule(id, moment(data.date).format('YYYYMMDD'), started_at, deadline_at, moment(data.finished_at).format('YYYY-MM-DD HH:mm'));
+            alert('수정했습니다.');
+            history.push(`/planlist/${date}`);
+        }
+        catch (e) {
+            console.log(e);
+            alert('수정에 실패했습니다.');
+        }
     };
 
 
@@ -264,7 +280,7 @@ const PlanModify = () =>{
                             <div style={{marginRight:'20px'}}>시</div>
                             <FormControl style={{marginLeft:'15px', marginRight:'25px', marginBottom:'3px'}}>
                                 <Select labelId="demo-simple-select-lable"
-                                    id = "demo-simple-select" value = {startMin} onChange={handleStartMin}>
+                                    id = "demo-simple-select" value = {startMin} key = {startMin} onChange={handleStartMin}>
                                     {minArr()}
                                 </Select>
                             </FormControl>
@@ -312,7 +328,7 @@ const PlanModify = () =>{
                             <div style={{marginRight:'20px'}}>시</div>
                             <FormControl style={{marginLeft:'15px', marginRight:'25px', marginBottom:'3px'}}>
                                 <Select labelId="demo-simple-select-lable"
-                                    id = "demo-simple-select" value = {endMin} onChange={handleEndMin}>
+                                    id = "demo-simple-select" value = {endMin} key = {endMin} onChange={handleEndMin}>
                                     {minArr()}
                                 </Select>
                             </FormControl>
@@ -410,8 +426,9 @@ const PlanModify = () =>{
                     </Grid>
                 </Grid>
                 {/* footer */}
-                <Grid container justifyContent="center" alignItems="center" style={{marginTop:'30px'}}>
-                    <Button type = "submit" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF'}} onClick={modify}>수정하기</Button>
+                <Grid container justifyContent="center" alignItems="center" style={{marginTop:'30px', display:"flex",}}>
+                <Button type = "submit" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF',marginRight:"32px"}} onClick={()=> window.location.replace("/plan")}>뒤로가기</Button>
+                <Button type = "submit" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF'}} onClick={modify}>수정하기</Button>
                 </Grid>
             </form>
         </Wrapper>

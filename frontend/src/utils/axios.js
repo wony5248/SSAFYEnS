@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const request = axios.create({
-    // baseURL:"http://i5a109.p.ssafy.io:8079",
-    baseURL:"http://127.0.0.1:8079",
+    baseURL:"http://i5a109.p.ssafy.io:8079",
+    // baseURL:"http://127.0.0.1:8079",
     headers:{
         'content-type': 'application/json;charset=UTF-8'
     },
@@ -19,18 +19,21 @@ export const scheduleAPI = {
             }
         })
     },
-    addSchedule:(title, started_at, deadline_at, date)=>{
+    addSchedule:(title, started_at, deadline_at, date, notification)=>{
         return request.post('/schedule', {
-           date , title, context : 'test', expectstart_at : started_at, deadline_at, notificationtime : false
-        },{
+           date , title, context : 'test', started_at, deadline_at, notification, finished_at:deadline_at
+        }
+        ,{
             headers:{
                 access_token: window.sessionStorage.getItem('token')
             }
-        })
+        }
+        )
     },
-    modifySchedule:(schedule_id)=>{
+    modifySchedule:(schedule_id, date, started_at, deadline_at, finished_at)=>{
+        console.log(`${schedule_id}, ${date}, ${started_at}, ${deadline_at}, ${finished_at}`);
         return request.put(`/schedule/${schedule_id}`,{
-            schedule_id
+            schedule_id, date, started_at, deadline_at, finished_at
         },{
             headers:{
                 access_token: window.sessionStorage.getItem('token')
