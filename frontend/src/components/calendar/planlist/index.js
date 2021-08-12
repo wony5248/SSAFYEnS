@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {useLocation, useHistory} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 import Wrapper from './styles';
 import {Grid, IconButton, Button, Box, withStyles } from '@material-ui/core';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
@@ -9,7 +9,6 @@ import moment from 'moment';
 import {scheduleAPI} from '../../../utils/axios';
 
 const PlanList = () => {
-    let history = useHistory();
     const location = useLocation();
     const [query, setQuery] = useState('react');
     const [data, setData] = useState([]);
@@ -21,16 +20,17 @@ const PlanList = () => {
         },
       })(Rating);
 
-    const [getMoment, setMoment] = useState(moment());
+    // const [getMoment, setMoment] = useState(moment());
 
-    let today = moment(`${getMoment.format('YYYY')}-${location.state.month}-${location.state.day}`);
-
+    let today = moment(location.pathname.split('/')[2]).format('YYYY-MM-DD');
+    
     useEffect(()=>{
         let completed = false;
         
         async function getMonthlySchedule(){
-            const result = await scheduleAPI.getMonthly( today.format("YYYY-MM-DD"));
-            setData(result.data.data);
+            const result = await scheduleAPI.getMonthly(today);
+            setData(result.data);
+            console.log(result.data);
         }
         getMonthlySchedule();
         return ()=>{
@@ -42,10 +42,9 @@ const PlanList = () => {
     const planListArr = () =>{
         let result = [];
         
-        let rating = 4;
 
         for (let i = 0; i <data.length; i++){
-            if (today.format('MM-DD') ===  moment(data[i].started_at).format("MM-DD")){
+            if (moment(today).format('MM-DD') ===  moment(data[i].started_at).format("MM-DD")){
                 result = result.concat(
                     <Grid Contatiner style={{borderBottom:'1px solid #A3CCA3', width:'100%', height:'150px'}}>
                         {/* title */}
@@ -71,7 +70,7 @@ const PlanList = () => {
                                     <div style={{marginTop:'6px', marginRight:'10px'}}>평점</div>
                                     <div style={{marginTop:'-2px'}}>
                                         <Box component="fieldset" mb={3} borderColor="transparent">
-                                            <StyledRating name="read-only" value={rating} readOnly />
+                                            <StyledRating name="read-only" value={data[i].point/20} readOnly />
                                         </Box>
                                     </div>
                                 </div>
@@ -79,7 +78,7 @@ const PlanList = () => {
                             ):<div> </div>}
                             <div>
                                 <Button style={{background:'#A3CCA3', color:'#ffffff', height:'40px', marginRight:'20px'}} 
-                                onClick={()=>select?null:window.location.replace(`/planmodify/${today.format('MMDD')}/${i}`)}
+                                onClick={()=>select?null:window.location.replace(`/planmodify/${moment(today).format('YYYYMMDD')}/${data[i].schedule_id}`)}
                                 >
                                     수정
                                 </Button>
@@ -112,7 +111,7 @@ const PlanList = () => {
                     <Grid item >
                         <div style={{background:'#A3CCA3', width:'130px', height:'30px', textAlign:'center', 
                         paddingTop:'5px', marginTop : '10px', borderRadius:45, color:'#ffffff', fontWeight:'bold'}}>
-                            {today.format('MM월 DD일')}
+                            {moment(today).format('MM월 DD일')}
                         </div>
                     </Grid>
                 </Grid>

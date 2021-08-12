@@ -2,30 +2,70 @@ import axios from 'axios';
 
 const request = axios.create({
     baseURL:"http://i5a109.p.ssafy.io:8079",
+    headers:{
+        'content-type': 'application/json;charset=UTF-8'
+    },
 });
+
 
 export const scheduleAPI = {
     getMonthly: (date)=>{
         return request.get(`/schedule/month/${date}`, {
             date
+        },{
+            headers:{
+                access_token: window.sessionStorage.getItem('token')
+            }
         })
     },
     addSchedule:(title, started_at, deadline_at, date)=>{
         return request.post('/schedule', {
            date , title, context : 'test', expectstart_at : started_at, deadline_at, notificationtime : false
+        },{
+            headers:{
+                access_token: window.sessionStorage.getItem('token')
+            }
+        })
+    },
+    modifySchedule:(schedule_id)=>{
+        return request.put(`/schedule/${schedule_id}`,{
+            schedule_id
+        },{
+            headers:{
+                access_token: window.sessionStorage.getItem('token')
+            }
+        })
+    },
+    deleteSchedule:(schedule_id)=>{
+        return request.delete(`/schedule/${schedule_id}`,{
+            schedule_id
+        },{
+            headers:{
+                access_token: window.sessionStorage.getItem('token')
+            } 
+        })
+    },
+    getSchedule:(schedule_id) =>{
+        return request.get(`/schedule/${schedule_id}`,{
+            schedule_id
+        },{
+            headers:{
+                access_token: window.sessionStorage.getItem('token')
+            }
         })
     }
 };
-
-let token;
 
 export const userAPI = {
     login: (id, password) =>{
         return request.post('/user/login', { 
             user_id:id, password
         }).then(response=>{
-            const accessToken = response.data.access_token;
-            token = `${accessToken}`;
+            const access_token = response.data.access_token;
+            window.sessionStorage.setItem('token', access_token);
+            
+        }).catch(error=>{
+            console.log(error);
         })
     },
     checkUserId: (id)=>{
@@ -56,7 +96,7 @@ export const userAPI = {
     logout:()=>{
         return request.get(`/user/logout`,{
             headers:{
-                access_token: token
+                access_token : window.sessionStorage.getItem('token')
             }
         })
     }
