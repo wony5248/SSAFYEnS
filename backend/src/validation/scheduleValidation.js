@@ -58,9 +58,7 @@ exports.user_id = check("user_id").default("honggildong1!");
 exports.humidity = check("humidity").default(0);
 exports.illuminance = check("illuminance").default(0);
 exports.noise = check("noise").default(0);
-exports.temperature = check("temperature").customSanitizer(
-  (value, { req }) => 0
-);
+exports.temperature = check("temperature").default(0);
 exports.notificationtime = check("notificationtime")
   .custom((value, { req }) => value == null || moment(value).isValid())
   .customSanitizer((value, { req }) => {

@@ -147,11 +147,18 @@ exports.post = function (body) {
 };
 exports.get_$schedule_id$ = function (params) {
   return new Promise(async function (resolve, reject) {
-    const { schedule_id } = params;
+    const { schedule_id, user_id } = params;
     db["schedules"]
       .findOne({
         where: {
-          schedule_id,
+          [op.and]: [
+            {
+              schedule_id,
+            },
+            {
+              user_id,
+            },
+          ],
         },
       })
       .then((data) => {
@@ -168,12 +175,20 @@ exports.get_$schedule_id$ = function (params) {
 };
 exports.put_$schedule_id$ = function (data) {
   return new Promise(async function (resolve, reject) {
+    const user_id = data.user_id;
     const schedule_id = data.schedule_id;
     const next_schedule = data.body;
 
     const prev_schedule = await db["schedules"].findOne({
       where: {
-        schedule_id,
+        [op.and]: [
+          {
+            schedule_id,
+          },
+          {
+            user_id,
+          },
+        ],
       },
     });
 
@@ -217,11 +232,18 @@ exports.put_$schedule_id$ = function (data) {
 };
 exports.delete_$schedule_id$ = function (payload) {
   return new Promise(async function (resolve, reject) {
-    const { schedule_id } = payload;
+    const { schedule_id, user_id } = payload;
     console.log(payload);
     const prev_schedule = await db["schedules"].findOne({
       where: {
-        schedule_id,
+        [op.and]: [
+          {
+            schedule_id,
+          },
+          {
+            user_id,
+          },
+        ],
       },
     });
     if (prev_schedule == null) {
@@ -252,7 +274,14 @@ exports.post_submit = function (body) {
       },
       {
         where: {
-          date,
+          [op.and]: [
+            {
+              date,
+            },
+            {
+              user_id,
+            },
+          ],
         },
       }
     );
@@ -269,6 +298,9 @@ exports.post_submit = function (body) {
           },
           {
             week,
+          },
+          {
+            user_id,
           },
         ],
       },
@@ -292,8 +324,15 @@ exports.post_submit = function (body) {
     //monthly
     const monthlyResult = await db["monthly"].findOne({
       where: {
-        year,
-        month,
+        [op.and]: [
+          {
+            year,
+          },
+          {
+            month,
+          },
+          { user_id },
+        ],
       },
     });
 
@@ -314,7 +353,14 @@ exports.post_submit = function (body) {
       {},
       {
         where: {
-          year,
+          [op.and]: [
+            {
+              year,
+            },
+            {
+              user_id,
+            },
+          ],
         },
       }
     );
@@ -346,7 +392,7 @@ exports.post_submit = function (body) {
 exports.post_daily = function (payload) {
   return new Promise(async function (resolve, reject) {
     try {
-      const { date } = payload;
+      const { date, user_id } = payload;
       const date_end = moment(date).add(1, "days").toDate();
       const data = await db["schedules"].findAll({
         where: {
@@ -361,6 +407,9 @@ exports.post_daily = function (payload) {
                 [op.lte]: date_end,
               },
             },
+            {
+              user_id,
+            },
           ],
         },
       });
@@ -371,41 +420,41 @@ exports.post_daily = function (payload) {
   });
 };
 
-exports.get_week = function (date) {
-  return new Promise(async function (resolve, reject) {
-    const week = moment(date).startOf("week");
+// exports.get_week = function (date) {
+//   return new Promise(async function (resolve, reject) {
+//     const week = moment(date).startOf("week");
 
-    const start = moment(week).startOf("week").toDate();
-    const end = moment(week).add(1, "week").toDate();
+//     const start = moment(week).startOf("week").toDate();
+//     const end = moment(week).add(1, "week").toDate();
 
-    console.log(` weekly schedule을 조회합니다`, start, end);
-    const data = await db["schedules"]
-      .findAll({
-        where: {
-          [op.or]: [
-            {
-              finished_at: {
-                [op.gt]: start,
-              },
-              started_at: {
-                [op.lt]: end,
-              },
-            },
-          ],
-        },
-      })
-      .then((result) => {
-        return resolve(result);
-      })
-      .catch((error) => {
-        console.log(error);
-        return reject("db error");
-      });
-  });
-};
+//     console.log(` weekly schedule을 조회합니다`, start, end);
+//     const data = await db["schedules"]
+//       .findAll({
+//         where: {
+//           [op.or]: [
+//             {
+//               finished_at: {
+//                 [op.gt]: start,
+//               },
+//               started_at: {
+//                 [op.lt]: end,
+//               },
+//             },
+//           ],
+//         },
+//       })
+//       .then((result) => {
+//         return resolve(result);
+//       })
+//       .catch((error) => {
+//         console.log(error);
+//         return reject("db error");
+//       });
+//   });
+// };
 exports.get_month = function (payload) {
   return new Promise(async function (resolve, reject) {
-    console.log("hi: ", payload);
+    const user_id = payload.user_id;
     const month = moment(payload.date).startOf("month");
 
     const standard1 = moment(month).toDate();
@@ -418,14 +467,19 @@ exports.get_month = function (payload) {
     const data = await db["schedules"]
       .findAll({
         where: {
-          [op.or]: [
+          [op.and]: [
             {
               finished_at: {
                 [op.gt]: standard1,
               },
+            },
+            {
               started_at: {
                 [op.lt]: standard2,
               },
+            },
+            {
+              user_id,
             },
           ],
         },
@@ -442,8 +496,9 @@ exports.get_month = function (payload) {
   });
 };
 
-exports.get_year = function (date) {
+exports.get_year = function (data) {
   return new Promise(async function (resolve, reject) {
+    const { date, user_id } = data;
     const start = moment(date).startOf("year");
     const end = moment(start).add(1, "year").toDate();
 
@@ -451,14 +506,19 @@ exports.get_year = function (date) {
     const data = await db["schedules"]
       .findAll({
         where: {
-          [op.or]: [
+          [op.and]: [
             {
               started_at: {
                 [op.gte]: start,
               },
+            },
+            {
               finished_at: {
                 [op.lte]: end,
               },
+            },
+            {
+              user_id,
             },
           ],
         },

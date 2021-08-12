@@ -35,9 +35,6 @@ router.get("/duplicatecheckcellphone/:cellphone", (req, res) => {
     });
 });
 
-
-
-
 router.post("/", (req, res) => {
   user
     .createUser(req)
@@ -70,7 +67,6 @@ router.get("/password", (req, res) => {
       res.status(400).send(error);
     });
 });
-
 
 router.put("/password", (req, res) => {
   user
@@ -159,6 +155,5 @@ router.post("/:user_id/exp/:add_exp", (req, res) => {
       res.status(400).send(error);
     });
 });
-
 
 module.exports = router;

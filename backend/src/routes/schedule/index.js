@@ -25,6 +25,7 @@ router.post(
   (req, res) => {
     //validation middleware에서 에러 발생시 req에 에러 관련 객체 담김.
     payload = { ...req.body, ...req.params };
+    console.log(payload);
     const result = validationResult(req);
     if (!result.isEmpty()) {
       console.log(validationResult(req));
@@ -42,10 +43,12 @@ router.post(
   }
 );
 router.get("/:schedule_id", (req, res) => {
+  payload = { ...req.body, ...req.params };
+  console.log(payload);
   const errors = validationResult(req);
   console.log("error : ", errors);
   service
-    .get_$schedule_id$(req.params)
+    .get_$schedule_id$(payload)
     .then((data) => {
       res.json(data);
     })
@@ -84,6 +87,7 @@ router.put(
         .put_$schedule_id$({
           schedule_id: req.params.schedule_id,
           body: req.body,
+          user_id: req.body.user_id,
         })
         .then((data) => {
           res.json(data);
@@ -133,8 +137,7 @@ router.get("/month/:date", validation.date, (req, res) => {
 //get all scheudle of day
 router.get("/daily/:date", validation.date, (req, res) => {
   const payload = { ...req.body, ...req.params };
-  console.log("payload 22:", payload);
-
+  console.log("payload :", payload);
   const result = validationResult(req);
   if (!result.isEmpty()) {
     console.log(validationResult(req));
@@ -172,13 +175,15 @@ router.get("/daily/:date", validation.date, (req, res) => {
 
 // Get yearly schedule
 router.get("/year/:date", validation.date, (req, res) => {
+  const payload = { ...req.body, ...req.params };
+  console.log("payload :", payload);
   const result = validationResult(req);
   if (!result.isEmpty()) {
     console.log(validationResult(req));
     res.status("400").json({ result });
   } else {
     service
-      .get_year(req.params.date)
+      .get_year(payload)
       .then((data) => {
         res.json(data);
       })
