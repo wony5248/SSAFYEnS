@@ -398,7 +398,7 @@ const Groupinfo = (props) => {
               <Secondrightdiv>
                 {context}
               </Secondrightdiv>{" "}
-              <Joinbtn onClick={openCreateModal}> 가입 하기 </Joinbtn>{" "}
+              <Joinbtn onClick ={openCreateModal}> 가입 하기 </Joinbtn>{" "}
             </Secondcontent>{" "}
           </Seconddiv></div>
         </Wrapper>
@@ -598,8 +598,7 @@ const Groupinfo = (props) => {
             <Secondcontent>
               <Titlediv> 그룹 소개 </Titlediv>{" "}
               <Secondrightdiv>
-                아!죽여줘 하시는 분들의 모임. <br /> 주 1 회 모여서 스터디
-                합니다. <br /> 코딩에 깔려 죽으실꺼 같은 분들 환영입니다.{" "}
+              {context}
               </Secondrightdiv>{" "}
               <Joinbtn onClick={openCreateModal}> 가입 하기 </Joinbtn>{" "}
             </Secondcontent>{" "}

@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const request = axios.create({
-    baseURL:"http://i5a109.p.ssafy.io:8079",
+    // baseURL:"http://i5a109.p.ssafy.io:8079",
+    baseURL:"http://127.0.0.1:8079",
     headers:{
         'content-type': 'application/json;charset=UTF-8'
     },
@@ -118,20 +119,60 @@ export const groupAPI = {
             q : ""
         })
     },
-    getGroup:(id)=>{
-        return request.get(`/group/${id}`)
+    getGroup:(groupid)=>{
+        return request.get(`/group/${groupid}`)
     },
-    updateGroup:(id)=>{
-        return request.put(`/group/${id}`,{
+    updateGroup:(groupid)=>{
+        return request.put(`/group/${groupid}`,{
         })
     },
-    deleteGroup:(id)=>{
-        return request.delete(`/group/${id}`,{
+    deleteGroup:(groupid)=>{
+        return request.delete(`/group/${groupid}`,{
         })
     },
     searchGroup:(question)=>{
-        return request.porst(`/group/search`,{
+        return request.post(`/group/search`,{
             q:question
+        })
+    },
+    // 그룹 가입 신청 목록
+    applicantListGroup:(groupid)=>{
+        return request.get(`/group/${groupid}/applicant`,{
+            headers:{
+                access_token : window.sessionStorage.getItem('token')
+            }
+        })
+    },
+    // 그룹 가입 신청
+    applicantGroup:(groupid)=>{
+        return request.post(`/group/${groupid}/applicant`,{
+            headers:{
+                access_token : window.sessionStorage.getItem('token')
+            }
+        })
+    },
+    // 그룹 가입 신청 거절? 취소?
+    rejectGroup:(groupid)=>{
+        return request.delete(`/group/${groupid}/applicant`,{
+            headers:{
+                access_token : window.sessionStorage.getItem('token')
+            }
+        })
+    },
+    // 그룹 신청 승인
+    joinGroup:(groupid, userid)=>{
+        return request.post(`/group/${groupid}/applicant/${userid}`,{
+            headers:{
+                access_token : window.sessionStorage.getItem('token')
+            }
+        })
+    },
+    //그룹 신청
+    exileGroup:(groupid, userid)=>{
+        return request.delete(`/group/${groupid}/applicant${userid}`,{
+            headers:{
+                access_token : window.sessionStorage.getItem('token')
+            }
         })
     },
 }

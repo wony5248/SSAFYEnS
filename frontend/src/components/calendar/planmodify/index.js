@@ -11,17 +11,14 @@ import OpacityIcon from '@material-ui/icons/Opacity';
 import {Thermometer} from 'react-feather';
 import {scheduleAPI} from '../../../utils/axios';
 
-const PlanModify = (props) =>{
-    const {date, id} = props;
-    console.log(date);
-    console.log(id);
-    let history = useHistory();
+const PlanModify = () =>{
     const location = useLocation();
     const [query, setQuery] = useState('react');
     const [data, setData] = useState([]);
 
-    const idx = location.state.idx;
-    const [rating, setRating] = useState(location.state || 0);
+    const id = location.pathname.split('/')[3];
+
+    const [rating, setRating] = useState(0);
     const [startMonth, setStartMonth] =useState('');
     const [startDay, setStartDay] =useState('');
     const [startHour, setStartHour] =useState('');
@@ -33,23 +30,33 @@ const PlanModify = (props) =>{
     const [endMin, setEndMin] =useState();
     const [title, setTitle] =useState('');
 
+    const [humi, setHumi] = useState(0);
+    const [illumi, setIllumi] = useState(0);
+    const [noise, setNoise] = useState(0);
+    const [temp, setTemp] = useState(0);
+
     useEffect(()=>{
         let completed = false;
         
         async function getMonthlySchedule(){
-            const result = await scheduleAPI.getMonthly(moment(location.state.year).format('YYYY'), moment(location.state.month).format('MM'));
-            setData(result.data);
-            setStartMonth(Number(moment(data[idx].started_at).format('MM')));
-            setStartDay(Number(moment(data[idx].started_at).format('DD')));
-            setStartHour(Number(moment(data[idx].started_at).format('HH')));
-            setStartMin(moment(data[idx].started_at).format('mm'));
+            const result = await scheduleAPI.getSchedule(id);
+            setStartMonth(Number(moment(data.started_at).format('MM')));
+            setStartDay(Number(moment(data.started_at).format('DD')));
+            setStartHour(Number(moment(data.started_at).format('HH')));
+            setStartMin(Number(moment(data.started_at).format('mm')));
 
-            setEndMonth(Number(moment(data[idx].deadline_at).format('MM')));
-            setEndDay(Number(moment(data[idx].deadline_at).format('DD')));
-            setEndHour(Number(moment(data[idx].deadline_at).format('HH')));
-            setEndMin(moment(data[idx].deadline_at).format('mm'));
-            setTitle(data[idx].title);
-
+            setEndMonth(Number(moment(data.deadline_at).format('MM')));
+            setEndDay(Number(moment(data.deadline_at).format('DD')));
+            setEndHour(Number(moment(data.deadline_at).format('HH')));
+            setEndMin(Number(moment(data.deadline_at).format('mm')));
+            setTitle(data.title);
+            setRating(data.point/20);
+            setHumi(data.humidity);
+            setNoise(data.noise);
+            setIllumi(data.illuminance);
+            setTemp(data.temperature);
+            
+            console.log(startMin);
         }
         getMonthlySchedule();
         return ()=>{
@@ -187,8 +194,10 @@ const PlanModify = (props) =>{
 
     const minArr = () =>{
         let result = [];
-        result = result.concat(<MenuItem value ={'00'}>00</MenuItem>);
-        result = result.concat(<MenuItem value ={'30'}>30</MenuItem>);
+        for (let i = 0; i <=30;i+=30){
+            result = result.concat(<MenuItem value ={i}>{i}</MenuItem>);
+        }
+        
         return result;
     };
 
@@ -383,19 +392,19 @@ const PlanModify = (props) =>{
                         <Grid style={{width:'400px', marginLeft:'50px', marginTop:'3px', align:'center', display: 'flex'}}>
                             <WbIncandescentIcon style={{color:'#A3CCA3' , marginRight:'20px'}}/> 
                             <div style={{marginRight:'20px'}} onClick={()=>{alert(typeof startMonth)}}>
-                                밝기
+                                {illumi}
                             </div>
                             <MicIcon style={{color:'#A3CCA3' , marginRight:'20px'}}/> 
                             <div style={{marginRight:'20px'}}>
-                                소음
+                                {noise}
                             </div>                                    
                             <OpacityIcon style={{color:'#A3CCA3' , marginRight:'20px', marginTop:'-2px'}}/> 
                             <div style={{marginRight:'20px'}}>
-                                습도
+                                {humi}
                             </div>
                             <Thermometer style={{color:'#A3CCA3' , marginRight:'20px'}} />
                             <div style={{marginRight:'20px'}}>
-                                온도
+                                {temp}
                             </div>
                         </Grid>
                     </Grid>
