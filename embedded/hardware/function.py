@@ -156,7 +156,12 @@ def delete_schedule(seq=0):
     if seq == 0:
         # 데이터 가져오는 api 호출 코드 추가
         origin_data = server.get(WHOLE_SCHEDULE, date=True)
-        synthesize_ssml(make_edit_schedule_list(origin_data, True))
+        if len(origin_data) == 0:
+            os.system(f'aplay {CUR_DIR}/tts_wav/no_schedule.wav')
+            return False
+        else:
+            synthesize_ssml(make_edit_schedule_list(origin_data))
+            return True
         return True
     elif seq == 1:
         # 삭제 api 호출
