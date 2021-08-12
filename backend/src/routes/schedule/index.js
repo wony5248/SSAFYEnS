@@ -60,6 +60,7 @@ router.put(
   validation.finished_at,
   validation.deadline_at,
   validation.notification,
+  validation.notificationtime,
   validation.is_finished,
   (req, res) => {
     const payload = { ...req.body };
