@@ -136,19 +136,19 @@ router.get("/getdaily/:date/current", async function (req, res, next) {
           currentTime < endTime &&
           response.data[i].is_finished === false
         ) {
-          arr.push(response.data.data[i])
+          arr.push(response.data[i])
         } else if (
           currentTime === endTime &&
           currentMin <= endMin &&
           response.data[i].is_finished === false
         ) {
-          arr.push(response.data.data[i])
+          arr.push(response.data[i])
         } else if (
           currentTime === startTime &&
           startMin <= currentMin &&
           response.data[i].is_finished === false
         ) {
-          arr.push(response.data.data[i])
+          arr.push(response.data[i])
         }
       }
       arr.sort(function (a, b) {
