@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
 
       // M:N 관계
       models.users.belongsToMany(models.groups, {foreignKey:"user_id", through: models.usersmngroups}) 
+      models.users.belongsToMany(models.groups, {as:"group_id", foreignKey:"user_id", through: models.applicants}) 
     }
   };
   users.init(

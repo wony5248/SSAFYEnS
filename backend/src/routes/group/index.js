@@ -68,4 +68,60 @@ router.post("/search", (req, res) => {
     });
 });
 
+router.get("/:group_id/applicant", (req, res) => {
+  group
+    .getApplicants(req)
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((error) => {
+      res.status(400).send(error);
+    });
+});
+
+router.post("/:group_id/applicant", (req, res) => {
+  group
+    .createApplicant(req)
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((error) => {
+      res.status(400).send(error);
+    });
+});
+
+router.delete("/:group_id/applicant", (req, res) => {
+  group
+    .deleteApplicant(req)
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((error) => {
+      res.status(400).send(error);
+    });
+});
+
+router.post("/:group_id/applicant/:user_id", (req, res) => {
+  group
+    .createMemberById(req)
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((error) => {
+      res.status(400).send(error);
+    });
+});
+
+router.delete("/:group_id/applicant/:user_id", (req, res) => {
+  group
+    .deleteApplicantById(req)
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((error) => {
+      res.status(400).send(error);
+    });
+});
+
+
 module.exports = router;
