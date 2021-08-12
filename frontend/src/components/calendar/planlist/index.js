@@ -58,7 +58,7 @@ const PlanList = () => {
                         </div>
                         {/* body */}
                         <Grid item style={{margin:'10px', height:'50px', marginTop:'20px', marginBottom:'-10px'}}>
-                            <div>{moment(data[i].started_at).format('hh')} : {moment(data[i].started_at).format('mm')} 시작 {moment(data[i].deadline_at).format('HH')} : {moment(data[i].deadline_at).format('mm')} 마감</div>
+                            <div>{moment(data[i].started_at).format('HH')} : {moment(data[i].started_at).format('mm')} 시작 {moment(data[i].finished_at).format('HH')} : {moment(data[i].finished_at).format('mm')} 마감</div>
                         </Grid>
                         {/* footer */}
                         <div style={{margin:'10px', display: 'flex', justifyContent:'space-between', width:'100%'}}>

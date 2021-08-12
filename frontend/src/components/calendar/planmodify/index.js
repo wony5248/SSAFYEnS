@@ -55,11 +55,11 @@ const PlanModify = () =>{
             setStartDay(Number(moment(result.data.started_at).format('DD')));
             setStartHour(Number(moment(result.data.started_at).format('HH')));
             setStartMin(moment(result.data.started_at).format('mm'));
-
-            setEndMonth(Number(moment(result.data.deadline_at).format('MM')));
-            setEndDay(Number(moment(result.data.deadline_at).format('DD')));
-            setEndHour(Number(moment(result.data.deadline_at).format('HH')));
-            setEndMin(moment(result.data.deadline_at).format('mm'));
+            console.log(Number(moment(result.data.started_at).format('HH')))
+            setEndMonth(Number(moment(result.data.finished_at).format('MM')));
+            setEndDay(Number(moment(result.data.finished_at).format('DD')));
+            setEndHour(Number(moment(result.data.finished_at).format('HH')));
+            setEndMin(moment(result.data.finished_at).format('mm'));
             setTitle(result.data.title);
             setRating(result.data.point/20);
             setHumi(result.data.humidity);
@@ -424,7 +424,7 @@ const PlanModify = () =>{
                 </Grid>
                 {/* footer */}
                 <Grid container justifyContent="center" alignItems="center" style={{marginTop:'30px', display:"flex",}}>
-                <Button type = "submit" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF',marginRight:"32px"}} onClick={()=> window.location.replace("/plan")}>뒤로가기</Button>
+                <Button type = "submit" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF',marginRight:"32px"}} onClick={()=> window.location.href("/plan")}>뒤로가기</Button>
                 <Button type = "submit" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF'}} onClick={modify}>수정하기</Button>
                 </Grid>
             </form>
