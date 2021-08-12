@@ -9,7 +9,7 @@ const scheduleRoutes = require("./schedule");
 
 //접속요청 경로 출력
 router.use((req, res, next) => {
-  console.log("Path : ", req.path, req.socket.remoteAddress);
+  console.log(`\n(${req.socket.remoteAddress}): ${req.method} ${req.path}`);
   next();
 });
 
