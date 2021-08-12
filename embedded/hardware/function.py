@@ -121,7 +121,7 @@ def brief_schedule(seq=0):
 def brief_cur_schedule(seq=0):
     print("cur schedule")
     data = server.get(CUR_SCHEDULE, date=True)
-    if data is None:
+    if len(data) == 0:
         os.system(f'aplay {CUR_DIR}/tts_wav/no_cur_schedule.wav')
     else:
         synthesize_ssml(make_cur_schedule(data))
@@ -173,18 +173,18 @@ def clear_schedule(seq=0):
     # 현재 진행중인 일정 가져오기
     # 있으면 완료, 없으면 없다고 알리기
     data = server.get(CUR_SCHEDULE, date=True)
-    if data is None:
+    if len(data) == 0:
         os.system(f'aplay {CUR_DIR}/tts_wav/no_cur_schedule.wav')
     else:
         # 완료 api 요청
-        # data, route, id=None
         changed_value = {
             "started_at": data['started_at'],
             "finished_at": server.get_timeline(True),
             "deadline_at": data['deadline_at'],
             "is_finished": True
         }
-        success = server.put(changed_value, SPECIFIC_SCHEDULE, data['id'])
+        # 일단 임의로 첫번째 진행중인 일정 삭제
+        success = server.put(changed_value, SPECIFIC_SCHEDULE, data[0]['schedule_id'])
         reset_data()
         if success:
             os.system(f'aplay {CUR_DIR}/tts_wav/clear_schedule_finish.wav')
