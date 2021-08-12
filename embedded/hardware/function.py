@@ -77,13 +77,13 @@ def pick_data(idx):
 def fix_data(value):
     global changed_data
     print(value)
-    cur_deadline = changed_data['deadline_at']
-    cur_hour = int(cur_deadline[-4:-2])
+    cur_finish = changed_data['finished_at']
+    cur_hour = int(cur_finish[-4:-2])
     new_hour = cur_hour + value
     if new_hour > 24:
         return False
     new_hour = '{0:02d}'.format(new_hour)
-    changed_data['deadline_at'] = cur_deadline[:-4] + new_hour + cur_deadline[-2:]
+    changed_data['finished_at'] = cur_finish[:-4] + new_hour + cur_finish[-2:]
     return True
 
 
@@ -111,7 +111,11 @@ def add_schedule(seq=0):
 def brief_schedule(seq=0):
     print("briefing")
     data = server.get(WHOLE_SCHEDULE, date=True)
-    synthesize_ssml(make_day_briefing(data))
+    if len(data) == 0:
+        os.system(f'aplay {CUR_DIR}/tts_wav/no_schedule.wav')
+    else:
+        brief_cur_schedule()
+        synthesize_ssml(make_day_briefing(data))
     return False
 
 def brief_cur_schedule(seq=0):
@@ -120,7 +124,7 @@ def brief_cur_schedule(seq=0):
     if data is None:
         os.system(f'aplay {CUR_DIR}/tts_wav/no_cur_schedule.wav')
     else:
-        synthesize_ssml(make_day_briefing(data))
+        synthesize_ssml(make_cur_schedule(data))
     return False
 
 def edit_schedule(seq=0):
@@ -128,14 +132,18 @@ def edit_schedule(seq=0):
     print("edit")
     if seq == 0:
         origin_data = server.get(WHOLE_SCHEDULE, date=True)
-        synthesize_ssml(make_edit_schedule_list(origin_data))
-        return True
+        if len(origin_data) == 0:
+            os.system(f'aplay {CUR_DIR}/tts_wav/no_schedule.wav')
+            return False
+        else:
+            synthesize_ssml(make_edit_schedule_list(origin_data))
+            return True
     elif seq == 1:
         os.system(f'aplay {CUR_DIR}/tts_wav/edit_schedule_time.wav')
         return True
     elif seq == 2:
         # 몇시간 -> 파싱해서 db 수정 요청
-        success = server.put(changed_data, SPECIFIC_SCHEDULE, changed_data['id'])
+        success = server.put(changed_data, SPECIFIC_SCHEDULE, changed_data['schedule_id'])
         reset_data()
         if success:
             os.system(f'aplay {CUR_DIR}/tts_wav/edit_schedule_finish.wav')

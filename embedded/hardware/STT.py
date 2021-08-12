@@ -91,10 +91,12 @@ class STT():
                             if loc_start >= 2:
                                 start = chg1 = int(strr[loc_start-1])
                                 start = chg2 = int(strr[loc_start-2:loc_start])
-                        except:
                             if start is None:
                                 os.system(f'aplay {CUR_DIR}/tts_wav/i_dont_understand.wav')
                                 return 0
+                        except:
+                            os.system(f'aplay {CUR_DIR}/tts_wav/i_dont_understand.wav')
+                            return 0
                         loc_finish = strr.find('시까지')
                         try:
                             if loc_finish >= 2:
@@ -172,10 +174,12 @@ class STT():
                                 if loc >= 2:
                                     hour = chg1 = int(strr[loc-1])
                                     hour = chg2 = int(strr[loc-2:loc])
-                            except:
                                 if hour is None:
                                     os.system(f'aplay {CUR_DIR}/tts_wav/i_dont_understand.wav')
                                     return 1
+                            except:
+                                os.system(f'aplay {CUR_DIR}/tts_wav/i_dont_understand.wav')
+                                return 1
                             success = function.fix_data(hour)
                             if not success:
                                 os.system(f'aplay {CUR_DIR}/tts_wav/add_schedule_over_midnight.wav')
