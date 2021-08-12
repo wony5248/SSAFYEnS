@@ -11,17 +11,15 @@ import OpacityIcon from '@material-ui/icons/Opacity';
 import {Thermometer} from 'react-feather';
 import {scheduleAPI} from '../../../utils/axios';
 
-const PlanModify = (props) =>{
-    const {date, id} = props;
-    console.log(date);
-    console.log(id);
+const PlanModify = () =>{
     let history = useHistory();
     const location = useLocation();
     const [query, setQuery] = useState('react');
-    const [data, setData] = useState([]);
 
-    const idx = location.state.idx;
-    const [rating, setRating] = useState(location.state || 0);
+    const id = location.pathname.split('/')[3];
+    const date = location.pathname.split('/')[2];
+
+    const [rating, setRating] = useState(0);
     const [startMonth, setStartMonth] =useState('');
     const [startDay, setStartDay] =useState('');
     const [startHour, setStartHour] =useState('');
@@ -33,22 +31,45 @@ const PlanModify = (props) =>{
     const [endMin, setEndMin] =useState();
     const [title, setTitle] =useState('');
 
+    const [humi, setHumi] = useState(0);
+    const [illumi, setIllumi] = useState(0);
+    const [noise, setNoise] = useState(0);
+    const [temp, setTemp] = useState(0);
+
+    const [state, setState] = useState({
+        alarmYES: true,
+        completed: false
+    });
+
+    const [timer, setTimer] = useState('');
+    const [data, setData] = useState({});
+
     useEffect(()=>{
         let completed = false;
         
         async function getMonthlySchedule(){
-            const result = await scheduleAPI.getMonthly(moment(location.state.year).format('YYYY'), moment(location.state.month).format('MM'));
+            const result = await scheduleAPI.getSchedule(id);
             setData(result.data);
-            setStartMonth(Number(moment(data[idx].started_at).format('MM')));
-            setStartDay(Number(moment(data[idx].started_at).format('DD')));
-            setStartHour(Number(moment(data[idx].started_at).format('HH')));
-            setStartMin(moment(data[idx].started_at).format('mm'));
+            
+            setStartMonth(Number(moment(result.data.started_at).format('MM')));
+            setStartDay(Number(moment(result.data.started_at).format('DD')));
+            setStartHour(Number(moment(result.data.started_at).format('HH')));
+            setStartMin(moment(result.data.started_at).format('mm'));
 
-            setEndMonth(Number(moment(data[idx].deadline_at).format('MM')));
-            setEndDay(Number(moment(data[idx].deadline_at).format('DD')));
-            setEndHour(Number(moment(data[idx].deadline_at).format('HH')));
-            setEndMin(moment(data[idx].deadline_at).format('mm'));
-            setTitle(data[idx].title);
+            setEndMonth(Number(moment(result.data.deadline_at).format('MM')));
+            setEndDay(Number(moment(result.data.deadline_at).format('DD')));
+            setEndHour(Number(moment(result.data.deadline_at).format('HH')));
+            setEndMin(moment(result.data.deadline_at).format('mm'));
+            setTitle(result.data.title);
+            setRating(result.data.point/20);
+            setHumi(result.data.humidity);
+            setNoise(result.data.noise);
+            setIllumi(result.data.illuminance);
+            setTemp(result.data.temperature);
+
+            setState({completed:result.data.is_finished,
+                alarmYES:result.data.notification});
+            
 
         }
         getMonthlySchedule();
@@ -57,10 +78,7 @@ const PlanModify = (props) =>{
         };
     }, [query]);
 
-    const [state, setState] = useState({
-        alarmYES: true,
-        completed: false
-    });
+    
 
     const StyledRating = withStyles({
         iconFilled: {
@@ -69,10 +87,6 @@ const PlanModify = (props) =>{
       })(Rating);
 
     const thisYear = moment().format('YY');
-
-    const [timer, setTimer] = useState('');
-
-    
 
     const handleAlarm = (event) => {
         setState({...state, [event.target.name]: event.target.checked});
@@ -189,12 +203,23 @@ const PlanModify = (props) =>{
         let result = [];
         result = result.concat(<MenuItem value ={'00'}>00</MenuItem>);
         result = result.concat(<MenuItem value ={'30'}>30</MenuItem>);
+        
         return result;
     };
 
-    const modify = () =>{
-        // 수정시 axios로 수정보내기
-        console.log('modify');
+    const modify = async () =>{
+        let started_at = moment(`${moment().format('YYYY')}-${startMonth}-${startDay} ${startHour}:${startMin}`).format('YYYY-MM-DD HH:mm');
+        let deadline_at = moment(`${moment().format('YYYY')}-${endMonth}-${endDay} ${endHour}:${endMin}`).format('YYYY-MM-DD HH:mm');
+ 
+        try{
+            await scheduleAPI.modifySchedule(id, moment(data.date).format('YYYYMMDD'), started_at, deadline_at, moment(data.finished_at).format('YYYY-MM-DD HH:mm'));
+            alert('수정했습니다.');
+            history.push(`/planlist/${date}`);
+        }
+        catch (e) {
+            console.log(e);
+            alert('수정에 실패했습니다.');
+        }
     };
 
 
@@ -255,7 +280,7 @@ const PlanModify = (props) =>{
                             <div style={{marginRight:'20px'}}>시</div>
                             <FormControl style={{marginLeft:'15px', marginRight:'25px', marginBottom:'3px'}}>
                                 <Select labelId="demo-simple-select-lable"
-                                    id = "demo-simple-select" value = {startMin} onChange={handleStartMin}>
+                                    id = "demo-simple-select" value = {startMin} key = {startMin} onChange={handleStartMin}>
                                     {minArr()}
                                 </Select>
                             </FormControl>
@@ -303,7 +328,7 @@ const PlanModify = (props) =>{
                             <div style={{marginRight:'20px'}}>시</div>
                             <FormControl style={{marginLeft:'15px', marginRight:'25px', marginBottom:'3px'}}>
                                 <Select labelId="demo-simple-select-lable"
-                                    id = "demo-simple-select" value = {endMin} onChange={handleEndMin}>
+                                    id = "demo-simple-select" value = {endMin} key = {endMin} onChange={handleEndMin}>
                                     {minArr()}
                                 </Select>
                             </FormControl>
@@ -383,19 +408,19 @@ const PlanModify = (props) =>{
                         <Grid style={{width:'400px', marginLeft:'50px', marginTop:'3px', align:'center', display: 'flex'}}>
                             <WbIncandescentIcon style={{color:'#A3CCA3' , marginRight:'20px'}}/> 
                             <div style={{marginRight:'20px'}} onClick={()=>{alert(typeof startMonth)}}>
-                                밝기
+                                {illumi}
                             </div>
                             <MicIcon style={{color:'#A3CCA3' , marginRight:'20px'}}/> 
                             <div style={{marginRight:'20px'}}>
-                                소음
+                                {noise}
                             </div>                                    
                             <OpacityIcon style={{color:'#A3CCA3' , marginRight:'20px', marginTop:'-2px'}}/> 
                             <div style={{marginRight:'20px'}}>
-                                습도
+                                {humi}
                             </div>
                             <Thermometer style={{color:'#A3CCA3' , marginRight:'20px'}} />
                             <div style={{marginRight:'20px'}}>
-                                온도
+                                {temp}
                             </div>
                         </Grid>
                     </Grid>
