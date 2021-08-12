@@ -30,10 +30,10 @@ export const scheduleAPI = {
         }
         )
     },
-    modifySchedule:(schedule_id, date, started_at, deadline_at, finished_at)=>{
-        console.log(`${schedule_id}, ${date}, ${started_at}, ${deadline_at}, ${finished_at}`);
+    modifySchedule:(schedule_id, date, title, notification, started_at, deadline_at, finished_at)=>{
+        console.log(`${title}, ${notification}`);
         return request.put(`/schedule/${schedule_id}`,{
-            schedule_id, date, started_at, deadline_at, finished_at
+            schedule_id, date, title, started_at, deadline_at, finished_at, notification
         },{
             headers:{
                 access_token: window.sessionStorage.getItem('token')

@@ -24,7 +24,6 @@ const Month = () => {
         today.format("YYYY-MM-DD")
       );
       setData(result.data);
-      console.log(result.data);
     }
     getMonthlySchedule();
     return () => {

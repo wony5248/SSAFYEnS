@@ -210,14 +210,11 @@ const PlanModify = () =>{
     const modify = async () =>{
         let started_at = moment(`${moment().format('YYYY')}-${startMonth}-${startDay} ${startHour}:${startMin}`).format('YYYY-MM-DD HH:mm');
         let deadline_at = moment(`${moment().format('YYYY')}-${endMonth}-${endDay} ${endHour}:${endMin}`).format('YYYY-MM-DD HH:mm');
- 
         try{
-            await scheduleAPI.modifySchedule(id, moment(data.date).format('YYYYMMDD'), started_at, deadline_at, moment(data.finished_at).format('YYYY-MM-DD HH:mm'));
-            alert('수정했습니다.');
-            history.push(`/planlist/${date}`);
+            await scheduleAPI.modifySchedule(id, moment(data.date).format('YYYYMMDD'), title, state.alarmYES, started_at, deadline_at, moment(data.finished_at).format('YYYY-MM-DD HH:mm'));
+            
         }
         catch (e) {
-            console.log(e);
             alert('수정에 실패했습니다.');
         }
     };
