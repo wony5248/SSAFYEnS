@@ -1,6 +1,4 @@
 const router = require("express").Router();
-const aaRoutes = require("./aa");
-// const mvpRoutes = require("./mvp");
 const userRoutes = require("./user");
 const groupRoutes = require("./group");
 // const middleware = require("../middleware");
@@ -19,7 +17,6 @@ router.use((req, res, next) => {
 // jwt 토큰 뜯어서 전달
 // verifyToken(req, res, next);
 
-// router.use("/mvp", mvpRoutes);
 router.use("/user", userRoutes);
 router.use("/group", groupRoutes);
 router.use("/average", averageRoutes);
