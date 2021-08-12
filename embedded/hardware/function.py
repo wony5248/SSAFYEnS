@@ -161,7 +161,7 @@ def delete_schedule(seq=0):
     elif seq == 1:
         # 삭제 api 호출
         # self, route, id=None
-        success = server.delete(SPECIFIC_SCHEDULE, changed_data['id'])
+        success = server.delete(SPECIFIC_SCHEDULE, changed_data['schedule_id'])
         reset_data()
         if success:
             os.system(f'aplay {CUR_DIR}/tts_wav/delete_schedule_finish.wav')
