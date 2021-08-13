@@ -7,11 +7,12 @@ exports.verifyToken = (req, res, next) => {
     (error, decoded) => {
       if (error) {
         console.log("[TEST]This is jwt error:", error);
+        return res.json({ error })
       } else {
         console.log("[TEST]This is jwt decoded:", decoded);
         req.user_id = decoded.user_id;
+        next();
       }
-      next();
     }
   );
 };

@@ -11,8 +11,8 @@ router.use((req, res, next) => {
     next()
 })
 
-router.use(middleware.verifyToken);
 router.use("/user", userRoutes);
+router.use(middleware.verifyToken);
 router.use("/group", groupRoutes);
 router.use("/average", averageRoutes);
 router.use("/schedule", scheduleRoutes);
