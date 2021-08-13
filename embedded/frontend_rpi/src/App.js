@@ -1,13 +1,16 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import Progress from './pages/Progress/';
 import Rating from './pages/Rating/';
 import Timer from './pages/Timer/';
 import Today from './pages/Today/';
 import Change from './pages/Change/';
+import axios from 'axios';
 import Changecalendar from './pages/Changecalendar'
 import Create from './pages/Create'
+import Streaming from './pages/Streaming';
 import {UserContextProvider} from "./context"
+import moment from 'moment';
 // const theme = createTheme({
 //   typography: {
 //     fontFamily: ['Noto Sans KR'].join(','),
@@ -32,6 +35,15 @@ import {UserContextProvider} from "./context"
 
 
 function App() {
+
+  // useEffect(() => {
+  //   // const rendering = () => {
+  //   //   window.alert(moment().format("HH시mm분 입니다."))
+
+  //   // };
+
+  //   rendering();
+  // }, []);
   return (
         <UserContextProvider>
           <BrowserRouter>
@@ -42,7 +54,7 @@ function App() {
             <Route exact path="/Create" component={Create} />
             <Route exact path="/Timer" component={Timer} />
             <Route exact path="/Today" component={Today} />
-            <Route exact path="/Change" component={Change} />
+            <Route exact path="/Streaming" component={Streaming} />
             <Route exact path="/Change/:id" component={Changecalendar} />
             <Redirect to="/" />
           </Switch>
