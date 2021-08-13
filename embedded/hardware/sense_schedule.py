@@ -6,10 +6,10 @@ crontab -e
 ```
 """
 
-from Sensor import *
-from Server import *
+from sensor import *
+from server import *
 
 sensor = Sensor()
 server = Server()
 datas = sensor.get_data()
-server.post(datas)
+server.post(datas, 'sensor')
