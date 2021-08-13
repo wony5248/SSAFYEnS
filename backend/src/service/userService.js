@@ -319,26 +319,51 @@ exports.getUserById = function (req, res, next) {
 
     const { user_id } = req.params;
     db["users"]
-      .findOne({
-        where: {
-          user_id: user_id,
-        },
+    .findOne({where: { user_id }})
+    .then((user) => {
+      console.log("This is getUserById user:", user)
+      if (user == null) {
+        // 401 에러로 올릴 필요
+        console.log("User not found")
+        return reject()
+      }
+
+      // mytrophies, mygroups
+      user.getTrophies() 
+      .then((trophies) => {
+        mytrophies = trophies.map(datum => {  
+          const { trophy_id, title, context, is_hidden, exp, img, created_at, updated_at, usersmntrophies } = datum;
+          // console.log({ trophy_id, title, context, is_hidden, exp, img, created_at, updated_at, trophy_id: usersmntrophies.trophy_id, user_id: usersmntrophies.user_id, achieved_at: usersmntrophies.achieved_at })
+          return { trophy_id, title, context, is_hidden, exp, img, created_at, updated_at, trophy_id: usersmntrophies.trophy_id, user_id: usersmntrophies.user_id, achieved_at: usersmntrophies.achieved_at }
+        })
+        console.log("This is getUserById mytrophies:", mytrophies)
+        // mygroups
+        user.getGroups()
+        .then((groups) => {
+          mygroups = groups.map(group => {
+            const { group_id, name, context, pax, ranking, created_at, updated_at, usersmngroups } = group
+            return { group_id, name, context, pax, ranking, created_at, updated_at, joined_at: usersmngroups.joined_at, is_group_admin: usersmngroups.is_group_admin }
+          })
+          console.log("This is getUserById mygroups:", mygroups)
+
+          // user, mygroups, mytrophies 합체
+          const data = { ...user.toJSON(), mytrophies, mygroups}
+          return resolve(data)
+          
+        })
+        .catch((err) => { return reject(err); })
+
       })
-      .then((data) => {
-        console.log("This is getUserById data:", data);
-        if (data == null) {
-          // 401 에러로 올릴 필요
-          console.log("User not found");
-          return reject(error);
-        }
-        return resolve(data);
-      })
-      .catch((error) => {
-        console.log("Unknown Error", error);
-        return reject(error);
-      });
-  });
-};
+      .catch((error) => {return reject(error)})
+
+
+    })
+    .catch((error) => {
+      console.log("Unknown Error", error)
+      return reject(error)
+    })
+  })
+}
 
 exports.updateUserById = function (req, res, next) {
   return new Promise(async function (resolve, reject) {
@@ -424,26 +449,26 @@ exports.addExpById = function (req, res, next) {
     // updateUserById처럼 findOne-update도 가능하지만 단순히 숫자만 증가/감소 시키는 것이라면
     // instance에 대해 increment를 할 수도 있다 https://github.com/sequelize/sequelize/issues/7268
     db["users"]
-      .findOne({ where: { user_id } })
-      .then((user) => {
-        // console.log("This is addExpById user:", user)
-        user
-          .increment(["exp"], { by: add_exp })
-          .then((data) => {
-            // console.log("This is addExpById data:", data)
-            // data는 업데이트 되기 이전을 돌려준다
-            // https://sequelize.org/master/class/lib/model.js~Model.html#instance-method-increment
-            // The updated instance will be returned by default in Postgres. However, in other dialects, you will need to do a reload to get the new values.
-            // 굳이 업데이트된 상태의 user를 주려면 reload해야된다
-            return resolve(data.reload());
-          })
-          .catch((error) => {
-            return reject(error);
-          });
+    .findOne({ where: { user_id } })
+    .then((user) => {
+      // console.log("This is addExpById user:", user)
+      user
+      .increment(["exp"], { by: add_exp })
+      .then((data) => {
+        // console.log("This is addExpById data:", data)
+        // data는 업데이트 되기 이전을 돌려준다
+        // https://sequelize.org/master/class/lib/model.js~Model.html#instance-method-increment
+        // The updated instance will be returned by default in Postgres. However, in other dialects, you will need to do a reload to get the new values.
+        // 굳이 업데이트된 상태의 user를 주려면 reload해야된다
+        return resolve(data.reload());
       })
       .catch((error) => {
-        console.log(error);
         return reject(error);
       });
+    })
+    .catch((error) => {
+      console.log(error);
+      return reject(error);
+    });
   });
 };
