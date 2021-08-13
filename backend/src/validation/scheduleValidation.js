@@ -30,14 +30,11 @@ exports.finished_at = check("finished_at")
   .customSanitizer((value, { req }) => moment(value).toDate());
 
 exports.deadline_at = check("deadline_at")
-  .notEmpty()
   .custom((value, { req }) => moment(value).isValid())
   .customSanitizer((value, { req }) => moment(value).toDate());
 
 exports.notification = check("notification").default(null);
 exports.is_finished = check("is_finished").isIn([null, true, false]);
-//   check("isfinished").isBoolean(),);
-//   .custom((value, { req }) => [null, true, false].indexOf(value) != -1)
 
 exports.month = check("month").customSanitizer(
   (value, { req }) => moment(req.body.started_at).month() + 1
@@ -50,17 +47,16 @@ exports.week = check("week").customSanitizer((value, { req }) =>
 exports.year = check("year").customSanitizer((value, { req }) =>
   moment(req.body.started_at).year()
 );
+
 exports.cnt_schedule = check("cnt_schedule").default(0);
 exports.point = check("point").customSanitizer((value, { req }) => 0);
-exports.user_id = check("user_id").default("honggildong1!");
+// exports.user_id = check("user_id").default("honggildong1!");
 
 //environment
 exports.humidity = check("humidity").default(0);
 exports.illuminance = check("illuminance").default(0);
 exports.noise = check("noise").default(0);
-exports.temperature = check("temperature").customSanitizer(
-  (value, { req }) => 0
-);
+exports.temperature = check("temperature").default(0);
 exports.notificationtime = check("notificationtime")
   .custom((value, { req }) => value == null || moment(value).isValid())
   .customSanitizer((value, { req }) => {
