@@ -1,4 +1,3 @@
-// const constraints = require("../constraint/schedule")
 const Sequelize = require("sequelize");
 const moment = require("moment");
 const op = Sequelize.Op;
@@ -14,57 +13,59 @@ exports.unimplemented = function () {
 
 exports.post = function (req) {
   return new Promise(async function (resolve, reject) {
-    const sum_point = 0;
+    //1-1 schedule 생성
+    //1-2 daily => weekly => monthly => yearly 생성
+    const schedule = await logic.buildSchedule(req)
+    const migrateResult = await logic.migrate(req, req.body)
 
-    //schedule이 생성되면 관련된 daily, weekly, monthly,yearly 생성
-    const db_schedules = await logic.buildSchedule(req)
-    await logic.migrate(req, req.body).then(async (result) => {
-      await result.reduce(async (promise, cur) => {
-        const acc = await promise.then();
-        cur && cur.save();
-        return Promise.resolve();
-      }, Promise.resolve({}));
-    });
+    //old
     // const dailyResult = await logic.createOrUpdateDaily(req)
     // const weeklyResult = await logic.createOrUpdateWeekly(req)
     // const monthlyResult = await logic.createOrUpdateMonthly(req)
     // const yearlyResult = await logic.createOrUpdateYearly(req)
+
     try {
-      db_schedules.save();
+      //2-1 schedule 일괄처리
+      //2-2 migrate 일괄처리
+      schedule.save();
+      await migrateResult.reduce(async (promise, cur) => {
+        const acc = await promise.then();
+        cur && cur.save();
+        return Promise.resolve();
+      }, Promise.resolve({}));
+
+      //old
       // if (dailyResult != null) dailyResult.save();
       // if (weeklyResult != null) weeklyResult.save();
       // if (monthlyResult != null) monthlyResult.save();
       // if (yearlyResult != null) yearlyResult.save();
-      resolve({ result: "put" });
-    } catch (error) {
-      console.log(error);
-      reject("error");
-    }
-    return resolve({ result: "post" });
+
+      return resolve({ result: "post" });
+    } catch (error) { return reject("error") }
   });
 };
 
 exports.get_$schedule_id$ = function (req) {
   return new Promise(async function (resolve, reject) {
     const schedule = await logic.findSchedule_id(req)
-    resolve(schedule);
+    if (schedule == null) return reject("존재하지 않는 스케쥴입니다")
+    else return resolve(schedule);
   });
 };
 
 exports.put_$schedule_id$ = function (req) {
   return new Promise(async function (resolve, reject) {
+
+    //1-1 수정하려는 스케쥴 확인
     const next_schedule = req.body;
     const prev_schedule = await logic.findSchedule_id(req)
 
-    //1. 존재하지않을 경우 반환
     if (prev_schedule == null) return reject("존재하지 않는 스케쥴입니다");
-    //2. 이미 완료된 일정일 경우 반환
     if (prev_schedule.is_finished == true)
       return reject("평가 완료된 일정입니다.");
 
-    //schedule 수정
 
-    //point 수정
+    //2-1 수정하려는 스케쥴 관련된 daily => weekly => monthly => yearly 삭제
     await logic.migrate_undo(prev_schedule).then(async (result) => {
       await result.reduce(async (promise, cur) => {
         const acc = await promise.then();
@@ -72,6 +73,8 @@ exports.put_$schedule_id$ = function (req) {
         return Promise.resolve();
       }, Promise.resolve({}));
     });
+
+    //2-2 수정하려는 스케쥴과 관련된 daily => weekly => monthly => yearly 생성 
     await logic.migrate(req, next_schedule).then(async (result) => {
       await result.reduce(async (promise, cur) => {
         const acc = await promise.then();
@@ -80,74 +83,43 @@ exports.put_$schedule_id$ = function (req) {
       }, Promise.resolve({}));
     });
     try {
+      //3-1 스케쥴 수정
       prev_schedule.update({
         ...next_schedule,
       });
       prev_schedule.save();
 
-      // migrate_Result.map((data) => data.save());
 
       resolve({ result: "put" });
-    } catch (error) {
-      console.log(error);
-      reject("error");
-    }
+    } catch (error) { reject("error"); }
   });
 };
+
 exports.delete_$schedule_id$ = function (req) {
   return new Promise(async function (resolve, reject) {
-    const { schedule_id, user_id } = payload;
-
+    //1 삭제할 스케쥴 검색
     const prev_schedule = await logic.findSchedule_id(req)
 
     if (prev_schedule == null) {
       return reject("존재하지 않는 schedule_id입니다");
     }
 
-    await logic.migrate_undo(prev_schedule).then(async (result) => {
-      prev_schedule.destroy()
-      await result.reduce(async (promise, cur) => {
-        const acc = await promise.then();
-        cur && cur.save();
-        return Promise.resolve();
-      }, Promise.resolve({}));
-      resolve({ result: "put" })
-    }).catch((error) => {
-      reject("migratie_undo error")
-    })
+    //2 대상 스케쥴과 관련된 통계 데이터 검색
+    await logic.migrate_undo(prev_schedule)
+      .then(async (result) => {
+        //3-1 검색 완료시 일괄 삭제
+        prev_schedule.destroy()
+        await result.reduce(async (promise, cur) => {
+          const acc = await promise.then();
+          cur && cur.save();
+          return Promise.resolve();
+        }, Promise.resolve({}));
+        resolve({ result: "put" })
 
-  });
-};
-
-
-exports.post_daily = function (payload) {
-  return new Promise(async function (resolve, reject) {
-    try {
-      const { date, user_id } = payload;
-      const date_end = moment(date).add(1, "days").toDate();
-      const data = await db["schedules"].findAll({
-        where: {
-          [op.and]: [
-            {
-              started_at: {
-                [op.gte]: date,
-              },
-            },
-            {
-              finished_at: {
-                [op.lte]: date_end,
-              },
-            },
-            {
-              user_id,
-            },
-          ],
-        },
-      });
-      resolve(data);
-    } catch (error) {
-      reject("error");
-    }
+      }).catch((error) => {
+        //3-2 검색 실패시 reject
+        reject("migratie_undo error")
+      })
   });
 };
 
@@ -160,6 +132,7 @@ exports.get_daily_$date$ = function (req) {
     return resolve(schedules);
   });
 };
+
 exports.get_month_$date$ = function (req) {
   return new Promise(async function (resolve, reject) {
     const schedules = await logic.getSchedule_unit(req, "month")
@@ -179,6 +152,36 @@ exports.get_year_$date$ = function (req) {
 
 
 //!unsued
+// exports.post_daily = function (payload) {
+//   return new Promise(async function (resolve, reject) {
+//     try {
+//       const { date, user_id } = payload;
+//       const date_end = moment(date).add(1, "days").toDate();
+//       const data = await db["schedules"].findAll({
+//         where: {
+//           [op.and]: [
+//             {
+//               started_at: {
+//                 [op.gte]: date,
+//               },
+//             },
+//             {
+//               finished_at: {
+//                 [op.lte]: date_end,
+//               },
+//             },
+//             {
+//               user_id,
+//             },
+//           ],
+//         },
+//       });
+//       resolve(data);
+//     } catch (error) {
+//       reject("error");
+//     }
+//   });
+// };
 // exports.post_submit = function (body) {
 //   return new Promise(async function (resolve, reject) {
 //     const { date, sum_point, context, user_id, month, year, week } = body;
