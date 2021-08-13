@@ -4,7 +4,7 @@ import axios from "axios";
 import styled from "styled-components";
 import moment from "moment";
 import { useUserContext } from "../../context";
-import 'moment/locale/ko';
+import "moment/locale/ko";
 
 const Todaycontainer = styled.div`
   overflow: auto;
@@ -86,12 +86,38 @@ const Todaychangebtn = styled.button`
   justify-content: center;
   padding: 4px;
 `;
+const Changechangebtn = styled.button`
+  width: 78px;
+  height: 60%;
+  border-radius: 8px;
+  border: 0px;
+  color: white;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  justify-content: center;
+  background-color: ${(props) =>
+    props.isdark === true ? "#424242" : "#69a569"};
+  padding: 4px;
+`;
 const Nodiv = styled.div`
-  color : ${props => props.isdark ? "white" : "#121212"}; 
+  color: ${(props) => (props.isdark ? "white" : "#121212")};
 `;
 const Todaylayout = () => {
   const [itemList, setItemList] = useState([]);
   const { isdarked } = useUserContext();
+  const Delete = async (props) => {
+    const id = props;
+    console.log(id);
+    if (window.confirm("정말 삭제하시겠 습니까?")) {
+      await axios
+        .delete(`http://127.0.0.1:4500/schedule/${id}`)
+        .then(({ data }) => {})
+        .catch((e) => {});
+      window.location.replace(`/Today`);
+    } else {
+    }
+  };
   useEffect(() => {
     async function loadCalendar() {
       await axios
@@ -101,6 +127,7 @@ const Todaylayout = () => {
           )}`
         )
         .then(({ data }) => {
+          console.log(data)
           setItemList(data);
         })
         .catch((e) => {});
@@ -131,19 +158,43 @@ const Todaylayout = () => {
                   <Todaytitlename style={{ width: "500px" }}>
                     {item.context}
                   </Todaytitlename>
-                  <Todaytitlename>이미 완료된 일정입니다.</Todaytitlename>
+                  <div style={{display:"flex", height:"100%", alignItems:"center", width:"250px",justifyContent:"space-between"}}>
+                  <Changechangebtn
+                    isdark={isdarked}
+                    onClick={() => Delete(item.schedule_id)}
+                  >
+                    삭제
+                  </Changechangebtn>
+                  <Todaytitlename style={{fontSize:"20px", display:"flex", alignItems:"center"}}>완료된 일정입니다.</Todaytitlename>
+                  </div>
                 </Todaychangecon>
               ) : (
                 <Todaychangecon>
                   <Todaytitlename>{item.context}</Todaytitlename>
-                  <Todaychangebtn
-                    isdark={isdarked}
-                    onClick={() =>
-                      window.location.replace(`/Rating/${item.schedule_id}`)
-                    }
-                  >
-                    완료
-                  </Todaychangebtn>
+                  <div style={{display:"flex", height:"100%", alignItems:"center", width:"250px",justifyContent:"space-between"}}>
+                    <Changechangebtn
+                      isdark={isdarked}
+                      onClick={() => Delete(item.schedule_id)}
+                    >
+                      삭제
+                    </Changechangebtn>
+                    <Changechangebtn
+                      isdark={isdarked}
+                      onClick={() =>
+                        window.location.replace(`/Change/${item.schedule_id}`)
+                      }
+                    >
+                      변경
+                    </Changechangebtn>
+                    <Todaychangebtn
+                      isdark={isdarked}
+                      onClick={() =>
+                        window.location.replace(`/Rating/${item.schedule_id}`)
+                      }
+                    >
+                      완료
+                    </Todaychangebtn>
+                  </div>
                 </Todaychangecon>
               )}
             </Todaytitle>

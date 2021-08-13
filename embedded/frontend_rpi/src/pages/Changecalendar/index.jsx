@@ -178,6 +178,16 @@ const Changecalendarlayout = (props) => {
     const startmin = Number(`${starttime[2]}${starttime[3]}`);
     const endhour = Number(`${endtime[0]}${endtime[1]}`);
     const endmin = Number(`${endtime[2]}${endtime[3]}`);
+    console.log(`${moment().format("YYYYMMDD")}`,)
+    console.log(`${moment().format("YYYYMMDD")} ${
+      starttime[0] + starttime[1] + starttime[2] + starttime[3]
+    }`,)
+    console.log(`${moment().format("YYYYMMDD")} ${
+      endtime[0] + endtime[1] + endtime[2] + endtime[3]
+    }`,)
+    console.log(deadline)
+    console.log(title)
+    console.log(context)
     if (starthour < endhour) {
       if (window.confirm("정말 완료하시겠 습니까?")) {
         await axios
@@ -226,7 +236,7 @@ const Changecalendarlayout = (props) => {
           .then(({ data }) => {
           })
           .catch((e) => {});
-        window.location.replace(`/Change`);
+        window.location.replace(`/Today`);
       } else {
         // console.log("변화 없음");
       }

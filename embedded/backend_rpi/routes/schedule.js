@@ -11,7 +11,7 @@ router.post("/", async function (req, res, next) {
     .post(
       "http://i5a109.p.ssafy.io:8079/schedule",
       {
-        date: req.body.date || moment().format("YYYYMMDD"),
+        date: req.body.date,
         started_at: req.body.started_at,
         finished_at: req.body.finished_at,
         deadline_at: req.body.deadline_at,
@@ -65,11 +65,12 @@ router.delete("/:id", async function (req, res, next) {
 });
 // 일정 변경 및 완료
 router.put("/:id", async function (req, res, next) {
+  console.log(req.body)
   await axios
     .put(
       `http://i5a109.p.ssafy.io:8079/schedule/${req.params.id}`,
       {
-        date: req.body.date || moment().format("YYYYMMDD"),
+        date: req.body.date,
         started_at: req.body.started_at,
         finished_at: req.body.finished_at,
         deadline_at: req.body.deadline_at,

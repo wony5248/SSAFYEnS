@@ -110,9 +110,11 @@ const Changecalendarlayout = () => {
   };
   const handletitleChange = (event) => {
     setTitle(event.target.value);
+    console.log(event.target.value)
   };
   const handlecontextChange = (event) => {
     setContext(event.target.value);
+    console.log(event.target.value)
   };
   const Confirm = async () => {
     const starthour = Number(`${starttime[0]}${starttime[1]}`);
