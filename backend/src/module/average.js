@@ -40,13 +40,13 @@ exports.getAverage = async (req, unit) => {
     const condition2 = {}
     const condition3 = {}
     const condition4 = {}
-
+    console.log("파라미터 : ", req, unit)
     if (req.body.year != null) condition1.year = req.body.year
     if (req.body.month != null) condition2.month = req.body.month
     if (req.body.week != null) condition3.week = req.body.week
-    if (req.body.date != null) condition4.date = req.body.date
+    if (req.body.date != null) condition4.date = req.params.date
 
-    const { user_id } = req
+    const { user_id } = reqt
     console.log(condition1, condition2, condition3, condition4)
 
     const daily = await db[unit]

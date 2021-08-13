@@ -10,27 +10,7 @@ router.get(
   validation.month,
   validation.year,
   validation.week,
-  // validation.user_id,
   controller.get_daily_$date$
-  // (req, res) => {
-  //   payload = { ...req.params, ...req.body };
-  //   console.log("payload : ", payload);
-
-  //   const result = validationResult(req);
-  //   if (!result.isEmpty()) {
-  //     console.log(validationResult(req));
-  //     res.status("400").json({ error: result });
-  //   } else {
-  //     service
-  //       .get_daily(payload)
-  //       .then((data) => {
-  //         res.json(data);
-  //       })
-  //       .catch((error) => {
-  //         res.status("405").json({ error });
-  //       });
-  //   }
-  // }
 );
 
 //comment on daily
@@ -42,25 +22,7 @@ router.put(
   validation.week,
   validation.daily_context,
   validation.user_id,
-  (req, res) => {
-    payload = { ...req.params, ...req.body };
-    console.log("payload : ", payload);
-
-    const result = validationResult(req);
-    if (!result.isEmpty()) {
-      console.log(validationResult(req));
-      res.status("400").json({ error: result });
-    } else {
-      service
-        .put_daily(payload)
-        .then((data) => {
-          res.json(data);
-        })
-        .catch((error) => {
-          res.status("405").json({ error });
-        });
-    }
-  }
+  controller.put_daily_$date$
 );
 // Delete Comment on daily
 // todo delete ​/average​/daily​/{date}
@@ -68,9 +30,9 @@ router.put(
 // Get weekly information
 router.get(
   "/week/:date",
+  validation.week,
   validation.month,
   validation.year,
-  validation.week,
   validation.user_id,
   controller.get_week_$date$
 );

@@ -16,13 +16,15 @@ info:
     * DELETE /average/daily/{date}는 삭제했습니다. 일간 평가(daily_context)를 지우고자 하는 경우 POST(사실 이거도 PUT이어야...)를 활용하세요.
     * 0809 합의로 schedule notification은 일정 시작 전의 알림으로 간주합니다.
     * 마이페이지에서 "얻을 수 있는 트로피" 페이지 같은게 있으면 좋을 것 같습니다???
+    * trophy와 관련된 API들이 변경되었습니다. `user/~~~~~`에서 `trophy/~~~~~~`로 모두 변경, 이동했습니다
+    * created_at고 updated_at은 POST/PUT requestBody로 보내시면 안 됩니다. 
   # termsOfService: http://swagger.io/terms/
   # contact:
   #   email: apiteam@swagger.io
 #   license:
 #     name: Apache 2.0
 #     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.1
+  version: 1.0.2
 # externalDocs:
 #   description: Find out more about Swagger
 #   url: http://swagger.io
@@ -43,9 +45,11 @@ tags:
 - name: trophy
   description: Operations about trophy
 - name: average
-  description: 통계를 위한 내용입니다
+  description: |-
+    * 통계를 위한 내용입니다
 - name: group
-  description: 그룹에 관한 내용입니다. 그룹에 가입신청/승인하는 과정이 빠져있네요???
+  description: |-
+    * 그룹에 관한 내용입니다.
   # externalDocs:
   #   description: Find out more about our store
   #   url: http://swagger.io
@@ -144,12 +148,16 @@ paths:
       operationId: updateScheduleById
       description: |- 
         * 일정을 (완료이전) 수정, 완료, (완료이후) 수정하는 것 모두 여기에서 이루어짐. 현재는 모든 값을 보낼 수 있지만 FE에서 적절히 보내기
-        * **완료된 일정을 수정할 수 있어야하는가???**
+        * 완료된 일정을 수정할 수 있어야하는가???
+        * **그래서 합의에 따라 is_finished==true인 경우는 PUT 요청을 거절(에러 반환)합니다.**
+        ---
+        * 이하 폐기
         * PUT요청에서 is_finished가 true->false로 가는 경우... 막아주세요(FE)
-        * 이하 BE
         * PUT요청에 (is_finished가 true면) daily/weekly/monthly/yearly 업데이트 필요
         * 만약 다른 날짜로 update한다면, 사실상 `POST /schedule`과 동일.
         * 하지만 과거로 update한다면 수정사항이 매우 많을 것 같다. (sum, cnt 등)
+        
+
       parameters:
       - name: schedule_id
         in: path
@@ -312,6 +320,26 @@ paths:
           
   /user:
   
+    get:
+      tags:
+      - user
+      summary: '[TEST] Get All Users (관리자 페이지용)'
+      description: |-
+        * 모든 유저 정보를 가져옵니다.
+        * 각 유저가 가진 트로피, 가입(신청)한 그룹의 목록은 가져오지 않습니다.
+      operationId: getUserAll
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/user'
+
+      
+  
     post:
       tags:
       - user
@@ -347,35 +375,35 @@ paths:
       
   /user/id:
   
-    get:
+    post:
       tags:
       - user
       summary: returns user_id info
-      description: 아이디 찾기(get은 requestbody말고 path, query parameter만 사용가능)
+      description: 아이디 찾기
       operationId: findId
-      parameters:
-      - name: name
-        in: query
-        description: 이름
-        # required: true
-        schema:
-          type: string
-      - name: email
-        in: query
-        description: 이메일
-        # required: true
-        schema:
-          type: string
-      # requestBody:
-      #   description: 이름, 이메일
-      #   content:
-      #     application/json:
-      #       schema:
-      #         properties:
-      #           name:
-      #             $ref: '#/components/schemas/user/properties/name'
-      #           email:
-      #             $ref: '#/components/schemas/user/properties/email'
+      # parameters:
+      # - name: name
+      #   in: query
+      #   description: 이름
+      #   # required: true
+      #   schema:
+      #     type: string
+      # - name: email
+      #   in: query
+      #   description: 이메일
+      #   # required: true
+      #   schema:
+      #     type: string
+      requestBody:
+        description: 이름, 이메일
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  $ref: '#/components/schemas/user/properties/name'
+                email:
+                  $ref: '#/components/schemas/user/properties/email'
       responses:
         200:
           description: OK // 결과가 없으면 비어있는 JSON이 오게 됨
@@ -391,7 +419,7 @@ paths:
     
   /user/password:
     
-    get:
+    post:
       tags:
       - user
       summary: 비밀번호 재설정 인증(get은 requestbody말고 path, query)
@@ -399,25 +427,37 @@ paths:
         * 정보가 모두 일치하면 해당되는 회원 정보를 돌려줍니다. (향후 정보수정 페이지에서 업데이트 하는 경우의 확장성을 위해) 
         * 해당하는 회원이 없는 경우 {}를 반환합니다.
       operationId: validatePasswordRenew
-      parameters:
-      - name: name
-        in: query
-        description: 이름
-        # required: true
-        schema:
-          type: string
-      - name: user_id
-        in: query
-        description: 아이디
-        # required: true
-        schema:
-          type: string
-      - name: email
-        in: query
-        description: 이메일
-        # required: true
-        schema:
-          type: string
+      # parameters:
+      # - name: name
+      #   in: query
+      #   description: 이름
+      #   # required: true
+      #   schema:
+      #     type: string
+      # - name: user_id
+      #   in: query
+      #   description: 아이디
+      #   # required: true
+      #   schema:
+      #     type: string
+      # - name: email
+      #   in: query
+      #   description: 이메일
+      #   # required: true
+      #   schema:
+      #     type: string
+      requestBody:
+        description: 이름, 이메일
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  $ref: '#/components/schemas/user/properties/name'
+                email:
+                  $ref: '#/components/schemas/user/properties/email'
+                user_id:
+                  $ref: '#/components/schemas/user/properties/email'
       responses:
         200:
           $ref: '#/components/responses/200user'
@@ -533,15 +573,15 @@ paths:
       operationId: getUserById
       description: |-
         * (미적용) JWT토큰을 통해 본인인 경우에만 조회할 수 있다
-        * (미적용) mytrophies, mygroups
-        * (미적용) mytrophies, mygroups에서는 본인의 획득,가입 시점도 제공하면 좋을 것같다
+        * mytrophies, mygroups
+        * mytrophies, mygroups에서는 본인의 획득,가입 시점도 제공하면 좋을 것같다
         * 당연히? 회원이 소유한 트로피만 반환한다
       parameters:
       - in: path
         name: user_id
         required: true
         schema:
-          $ref: "#/components/schemas/daily/properties/date"
+          $ref: "#/components/schemas/user/properties/user_id"
       responses:
         200:
           # $ref: '#/components/responses/200user'
@@ -585,6 +625,7 @@ paths:
         * 현재 방식은 프론트엔드가 GET으로 갖고 온 정보에 변경될 내용만 override해서 json 형태로 보내주는 것임
         * 합의사항 id는 수정할 수 없고, 이메일과 전화번호는 수정될 수 있다고 생각하여 수정가능 (FE)
         * BE에서는 들어오는 모든 정보를 수정토록 하였으므로, FE가 보내는 값이 중요...
+        * **password여기에서 수정하시면 안됩니다!!!** (취지상도 그렇고 귀찮아서 암호화 구현 안해놨어요)
       operationId: updateUserById
       parameters:
       - name: user_id
@@ -638,7 +679,7 @@ paths:
       security:
       - JWT: []
       
-  /user/{user_id}/exp/{addExp}:  
+  /user/{user_id}/exp/{add_exp}:  
     
     post:
       tags:
@@ -655,7 +696,7 @@ paths:
         required: true
         schema:
           type: string
-      - name: addExp
+      - name: add_exp
         in: path
         description: The exp to be added
         required: true
@@ -756,7 +797,7 @@ paths:
       security:
       - JWT: []
 
-    post:
+    put:
       tags:
       - average
       summary: Comment on daily
@@ -1063,7 +1104,10 @@ paths:
       tags:
       - group
       summary: create new group
-      description: /group/namevalidation 을 통해 그룹명이 겹치지 않는지 중복확인 된 경우에만 요청을 보내주세요. 그룹을 생성한 사람이 자동적으로 첫 회원이자 관리자가 됩니다
+      description: |-
+        * /group/namevalidation 을 통해 그룹명이 겹치지 않는지 중복확인 된 경우에만 요청을 보내주세요.
+        * 그룹을 생성한 사람이 자동적으로 첫 회원이자 그룹 관리자가 됩니다
+        * 모든 그룹 목록을 보여주는 `GET /group` 도 만들 수 있지만 `POST /group/search`에 q를 공란으로 보내는 것과 마찬가지라 다시 구현하지 않겠습니다.
       operationId: createGroup
       # https://swagger.io/docs/specification/describing-request-body/
       requestBody:
@@ -1159,7 +1203,7 @@ paths:
                               joined_at:
                                 type: string
                                 format: date-time
-                              is_groupadmin:
+                              is_group_admin:
                                 type: boolean
         400:
           $ref: '#/components/responses/400'
@@ -1210,7 +1254,7 @@ paths:
                               joined_at:
                                 type: string
                                 format: date-time
-                              is_groupadmin:
+                              is_group_admin:
                                 type: boolean
         400:
           $ref: '#/components/responses/400'
@@ -1249,7 +1293,7 @@ paths:
         * 검색 내용을 보내면 해당되는 그룹들을 반환한다. 
         * 이때 검색하는 대상은 name, context로 한다. (이외에 찾을게 있나요???)
         * url경로로 한글, 특수문자도 전달되면 그냥 get, query parameter로 받아도 될 것 같은데 확인 필요.
-        * response에서 그룹의 멤버도 검색했을 때 필요할까요???
+        * response에서 그룹의 멤버도 검색했을 때 필요할까요??? 0813 합의로 어디에선가 필요하긴 하지만, 여기말고 GET /user/user_id에서 구현하기로 했습니다. 그래서 업데이트로 주석처리하였습니다.
       requestBody:
         description: "검색어"
         content:
@@ -1273,23 +1317,23 @@ paths:
               schema:
                 allOf:
                 - $ref: '#/components/schemas/group'
-                - type: object
-                  properties:
-                    members:
-                      type: array
-                      items:
-                        allOf:
-                          - $ref: '#/components/schemas/user'
-                          - type: object
-                            # required:
-                            # - joined_at
-                            # - is_groupadmin
-                            properties:
-                              joined_at:
-                                type: string
-                                format: date-time
-                              is_groupadmin:
-                                type: boolean
+                # - type: object
+                #   properties:
+                #     members:
+                #       type: array
+                #       items:
+                #         allOf:
+                #           - $ref: '#/components/schemas/user'
+                #           - type: object
+                #             # required:
+                #             # - joined_at
+                #             # - is_groupadmin
+                #             properties:
+                #               joined_at:
+                #                 type: string
+                #                 format: date-time
+                #               is_group_admin:
+                #                 type: boolean
         400:
           $ref: '#/components/responses/400'
         401:
@@ -1446,7 +1490,74 @@ paths:
       security:
       - JWT: []          
       
-  /user/{user_id}/trophy:
+
+      
+  /trophy:
+  
+    post:
+      tags:
+      - trophy
+      summary: 트로피를 만듭니다. (관리자 페이지용)
+      description: |-
+        * 트로피를 만듭니다.
+        * 하지만 이걸 만들었다해서 회원 각각이 얻는 로직이 구현된 것은 아닙니다.
+        * 그러니 그냥 SQL로 직접 DB에 반영하는거랑 크게 차이가 없습니다.
+      operationId: createTrophy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/trophy'
+      responses:
+        200:
+          description: 'Successful'
+        400:
+          description: 'Bad Request'
+      security:
+      - JWT: []
+      
+    get:
+      tags:
+      - trophy
+      summary: 모든 트로피를 조회합니다. 
+      description: |-
+        * 얻을 수 있는 모든 트로피를 반환합니다.
+        * 단순히 서비스상의 기능을 보여주므로 로그인할 필요가 없다고 느껴집니다.
+      operationId: getTrophyAll
+      responses:
+        200:
+          description: 'Successful'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/trophy'
+        400:
+          description: 'Bad Request'
+      # security:
+      # - JWT: []
+      
+  /trophy/user:
+  
+    get:
+      tags:
+      - trophy
+      summary: '[TEST] 모든 유저-트로피 관계를 조회합니다.'
+      description: |-
+        * 모든 유저가 획득한 모든 트로피 관계를 반환합니다.
+        * DB에 있는 걸 전부 가져옵니다.
+        * 테스트용입니다
+        * user와 trophy를 join해서 가져오는 것도 (힘들지만) 가능합니다.
+      operationId: getUserTrophyAll
+      responses:
+        200:
+          description: OK
+          
+  
+  
+  
+  /trophy/user/{user_id}:
   
     get:
       tags:
@@ -1454,6 +1565,10 @@ paths:
       summary: gets array of trophy gained by user(user_id)
       description: |-
         * user_id에 해당하는 회원이 보유한 트로피들을 반환합니다.
+        * 회원에 대한 상세한 검색을 하는 경우에는 트로피의 정보도 필요할 것으로 보인다
+        * 그러므로 트로피 정보를 join한 형태로 반환함
+        * jwt토큰을 굳이 안받아도 user_id가 있다. 만약 다른 사람의 트로피를 조회하는거일수도 있고.
+      operationId: getUserTrophiesById
       parameters:
       - in: path
         required: true
@@ -1471,18 +1586,19 @@ paths:
                   $ref: '#/components/schemas/mytrophy'
         400:
           description: 'Bad Request'
-      security:
-      - JWT: []
+      # security:
+      # - JWT: []
       
-  /user/{user_id}/trophy/{trophy_id}:
+  /trophy/{trophy_id}/user/{user_id}:
       
     post:
       tags:
-      - trophy    
+      - trophy
       summary: adds trophy to user(user_id)
       description: |-
         * user_id에 해당하는 회원이 trophy_id에 해당하는 트로피를 얻습니다.
         * 성공적으로 추가된 경우 200, 오류 발생시 400 코드를 반환합니다.
+      operationId: createUserTrophyById
       parameters:
       - in: path
         required: true
@@ -1501,6 +1617,8 @@ paths:
           description: 'Bad Request'
       security:
       - JWT: []
+      
+      
       
 components:
 
@@ -1624,7 +1742,7 @@ components:
           description: |-
             true: admin,
             false: not admin,
-            이때의 admin은 사이트 전체를 의미함, groupadmin과 다름
+            이때의 admin은 사이트 전체를 의미함, group_admin과 다름
           default: false
         created_at:
           type: string
@@ -1865,6 +1983,7 @@ components:
       #   propertyName: mytrophy
         
     mytrophy:
+      description: 'API 설계하면서 계속 쓰기 귀찮아서 이렇게 한 것일뿐, 실제로 DB에 이렇게 되어있지 않습니다'
       allOf:
         - $ref: '#/components/schemas/trophy'
         - type: object

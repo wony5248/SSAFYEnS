@@ -14,21 +14,27 @@ exports.unimplemented = function () {
 
 exports.post = function (req) {
   return new Promise(async function (resolve, reject) {
-
     const sum_point = 0;
 
     //schedule이 생성되면 관련된 daily, weekly, monthly,yearly 생성
     const db_schedules = await logic.buildSchedule(req)
-    const dailyResult = await logic.createOrUpdateDaily(req)
-    const weeklyResult = await logic.createOrUpdateWeekly(req)
-    const monthlyResult = await logic.createOrUpdateMonthly(req)
-    const yearlyResult = await logic.createOrUpdateYearly(req)
+    await logic.migrate(req, req.body).then(async (result) => {
+      await result.reduce(async (promise, cur) => {
+        const acc = await promise.then();
+        cur && cur.save();
+        return Promise.resolve();
+      }, Promise.resolve({}));
+    });
+    // const dailyResult = await logic.createOrUpdateDaily(req)
+    // const weeklyResult = await logic.createOrUpdateWeekly(req)
+    // const monthlyResult = await logic.createOrUpdateMonthly(req)
+    // const yearlyResult = await logic.createOrUpdateYearly(req)
     try {
       db_schedules.save();
-      if (dailyResult != null) dailyResult.save();
-      if (weeklyResult != null) weeklyResult.save();
-      if (monthlyResult != null) monthlyResult.save();
-      if (yearlyResult != null) yearlyResult.save();
+      // if (dailyResult != null) dailyResult.save();
+      // if (weeklyResult != null) weeklyResult.save();
+      // if (monthlyResult != null) monthlyResult.save();
+      // if (yearlyResult != null) yearlyResult.save();
       resolve({ result: "put" });
     } catch (error) {
       console.log(error);
@@ -97,15 +103,19 @@ exports.delete_$schedule_id$ = function (req) {
     if (prev_schedule == null) {
       return reject("존재하지 않는 schedule_id입니다");
     }
-    await logic.migrate_undo(prev_schedule)
-      .then((data) => {
-        prev_schedule.destroy();
-        return resolve({ result: "delete" });
-      })
-      .catch((error) => {
-        console.log(error);
-        return reject("migrate_undo 에러");
-      });
+
+    await logic.migrate_undo(prev_schedule).then(async (result) => {
+      prev_schedule.destroy()
+      await result.reduce(async (promise, cur) => {
+        const acc = await promise.then();
+        cur && cur.save();
+        return Promise.resolve();
+      }, Promise.resolve({}));
+      resolve({ result: "put" })
+    }).catch((error) => {
+      reject("migratie_undo error")
+    })
+
   });
 };
 
