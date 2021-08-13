@@ -133,7 +133,7 @@ const Changecalendarlayout = () => {
             deadline_at: `${moment().format("YYYYMMDD")} ${
               deadline[0] + deadline[1] + deadline[2] + deadline[3]
             }`,
-            notification: `${moment().format("YYYYMMDD")} ${
+            notificationtime: `${moment().format("YYYYMMDD")} ${
               notitime[0] + notitime[1] + notitime[2] + notitime[3]
             }`,
             is_finished: false,
@@ -167,7 +167,7 @@ const Changecalendarlayout = () => {
             deadline_at: `${moment().format("YYYYMMDD")} ${
               deadline[0] + deadline[1] + deadline[2] + deadline[3]
             }`,
-            notification: `${moment().format("YYYYMMDD")} ${
+            notificationtime: `${moment().format("YYYYMMDD")} ${
               notitime[0] + notitime[1] + notitime[2] + notitime[3]
             }`,
             is_finished: false,

@@ -130,7 +130,6 @@ const Progresslayout = () => {
           )}`
         )
         .then(({ data }) => {
-
           for (let i = 0; i < data.length; i++) {
             const startTime = Number(moment(data[i].started_at).format("HH"));
             const startMin = Number(moment(data[i].started_at).format("mm"));
@@ -170,20 +169,21 @@ const Progresslayout = () => {
         });
     }
     loadCalendar();
-    console.log("asdfas")
+    console.log("asdfas");
   }, []);
   const { isdarked } = useUserContext();
   return (
     <Progresscontainer isdark={isdarked}>
       {istrue ? (
-        <div style={{height:"100%"}}>
+        <div style={{ height: "100%" }}>
           {calarr.map((item) => (
             <Fulldiv>
               <Progresstitle isdark={isdarked}>
                 <Progresstitlenamecon>
                   <Progresstitlename>{item.title}</Progresstitlename>
                   <Progresstitletime>
-                    {moment(item.started_at).format("HH:mm")} ~ {moment(item.finished_at).format("HH:mm")}
+                    {moment(item.started_at).format("HH:mm")} ~{" "}
+                    {moment(item.finished_at).format("HH:mm")}
                   </Progresstitletime>
                 </Progresstitlenamecon>
                 <div
@@ -195,7 +195,15 @@ const Progresslayout = () => {
                   }}
                 >
                   <Progressdeadline>등록 알람</Progressdeadline>
-                  <Progressdeadline>{moment(item.notification).format("HH:mm")}</Progressdeadline>
+                  {item.notificationtime ? (
+                    <Progressdeadline>
+                      {moment(item.notificationtime).format("HH:mm")}
+                    </Progressdeadline>
+                  ) : (
+                    <Progressdeadline>
+                      등록된 알람이 없습니다.
+                    </Progressdeadline>
+                  )}
                 </div>
                 <div
                   style={{
@@ -206,16 +214,22 @@ const Progresslayout = () => {
                   }}
                 >
                   <Progressdeadline>일정 데드라인</Progressdeadline>
-                  <Progressdeadline>{moment(item.deadline_at).format("YYYY.MM.DD HH:mm")}</Progressdeadline>
+                  <Progressdeadline>
+                    {moment(item.deadline_at).format("YYYY.MM.DD HH:mm")}
+                  </Progressdeadline>
                 </div>
               </Progresstitle>
               <Progresscontentcon isdark={isdarked}>
                 <Progresscontenttitle>일정 내용</Progresscontenttitle>
-                <Progresscontent isdark={isdarked}>{item.context}</Progresscontent>
+                <Progresscontent isdark={isdarked}>
+                  {item.context}
+                </Progresscontent>
                 <Btndiv>
                   <Completebtn
                     isdark={isdarked}
-                    onClick={() => window.location.replace(`/Rating/${item.id}`)}
+                    onClick={() =>
+                      window.location.replace(`/Rating/${item.schedule_id}`)
+                    }
                   >
                     완료
                   </Completebtn>

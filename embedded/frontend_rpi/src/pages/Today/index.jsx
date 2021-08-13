@@ -9,7 +9,7 @@ import 'moment/locale/ko';
 const Todaycontainer = styled.div`
   overflow: auto;
   width: auto;
-  height: 100%;
+  height: 97.2%;
   color: #a3cca3;
   padding-top: 14px;
   padding-right: 12px;
@@ -139,7 +139,7 @@ const Todaylayout = () => {
                   <Todaychangebtn
                     isdark={isdarked}
                     onClick={() =>
-                      window.location.replace(`/Rating/${item.id}`)
+                      window.location.replace(`/Rating/${item.schedule_id}`)
                     }
                   >
                     완료

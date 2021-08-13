@@ -6,7 +6,11 @@ embedded/frontend_rpi/package-lock.json
 node_modules/
 node_modules
 .gitignore
+
+
+
 README.md
+
 dist/*
 =======
 >>>>>>> a921e7def8d93ca4171ccc4a987948df3dd655c4

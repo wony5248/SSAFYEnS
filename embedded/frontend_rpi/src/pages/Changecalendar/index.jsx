@@ -182,6 +182,7 @@ const Changecalendarlayout = (props) => {
       if (window.confirm("정말 완료하시겠 습니까?")) {
         await axios
           .put(`http://127.0.0.1:4500/schedule/${id}`, {
+            date: `${moment().format("YYYYMMDD")}`,
             started_at: `${moment().format("YYYYMMDD")} ${
               starttime[0] + starttime[1] + starttime[2] + starttime[3]
             }`,
@@ -189,7 +190,8 @@ const Changecalendarlayout = (props) => {
               endtime[0] + endtime[1] + endtime[2] + endtime[3]
             }`,
             deadline_at: deadline,
-            notification: moment().format("YYYYMMDD HHmm"),
+            notification: null,
+            notificationtime: null,
             title: title,
             context: context,
             point: point,
@@ -206,6 +208,7 @@ const Changecalendarlayout = (props) => {
       if (window.confirm("정말 완료하시겠 습니까?")) {
         await axios
           .put(`http://127.0.0.1:4500/schedule/${id}`, {
+            date: `${moment().format("YYYYMMDD")}`,
             started_at: `${moment().format("YYYYMMDD")} ${
               starttime[0] + starttime[1] + starttime[2] + starttime[3]
             }`,
@@ -213,7 +216,8 @@ const Changecalendarlayout = (props) => {
               endtime[0] + endtime[1] + endtime[2] + endtime[3]
             }`,
             deadline_at: deadline,
-            notification: moment().format("YYYYMMDD HHmm"),
+            notification: null,
+            notificationtime: null,
             title: title,
             context: context,
             point: point,
@@ -238,6 +242,7 @@ const Changecalendarlayout = (props) => {
           setDeadline(moment(data.deadline_at).format("YYYYMMDD HHmm"));
           setTitle(data.title);
           setContext(data.context);
+          console.log(data)
           setIsfinished(data.is_finished);
           setPoint(data.point);
         })
