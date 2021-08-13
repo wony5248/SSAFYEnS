@@ -20,7 +20,6 @@ router.post(
 
   validation.point,
   validation.cnt_schedule,
-  validation.user_id,
   validation.humidity,
   validation.illuminance,
   validation.noise,
@@ -43,7 +42,6 @@ router.put(
   validation.year,
   validation.week,
   validation.cnt_schedule,
-  validation.user_id,
   validation.humidity,
   validation.illuminance,
   validation.noise,
