@@ -31,7 +31,7 @@ export const scheduleAPI = {
         )
     },
     modifySchedule:(schedule_id, date, title, notification, started_at, deadline_at, finished_at)=>{
-        console.log(`${title}, ${notification}`);
+        // console.log(`${title}, ${notification}`);
         return request.put(`/schedule/${schedule_id}`,{
             schedule_id, date, title, started_at, deadline_at, finished_at, notification
         },{
@@ -57,6 +57,33 @@ export const scheduleAPI = {
                 access_token: window.sessionStorage.getItem('token')
             }
         })
+    },
+    getDailyAverage:(date)=>{
+        return request.get(`/average/daily/${date}`,{
+            date
+        },{
+            headers:{
+                access_token: window.sessionStorage.getItem('token')
+            }
+        })
+    },
+    getWeeklyAverage:(year, week)=>{
+        return request.get(`/average/weekly/${year}/${week}`,{
+            year, week
+        },{
+            headers:{
+                access_token: window.sessionStorage.getItem('token')
+            }
+        })
+    },
+    getMonthlyAverage:(date)=>{
+        return request.get(`/average/monthly/${date}`,{
+            date
+        },{
+            headers:{
+                access_token: window.sessionStorage.getItem('token')
+            }
+        })
     }
 };
 
@@ -67,7 +94,6 @@ export const userAPI = {
         }).then(response=>{
             const access_token = response.data.access_token;
             window.sessionStorage.setItem('token', access_token);
-            
         }).catch(error=>{
             console.log(error);
         })
@@ -92,13 +118,53 @@ export const userAPI = {
             user_id: id, name, email, cellphone:number, password
         })
     },
-    mypage: (id)=>{
-        return request.get(`/user/${id}`,{
-            user_id:id
+    mypage: (user_id)=>{
+        return request.get(`/user/${user_id}`,{
+            user_id
+        },{
+            headers:{
+                access_token : window.sessionStorage.getItem('token')
+            } 
+        }).catch(e=>{
+            console.log(e);
         })
     },
     logout:()=>{
         return request.get(`/user/logout`,{
+            headers:{
+                access_token : window.sessionStorage.getItem('token')
+            }
+        })
+    },
+    findId: (name, email)=>{
+        return request.get(`/user/id`,{
+            name, email
+        })
+    },
+    findPw: (name, id, email)=>{
+        return request.get('/user/password',{
+            name, user_id:id, email
+        })
+    },
+    resetPw:(id, password)=>{
+        return request.put('/user/password',{
+            user_id:id, password
+        })
+    },
+    getTrophy:(user_id)=>{
+        return request.get(`/user/${user_id}/trophy`,{
+            user_id
+        },{
+            headers:{
+                access_token : window.sessionStorage.getItem('token')
+            }
+        }
+        )
+    },
+    modifyUser:(user_id, name, email, cellphone, password)=>{
+        return request.put(`/user/${user_id}`,{
+            user_id, name, email, cellphone, password
+        },{
             headers:{
                 access_token : window.sessionStorage.getItem('token')
             }

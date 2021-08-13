@@ -15,6 +15,7 @@ import Groupinfo from './pages/groupinfo';
 import DailyEvaluate from './pages/dailyevaluate';
 import ModifyUserInfo from './pages/modifyuserinfo';
 import CheckPw from './pages/checkpasswd';
+import ResetPassword from './pages/resetpasswd';
 import Average from './pages/average';
 
 
@@ -37,7 +38,8 @@ const App = () =>{
         <Route exact path = "/dailyevaluate" component={DailyEvaluate}/>
         <Route exact path = "/modifyuserinfo/:id" component={ModifyUserInfo}/>
         <Route exact path = "/checkpassword/:id" component={CheckPw}/>
-        <Route exact path = "/average" component={Average}/>
+        <Route exact path = "/resetpassword/:id" component={ResetPassword}/>
+        <Route exact path = "/average/:id" component={Average}/>
       </Switch>
     </BrowserRouter>
   );

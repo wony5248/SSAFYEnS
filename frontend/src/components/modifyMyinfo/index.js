@@ -1,18 +1,69 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import {useLocation} from 'react-router-dom';
 import {Grid, Button, TextField} from '@material-ui/core';
 import Wrapper from './styles';
-// import {userAPI} from '../../utils/axios';
+import {userAPI} from '../../utils/axios';
 
 const ModifyInfo = () =>{
-    const [id, setId] = useState('');
+    const location = useLocation();
+    const [query, setQuery] = useState('react');
+    const id = location.pathname.split('/')[2];
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [check_password, setCheckPassword] = useState('');
     const [name, setName] = useState('');
     const [check, setCheck] = useState('');
     const [number, setNumber] = useState('');
+    const [checkemail, setCheckEmail] = useState('');
+    const [checknumber, setCheckNumber] = useState('');
 
+    const [emailLabel, setEmailLabel] = useState(false);
+    const [numberLabel, setNumberLabel] = useState(false);
 
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        let completed = false;
+        async function getData(){
+            const result = await userAPI.mypage(id);
+            setData(result.data);
+            setName(result.data.name);
+            setEmail(result.data.email);
+            setNumber(result.data.cellphone);
+        }
+        getData();
+        return ()=>{
+            completed = true;
+        };
+    },[query]);
+
+    const handleNumberLabel = async () => {
+        if(number!==data.cellphone){
+            try{    
+                await userAPI.checkUserPhone(number);
+                setNumberLabel(true);
+                setCheckNumber('사용 가능한 전화번호입니다.');
+            }catch (error){
+                setCheckNumber('전화번호가 이미 존재합니다.');
+            }
+        }else{
+            setCheckNumber('현재 고객님의 전화번호입니다.');
+        }
+    };
+
+    const handleEmailLabel = async () => {
+        if(email!==data.email){
+            try{ 
+                await userAPI.checkUserEmail(email);
+                setEmailLabel(true);
+                setCheckEmail('사용 가능한 email입니다.');
+            }catch (error){
+                setCheckEmail('email이 이미 존재합니다.');
+            }
+        }else{
+            setCheckEmail('현재 고객님의 email입니다.');
+        }
+    };
     const handlePassword = (event) =>{
         setPassword(event.target.value);
     };
@@ -31,13 +82,21 @@ const ModifyInfo = () =>{
         setName(event.target.value);
     };
 
+    const handleEmail = (event) =>{
+        setEmail(event.target.value);
+    };
+
+    const handleNumber = (event) =>{
+        setNumber(event.target.value);
+    };
+
     const modifyUser = async () => {
         try{
-            // const result = await userAPI.addUser(id, name, email, number, password);
-            // alert("회원가입을 축하합니다!");
-            // history.push('/');
-            alert('test');
+            await userAPI.modifyUser(data.user_id, name, email, number, password);
+            alert("정보를 수정했습니다.");
+            window.location.href= `/mypage`;
         }catch(error){
+            console.log(error);
             alert("정보 수정에 실패했습니다.");
         }
     };
@@ -113,9 +172,20 @@ const ModifyInfo = () =>{
                                             <div style={{fontSize:30}}>Email</div>
                                         </div>
                                         <div style={{marginLeft:'50px', marginTop:'10px'}}>
-                                            <TextField disabled type="text" label="" variant="outlined" id="outlined-basic" 
-                                                    value = {email} style={{width:'300px'}}/>
+                                            {emailLabel?(
+                                            <TextField disabled type="email" label="" variant="outlined" id="outlined-basic" 
+                                                    value = {email} onChange={handleEmail} style={{width:'300px'}}/>
+                                            ):(
+                                                <TextField type="text" label="" variant="outlined" id="outlined-basic" 
+                                                    value = {email} onChange={handleEmail} style={{width:'300px'}}/>
+                                            )}
                                         </div>
+                                        <div style={{marginLeft:'20px', marginTop:'10px'}}>
+                                            <Button style={{height:'50px'}} onClick={handleEmailLabel}>중복 확인</Button>
+                                        </div>
+                                    </Grid>
+                                    <Grid style={{marginTop:'15px', marginLeft:'290px'}}>
+                                        {checkemail}
                                     </Grid>
                                     {/* phone */}
                                     <Grid container direction="row" style={{marginTop:'15px'}}>
@@ -124,9 +194,20 @@ const ModifyInfo = () =>{
                                             <div style={{fontSize:30}}>전화번호</div>
                                         </div>
                                         <div style={{marginLeft:'50px', marginTop:'10px'}}>
-                                            <TextField disabled type="text" label="" variant="outlined" id="outlined-basic" 
-                                                    value = {number} style={{width:'300px'}}/>
+                                            {numberLabel?(
+                                                <TextField disabled type="text" label="" variant="outlined" id="outlined-basic" 
+                                                    value = {number} onChange={handleNumber} style={{width:'300px'}}/>
+                                            ):(
+                                                <TextField type="text" label="" variant="outlined" id="outlined-basic" 
+                                                    value = {number} onChange={handleNumber} style={{width:'300px'}}/>
+                                            )}
                                         </div>
+                                        <div style={{marginLeft:'20px', marginTop:'10px'}}>
+                                            <Button style={{height:'50px'}} onClick={handleNumberLabel}>중복 확인</Button>
+                                        </div>
+                                    </Grid>
+                                    <Grid style={{marginTop:'15px', marginLeft:'290px'}}>
+                                        {checknumber}
                                     </Grid>
                                 </Grid>
                             </Grid>
