@@ -374,7 +374,6 @@ exports.updateUserById = function (req, res, next) {
   })
 }
 
-// 작동하기는 하나, return resolve(data)로 index.js로 넘어갈때 JSON대신 integer만 가서 주의 표시 뜨며, FE에 error를 보냄
 exports.deleteUserById = function (req, res, next) {
   return new Promise(async function (resolve, reject) {
     // jwt 인증 확인 필요
@@ -393,11 +392,46 @@ exports.deleteUserById = function (req, res, next) {
     .then((data) => {
       console.log(data)
       // 1
-      return resolve(data)
+      return resolve()
     })
     .catch((error) => {
       console.log(error)
       return reject(error)
     })
+  })
+}
+
+exports.addExpById = function (req, res, next) {
+  return new Promise(async function (resolve, reject) {
+    // jwt 인증 확인 필요
+      // jwt로 본인 계정을 수정하고 있는 것인지 확인 필요..?
+    
+    const { user_id, add_exp } = req.params
+
+    // updateUserById처럼 findOne-update도 가능하지만 단순히 숫자만 증가/감소 시키는 것이라면
+    // instance에 대해 increment를 할 수도 있다 https://github.com/sequelize/sequelize/issues/7268
+    db["users"]
+    .findOne({where: {user_id}})
+    .then((user) => {
+      // console.log("This is addExpById user:", user)
+      user.increment(['exp'], { by: add_exp })
+      .then((data) => {
+        // console.log("This is addExpById data:", data)
+        // data는 업데이트 되기 이전을 돌려준다
+        // https://sequelize.org/master/class/lib/model.js~Model.html#instance-method-increment
+        // The updated instance will be returned by default in Postgres. However, in other dialects, you will need to do a reload to get the new values.
+        // 굳이 업데이트된 상태의 user를 주려면 reload해야된다
+        return resolve(data.reload())
+      })
+      .catch((error) => {
+        return reject(error)
+      })
+
+    })
+    .catch((error) => {
+      console.log(error)
+      return reject(error)
+    })
+
   })
 }

@@ -186,7 +186,7 @@ exports.put_$schedule_id$ = function (data) {
     //schedule 수정
 
     //point 수정
-    await migrate_undo(prev_schedule, next_schedule).then(async (result) => {
+    await migrate_undo(prev_schedule).then(async (result) => {
       await result.reduce(async (promise, cur) => {
         const acc = await promise.then();
         cur && cur.save();
@@ -215,28 +215,30 @@ exports.put_$schedule_id$ = function (data) {
     }
   });
 };
-exports.delete_$schedule_id$ = function (data) {
+exports.delete_$schedule_id$ = function (payload) {
   return new Promise(async function (resolve, reject) {
-    const { id } = data;
-    db["schedules"]
-      .destroy({
-        where: {
-          schedule_id,
-        },
-      })
-      .then((result) => {
-        console.log("답 : ", result);
-        if (result == 0) reject("no db instance");
-        else if (result == 1) resolve(result);
-        resolve(result);
+    const { schedule_id } = payload;
+    console.log(payload);
+    const prev_schedule = await db["schedules"].findOne({
+      where: {
+        schedule_id,
+      },
+    });
+    if (prev_schedule == null) {
+      return reject("존재하지 않는 schedule_id입니다");
+    }
+    migrate_undo(prev_schedule)
+      .then((data) => {
+        prev_schedule.destroy();
+        return resolve({ result: "delete" });
       })
       .catch((error) => {
         console.log(error);
-        reject("db error");
+        return reject("migrate_undo 에러");
       });
-    // reject("db instance not finded");
   });
 };
+
 exports.post_submit = function (body) {
   return new Promise(async function (resolve, reject) {
     const { date, sum_point, context, user_id, month, year, week } = body;

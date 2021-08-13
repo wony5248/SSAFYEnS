@@ -10,10 +10,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      models.users.belongsTo(models.users, { foreignKey: user_id });
 
       // M:N 관계
-      models.users.belongsToMany(models.groups, {foreignKey:"user_id", through: models.usersmngroups}) 
+      models.users.belongsToMany(models.groups, {
+        foreignKey: "user_id",
+        through: models.usersmngroups,
+      });
+      models.users.belongsToMany(models.groups, {
+        as: "group_id",
+        foreignKey: "user_id",
+        through: models.applicants,
+      });
     }
   }
   users.init(
@@ -31,9 +38,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'users',
-      createdAt: 'created_at', 
-      updatedAt: false
+      modelName: "users",
+      createdAt: "created_at",
+      updatedAt: false,
     }
   );
   return users;

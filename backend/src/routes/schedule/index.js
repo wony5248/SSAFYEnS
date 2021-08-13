@@ -10,6 +10,7 @@ router.post(
   validation.finished_at,
   validation.deadline_at,
   validation.notification,
+  validation.notificationtime,
   validation.is_finished,
   validation.month,
   validation.year,
@@ -52,6 +53,7 @@ router.get("/:schedule_id", (req, res) => {
       res.status("405").send(error);
     });
 });
+
 //Updates a schedule with JSON data
 //todo 파라미터 추가
 router.put(
@@ -61,6 +63,7 @@ router.put(
   validation.finished_at,
   validation.deadline_at,
   validation.notification,
+  validation.notificationtime,
   validation.is_finished,
   validation.month,
   validation.year,
@@ -93,7 +96,7 @@ router.put(
 );
 //Deletes a schedule
 router.delete("/:schedule_id", (req, res) => {
-  const payload = { ...req.body };
+  const payload = { ...req.body, ...req.params };
   service
     .delete_$schedule_id$(payload)
     .then((result) => {
