@@ -26,11 +26,12 @@ exports.get_daily_$date$ = function (req) {
   });
 };
 
-exports.put_daily = function (payload) {
+exports.put_daily_$date$ = function (req) {
   return new Promise(async function (resolve, reject) {
     //daily 평가 기능
     try {
-      const { date, daily_context, user_id, month, year, week } = payload;
+      const { date, daily_context } = req.body;
+      const { user_id } = req
       const dailyResult = await db["daily"].findOne({
         where: {
           date,
@@ -42,7 +43,7 @@ exports.put_daily = function (payload) {
       } else {
         dailyResult.daily_context = daily_context;
       }
-      //해당 일에 합산할 point와 schedule 개수를 알아내기 위해 당일 스케쥴을 검색
+      //is_finished 처리할 schedule 검색
       const started_at = date;
       const finished_at = moment(date).add(1, "days").toDate();
       const dailySchedules = await db["schedules"].findAll({
@@ -65,15 +66,16 @@ exports.put_daily = function (payload) {
       if (dailySchedules == null) {
         return reject("해당 일자 스케쥴이 존재하지 않습니다");
       } else {
+
         await dailySchedules.reduce(async (promise, cur) => {
           const acc = await promise.then();
           cur.is_finished = true;
           cur.save();
           return Promise.resolve(acc);
         }, Promise.resolve({}));
+        dailyResult.save();
+        return resolve({ result: "put" });
       }
-      dailyResult.save();
-      return resolve({ result: "put" });
     } catch (error) {
       console.log(error);
       return reject("error");

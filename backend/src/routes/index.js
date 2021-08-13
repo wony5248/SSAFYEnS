@@ -11,6 +11,8 @@ router.use((req, res, next) => {
     next()
 })
 
+
+
 router.use("/user", userRoutes);
 router.use(middleware.verifyToken);
 router.use("/group", groupRoutes);

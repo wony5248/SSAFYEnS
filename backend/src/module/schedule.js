@@ -2,19 +2,19 @@ const Sequelize = require("sequelize");
 const moment = require("moment")
 const op = Sequelize.Op;
 const db = require("../models");
-
+const daily = require("../models/daily");
 
 
 exports.buildSchedule = async (req) => {
-    const { date, point, month, year, week, started_at, finished_at } = req.body;
-    console.log("네 : ", req.body)
+    const { date, week, month, year, title, context, expectstart_at, started_at, finished_at, deadline_at, notification, notificationtime, is_finished, point, noise, temperature } = req.body;
     const { user_id } = req
     return await db["schedules"].build({
-        date, point, month, year, week, started_at, user_id, finished_at
+        user_id, date, week, month, year, title, context, expectstart_at, started_at, finished_at, deadline_at, notification, notificationtime, is_finished, point, noise, temperature
     });
 }
 exports.createOrUpdateDaily = async (req) => {
-    const { date, point, month, year, week, started_at } = req.body;
+
+    const { date, month, year, week, title, daily_context, started_at, point, sum_humidity, sum_illuminance, sum_noise, sum_temperature } = req.body;
     const { user_id } = req
 
     const start_day = moment(started_at).startOf("day");
@@ -31,17 +31,30 @@ exports.createOrUpdateDaily = async (req) => {
             month,
             year,
             user_id,
+            daily_context,
             sum_point: point,
             cnt_schedule: 1,
+            title,
+
+            sum_humidity,
+            sum_illuminance,
+            sum_noise,
+            sum_temperature
         });
     } else {
         dailyResult.sum_point += point;
         dailyResult.cnt_schedule += 1;
+        dailyResult.daily_context = daily_context
+
+        dailyResult.sum_humidity += sum_humidity
+        dailyResult.sum_illuminance += sum_illuminance
+        dailyResult.sum_noise += sum_noise
+        dailyResult.sum_temperature += sum_temperature
     }
     return dailyResult
 }
 exports.createOrUpdateWeekly = async (req) => {
-    const { date, point, month, year, week, started_at } = req.body;
+    const { date, point, month, year, week, sum_humidity, sum_illuminance, sum_noise, sum_temperature } = req.body;
     const { user_id } = req
     const weeklyResult = await db["weekly"].findOne({
         where: {
@@ -69,15 +82,21 @@ exports.createOrUpdateWeekly = async (req) => {
             user_id,
             sum_point: point,
             cnt_schedule: 1,
+            sum_humidity, sum_illuminance, sum_noise, sum_temperature
         });
     } else {
         weeklyResult.sum_point += point;
         weeklyResult.cnt_schedule += 1;
+
+        weeklyResult.sum_humidity += sum_humidity
+        weeklyResult.sum_illuminance += sum_illuminance
+        weeklyResult.sum_noise += sum_noise
+        weeklyResult.sum_temperature += sum_temperature
     }
     return weeklyResult
 }
 exports.createOrUpdateMonthly = async (req) => {
-    const { date, point, month, year, week, started_at } = req.body;
+    const { point, month, year, sum_humidity, sum_illuminance, sum_noise, sum_temperature } = req.body;
     const { user_id } = req
     const monthlyResult = await db["monthly"].findOne({
         where: {
@@ -103,15 +122,22 @@ exports.createOrUpdateMonthly = async (req) => {
             user_id,
             sum_point: point,
             cnt_schedule: 1,
+
+            sum_humidity, sum_illuminance, sum_noise, sum_temperature
         });
     } else {
         monthlyResult.sum_point += point;
         monthlyResult.cnt_schedule += 1;
+
+        monthlyResult.sum_humidity += sum_humidity
+        monthlyResult.sum_illuminance += sum_illuminance
+        monthlyResult.sum_noise += sum_noise
+        monthlyResult.sum_temperature += sum_temperature
     }
     return monthlyResult
 }
 exports.createOrUpdateYearly = async (req) => {
-    const { date, point, month, year, week, started_at } = req.body;
+    const { point, year, week, sum_humidity, sum_illuminance, sum_noise, sum_temperature } = req.body;
     const { user_id } = req
     const yearlyResult = await db["yearly"].findOne({
         [op.and]: [
@@ -131,10 +157,17 @@ exports.createOrUpdateYearly = async (req) => {
             user_id,
             sum_point: point,
             cnt_schedule: 1,
+
+            sum_humidity, sum_illuminance, sum_noise, sum_temperature
         });
     } else {
         yearlyResult.sum_point += point;
         yearlyResult.cnt_schedule += 1;
+
+        yearlyResult.sum_humidity += sum_humidity
+        yearlyResult.sum_illuminance += sum_illuminance
+        yearlyResult.sum_noise += sum_noise
+        yearlyResult.sum_temperature += sum_temperature
     }
     return yearlyResult
 }
@@ -186,16 +219,6 @@ exports.migrate_undo = async (prev_schedule) => {
         });
         if (dailyResult == null || dailyResult[0] == 0) {
             return reject("해당 daily를 찾을 수 없습니다.1");
-            // await db["daily"].create({
-            //   date: started_day,
-            //   week,
-            //   month,
-            //   year,
-            //   user_id,
-            //   point,
-            //   cnt_schedule: 1,
-            //   is_finished: true,
-            // });
         } else if (dailyResult.dataValues.cnt_schedule == 1) {
             console.log("해당 daily를 제거합니다");
             dailyResult.destroy();
@@ -215,6 +238,9 @@ exports.migrate_undo = async (prev_schedule) => {
                 [op.and]: [
                     {
                         year,
+                    },
+                    {
+                        month
                     },
                     {
                         week,
@@ -248,8 +274,13 @@ exports.migrate_undo = async (prev_schedule) => {
 
         const monthlyResult = await db["monthly"].findOne({
             where: {
-                year,
-                month,
+                [op.and]: [
+                    {
+                        year
+                    },
+                    { month },
+                    { user_id }
+                ]
             },
         });
 
@@ -274,7 +305,10 @@ exports.migrate_undo = async (prev_schedule) => {
 
         const yearlyResult = await db["yearly"].findOne({
             where: {
-                year,
+                [op.and]: [
+                    { year },
+                    { user_id }
+                ]
             },
         });
 
@@ -349,10 +383,10 @@ exports.migrate = async (req, next_schedule) => {
             dailyResult.sum_point += point;
             dailyResult.cnt_schedule += 1;
 
-            dailyResult.sum_humidity = humidity;
-            dailyResult.sum_illuminance = illuminance;
-            dailyResult.sum_noise = noise;
-            dailyResult.sum_temperature = temperature;
+            dailyResult.sum_humidity += humidity;
+            dailyResult.sum_illuminance += illuminance;
+            dailyResult.sum_noise += noise;
+            dailyResult.sum_temperature += temperature;
         }
 
         //weekly 확인
@@ -392,10 +426,10 @@ exports.migrate = async (req, next_schedule) => {
             weeklyResult.sum_point += point;
             weeklyResult.cnt_schedule += 1;
 
-            weeklyResult.sum_humidity = humidity;
-            weeklyResult.sum_illuminance = illuminance;
-            weeklyResult.sum_noise = noise;
-            weeklyResult.sum_temperature = temperature;
+            weeklyResult.sum_humidity += humidity;
+            weeklyResult.sum_illuminance += illuminance;
+            weeklyResult.sum_noise += noise;
+            weeklyResult.sum_temperature += temperature;
         }
 
         const monthlyResult = await db["monthly"].findOne({
@@ -433,10 +467,10 @@ exports.migrate = async (req, next_schedule) => {
             monthlyResult.sum_point += point;
             monthlyResult.cnt_schedule += 1;
 
-            monthlyResult.sum_humidity = humidity;
-            monthlyResult.sum_illuminance = illuminance;
-            monthlyResult.sum_noise = noise;
-            monthlyResult.sum_temperature = temperature;
+            monthlyResult.sum_humidity += humidity;
+            monthlyResult.sum_illuminance += illuminance;
+            monthlyResult.sum_noise += noise;
+            monthlyResult.sum_temperature += temperature;
         }
 
         const yearlyResult = await db["yearly"].findOne(
@@ -473,10 +507,10 @@ exports.migrate = async (req, next_schedule) => {
             yearlyResult.sum_point += point;
             yearlyResult.cnt_schedule += 1;
 
-            yearlyResult.sum_humidity = humidity;
-            yearlyResult.sum_illuminance = illuminance;
-            yearlyResult.sum_noise = noise;
-            yearlyResult.sum_temperature = temperature;
+            yearlyResult.sum_humidity += humidity;
+            yearlyResult.sum_illuminance += illuminance;
+            yearlyResult.sum_noise += noise;
+            yearlyResult.sum_temperature += temperature;
         }
         return resolve([dailyResult, weeklyResult, monthlyResult, yearlyResult]);
     });
