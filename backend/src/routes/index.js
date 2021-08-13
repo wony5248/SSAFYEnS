@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const userRoutes = require("./user");
 const groupRoutes = require("./group");
-// const middleware = require("../middleware");
+const middleware = require("../middleware");
 const averageRoutes = require("./average");
 const scheduleRoutes = require("./schedule");
 const trophyRoutes = require("./trophy");
