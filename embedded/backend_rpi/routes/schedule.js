@@ -4,27 +4,33 @@ const axios = require("axios");
 var fs = require("fs");
 var sensorData = [];
 var moment = require("moment");
-
+var url = "i5a109.p.ssafy.io:8079"
 // 일정 추가
 router.post("/", async function (req, res, next) {
   await axios
-    .post("http://i5a109.p.ssafy.io:8079/schedule", {
-      
-      date: req.body.date || moment().format("YYYYMMDD"),
-      started_at: req.body.started_at,
-      finished_at: req.body.finished_at,
-      deadline_at: req.body.deadline_at,
-      notification: null,
-      notificationtime: req.body.notificationtime,
-      is_finished: req.body.is_finished,
-      title: req.body.title,
-      context: req.body.context,
-      month: req.body.month,
-      year: req.body.year,
-      week: req.body.week,
-      point: req.body.point,
-      user_id: req.body.user_id,
-    })
+    .post(
+      "http://i5a109.p.ssafy.io:8079/schedule",
+      {
+        date: req.body.date || moment().format("YYYYMMDD"),
+        started_at: req.body.started_at,
+        finished_at: req.body.finished_at,
+        deadline_at: req.body.deadline_at,
+        notification: null,
+        notificationtime: req.body.notificationtime,
+        is_finished: req.body.is_finished,
+        title: req.body.title,
+        context: req.body.context,
+        month: req.body.month,
+        year: req.body.year,
+        week: req.body.week,
+        point: req.body.point,
+        user_id: req.body.user_id,
+      },
+      {
+        headers:{access_token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiamJqIiwiaWF0IjoxNjI4ODIwODExfQ.i4UAyy2spAipBvECTtSC2Mbb3LbO_RTPGFpzMweUOX4"}
+      }
+    )
     .then((response) => {
       res.send(response.data);
       console.log(11111);
@@ -39,9 +45,15 @@ router.post("/", async function (req, res, next) {
 
 // 일정 삭제
 router.delete("/:id", async function (req, res, next) {
-  console.log(req.params.id)
+  console.log(req.params.id);
   await axios
-    .delete(`http://i5a109.p.ssafy.io:8079/schedule/${req.params.id}`)
+    .delete(
+      `http://i5a109.p.ssafy.io:8079/schedule/${req.params.id}`,
+      {
+        headers:{access_token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiamJqIiwiaWF0IjoxNjI4ODIwODExfQ.i4UAyy2spAipBvECTtSC2Mbb3LbO_RTPGFpzMweUOX4"},
+      }
+    )
     .then((response) => {
       res.send(response.data);
       console.log(22222);
@@ -54,18 +66,25 @@ router.delete("/:id", async function (req, res, next) {
 // 일정 변경 및 완료
 router.put("/:id", async function (req, res, next) {
   await axios
-    .put(`http://i5a109.p.ssafy.io:8079/schedule/${req.params.id}`, {
-      date: req.body.date || moment().format("YYYYMMDD"),
-      started_at: req.body.started_at,
-      finished_at: req.body.finished_at,
-      deadline_at: req.body.deadline_at,
-      notification: req.body.notification,
-      notificationtime: req.body.notificationtime,
-      is_finished: req.body.is_finished,
-      title: req.body.title,
-      point: req.body.point,
-      context: req.body.context,
-    })
+    .put(
+      `http://i5a109.p.ssafy.io:8079/schedule/${req.params.id}`,
+      {
+        date: req.body.date || moment().format("YYYYMMDD"),
+        started_at: req.body.started_at,
+        finished_at: req.body.finished_at,
+        deadline_at: req.body.deadline_at,
+        notification: req.body.notification,
+        notificationtime: req.body.notificationtime,
+        is_finished: req.body.is_finished,
+        title: req.body.title,
+        point: req.body.point,
+        context: req.body.context,
+      },
+      {
+        headers:{access_token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiamJqIiwiaWF0IjoxNjI4ODIwODExfQ.i4UAyy2spAipBvECTtSC2Mbb3LbO_RTPGFpzMweUOX4"},
+      }
+    )
     .then((response) => {
       res.send(response.data);
       console.log(response.data);
@@ -80,7 +99,13 @@ router.put("/:id", async function (req, res, next) {
 // test용
 router.get("/", async function (req, res, next) {
   await axios
-    .get("http://i5a109.p.ssafy.io:8079/schedule/6")
+    .get(
+      "http://i5a109.p.ssafy.io:8079/schedule/6",
+      {
+        headers:{access_token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiamJqIiwiaWF0IjoxNjI4ODIwODExfQ.i4UAyy2spAipBvECTtSC2Mbb3LbO_RTPGFpzMweUOX4"},
+      }
+    )
     .then((response) => {
       res.send(response.data);
       console.log(11111);
@@ -104,17 +129,32 @@ router.get("/", async function (req, res, next) {
 
 // 현재 일정 가져오기
 router.get("/getdaily/:date/current", async function (req, res, next) {
-  const arr = []
+  const arr = [];
   await axios
-    .get(`http://i5a109.p.ssafy.io:8079/schedule/daily/${req.params.date}`)
+    .get(
+      `http://i5a109.p.ssafy.io:8079/schedule/daily/${req.params.date}`,
+      {
+        headers:{access_token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiamJqIiwiaWF0IjoxNjI4ODIwODExfQ.i4UAyy2spAipBvECTtSC2Mbb3LbO_RTPGFpzMweUOX4"},
+      }
+    )
     .then((response) => {
       for (let i = 0; i < response.data.length; i++) {
-
-        response.data[i].date = moment(response.data[i].date).format("YYYYMMDD")
-        response.data[i].started_at = moment(response.data[i].started_at).format("YYYYMMDD HHmm")
-        response.data[i].finished_at = moment(response.data[i].finished_at).format("YYYYMMDD HHmm")
-        response.data[i].deadline_at = moment(response.data[i].deadline_at).format("YYYYMMDD HHmm")
-        response.data[i].notification = moment(response.data[i].notification).format("YYYYMMDD HHmm")
+        response.data[i].date = moment(response.data[i].date).format(
+          "YYYYMMDD"
+        );
+        response.data[i].started_at = moment(
+          response.data[i].started_at
+        ).format("YYYYMMDD HHmm");
+        response.data[i].finished_at = moment(
+          response.data[i].finished_at
+        ).format("YYYYMMDD HHmm");
+        response.data[i].deadline_at = moment(
+          response.data[i].deadline_at
+        ).format("YYYYMMDD HHmm");
+        response.data[i].notification = moment(
+          response.data[i].notification
+        ).format("YYYYMMDD HHmm");
         const startTime = Number(
           moment(response.data[i].started_at).format("HH")
         );
@@ -136,19 +176,19 @@ router.get("/getdaily/:date/current", async function (req, res, next) {
           currentTime < endTime &&
           response.data[i].is_finished === false
         ) {
-          arr.push(response.data[i])
+          arr.push(response.data[i]);
         } else if (
           currentTime === endTime &&
           currentMin <= endMin &&
           response.data[i].is_finished === false
         ) {
-          arr.push(response.data[i])
+          arr.push(response.data[i]);
         } else if (
           currentTime === startTime &&
           startMin <= currentMin &&
           response.data[i].is_finished === false
         ) {
-          arr.push(response.data[i])
+          arr.push(response.data[i]);
         }
       }
       arr.sort(function (a, b) {
@@ -157,11 +197,10 @@ router.get("/getdaily/:date/current", async function (req, res, next) {
           Number(moment(b.started_at).format("HHmm"))
         );
       });
-      if (arr.length === 0){
+      if (arr.length === 0) {
         res.send("현재 등록된 일정이 없습니다.");
-      }
-      else {
-        res.send(arr)
+      } else {
+        res.send(arr);
       }
       console.log(22222);
     })
@@ -174,7 +213,13 @@ router.get("/getdaily/:date/current", async function (req, res, next) {
 // 하루일정 가져오기 음성비서용
 router.get("/getdaily/secretary/:date", async function (req, res, next) {
   await axios
-    .get(`http://i5a109.p.ssafy.io:8079/schedule/daily/${req.params.date}`)
+    .get(
+      `http://i5a109.p.ssafy.io:8079/schedule/daily/${req.params.date}`,
+      {
+        headers: {access_token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiamJqIiwiaWF0IjoxNjI4ODIwODExfQ.i4UAyy2spAipBvECTtSC2Mbb3LbO_RTPGFpzMweUOX4"},
+      }
+    )
     .then((response) => {
       const arr = response.data;
       arr.sort(function (a, b) {
@@ -183,12 +228,14 @@ router.get("/getdaily/secretary/:date", async function (req, res, next) {
           Number(moment(b.started_at).format("HHmm"))
         );
       });
-      for (let i =0; i < arr.length; i++){
-        arr[i].date = moment(arr[i].date).format("YYYYMMDD")
-        arr[i].started_at = moment(arr[i].started_at).format("YYYYMMDD HHmm")
-        arr[i].finished_at = moment(arr[i].finished_at).format("YYYYMMDD HHmm")
-        arr[i].deadline_at = moment(arr[i].deadline_at).format("YYYYMMDD HHmm")
-        arr[i].notification = moment(arr[i].notification).format("YYYYMMDD HHmm")
+      for (let i = 0; i < arr.length; i++) {
+        arr[i].date = moment(arr[i].date).format("YYYYMMDD");
+        arr[i].started_at = moment(arr[i].started_at).format("YYYYMMDD HHmm");
+        arr[i].finished_at = moment(arr[i].finished_at).format("YYYYMMDD HHmm");
+        arr[i].deadline_at = moment(arr[i].deadline_at).format("YYYYMMDD HHmm");
+        arr[i].notification = moment(arr[i].notification).format(
+          "YYYYMMDD HHmm"
+        );
       }
       res.send(arr);
       console.log(22222);
@@ -203,7 +250,13 @@ router.get("/getdaily/secretary/:date", async function (req, res, next) {
 // 하루일정 가져오기
 router.get("/getdaily/:date", async function (req, res, next) {
   await axios
-    .get(`http://i5a109.p.ssafy.io:8079/schedule/daily/${req.params.date}`)
+    .get(
+      `http://i5a109.p.ssafy.io:8079/schedule/daily/${req.params.date}`,
+      {
+        headers: {access_token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiamJqIiwiaWF0IjoxNjI4ODIwODExfQ.i4UAyy2spAipBvECTtSC2Mbb3LbO_RTPGFpzMweUOX4"},
+      }
+    )
     .then((response) => {
       const arr = response.data;
       arr.sort(function (a, b) {
@@ -224,9 +277,14 @@ router.get("/getdaily/:date", async function (req, res, next) {
 
 //일정 가져오기
 router.get("/:id", async function (req, res, next) {
-
   await axios
-    .get(`http://i5a109.p.ssafy.io:8079/schedule/${req.params.id}`)
+    .get(
+      `http://i5a109.p.ssafy.io:8079/schedule/${req.params.id}`,
+      {
+        headers:{access_token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiamJqIiwiaWF0IjoxNjI4ODIwODExfQ.i4UAyy2spAipBvECTtSC2Mbb3LbO_RTPGFpzMweUOX4"},
+      }
+    )
     .then((response) => {
       res.send(response.data);
       console.log(response.data);
