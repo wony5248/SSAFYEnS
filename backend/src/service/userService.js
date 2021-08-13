@@ -127,14 +127,9 @@ exports.createUser = function (req) {
 exports.findId = function (req) {
   return new Promise(async function (resolve, reject) {
     try {
-      console.log("This is findId req.query:", req.query);
-      const where = {
-        name: req.query.name,
-        email: req.query.email,
-      };
       const data = await db["users"].findAll({
         attributes: ["user_id"],
-        where: where,
+        where: req.body,
       });
       if (!data.length) {
         // if no user
@@ -156,14 +151,14 @@ exports.findId = function (req) {
 exports.validatePasswordRenew = function (req, res) {
   return new Promise(async function (resolve, reject) {
     try {
-      console.log("This is validatePasswordRenew req.query:", req.query);
-      const where = {
-        name: req.query.name,
-        user_id: req.query.user_id,
-        email: req.query.email,
-      };
+      // console.log("This is validatePasswordRenew req.query:", req.query);
+      // const where = {
+      //   name: req.query.name,
+      //   user_id: req.query.user_id,
+      //   email: req.query.email,
+      // };
       const data = await db["users"].findOne({
-        where: where,
+        where: req.body,
       });
       console.log("This is validatePasswordRenew data:", data);
       // 정보에 해당하는 회원이 없는 경우
@@ -221,44 +216,41 @@ exports.updatePassword = function (req, res) {
 
 exports.login = function (req, res) {
   return new Promise(async function (resolve, reject) {
-    try {
-      console.log("This is login req.body:", req.body);
-      const user = await db["users"].findOne({
-        where: {
-          user_id: req.body.user_id,
-        },
-      });
+
+    console.log("This is login req.body:", req.body);
+    const { user_id } = req.body
+
+    db["users"].findOne({where: { user_id }})
+    .then((user) => {
       console.log("This is login user:", user);
+
       // 해당 user_id 없으면 에러
       if (user == null) {
         console.log("User not found");
-        return reject(error);
-      }
-      const passwordIsValid = bcrypt.compareSync(
-        req.body.password,
-        user.password
-      );
-      console.log("This is login passwordIsValid:", passwordIsValid);
-      // password 결과 안 맞으면 에러 내용 필요
-      if (!passwordIsValid) {
+        return reject();
+      // 비밀번호 안 맞으면 에러
+      } else if (!bcrypt.compareSync(req.body.password,user.password)) {
         console.log("Password is not valid");
-        return reject(error);
+        return reject();
+      } else {
+        console.log('test')
+        const token = jsonwebtoken.sign(
+          { user_id: user.user_id }, // payload
+          config.secret || "secret", // secretkey // config 작동 안하는 것으로 확인
+          { expiresIn: config.expiresIn || 86400 } // 유효기간 정함. 해당 시간이 넘으면 나중에 verify할 때 오류 발생
+        )
+        console.log("This is login token:", token);
+        
+        const data = {
+          user_id: user.user_id,
+          access_token: token,
+        };
+        console.log("This is login data:", data);
+        return resolve(data);
       }
-      const token = jsonwebtoken.sign(
-        { user_id: user.user_id }, // payload
-        config.secret || "secret", // secretkey // config 작동 안하는 것으로 확인
-        { expiresIn: config.expiresIn || 86400 } // 유효기간 정함. 해당 시간이 넘으면 나중에 verify할 때 오류 발생
-      );
-      console.log("This is login token:", token);
-      const data = {
-        user_id: user.user_id,
-        access_token: token,
-      };
-      console.log("This is login data:", data);
-      return resolve(data);
-    } catch (error) {
-      return reject(error);
-    }
+    })
+    .catch((error) => { return reject(error); });
+
   });
 };
 
@@ -324,8 +316,7 @@ exports.getUserById = function (req, res, next) {
       console.log("This is getUserById user:", user)
       if (user == null) {
         // 401 에러로 올릴 필요
-        console.log("User not found")
-        return reject()
+        return reject("User not found")
       }
 
       // mytrophies, mygroups
@@ -382,7 +373,7 @@ exports.updateUserById = function (req, res, next) {
           name,
           email,
           cellphone,
-          password,
+          password: crypt.hashSync(req.body.password, 8),
           exp,
           created_at,
           is_admin,
@@ -394,7 +385,7 @@ exports.updateUserById = function (req, res, next) {
           },
         }
       )
-      .then((data) => {
+      .then(() => {
         db["users"]
           .findOne({ where: { user_id } })
           .then((data) => {
@@ -420,22 +411,29 @@ exports.deleteUserById = function (req, res, next) {
 
     const { user_id } = req.params;
     console.log("This is deleteUserById user_id: ", user_id);
-    const user = await db["users"]
-      .destroy({
-        // WHERE
-        where: {
-          user_id: user_id,
-        },
+    
+    // user가 삭제될 때 외래키 관계된 것들이 삭제를 방지한다
+    // 현재로서는 usersmngroups, applicants, usersmntrophies가 있다.
+    
+    db["applicants"].destroy({ where: { user_id }})
+    .then(() => {
+      db["usersmngroups"].destroy({ where: { user_id }})
+      .then(() => {
+        db["usersmntrophies"].destroy({ where: { user_id }})
+        .then(() => {
+          db["users"].destroy({ where: { user_id }})
+          .then((data) => {
+            // console.log(data)
+            return resolve()
+          })
+
+        })
+
       })
-      .then((data) => {
-        console.log(data);
-        // 1
-        return resolve();
-      })
-      .catch((error) => {
-        console.log(error);
-        return reject(error);
-      });
+      
+    })
+    .catch((error) => { return reject(error)})
+
   });
 };
 

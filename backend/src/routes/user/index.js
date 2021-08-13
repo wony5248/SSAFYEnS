@@ -46,7 +46,7 @@ router.post("/", (req, res) => {
     });
 });
 
-router.get("/id", (req, res) => {
+router.post("/id", (req, res) => {
   user
     .findId(req)
     .then((data) => {
@@ -57,7 +57,7 @@ router.get("/id", (req, res) => {
     });
 });
 
-router.get("/password", (req, res) => {
+router.post("/password", (req, res) => {
   user
     .validatePasswordRenew(req, res)
     .then((data) => {
