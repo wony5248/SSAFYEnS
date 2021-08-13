@@ -314,24 +314,49 @@ exports.getUserById = function (req, res, next) {
 
     const { user_id } = req.params;
     db["users"]
-      .findOne({
-        where: { 
-          user_id: user_id
-        }
+    .findOne({where: { user_id }})
+    .then((user) => {
+      console.log("This is getUserById user:", user)
+      if (user == null) {
+        // 401 에러로 올릴 필요
+        console.log("User not found")
+        return reject()
+      }
+
+      // mytrophies, mygroups
+      user.getTrophies() 
+      .then((trophies) => {
+        mytrophies = trophies.map(datum => {  
+          const { trophy_id, title, context, is_hidden, exp, img, created_at, updated_at, usersmntrophies } = datum;
+          // console.log({ trophy_id, title, context, is_hidden, exp, img, created_at, updated_at, trophy_id: usersmntrophies.trophy_id, user_id: usersmntrophies.user_id, achieved_at: usersmntrophies.achieved_at })
+          return { trophy_id, title, context, is_hidden, exp, img, created_at, updated_at, trophy_id: usersmntrophies.trophy_id, user_id: usersmntrophies.user_id, achieved_at: usersmntrophies.achieved_at }
+        })
+        console.log("This is getUserById mytrophies:", mytrophies)
+        // mygroups
+        user.getGroups()
+        .then((groups) => {
+          mygroups = groups.map(group => {
+            const { group_id, name, context, pax, ranking, created_at, updated_at, usersmngroups } = group
+            return { group_id, name, context, pax, ranking, created_at, updated_at, joined_at: usersmngroups.joined_at, is_group_admin: usersmngroups.is_group_admin }
+          })
+          console.log("This is getUserById mygroups:", mygroups)
+
+          // user, mygroups, mytrophies 합체
+          const data = { ...user.toJSON(), mytrophies, mygroups}
+          return resolve(data)
+          
+        })
+        .catch((err) => { return reject(err); })
+
       })
-      .then((data) => {
-        console.log("This is getUserById data:", data)
-        if (data == null) {
-          // 401 에러로 올릴 필요
-          console.log("User not found")
-          return reject(error)
-        }
-        return resolve(data)
-      })
-      .catch((error) => {
-        console.log("Unknown Error", error)
-        return reject(error)
-      })
+      .catch((error) => {return reject(error)})
+
+
+    })
+    .catch((error) => {
+      console.log("Unknown Error", error)
+      return reject(error)
+    })
   })
 }
 
