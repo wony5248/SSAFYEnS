@@ -7,6 +7,7 @@ var moment = require("moment");
 var url = "i5a109.p.ssafy.io:8079"
 // 일정 추가
 router.post("/", async function (req, res, next) {
+  console.log(req.body)
   await axios
     .post(
       "http://i5a109.p.ssafy.io:8079/schedule",

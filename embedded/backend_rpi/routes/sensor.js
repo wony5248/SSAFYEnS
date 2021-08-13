@@ -3,7 +3,8 @@ var router = express.Router();
 const axios = require("axios");
 var fs = require("fs");
 var sensorData = [];
-
+var { PythonShell } = require("python-shell");
+var moment = require("moment")
 /*DB 에서 가져올 센서 값*/
 router.get("/", function (req, res, next) {
   //   res.send({ "temp": "36", "humid": "56", "noise": "168", "light": "32" });
@@ -24,6 +25,37 @@ router.post("/", function (req, res, next) {
   sensorData.push(req.body["light"]);
   console.log(sensorData);
   res.json(req.body);
+});
+
+router.post("/notification", function (req, res, next) {
+  console.log(req.body.arr);
+
+  for (let i = 0; i < req.body.arr.length; i++) {
+    var options = {
+      mode: "text",
+
+      pythonPath: "",
+
+      pythonOptions: ["-u"],
+
+      scriptPath: "",
+
+      args: [
+        req.body.arr[i].title,
+        req.body.arr[i].started_at,
+        req.body.arr[i].finished_at,
+        req.body.arr[i].notificationtime,
+      ],
+      encoding: 'utf8'
+    };
+    PythonShell.run("../hardware/notification1.py", options, function (err, msg) {
+      if (err) throw err;
+      let data = msg[2]
+      console.log(data)
+      // console.log("results: %j", msg)
+    });
+  }
+  
 });
 
 module.exports = router;

@@ -157,6 +157,7 @@ const Changecalendarlayout = (props) => {
   const [deadline, setDeadline] = useState("");
   const [title, setTitle] = useState("");
   const [context, setContext] = useState("");
+  const [notitime, setNotitime] = useState("")
   const [isfinished, setIsfinished] = useState(false);
   const [point, setPoint] = useState(0);
   const { id } = props;
@@ -201,7 +202,7 @@ const Changecalendarlayout = (props) => {
             }`,
             deadline_at: deadline,
             notification: null,
-            notificationtime: null,
+            notificationtime: notitime,
             title: title,
             context: context,
             point: point,
@@ -227,7 +228,7 @@ const Changecalendarlayout = (props) => {
             }`,
             deadline_at: deadline,
             notification: null,
-            notificationtime: null,
+            notificationtime: notitime,
             title: title,
             context: context,
             point: point,
@@ -254,6 +255,7 @@ const Changecalendarlayout = (props) => {
           setContext(data.context);
           console.log(data)
           setIsfinished(data.is_finished);
+          setNotitime(data.notificationtime)
           setPoint(data.point);
         })
         .catch((e) => {});
