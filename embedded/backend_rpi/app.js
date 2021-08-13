@@ -9,7 +9,8 @@ var app = express();
 // db.connect();
 
 var indexRouter = require('./routes/index');
-var testRouter = require('./routes/test');
+var scheduleRouter = require('./routes/schedule');
+var sensorRouter = require('./routes/sensor');
 
 
 
@@ -23,7 +24,8 @@ app.use(cors());
 
 
 app.use('/', indexRouter);
-app.use('/test', testRouter);
+app.use('/sensor', sensorRouter);
+app.use('/schedule', scheduleRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

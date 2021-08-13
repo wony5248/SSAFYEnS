@@ -2,7 +2,7 @@ import React from "react";
 import Mannerbtn from "./styles";
 import SwitchStyle from "./switch";
 import styled from "styled-components";
-import MicOffIcon from '@material-ui/icons/MicOff';
+import DeveloperModeIcon from '@material-ui/icons/DeveloperMode';
 const Mannerdiv = styled.div`
   height: 19%;
   padding: 0 8px;
@@ -14,11 +14,11 @@ const Mannerdiv = styled.div`
 `;
 
 const Button = (props) => {
-  const { btnName } = props;
+  const { btnName, isdark } = props;
 
   return (
-    <Mannerbtn>
-      <Mannerdiv><MicOffIcon />{btnName}</Mannerdiv>
+    <Mannerbtn isdark = {isdark}>
+      <Mannerdiv><DeveloperModeIcon />{btnName}</Mannerdiv>
         <SwitchStyle></SwitchStyle>
     </Mannerbtn>
   );

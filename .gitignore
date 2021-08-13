@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 embedded/backend/node_modules
 embedded/frontend_rpi/node_modules
 embedded/frontend_rpi/package-lock.json
@@ -6,10 +6,11 @@ embedded/frontend_rpi/package-lock.json
 node_modules/
 node_modules
 .gitignore
-<<<<<<< HEAD
+
+
+
 README.md
-=======
->>>>>>> embedded-FS-axios
+
 dist/*
 =======
 # Editor : KJH

@@ -3,18 +3,19 @@ import Layout from "../../layout";
 import axios from "axios";
 import styled from "styled-components";
 import moment from "moment";
+import { useUserContext } from "../../context";
+import 'moment/locale/ko';
 
 const Todaycontainer = styled.div`
   overflow: auto;
   width: auto;
-  height: 97.1%;
+  height: 97.2%;
   color: #a3cca3;
-  background-color: white;
-  border: 1px solid #a3cca3;
-  margin: 0px;
-  padding-top: 1%;
+  padding-top: 14px;
   padding-right: 12px;
   padding-left: 12px;
+  padding-bot: 14px;
+  margin: 0px;
   padding-bottom: 1%;
 `;
 const Todaytitle = styled.div`
@@ -24,9 +25,9 @@ const Todaytitle = styled.div`
   border-radius: 4px;
   justify-content: space-around;
   width: auto;
+  color: white;
   height: 20%;
-  color: #a3cca3;
-  background-color: #a3cca3;
+  background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
   margin-bottom: 14px;
   padding: 0px;
 `;
@@ -36,8 +37,6 @@ const Todaytitlenamecon = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white;
-  background-color: #a3cca3;
   margin: 0px 16px;
   padding-top: 4px;
 `;
@@ -46,8 +45,6 @@ const Todaygoal = styled.div`
   height: 20%;
   display: flex;
   align-items: center;
-  color: white;
-  background-color: #a3cca3;
   margin: 0px 16px;
   padding-top: 4px;
 `;
@@ -55,18 +52,14 @@ const Todaygoal = styled.div`
 const Todaytitlename = styled.div`
   width: auto;
   height: 100%;
-  color: white;
   display: flex;
   align-items: center;
-  background-color: #a3cca3;
   padding-top: 4px;
 `;
 
 const Todaytitletime = styled.div`
   width: auto;
   height: 100%;
-  color: white;
-  background-color: #a3cca3;
   padding-top: 4px;
 `;
 
@@ -76,8 +69,6 @@ const Todaychangecon = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white;
-  background-color: #a3cca3;
   margin: 0px 16px;
 `;
 
@@ -86,28 +77,31 @@ const Todaychangebtn = styled.button`
   height: 60%;
   border-radius: 8px;
   border: 0px;
-  color: white;
   display: flex;
   align-items: center;
+  cursor: pointer;
+  background-color: ${(props) =>
+    props.isdark === true ? "#424242" : "#69a569"};
+  color: white;
   justify-content: center;
-  background-color: #69a569;
   padding: 4px;
 `;
-
+const Nodiv = styled.div`
+  color : ${props => props.isdark ? "white" : "#121212"}; 
+`;
 const Todaylayout = () => {
   const [itemList, setItemList] = useState([]);
+  const { isdarked } = useUserContext();
   useEffect(() => {
     async function loadCalendar() {
-      console.log(moment().format("YYYYMMDD"));
       await axios
         .get(
-          `http://127.0.0.1:4500/test/getdaily/${moment().format("YYYYMMDD")}`
+          `http://127.0.0.1:4500/schedule/getdaily/${moment().format(
+            "YYYYMMDD"
+          )}`
         )
         .then(({ data }) => {
-          console.log(data);
-          setItemList(data.data);
-          // console.log(data.data);
-          console.log(itemList);
+          setItemList(data);
         })
         .catch((e) => {});
     }
@@ -120,9 +114,9 @@ const Todaylayout = () => {
   return (
     <Todaycontainer>
       {itemList.length !== 0 ? (
-        <div style={{height: "100%"}}>
+        <div style={{ height: "100%" }}>
           {itemList.map((item) => (
-            <Todaytitle>
+            <Todaytitle isdark={isdarked}>
               <Todaytitlenamecon>
                 <Todaytitlename>일정 제목</Todaytitlename>
                 <Todaytitletime>
@@ -131,19 +125,43 @@ const Todaylayout = () => {
                 </Todaytitletime>
               </Todaytitlenamecon>
               <Todaygoal>{item.title}</Todaygoal>
-              <Todaychangecon>
-                <Todaytitlename>{item.context}</Todaytitlename>
-                <Todaychangebtn
-                  onClick={() => window.location.replace(`/Rating/${item.id}`)}
-                >
-                  완료
-                </Todaychangebtn>
-              </Todaychangecon>
+
+              {item.is_finished ? (
+                <Todaychangecon>
+                  <Todaytitlename style={{ width: "500px" }}>
+                    {item.context}
+                  </Todaytitlename>
+                  <Todaytitlename>이미 완료된 일정입니다.</Todaytitlename>
+                </Todaychangecon>
+              ) : (
+                <Todaychangecon>
+                  <Todaytitlename>{item.context}</Todaytitlename>
+                  <Todaychangebtn
+                    isdark={isdarked}
+                    onClick={() =>
+                      window.location.replace(`/Rating/${item.schedule_id}`)
+                    }
+                  >
+                    완료
+                  </Todaychangebtn>
+                </Todaychangecon>
+              )}
             </Todaytitle>
           ))}
         </div>
       ) : (
-        <div style={{height: "100%", display:"flex", justifyContent:"center", alignItems:"center",fontSize:"40px", color:"#121212"}}>등록된 오늘 일정이 없습니다.</div>
+        <Nodiv
+          isdark={isdarked}
+          style={{
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: "40px",
+          }}
+        >
+          등록된 오늘 일정이 없습니다.
+        </Nodiv>
       )}
     </Todaycontainer>
   );
