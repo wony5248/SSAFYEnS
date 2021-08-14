@@ -143,8 +143,8 @@ const Create = (props) => {
       if (window.confirm("정말 생성하시겠 습니까?")) {
         await groupAPI
           .addGroup(title, context)
-          .then(({ data }) => {})
-          .catch((e) => {});
+          .then(({ data }) => {window.alert("그룹이 생성되었습니다.")})
+          .catch((e) => {window.alert("생성에 실패하였습니다.")});
         window.location.href = "/group";
       }
       else {

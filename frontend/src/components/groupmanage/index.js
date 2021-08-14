@@ -5,7 +5,7 @@ import styled1 from "styled-components";
 import { styled, makeStyles } from "@material-ui/styles";
 import { Divider } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
-import Create from "../challengecreate";
+import Create from "../groupchange";
 import { groupAPI } from "../../utils/axios";
 import moment from "moment";
 const columns = [
@@ -246,11 +246,11 @@ const Groupmanage = (props) => {
               뒤로 가기
             </Challengebtn>
             <GroupNamediv>{title}</GroupNamediv>
-            <Challengebtn onClick={openCreateModal}>챌린지 만들기</Challengebtn>
+            <Challengebtn onClick={openCreateModal}>그룹 정보 변경</Challengebtn>
           </Grouptitlediv>
           <Joineddiv>
             <Availablediv>그룹 구성원</Availablediv>
-            <Create open={createopen} close={closeCreateModal} />
+            <Create open={createopen} close={closeCreateModal} groupid={id} />
             <Challengebtn onClick={openCreateModal}>그룹 삭제</Challengebtn>
           </Joineddiv>
           <div style={{ height: 400, width: "100%" }}>

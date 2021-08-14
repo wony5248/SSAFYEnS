@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Wrapper from "./styles";
 import Join from "../groupjoin";
 import { groupAPI } from "../../utils/axios";
+import Create from "../groupchange"
 const Topdiv = styled.div`
   display: flex;
   justify-content: space-between;
@@ -158,6 +159,7 @@ const Groupinfo = (props) => {
   const [joinopen, setJoinopen] = useState(false);
   const [title, setTitle] = useState("");
   const [context, setContext] = useState("");
+  const [createopen, setCreateopen] = useState(false);
   const openCreateModal = () => {
     setJoinopen(true);
   };
@@ -413,6 +415,7 @@ const Groupinfo = (props) => {
               </Secondcontent>{" "}
               <Secondcontent>
                 <Titlediv> 그룹 소개 </Titlediv>{" "}
+                <Create open={createopen} close={closeCreateModal} groupid={id} />
                 <Secondrightdiv>{context}</Secondrightdiv>{" "}
                 <Joinbtn
                   onClick={() => window.alert("이미 이 그룹의 일원입니다.")}

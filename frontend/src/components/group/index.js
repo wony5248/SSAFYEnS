@@ -6,7 +6,7 @@ import { styled, makeStyles } from "@material-ui/styles";
 import { Divider } from "@material-ui/core";
 import Create from "../groupcreate";
 import axios from "axios";
-import { groupAPI } from "../../utils/axios";
+import { groupAPI, userAPI } from "../../utils/axios";
 const columns = [
   {
     field: "group_id",
@@ -134,7 +134,8 @@ const Group = () => {
   const [createopen, setCreateopen] = useState(false);
   const [select, setSelect] = useState([]);
   const [select2, setSelect2] = useState([]);
-  const [row, setRow] = useState([]);
+  const [possiblegroup, setPossiblegroup] = useState([]);
+  const [joinedgroup, setJoinedgroup] = useState([])
   const [isleader, setIsleader] = useState(false);
   const openCreateModal = () => {
     setCreateopen(true);
@@ -177,24 +178,37 @@ const Group = () => {
           for (let i = 0; i < data.length; i++) {
             data[i].id = data[i].group_id;
           }
-          setRow(data);
+          setPossiblegroup(data);
+        })
+        .catch((e) => {});
+    }
+    async function loadUserInfo() {
+      await userAPI
+        .mypage(window.sessionStorage.getItem("id"))
+        .then(({ data }) => {
+          console.log(data)
+          for (let i = 0; i < data.mygroups.length; i++) {
+            data.mygroups[i].id = data.mygroups[i].group_id;
+          }
+          setJoinedgroup(data.mygroups)
         })
         .catch((e) => {});
     }
     loadGroup();
+    loadUserInfo();
   }, []);
   return (
     <div>
       <Wrapper>
         <Joineddiv>
-          <Availablediv>가입 가능한 그룹</Availablediv>
+          <Availablediv>모든 그룹</Availablediv>
           <Create open={createopen} close={closeCreateModal} />
           <Joinedbtn onClick={openCreateModal}>그룹 생성</Joinedbtn>
         </Joineddiv>
 
         <div style={{ height: 400, width: "100%" }}>
           <Muidatagrid
-            rows={row}
+            rows={possiblegroup}
             columns={columns}
             pageSize={5}
             onSelectionModelChange={(itm) => setSelect(itm)}
@@ -231,7 +245,7 @@ const Group = () => {
           </Joineddiv>
           <div style={{ height: 400, width: "100%" }}>
             <Muidatagrid
-              rows={row}
+              rows={joinedgroup}
               columns={columns}
               pageSize={5}
               onSelectionModelChange={(itm) => setSelect2(itm)}
