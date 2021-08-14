@@ -98,6 +98,7 @@ const Fulldiv = styled.div`
 const Completebtn = styled.button`
   border: none;
   color: white;
+  margin-left: 16px;
   border-radius: 8px;
   background-color: ${(props) =>
     props.isdark === true ? "#424242" : "#69a569"};
@@ -200,9 +201,7 @@ const Progresslayout = () => {
                       {moment(item.notificationtime).format("HH:mm")}
                     </Progressdeadline>
                   ) : (
-                    <Progressdeadline>
-                      등록된 알람이 없습니다.
-                    </Progressdeadline>
+                    <Progressdeadline>등록된 알람이 없습니다.</Progressdeadline>
                   )}
                 </div>
                 <div
@@ -225,6 +224,14 @@ const Progresslayout = () => {
                   {item.context}
                 </Progresscontent>
                 <Btndiv>
+                  <Completebtn
+                    isdark={isdarked}
+                    onClick={() =>
+                      window.location.replace(`/Change/${item.schedule_id}`)
+                    }
+                  >
+                    변경
+                  </Completebtn>
                   <Completebtn
                     isdark={isdarked}
                     onClick={() =>

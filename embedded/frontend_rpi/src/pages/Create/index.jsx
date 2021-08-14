@@ -4,7 +4,7 @@ import styled1 from "styled-components";
 import axios from "axios";
 import moment from "moment";
 import { useUserContext } from "../../context";
-import 'moment/locale/ko';
+import "moment/locale/ko";
 
 const Changeselect = styled1.select`
   width: 15%;
@@ -69,14 +69,16 @@ const Btndiv = styled1.div`
 `;
 const Addbtn = styled1.button`
     background-color: #a3cca3;
-    background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
+    background-color: ${(props) =>
+      props.isdark === true ? "gray" : "#a3cca3"};
     color: white;
     border: none;
     border-radius: 8px;
     height:100%;
     width: 150px;
     &:hover{
-        background-color: ${(props) => (props.isdark === true ? "#c9c9c9" : "#69a569")};
+        background-color: ${(props) =>
+          props.isdark === true ? "#c9c9c9" : "#69a569"};
     }
 `;
 const Changeendtext = styled1.div`
@@ -88,11 +90,11 @@ const Changecalendarlayout = () => {
   const [starttime, setStarttime] = useState("");
   const [endtime, setEndtime] = useState("");
   const [deadline, setDeadline] = useState("");
-  const [notitime, setNotitime] = useState("");
+  const [notitime, setNotitime] = useState(null);
   const [title, setTitle] = useState("");
   const [context, setContext] = useState("");
   const [startarr, setStartarr] = useState([]);
-
+  const [notiarr, setNotiarr] = useState([]);
   const [titlearr, setTitlearr] = useState([]);
   const [contextarr, setContextarr] = useState([]);
 
@@ -107,20 +109,24 @@ const Changecalendarlayout = () => {
   };
   const handlenotiChange = (event) => {
     setNotitime(event.target.value);
+    if (event.target.value[0] + event.target.value[1] === "설정") {
+      setNotitime(null);
+    }
   };
   const handletitleChange = (event) => {
     setTitle(event.target.value);
-    console.log(event.target.value)
+    console.log(event.target.value);
   };
   const handlecontextChange = (event) => {
     setContext(event.target.value);
-    console.log(event.target.value)
+    console.log(event.target.value);
   };
   const Confirm = async () => {
     const starthour = Number(`${starttime[0]}${starttime[1]}`);
     const startmin = Number(`${starttime[2]}${starttime[3]}`);
     const endhour = Number(`${endtime[0]}${endtime[1]}`);
     const endmin = Number(`${endtime[2]}${endtime[3]}`);
+    console.log(notitime);
     if (starthour < endhour) {
       if (window.confirm("생성하시겠 습니까?")) {
         await axios
@@ -135,9 +141,11 @@ const Changecalendarlayout = () => {
             deadline_at: `${moment().format("YYYYMMDD")} ${
               deadline[0] + deadline[1] + deadline[2] + deadline[3]
             }`,
-            notificationtime: `${moment().format("YYYYMMDD")} ${
-              notitime[0] + notitime[1] + notitime[2] + notitime[3]
-            }`,
+            notificationtime: notitime
+              ? `${moment().format("YYYYMMDD")} ${
+                  notitime[0] + notitime[1] + notitime[2] + notitime[3]
+                }`
+              : null,
             is_finished: false,
             month: `${moment().format("MM")}`,
             year: `${moment().format("YYYY")}`,
@@ -170,7 +178,9 @@ const Changecalendarlayout = () => {
               deadline[0] + deadline[1] + deadline[2] + deadline[3]
             }`,
             notificationtime: `${moment().format("YYYYMMDD")} ${
-              notitime[0] + notitime[1] + notitime[2] + notitime[3]
+              notitime
+                ? notitime[0] + notitime[1] + notitime[2] + notitime[3]
+                : null
             }`,
             is_finished: false,
             month: `${moment().format("MM")}`,
@@ -218,7 +228,9 @@ const Changecalendarlayout = () => {
     ]);
     const rendering = () => {
       const result = [];
+      const result2 = [];
       result.push("시간");
+      result2.push("설정 안함");
       for (let i = 0; i < 24; i++) {
         if (i < 10) {
           result.push(`0${i}:00`);
@@ -228,7 +240,17 @@ const Changecalendarlayout = () => {
           result.push(`${i}:30`);
         }
       }
+      for (let i = 0; i < 24; i++) {
+        if (i < 10) {
+          result2.push(`0${i}:00`);
+          result2.push(`0${i}:30`);
+        } else {
+          result2.push(`${i}:00`);
+          result2.push(`${i}:30`);
+        }
+      }
       setStartarr(result);
+      setNotiarr(result2);
     };
 
     rendering();
@@ -302,7 +324,7 @@ const Changecalendarlayout = () => {
           value={notitime}
           onChange={handlenotiChange}
         >
-          {startarr.map((item) => (
+          {notiarr.map((item) => (
             <Changeoption
               isdark={isdarked}
               value={item[0] + item[1] + item[3] + item[4]}
