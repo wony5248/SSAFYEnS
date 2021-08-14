@@ -31,9 +31,11 @@ const Header = props=>{
                 await userAPI.logout();
                 setLogin(false);
                 window.sessionStorage.clear();
+                window.location.href = "/"
                 alert('정상적으로 로그아웃되었습니다.');
             }catch(error){
                 // logout 실패
+                console.log(error);
                 console.log('로그아웃 실패');
             }
             

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Wrapper from "./styles";
 import CloseIcon from "@material-ui/icons/Close";
 import { TextareaAutosize } from "@material-ui/core";
+import { groupAPI } from "../../utils/axios";
 const Headdiv = styled.div`
   width: 100%;
   height: 60px;
@@ -20,6 +21,7 @@ const Bodydiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   color: white;
 `;
 const Titlediv = styled.div`
@@ -93,7 +95,7 @@ const Texttitle = styled.textarea`
   justify-content: space-between;
   align-items: center;
   color: black;
-  padding:8px 2.5%;
+  padding: 8px 2.5%;
   &:focus {
     outline: none;
   }
@@ -114,34 +116,69 @@ const Createbtn = styled.button`
   }
 `;
 const Create = (props) => {
-  const { open, close } = props;
+  const { open, close, groupid } = props;
+  const [groupinfo, setGroupinfo] = useState([]);
+  const [title, setTitle] = useState("");
+  const [context, setContext] = useState("");
+  const handleContext = (e) => {
+    setContext(e.target.value);
+    console.log(e.target.value);
+  };
+  const handleTitle = (e) => {
+    setTitle(e.target.value);
+    console.log(e.target.value);
+  };
+  const handleChange = async () => {
+    await groupAPI
+      .updateGroup(groupid, title, context)
+      .then(() => {window.alert("그룹정보가 변경되었습니다.")})
+      .catch((e) => {window.alert("변경에 실패하였습니다.")});
+      window.location.href = `/group/${groupid}/manage`
+  };
+  useEffect(() => {
+    async function loadGroupinfo() {
+      await groupAPI
+        .getGroup(groupid)
+        .then(({ data }) => {
+          console.log(data);
+          setTitle(data.name);
+          setContext(data.context);
+        })
+        .catch((e) => {});
+    }
+
+    loadGroupinfo();
+  }, []);
   return (
     <div>
       {open ? (
         <Wrapper>
           <Headdiv>
             <div></div>
-            <div>챌린지 생성</div>
+            <div>그룹 정보</div>
             <Closebtn onClick={close}>
               <CloseIcon></CloseIcon>
             </Closebtn>
           </Headdiv>
           <Bodydiv>
             <Titlediv>
-              <Rounddiv>챌린지 이름</Rounddiv>
-              <Texttitle></Texttitle>
-            </Titlediv>
-            <Titlediv>
-              <Rounddiv>챌린지 기간</Rounddiv>
-              <Texttitle></Texttitle>
+              <Rounddiv>그룹 이름</Rounddiv>
+              <Texttitle value={title} onChange={handleTitle}></Texttitle>
             </Titlediv>
             <Contentdiv>
               <Rounddiv>챌린지 내용</Rounddiv>
-              <Textcontent></Textcontent>
+              <Textcontent
+                multiline
+                rows={4}
+                value={context}
+                onChange={handleContext}
+                variant="outlined"
+              ></Textcontent>
             </Contentdiv>
             <Bottomdiv>
-              <Createbtn onClick={close}>생성</Createbtn>
+              <Createbtn onClick={handleChange}>변경</Createbtn>
             </Bottomdiv>
+            <Bottomdiv style={{ height: "0px" }}></Bottomdiv>
           </Bodydiv>
         </Wrapper>
       ) : null}
