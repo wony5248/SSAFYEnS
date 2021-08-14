@@ -5,6 +5,7 @@ const request = axios.create({
 //   baseURL: "http://127.0.0.1:8079",
   headers: {
     "content-type": "application/json;charset=UTF-8",
+    "access_token" : window.sessionStorage.getItem("token")
   },
 });
 
@@ -20,7 +21,7 @@ export const scheduleAPI = {
     },
     addSchedule:(title, started_at, deadline_at, date, notification)=>{
         return request.post('/schedule', {
-           date , title, context : 'test', started_at, deadline_at, notification, finished_at:deadline_at
+           date, title, context : 'test', started_at, deadline_at, notification, finished_at:deadline_at
         }
         ,{
             headers:{
