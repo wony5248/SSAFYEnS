@@ -2,10 +2,7 @@ const moment = require("moment");
 const db = require("../models");
 const op = require("sequelize").Op;
 const logic = require("../module/average")
-// exports.get_daily_$date$ = async (req, term) => {
-//   const schedules = await logic.getSchedules_unit(req, "day")
-//   return resolve(schedules)
-// };
+
 exports.get_daily_$date$ = function (req) {
   return new Promise(async function (resolve, reject) {
     try {
@@ -15,7 +12,6 @@ exports.get_daily_$date$ = function (req) {
       }
 
       const schedules = await logic.getSchedule_unit(req, "day");
-
       const result = { ...daily, schedules };
       return resolve(result);
 
@@ -85,7 +81,6 @@ exports.put_daily_$date$ = function (req) {
 exports.get_week_$date$ = function (req) {
   return new Promise(async function (resolve, reject) {
     try {
-
       console.log(` weekly 통계 결과를 조회합니다`, payload);
 
       const weekly = await logic.getAverage(req, "weekly")
@@ -94,7 +89,6 @@ exports.get_week_$date$ = function (req) {
       }
 
       const schedules = await logic.getSchedule_unit(req, "week");
-
       const result = { ...weekly, schedules };
       return resolve(result);
 
@@ -116,7 +110,6 @@ exports.get_month_$date$ = function (req) {
       }
 
       const schedules = await logic.getSchedule_unit(req, "month");
-
       const result = { ...weekly, schedules };
       return resolve(result);
 
@@ -137,7 +130,6 @@ exports.get_year_$date$ = function (payload) {
       }
 
       const schedules = await logic.getSchedule_unit(req, "year");
-
       const result = { ...weekly, schedules };
       return resolve(result);
 
