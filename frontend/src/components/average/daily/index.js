@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import { useLocation } from "react-router-dom";
 import {Grid,  Box, withStyles } from '@material-ui/core';
 import Wrapper from './styles';
 import Calendar from 'react-calendar';
@@ -9,8 +10,13 @@ import MicIcon from '@material-ui/icons/Mic';
 import OpacityIcon from '@material-ui/icons/Opacity';
 import {Thermometer} from 'react-feather';
 import Rating from '@material-ui/lab/Rating';
+import { scheduleAPI } from "../../../utils/axios";
+import moment from "moment";
 
 const Daily = () =>{
+    const location = useLocation();
+    const [query, setQuery] = useState("react");
+    const [data, setData] = useState([]);
     const [rating, setRating] = useState(0);
     const StyledRating = withStyles({
         iconFilled: {
@@ -40,6 +46,20 @@ const Daily = () =>{
     };
 
     const context = "test";
+
+    useEffect(() => {
+        let completed = false;
+    
+        async function getMonthlySchedule() {
+          const result = await scheduleAPI.getDailyAverage(moment(date).format('YYYY-MM-DD'));
+          setData(result.data);
+          console.log(result.data);
+        }
+        getMonthlySchedule();
+        return () => {
+          completed = true;
+        };
+      }, [query]);
 
     return(
         <Wrapper>
