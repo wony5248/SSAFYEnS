@@ -13,11 +13,12 @@ info:
     * ReqeustBody, Response는 모두 application/json으로 통일합니다.
     * 0806 합의로 daily, weekly, monthly, yearly에 변화가 생겼습니다
     * schedule의 내용(context)와 daily의 일간 평가(context)에 혼동이 자주 발생하는 것 같아 daily의 경우 daily_context로 변경하였습니다
-    * DELETE /average/daily/{date}는 삭제했습니다. 일간 평가(daily_context)를 지우고자 하는 경우 POST(사실 이거도 PUT이어야...)를 활용하세요.
+    * DELETE /average/daily/{date}는 삭제했습니다. 일간 평가(daily_context)를 지우고자 하는 경우 PUT을 활용하세요.
     * 0809 합의로 schedule notification은 일정 시작 전의 알림으로 간주합니다.
     * 마이페이지에서 "얻을 수 있는 트로피" 페이지 같은게 있으면 좋을 것 같습니다???
     * trophy와 관련된 API들이 변경되었습니다. `user/~~~~~`에서 `trophy/~~~~~~`로 모두 변경, 이동했습니다
-    * created_at고 updated_at은 POST/PUT requestBody로 보내시면 안 됩니다. 
+    * created_at과 updated_at은 POST/PUT requestBody로 보내시면 안 됩니다. sequelize에서 자동으로 넣는 값입니다
+    * sequelize에서는 세계협정표준시(UTC)포맷('2021-08-14T09:15:38.000Z')으로 저장/불러오기하기 때문에 moment로 변환해서 현지시각으로 변경해서 사용해야합니다. 참고로 초 단위 이하는 절사합니다. (일시적으로 보일 수는 있음)
   # termsOfService: http://swagger.io/terms/
   # contact:
   #   email: apiteam@swagger.io
@@ -33,6 +34,14 @@ servers:
 - url: https://i5a109.p.ssafy.io:8079
 - url: http://i5a109.p.ssafy.io:8079
 tags:
+- name: user
+  description: Operations about user
+- name: group
+  description: |-
+    * 그룹에 관한 내용입니다.
+- name: average
+  description: |-
+    * 통계를 위한 내용입니다
 - name: schedule
   description: Everything about your schedules
   # externalDocs:
@@ -40,16 +49,8 @@ tags:
   #   url: http://swagger.io
 # - name: store
 #   description: Access to Schedules
-- name: user
-  description: Operations about user
 - name: trophy
   description: Operations about trophy
-- name: average
-  description: |-
-    * 통계를 위한 내용입니다
-- name: group
-  description: |-
-    * 그룹에 관한 내용입니다.
   # externalDocs:
   #   description: Find out more about our store
   #   url: http://swagger.io
@@ -406,14 +407,16 @@ paths:
                   $ref: '#/components/schemas/user/properties/email'
       responses:
         200:
-          description: OK // 결과가 없으면 비어있는 JSON이 오게 됨
+          description: OK // 결과가 없으면 비어있는 []이 오게 됨
           content:
             application/json:
               schema:
-                properties:
-                  user_id:
-                    $ref: '#/components/schemas/user/properties/user_id'
-                
+                type: array
+                items:
+                  properties:
+                    user_id:
+                      $ref: '#/components/schemas/user/properties/user_id'
+                  
       
     
     
@@ -556,6 +559,9 @@ paths:
       tags:
       - user
       summary: Logs out current logged in user session
+      description: |-
+        * 현재 테스트용으로 jwt토큰에 든 값을 복호화하여 돌려줍니다
+        * 미들웨어를 거치지 않고 headers[access_token]에 직접적으로 접근합니다.
       operationId: logout
       responses:
         default:
@@ -572,10 +578,9 @@ paths:
       summary: Get user info by user_id
       operationId: getUserById
       description: |-
-        * (미적용) JWT토큰을 통해 본인인 경우에만 조회할 수 있다
+        * (미적용) JWT토큰을 통해 본인인 경우에만 조회할 수 있다?
         * mytrophies, mygroups
-        * mytrophies, mygroups에서는 본인의 획득,가입 시점도 제공하면 좋을 것같다
-        * 당연히? 회원이 소유한 트로피만 반환한다
+        * mytrophies, mygroups에서는 회원의 획득,가입 시점도 제공하면 좋을 것같다
       parameters:
       - in: path
         name: user_id
@@ -604,7 +609,15 @@ paths:
                       description: 회원이 속한 그룹만 반환한다
                       type: array
                       items:
-                        $ref: '#/components/schemas/group'
+                        allOf:
+                        - $ref: '#/components/schemas/group'
+                        - type: object
+                          properties:
+                            joined_at:
+                              type: string
+                              format: date-time
+                            is_group_admin:
+                              type: boolean
               
         400:
           description: Invalid user_id supplied
@@ -612,20 +625,24 @@ paths:
         404:
           description: User not found
           content: {}
-      security:
-      - JWT: []
+      # security:
+      # - JWT: []
       
     put:
       tags:
       - user
       summary: Update user
       description: |-
-        * This can only be done by the logged in user.
         * (미적용) 회원 본인만 접근할 수 있다
         * 현재 방식은 프론트엔드가 GET으로 갖고 온 정보에 변경될 내용만 override해서 json 형태로 보내주는 것임
-        * 합의사항 id는 수정할 수 없고, 이메일과 전화번호는 수정될 수 있다고 생각하여 수정가능 (FE)
+        * 합의 id는 수정할 수 없고, 이메일과 전화번호는 수정될 수 있다고 생각하여 수정가능 (FE)
+        * 이미 존재하는 이메일/전화번호 로 수정은 DB unique를 통해 방지함
         * BE에서는 들어오는 모든 정보를 수정토록 하였으므로, FE가 보내는 값이 중요...
-        * **password여기에서 수정하시면 안됩니다!!!** (취지상도 그렇고 귀찮아서 암호화 구현 안해놨어요)
+        * name, email, cellphone, password, exp만 업데이트할 수 있습니다
+        ---
+        * password여기에서 수정가능합니다. 아래는 무시하셔도 됩니다.
+        * password재설정과 로그인 후 수정은 다릅니다
+        * password여기에서 수정하시면 안됩니다!!! (취지상도 그렇고 귀찮아서 암호화 구현 안해놨어요)
       operationId: updateUserById
       parameters:
       - name: user_id
@@ -650,14 +667,15 @@ paths:
         404:
           description: User not found
           content: {}
-      security:
-      - JWT: []
+      # security:
+      # - JWT: []
       
     delete:
       tags:
       - user
       summary: Delete user
-      description: This can only be done by the logged in user.
+      description: |-
+        * 이미 존재하지 않는 user_id를 넣으면 400으로 돌려줍니다.
       operationId: deleteUserById
       parameters:
       - name: user_id
@@ -676,8 +694,8 @@ paths:
         404:
           description: User not found
           content: {}
-      security:
-      - JWT: []
+      # security:
+      # - JWT: []
       
   /user/{user_id}/exp/{add_exp}:  
     
@@ -686,8 +704,7 @@ paths:
       - user
       summary: Add exp to user
       description: |-
-        * This can only be done by the logged in user.
-        * 
+        * add_exp에 넣은 integer만큼 회원의 exp(경험치)가 증가합니다.
       operationId: addExpById
       parameters:
       - name: user_id
@@ -712,8 +729,8 @@ paths:
         404:
           description: User not found
           content: {}
-      security:
-      - JWT: []
+      # security:
+      # - JWT: []
       
     
       
@@ -1230,7 +1247,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/group'
+              properties:
+                name:
+                  $ref: '#/components/schemas/group/properties/name'
+                
+              # $ref: '#/components/schemas/group'
       responses:
         200:
           description: group updated
@@ -1929,6 +1950,9 @@ components:
         created_at:
           type: string
           format: date-time
+        updated_at:
+          type: string
+          format: date-time
           # example: '2021-07-24T06:38:22.326Z'
         # DB기준으로 M:M관계이기에 group에 포함하기보다는 get했을 때 query로 받아오는 방식 
         # members:
@@ -1947,12 +1971,7 @@ components:
         #             format: date-time
         #           is_groupadmin:
         #             type: boolean
-        
-    # 만들다보니 너무 더러워서 그냥 직접 requestBody에 작성
-    # creategroupdata:
-    #   allOf:
-    #   - $ref: "#/components/schemas/group/properties/name"
-    #   - $ref: "#/components/schemas/group/properties/context"
+
         
           
     trophy:
@@ -1978,18 +1997,26 @@ components:
           type: string
           description: 트로피의 픽토그램이나 이미지의 경로입니다(링크/파일 미정)
           format: url
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
       # mytrophy로 상속을 위해 필요..하지 않다 https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/
       # discriminator:
       #   propertyName: mytrophy
         
     mytrophy:
-      description: 'API 설계하면서 계속 쓰기 귀찮아서 이렇게 한 것일뿐, 실제로 DB에 이렇게 되어있지 않습니다'
+      description: |-
+        * 'API 설계하면서 계속 쓰기 귀찮아서 이렇게 한 것일뿐, 실제로 DB에 이렇게 되어있지 않습니다'
+        * trophies와 usermntrophies를 JOIN해서 가져옵니다
       allOf:
         - $ref: '#/components/schemas/trophy'
         - type: object
           properties:
-            is_achieved:
-              type: boolean
+            # is_achieved:
+            #   type: boolean
             achieved_at:
               type: string
               format: date-time
