@@ -9,7 +9,6 @@ const bcrypt = require("bcrypt");
 
 exports.getDuplicateCheckById = function (req, res, next) {
   return new Promise(async function (resolve, reject) {
-    // jwt 인증 확인 필요
 
     const { user_id } = req.params;
     db["users"]
@@ -19,7 +18,7 @@ exports.getDuplicateCheckById = function (req, res, next) {
         },
       })
       .then((data) => {
-        console.log("This is getDuplicateCheckById data:", data);
+        // console.log("This is getDuplicateCheckById data:", data);
         if (data == null) {
           // 못 찾은게 정상
           console.log("Id is available");
@@ -37,7 +36,6 @@ exports.getDuplicateCheckById = function (req, res, next) {
 
 exports.getDuplicateCheckByEmail = function (req, res, next) {
   return new Promise(async function (resolve, reject) {
-    // jwt 인증 확인 필요
 
     const { email } = req.params;
     db["users"]
@@ -65,7 +63,6 @@ exports.getDuplicateCheckByEmail = function (req, res, next) {
 
 exports.getDuplicateCheckByCellphone = function (req, res, next) {
   return new Promise(async function (resolve, reject) {
-    // jwt 인증 확인 필요
 
     const { cellphone } = req.params;
     db["users"]
@@ -262,6 +259,7 @@ exports.logout = function (req, res, next) {
     console.log(req.headers["x-access-token"]); // undefined
     console.log(req.headers["access_token"]); // swagger 기준 실제 jwt 값 나옴
 
+    // middleware 적용 전
     const payload = jsonwebtoken.verify(
       req.headers["access_token"],
       config.secret || "secret",
@@ -282,10 +280,9 @@ exports.logout = function (req, res, next) {
   });
 };
 
-// openAPI 설계엔 없었지만 추가...
 exports.getUserAll = function (req, res, next) {
   return new Promise(async function (resolve, reject) {
-    // jwt 인증 확인 필요
+    // admin 계정 확인 필요?
 
     db["users"]
       .findAll()
@@ -307,7 +304,8 @@ exports.getUserAll = function (req, res, next) {
 
 exports.getUserById = function (req, res, next) {
   return new Promise(async function (resolve, reject) {
-    // jwt 인증 확인 필요
+    // jwt 인증 확인 필요?
+    // if (!req.user_id) return reject("jwt must be provided");
 
     const { user_id } = req.params;
     db["users"]
@@ -325,7 +323,7 @@ exports.getUserById = function (req, res, next) {
         mytrophies = trophies.map(datum => {  
           const { trophy_id, title, context, is_hidden, exp, img, created_at, updated_at, usersmntrophies } = datum;
           // console.log({ trophy_id, title, context, is_hidden, exp, img, created_at, updated_at, trophy_id: usersmntrophies.trophy_id, user_id: usersmntrophies.user_id, achieved_at: usersmntrophies.achieved_at })
-          return { trophy_id, title, context, is_hidden, exp, img, created_at, updated_at, trophy_id: usersmntrophies.trophy_id, user_id: usersmntrophies.user_id, achieved_at: usersmntrophies.achieved_at }
+          return { trophy_id, title, context, is_hidden, exp, img, created_at, updated_at, achieved_at: usersmntrophies.achieved_at }
         })
         console.log("This is getUserById mytrophies:", mytrophies)
         // mygroups
@@ -358,13 +356,14 @@ exports.getUserById = function (req, res, next) {
 
 exports.updateUserById = function (req, res, next) {
   return new Promise(async function (resolve, reject) {
-    // jwt 인증 확인 필요
-    // jwt로 본인 계정을 수정하고 있는 것인지 확인 필요
-
     const { user_id } = req.params;
-    // const body = req.body  // 왜인지 모르지만 이걸 통째로 UPDATE문에 넣으면 작동 안 한다
-    const { name, email, cellphone, password, exp, created_at, is_admin } =
-      req.body;
+
+    // jwt 인증 확인 필요
+    // if (!req.user_id) return reject("jwt must be provided");
+    // jwt로 본인 계정을 수정하고 있는 것인지 확인 필요
+    // else if (req.user_id !== user_id) return reject("Only oneself can update their info")
+
+    const { name, email, cellphone, password, exp, created_at, is_admin } = req.body;
     // console.log(name, email, cellphone, password, exp, created_at, is_admin)
     const user = await db["users"]
       .update(
@@ -375,8 +374,8 @@ exports.updateUserById = function (req, res, next) {
           cellphone,
           password: bcrypt.hashSync(req.body.password, 8),
           exp,
-          created_at,
-          is_admin,
+          // created_at,
+          // is_admin,
         },
         {
           // WHERE
@@ -406,11 +405,14 @@ exports.updateUserById = function (req, res, next) {
 
 exports.deleteUserById = function (req, res, next) {
   return new Promise(async function (resolve, reject) {
-    // jwt 인증 확인 필요
-    // jwt로 본인 계정을 수정하고 있는 것인지 확인 필요
-
     const { user_id } = req.params;
     console.log("This is deleteUserById user_id: ", user_id);
+
+    // jwt 인증 확인 필요
+    // if (!req.user_id) return reject("jwt must be provided");
+    // jwt로 본인 계정을 수정하고 있는 것인지 확인 필요
+    // else if (req.user_id !== user_id) return reject("Only oneself can delete their info")
+
     
     // user가 삭제될 때 외래키 관계된 것들이 삭제를 방지한다
     // 현재로서는 usersmngroups, applicants, usersmntrophies가 있다.
@@ -423,8 +425,9 @@ exports.deleteUserById = function (req, res, next) {
         .then(() => {
           db["users"].destroy({ where: { user_id }})
           .then((data) => {
-            // console.log(data)
-            return resolve()
+            console.log(data)
+            if (!data) return reject("삭제된 user가 없습니다")
+            return resolve()  // data를 담으면 오류남
           })
 
         })
@@ -440,7 +443,10 @@ exports.deleteUserById = function (req, res, next) {
 exports.addExpById = function (req, res, next) {
   return new Promise(async function (resolve, reject) {
     // jwt 인증 확인 필요
-    // jwt로 본인 계정을 수정하고 있는 것인지 확인 필요..?
+    // if (!req.user_id) return reject("jwt must be provided");
+    // jwt로 본인 계정을 수정하고 있는 것인지 확인 필요
+    // else if (req.user_id !== user_id) return reject("Only oneself can update their info")
+
 
     const { user_id, add_exp } = req.params;
 
