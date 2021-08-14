@@ -52,7 +52,7 @@ function App() {
             //     Number(moment().format("HH")) &&
             //   Number(moment(data[i].notificationtime).format("mm")) ===
             //     Number(moment().format("mm"))
-            // ) {
+            // ) 
             arr.push({
               title: data[i].title,
               context: data[i].context,
