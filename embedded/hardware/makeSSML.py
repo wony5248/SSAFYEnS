@@ -1,9 +1,9 @@
 from datetime import datetime
 
 def make_text_ssml(text):
-    print_test = "<speak>"+text+"</speak>"
-    print(print_test)
-    return print_test
+    final_ssml = "<speak>"+text+"</speak>"
+    print(final_ssml)
+    return final_ssml
 
 def make_12_timeline(time):
     # time format: '20210811 0050'
@@ -12,13 +12,48 @@ def make_12_timeline(time):
     antepost = "오전"
     if hour >= 12:
         antepost = "오후"
-        hour = hour - 12
+        if hour > 12:
+            hour = hour - 12
     hour = '{0:02d}'.format(hour)
     min = '{0:02d}'.format(min)
 
     final_time = f"{hour}:{min}"
     return (final_time, antepost)
 
+def make_today_time():
+    cur = datetime.now()
+    year = cur.year
+    month = cur.month
+    day = cur.day
+    hour = cur.hour
+    min = cur.minute
+    antepost = "오전"
+    if hour >= 12:
+        antepost = "오후"
+        if hour > 12:
+            hour -= 12
+    default_ssml = f"""
+    현재 시각 <say-as interpret-as="date" format="yyyymmdd" detail="1">
+      {year}-{month}-{day}
+    </say-as> <break time="300ms"/> {antepost}
+    <say-as interpret-as="time" format="hms12">{hour}:{min}</say-as> 입니다.
+    """
+    return default_ssml
+
+def make_notification(data):
+    default_ssml = f"""
+    {data['title']} 일정 {data['option']} 알람입니다.
+    """
+    if data['startAt'] is not None and data['finishAt'] is not None:
+        default_ssml += f"""
+            시작 시간은
+            <say-as interpret-as="time" format="hms12">{data['startAt']}:{data['startAt']}</say-as>
+            <break time="300ms"/> 종료 시간은
+            <say-as interpret-as="time" format="hms12">{data['finishAt']}:{data['finishAt']}</say-as>
+            입니다.
+        """
+    default_ssml += make_today_time()
+    return make_text_ssml(default_ssml)
 
 def make_day_briefing(data):
     default_ssml = """
@@ -35,7 +70,7 @@ def make_day_briefing(data):
     for schedule in data:
         try:
             start = schedule['started_at']
-            finish = schedule['deadline_at']
+            finish = schedule['finished_at']
             todo_name = schedule['title']
             complete = schedule['is_finished']
             startHour = int(start[-4:-2])

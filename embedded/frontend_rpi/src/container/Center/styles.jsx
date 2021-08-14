@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 const Centerlayout = styled.div`
-  display: flex-row;
   flex-wrap: nowrap;
   width: 68%;
   height: 98.75%;
