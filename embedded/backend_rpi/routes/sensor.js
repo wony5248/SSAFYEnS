@@ -42,7 +42,7 @@ router.post("/notification", function (req, res, next) {
 
       pythonOptions: ["-u"],
 
-      scriptPath: "",
+      scriptPath: "../hardware",
 
       args: [
         "--title",
@@ -56,7 +56,7 @@ router.post("/notification", function (req, res, next) {
       ],
       encoding: 'utf8'
     };
-    PythonShell.run("../hardware/notification.py", options, function (err, msg) {
+    PythonShell.run("./notification.py", options, function (err, msg) {
       if (err) throw err;
       let data = msg
       console.log(data)
