@@ -1,9 +1,12 @@
 import React, {useState} from 'react';
+import { useLocation } from "react-router-dom";
 import {Button, TextField, Grid} from '@material-ui/core';
 import Wrapper from './styles';
 
-const CheckPassword = (props) =>{
-    const {id} = props;
+const CheckPassword = () =>{
+    const location = useLocation();
+    const clicked = false;
+    const id = location.pathname.split("/")[2];
     const [password, setPassword] = useState('');
     const handlePassword = (event) =>{
         setPassword(event.target.value);
@@ -29,7 +32,7 @@ const CheckPassword = (props) =>{
                 </Grid>
                 <Grid container justifyContent= 'center' style={{marginTop:'50px'}}>
                     <Button size = "large" style={{width:'120px', height:'60px', fontSize:20, marginTop:'5px', background:'#A3CCA3', fontWeight:'bold', color:'#ffffff'}}
-                    onClick={check}>확인</Button>
+                    onClick={clicked?null:check}>확인</Button>
                 </Grid>
             </form>
             

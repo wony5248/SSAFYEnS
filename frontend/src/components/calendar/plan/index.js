@@ -9,7 +9,7 @@ import {scheduleAPI} from '../../../utils/axios';
 const Plan = (props) =>{
     const { open, close } = props;
     const [state, setState] = useState({
-        alarmYES: true,
+        alarmYES: false,
     });
 
     const thisYear = moment().format('YY');
@@ -28,9 +28,14 @@ const Plan = (props) =>{
     const [title, setTitle] =useState('');
 
     const addSchedule = async () => {
-        const started_at = moment(`${moment().format('YYYY')}-${startMonth}-${startDay} ${startHour}:${startMin}`).format('YYYY-MM-DD hh:mm');
-        const deadline_at = moment(`${moment().format('YYYY')}-${endMonth}-${endDay} ${endHour}:${endMin}`).format('YYYY-MM-DD hh:mm');
-        const result = await scheduleAPI.addSchedule(title, started_at, deadline_at, moment().format('YYYY-MM-DD'));
+        const started_at = moment(`${moment().format('YYYY')}-${startMonth}-${startDay} ${startHour}:${startMin}`).format('YYYY-MM-DD HH:mm');
+        const deadline_at = moment(`${moment().format('YYYY')}-${endMonth}-${endDay} ${endHour}:${endMin}`).format('YYYY-MM-DD HH:mm');
+        try{
+            await scheduleAPI.addSchedule(title, started_at, deadline_at, moment().format('YYYY-MM-DD'), state.alarmYES);
+            alert('등록성공');
+        }catch(e){
+            alert(e);
+        }
     }
 
     const handleAlarm = (event) => {

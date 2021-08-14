@@ -182,7 +182,7 @@ const SignUp = () =>{
                                         </div>
                                         <div style={{marginLeft:'50px', marginTop:'10px'}}>
                                             {emailLabel?(
-                                            <TextField disabled type="text" label="" variant="outlined" id="outlined-basic" 
+                                            <TextField disabled type="email" label="" variant="outlined" id="outlined-basic" 
                                                     value = {email} onChange={handleEmail} style={{width:'300px'}}/>
                                             ):(
                                                 <TextField type="text" label="" variant="outlined" id="outlined-basic" 

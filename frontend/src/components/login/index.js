@@ -29,8 +29,8 @@ const Login = () =>{
                 await userAPI.login(id, password);
                 window.sessionStorage.setItem("islogin", JSON.stringify(true));
                 const result = await userAPI.mypage(id);
-                window.sessionStorage.setItem('id',JSON.stringify(result.data.user_id));
-                window.sessionStorage.setItem("username", JSON.stringify(result.data.name));
+                window.sessionStorage.setItem('id',result.data.user_id);
+                window.sessionStorage.setItem("username", result.data.name);
                 alert(`${window.sessionStorage.getItem("username")}님 환영합니다!`);
                 history.push('/');
             }catch(e){

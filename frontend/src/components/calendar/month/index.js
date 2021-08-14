@@ -119,15 +119,7 @@ const Month = () => {
                       height: "100px",
                       verticalAlign: "top",
                     }}
-                    onClick={() => {
-                      history.push({
-                        pathname: "/planlist",
-                        state: {
-                          month: days.format("MM"),
-                          day: days.format("DD"),
-                        },
-                      });
-                    }}
+                    onClick={() => {history.push(`/planlist/${days.format("YYYYMMDD")}`)}}
                   >
                     <Grid container direction="column">
                       <span>{days.format("D")}</span>
@@ -158,15 +150,7 @@ const Month = () => {
                       height: "100px",
                       verticalAlign: "top",
                     }}
-                    onClick={() => {
-                      history.push({
-                        pathname: "/planlist",
-                        state: {
-                          month: days.format("MM"),
-                          day: days.format("DD"),
-                        },
-                      });
-                    }}
+                    onClick={() => {history.push(`/planlist/${days.format("YYYYMMDD")}`)}}
                   >
                     <Grid container direction="column">
                       <span>{days.format("D")}</span>
