@@ -25,7 +25,7 @@ info:
 #   license:
 #     name: Apache 2.0
 #     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.2
+  version: 1.0.3
 # externalDocs:
 #   description: Find out more about Swagger
 #   url: http://swagger.io
@@ -35,7 +35,9 @@ servers:
 - url: http://i5a109.p.ssafy.io:8079
 tags:
 - name: user
-  description: Operations about user
+  description: |-
+    * 회원에 관한 내용입니다.
+    * 유일하게 다른 요청들과 달리 미들웨어를 통해 jwt 검사를 하지 않습니다.
 - name: group
   description: |-
     * 그룹에 관한 내용입니다.
@@ -51,6 +53,19 @@ tags:
 #   description: Access to Schedules
 - name: trophy
   description: Operations about trophy
+- name: challenge
+  description: |-
+    * 그룹에서 공동의 목표를 위해 실시하는 챌린지이며, 스케쥴의 모음입니다
+    * 더 많은 논의가 필요합니다.
+    * 챌린지를 각 그룹 멤버에게 할당하기
+      * 그룹에서 챌린지를 생성하면 그룹 구성원들에게 동일한 스케쥴을 생성할까요?
+      * 아니면 각 스케쥴에 회원들이 직접 챌린지를 할당하는 방법? (또는 반대로 챌린지에 스케쥴 할당)
+    * 새롭게 가입하는 그룹 구성원들에게도 그 스케쥴을 생성해줘야하는가?
+      * 생성해준다
+      * 생성하지 않는다
+    * 그 스케쥴의 시간은 어떻게 정할 것인가? (생성시 시간설정이 이미 다른 구성원의 스케쥴과 겹친다면?)
+      * 그룹 멤버들의 시간대를 모두 가져와서 빈 시간에만 넣을 수 있게 (이건 연산 너무 복잡함)
+    * schedule에 challenge_id 속성 추가가 필요합니다(allowNull true).
   # externalDocs:
   #   description: Find out more about our store
   #   url: http://swagger.io
@@ -258,6 +273,29 @@ paths:
                   $ref: '#/components/schemas/schedule'
       security:
       - JWT: []
+      
+      
+  /schedule/environment:
+    post:
+      summary: Upload environment
+      description: |-
+        * id 를 어떻게 나눌지 아직 고민중입니다
+          * serialnumber는 schedule에 해당되는 environment의 id 값을 따로 만들고 싶어서 넣었습니다.
+        * environment_id, created_at은 sequelize에서 자동으로 만드므로 요청 보낼때 넣지 마세요
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/environment'
+      responses:
+        200:
+          description: 'Successful'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/environment'
+        
+      
 
   /user/duplicatecheckid/{user_id}:
   
@@ -1511,7 +1549,36 @@ paths:
       security:
       - JWT: []          
       
-
+  /group/{group_id}/member/{user_id}:
+  
+    delete:
+      tags:
+      - group
+      summary: deletes members (for group admin/for member)
+      description: |-
+        * group_id에 해당하는 그룹의 user_id에 해당하는 회원을 강퇴/탈퇴합니다.
+        * 탈퇴가 되었다(가입신청자 명단에서 삭제)는 뜻으로 200을, 오류 발생시 400을 반환합니다.
+        * 그룹관리자나 user_id에 해당하는 회원만 실행할 수 있습니다.
+      operationId: deleteMemberById
+      parameters:
+      - in: path
+        required: true
+        name: group_id
+        schema:
+          $ref: '#/components/schemas/group/properties/group_id'
+      - in: path
+        required: true
+        name: user_id
+        schema:
+          $ref: '#/components/schemas/user/properties/user_id'
+      responses:
+        200:
+          description: 'Successful'
+        400:
+          description: 'Bad request'
+      security:
+      - JWT: []          
+      
       
   /trophy:
   
@@ -1639,7 +1706,33 @@ paths:
       security:
       - JWT: []
       
-      
+  /challenge:
+  
+    get:
+      tags:
+      - challenge
+      summary: get all challenges
+      description: |-
+        * asdf
+      operationId: getAllChallengeByGroupId
+      # parameters:
+      # - in: path
+      #   required: true
+      #   name: group_id
+      #   schema:
+      #     $ref: '#/components/schemas/group/properties/group_id'
+      responses:
+        200:
+          description: 'Successful'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/challenge'
+                  
+      security:
+      - JWT: []
       
 components:
 
@@ -1781,7 +1874,7 @@ components:
         #     $ref: '#/components/schemas/group'
           
     daily:
-      description: 하루 정리?하는 화면. JSON크기를 줄일 방법을 찾자.  / environment.created_at은 어느시점을 넣어놓을까
+      description: 하루 정리?하는 화면. JSON크기를 줄일 방법을 찾자.
       # required:
       # - date
       type: object
@@ -1824,7 +1917,7 @@ components:
         
           
     weekly:
-      description: 주간 내용을 보여주는데 주를 판별하는 방법은??? moment weekofyear를 사용할 수 있을 것 같다. / environment.created_at은 어느시점을 넣어놓을까
+      description: 주간 내용을 보여주는데 주를 판별하는 방법은??? moment weekofyear를 사용할 수 있을 것 같다.
       # required:
       # - week
       type: object
@@ -2023,8 +2116,17 @@ components:
         
     environment:
       type: object
-      description: 아직 센서의 측정값을 모르기 때문에 섣불리 하기 힘들다
+      description: |-
+        * 아직 센서의 측정값을 모르기 때문에 섣불리 하기 힘들다
+          * description에 단위도 표기하면 좋을 것 같다
+        * id를 어떻게 나눌지 고민 필요
       properties:
+        environment_id:
+          type: integer
+          description: 필요한가요?
+        serialnumber:
+          type: integer
+          description: schedule마다의 
         humidity:
           type: integer
           description: 습도
@@ -2037,10 +2139,36 @@ components:
         temperature:
           type: integer
           description: 온도
-        # created_at:
-        #   type: string
-        #   description: 측정된 시각
-        #   format: date-time
+        schedule_id:
+          $ref: '#/components/schemas/schedule/properties/schedule_id'
+        created_at:
+          type: string
+          description: 측정된 시각이 아니라 서버에 업로드된 시점으로 기록될 것 같음
+          format: date-time
+          
+    challenge:
+      type: object
+      description: |-
+        * tags description에 적어놓겠습니다(여기는 다들 안 보시는 듯ㅠ)
+      properties:
+        challenge_id:
+          type: integer
+        name:
+          type: string
+        expectstart_at:
+          type: string
+          format: date-time
+        deadline_at:
+          type: string
+          format: date-time
+        group_id:
+          $ref: '#/components/schemas/group/properties/group_id'
+        created_at:
+          type: string
+          format: date-time
+        
+      
+          
           
     error:
       type: object
