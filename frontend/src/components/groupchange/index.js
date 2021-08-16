@@ -115,6 +115,19 @@ const Createbtn = styled.button`
     background-color: #69a569;
   }
 `;
+const Duplicatebtn = styled.button`
+  height: 40px;
+  background-color: #a3cca3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border-radius: 8px;
+  border: none;
+  &:hover {
+    background-color: #69a569;
+  }
+`;
 const Create = (props) => {
   const { open, close, groupid } = props;
   const [groupinfo, setGroupinfo] = useState([]);
@@ -128,12 +141,39 @@ const Create = (props) => {
     setTitle(e.target.value);
     console.log(e.target.value);
   };
+  const [ischeck, setIscheck] = useState(false)
   const handleChange = async () => {
-    await groupAPI
-      .updateGroup(groupid, title, context)
-      .then(() => {window.alert("그룹정보가 변경되었습니다.")})
-      .catch((e) => {window.alert("변경에 실패하였습니다.")});
+    if(ischeck === true){
+      if (window.confirm("정말 변경하시겠 습니까?")) {
+        await groupAPI
+        .updateGroup(groupid, title, context)
+        .then(() => {window.alert("그룹정보가 변경되었습니다.")})
+        .catch((e) => {window.alert("변경에 실패하였습니다.")});
       window.location.href = `/group/${groupid}/manage`
+      }
+      else {
+
+      }
+    }
+    else {
+      window.alert("중복 확인을 진행해 주세요")
+    }
+    
+  };
+  const handleDuplicate = async (e) => {
+    await groupAPI
+      .validateGroupName(title)
+      .then(({ data }) => {
+        if (data.found === true){
+          window.alert("이미 존재하는 그룹명입니다.")
+          setIscheck(false)
+        }
+        else{
+          window.alert("이용 가능한 그룹명입니다.")
+          setIscheck(true)
+        }
+      })
+      .catch((e) => {});
   };
   useEffect(() => {
     async function loadGroupinfo() {
@@ -164,6 +204,7 @@ const Create = (props) => {
             <Titlediv>
               <Rounddiv>그룹 이름</Rounddiv>
               <Texttitle value={title} onChange={handleTitle}></Texttitle>
+              <Duplicatebtn onClick={handleDuplicate}>중복 확인</Duplicatebtn>
             </Titlediv>
             <Contentdiv>
               <Rounddiv>챌린지 내용</Rounddiv>

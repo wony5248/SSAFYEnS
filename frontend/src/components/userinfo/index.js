@@ -15,10 +15,8 @@ const Userinfo = () =>{
     const [data, setData] = useState([]);
     const [exp, setExp] = useState(0);
 
-    const [trophyList, setTrophy] = useState([{trophy_id:0, title:'현재 트로피가 없어요 ㅠㅠ...'}]);
-    const [groupList, setGroup] = useState([
-        {group_id:0, name:'그룹이 없어요 ㅠㅠㅠㅠ', ranking:'그룹에 가입해보세요 !'}
-    ]);
+    const [trophyList, setTrophy] = useState([]);
+    const [groupList, setGroup] = useState([]);
 
     const BorderLinearProgress = withStyles((theme) => ({
         root: {
@@ -60,8 +58,16 @@ const Userinfo = () =>{
                 );
                 setData(result.data);
                 setExp(result.data.exp);
-                setTrophy(result.data.mytrophies);
-                setGroup(result.data.mygroups);
+                if(result.data.mytrophies.length>0) {
+                    setTrophy(result.data.mytrophies);
+                }else{
+                    setTrophy([{trophy_id:0, title:'현재 트로피가 없습니다.'}]);
+                }
+                if(result.data.mygroups.length>0) {
+                    setGroup(result.data.mygroups);
+                }else{
+                    setGroup([{group_id:0, name:'가입한 그룹이 없습니다.', ranking:'그룹에 가입해보세요 !'}]);
+                }
             }catch (err) {
                 console.log(err);
             }

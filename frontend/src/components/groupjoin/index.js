@@ -117,10 +117,13 @@ const Join = (props) => {
           .applicantGroup(groupid, reason)
           .then(({ data }) => {
             console.log(data)
+            window.alert("가입 신청이 완료되었습니다.")
+            window.location.href=`/group/${groupid}`
           })
           .catch((e) => {console.log(e)});
         // window.location.href = `/group/${groupid}`;
       } else {
+        window.alert("가입 신청이 되지 않았습니다.")
       }
   };
 
