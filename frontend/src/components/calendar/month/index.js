@@ -18,7 +18,7 @@ const Month = () => {
 
   useEffect(() => {
     let completed = false;
-    console.log("여기")
+    // console.log("여기")
     async function getMonthlySchedule() {
       const result = await scheduleAPI.getMonthly(
         today.format("YYYY-MM-DD")

@@ -30,11 +30,16 @@ const Plan = (props) =>{
     const addSchedule = async () => {
         const started_at = moment(`${moment().format('YYYY')}-${startMonth}-${startDay} ${startHour}:${startMin}`).format('YYYY-MM-DD HH:mm');
         const deadline_at = moment(`${moment().format('YYYY')}-${endMonth}-${endDay} ${endHour}:${endMin}`).format('YYYY-MM-DD HH:mm');
-        try{
-            await scheduleAPI.addSchedule(title, started_at, deadline_at, moment().format('YYYY-MM-DD'), state.alarmYES);
-            alert('등록성공');
-        }catch(e){
-            alert(e);
+        if(started_at>deadline_at){
+            alert("마감일이 시작일보다 빠릅니다");
+        }
+        else{
+            try{
+                await scheduleAPI.addSchedule(title, started_at, deadline_at, moment().format('YYYY-MM-DD'), state.alarmYES);
+                alert('등록성공');
+            }catch(e){
+                alert('등록에 실패했습니다');
+            }
         }
     }
 

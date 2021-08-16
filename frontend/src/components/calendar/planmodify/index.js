@@ -15,6 +15,7 @@ const PlanModify = () =>{
     let history = useHistory();
     const location = useLocation();
     const [query, setQuery] = useState('react');
+    const select = false;
 
     const id = location.pathname.split('/')[3];
     const date = location.pathname.split('/')[2];
@@ -210,14 +211,21 @@ const PlanModify = () =>{
     const modify = async () =>{
         let started_at = moment(`${moment().format('YYYY')}-${startMonth}-${startDay} ${startHour}:${startMin}`).format('YYYY-MM-DD HH:mm');
         let deadline_at = moment(`${moment().format('YYYY')}-${endMonth}-${endDay} ${endHour}:${endMin}`).format('YYYY-MM-DD HH:mm');
-        try{
-            await scheduleAPI.modifySchedule(id, moment(data.date).format('YYYYMMDD'), title, state.alarmYES, started_at, deadline_at, moment(data.finished_at).format('YYYY-MM-DD HH:mm'));
-            alert("변경이 완료되었습니다.")
-            window.location.href = "/plan"
+        if(started_at>deadline_at){
+            alert("마감일이 시작일보다 빠릅니다");
         }
-        catch (e) {
-            alert('수정에 실패했습니다.');
+        else{
+            try{
+                await scheduleAPI.modifySchedule(id, moment(data.date).format('YYYYMMDD'), title, state.alarmYES, started_at, deadline_at, moment(data.finished_at).format('YYYY-MM-DD HH:mm'));
+                alert("변경이 완료되었습니다.")
+                window.location.href = `/planlist/${date}`;
+            }
+            catch (e) {
+                alert('수정에 실패했습니다.');
+            }
+
         }
+        
     };
 
 
@@ -426,7 +434,7 @@ const PlanModify = () =>{
                 {/* footer */}
                 <Grid container justifyContent="center" alignItems="center" style={{marginTop:'30px', display:"flex",}}>
                 <Button type = "button" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF',marginRight:"32px"}} onClick={()=> window.location.href = "/plan"}>뒤로가기</Button>
-                <Button type = "submit" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF'}} onClick={modify}>수정하기</Button>
+                <Button type = "submit" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF'}} onClick={select?null:modify}>수정하기</Button>
                 </Grid>
             </form>
         </Wrapper>
