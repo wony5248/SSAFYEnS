@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React from "react";
 import SpeakerBtn from "../../components/Dark";
 import MannerBtn from "../../components/mannerbutton";
 import Rightsidecontainer from "./styles";
@@ -7,9 +7,8 @@ import Date from "../../components/Clock";
 import Sensor from "../../components/Sensor";
 import styled from "styled-components";
 import AddBoxIcon from "@material-ui/icons/AddBox";
-import axios from "axios";
-import moment from "moment";
 import { useUserContext } from "../../context";
+import 'moment/locale/ko';
 const Datediv = styled.div`
   width: auto;
   height: 20%;
@@ -28,6 +27,7 @@ const Addbtn = styled.button`
   background-color: ${(props) => (props.isdark === true ? "#424242" : "white")};
   font-size: 20px;
   margin: 0px;
+  cursor: pointer;
   border: ${(props) => (props.isdark === true ? "1px solid gray" : "1px solid #a3cca3")};
   &:hover {
     background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
@@ -40,7 +40,7 @@ function Rightsidebar() {
     if (window.confirm("일정을 생성하시겠습니까?")) {
       window.location.replace(`/Create`);
     } else {
-      console.log("변화 없음");
+      // console.log("변화 없음");
     }
   };
   return (

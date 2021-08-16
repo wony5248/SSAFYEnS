@@ -13,24 +13,6 @@ const Timercon = styled.div`
 `;
 
 const Timerlayout = () => {
-  // const [loading, setLoading] = useState(false);
-  // const [itemList, setItemList] = useState([]);
-  // useEffect(() => {
-  //   async function loadItem() {
-  //     const result = await axios
-  //       .get("./today.json")
-  //       .then(({ data }) => {
-  //         setLoading(true);
-  //         setItemList(data.Item);
-  //         console.log(data.Item);
-  //       })
-  //       .catch((e) => {
-  //         console.error(e);
-  //         setLoading(false);
-  //       });
-  //   }
-  //   loadItem();
-  // }, []);
   const { isdarked } = useUserContext();
   return (
     <Timercon>

@@ -1,18 +1,21 @@
-import React, { useState, useEffect,useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
 import axios from "axios";
 import styled from "styled-components";
 import moment from "moment";
 import { useUserContext } from "../../context";
+import "moment/locale/ko";
+
 const Todaycontainer = styled.div`
   overflow: auto;
   width: auto;
-  height: 97.1%;
+  height: 97.2%;
   color: #a3cca3;
-  margin: 0px;
-  padding-top: 1%;
+  padding-top: 14px;
   padding-right: 12px;
   padding-left: 12px;
+  padding-bot: 14px;
+  margin: 0px;
   padding-bottom: 1%;
 `;
 const Todaytitle = styled.div`
@@ -24,7 +27,7 @@ const Todaytitle = styled.div`
   width: auto;
   color: white;
   height: 20%;
-  background-color: ${props => props.isdark === true ? "gray" : "#a3cca3"};
+  background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
   margin-bottom: 14px;
   padding: 0px;
 `;
@@ -76,44 +79,71 @@ const Todaychangebtn = styled.button`
   border: 0px;
   display: flex;
   align-items: center;
-  background-color: ${props => props.isdark === true ? "#424242" : "#69a569"};
+  cursor: pointer;
+  background-color: ${(props) =>
+    props.isdark === true ? "#424242" : "#69a569"};
   color: white;
   justify-content: center;
   padding: 4px;
 `;
-
+const Changechangebtn = styled.button`
+  width: 78px;
+  height: 60%;
+  border-radius: 8px;
+  border: 0px;
+  color: white;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  justify-content: center;
+  background-color: ${(props) =>
+    props.isdark === true ? "#424242" : "#69a569"};
+  padding: 4px;
+`;
+const Nodiv = styled.div`
+  color: ${(props) => (props.isdark ? "white" : "#121212")};
+`;
 const Todaylayout = () => {
   const [itemList, setItemList] = useState([]);
   const { isdarked } = useUserContext();
+  const Delete = async (props) => {
+    const id = props;
+    console.log(id);
+    if (window.confirm("정말 삭제하시겠 습니까?")) {
+      await axios
+        .delete(`http://127.0.0.1:4500/schedule/${id}`)
+        .then(({ data }) => {})
+        .catch((e) => {});
+      window.location.replace(`/Today`);
+    } else {
+    }
+  };
   useEffect(() => {
     async function loadCalendar() {
-      console.log(moment().format("YYYYMMDD"));
       await axios
         .get(
-          `http://127.0.0.1:4500/schedule/getdaily/${moment().format("YYYYMMDD")}`
+          `http://127.0.0.1:4500/schedule/getdaily/${moment().format(
+            "YYYYMMDD"
+          )}`
         )
         .then(({ data }) => {
-          console.log(data);
+          console.log(data)
           setItemList(data);
-          console.log(itemList);
         })
         .catch((e) => {});
     }
     loadCalendar();
     setInterval(() => {
       loadCalendar();
-    }, 600000);
-    console.log(isdarked)
-    console.log(window.localStorage.getItem("isdark"))
-    console.log(window.localStorage.getItem("istoggle"))
+    }, 60000);
   }, []);
-  
+
   return (
     <Todaycontainer>
       {itemList.length !== 0 ? (
         <div style={{ height: "100%" }}>
           {itemList.map((item) => (
-            <Todaytitle isdark = {isdarked}>
+            <Todaytitle isdark={isdarked}>
               <Todaytitlenamecon>
                 <Todaytitlename>일정 제목</Todaytitlename>
                 <Todaytitletime>
@@ -122,43 +152,67 @@ const Todaylayout = () => {
                 </Todaytitletime>
               </Todaytitlenamecon>
               <Todaygoal>{item.title}</Todaygoal>
-              
-                {item.is_finished ? (
-                  <Todaychangecon>
-                    <Todaytitlename style={{width:"500px"}}>{item.context}</Todaytitlename>
-                    <Todaytitlename>
-                      이미 완료된 일정입니다.
-                    </Todaytitlename>
-                  </Todaychangecon>
-                ) : (
-                  <Todaychangecon>
-                    <Todaytitlename>{item.context}</Todaytitlename>
-                    <Todaychangebtn
-                      isdark = {isdarked}
+
+              {item.is_finished ? (
+                <Todaychangecon>
+                  <Todaytitlename style={{ width: "500px" }}>
+                    {item.context}
+                  </Todaytitlename>
+                  <div style={{display:"flex", height:"100%", alignItems:"center", width:"250px",justifyContent:"space-between"}}>
+                  <Changechangebtn
+                    isdark={isdarked}
+                    onClick={() => Delete(item.schedule_id)}
+                  >
+                    삭제
+                  </Changechangebtn>
+                  <Todaytitlename style={{fontSize:"20px", display:"flex", alignItems:"center"}}>완료된 일정입니다.</Todaytitlename>
+                  </div>
+                </Todaychangecon>
+              ) : (
+                <Todaychangecon>
+                  <Todaytitlename>{item.context}</Todaytitlename>
+                  <div style={{display:"flex", height:"100%", alignItems:"center", width:"250px",justifyContent:"space-between"}}>
+                    <Changechangebtn
+                      isdark={isdarked}
+                      onClick={() => Delete(item.schedule_id)}
+                    >
+                      삭제
+                    </Changechangebtn>
+                    <Changechangebtn
+                      isdark={isdarked}
                       onClick={() =>
-                        window.location.replace(`/Rating/${item.id}`)
+                        window.location.replace(`/Change/${item.schedule_id}`)
+                      }
+                    >
+                      변경
+                    </Changechangebtn>
+                    <Todaychangebtn
+                      isdark={isdarked}
+                      onClick={() =>
+                        window.location.replace(`/Rating/${item.schedule_id}`)
                       }
                     >
                       완료
                     </Todaychangebtn>
-                  </Todaychangecon>
-                )}
+                  </div>
+                </Todaychangecon>
+              )}
             </Todaytitle>
           ))}
         </div>
       ) : (
-        <div
+        <Nodiv
+          isdark={isdarked}
           style={{
             height: "100%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             fontSize: "40px",
-            color: "#121212",
           }}
         >
           등록된 오늘 일정이 없습니다.
-        </div>
+        </Nodiv>
       )}
     </Todaycontainer>
   );

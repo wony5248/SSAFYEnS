@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React from "react";
 import Sensorbtn from "./styles";
 import { useUserContext } from "../../context";
 

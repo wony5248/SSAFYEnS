@@ -27,7 +27,7 @@ router.post("/addSchedule", (req, res) => {
 });
 
 router.get("/getMonthly/:year/:month", (req, res) => {
-  const { year, month } = req.params;
+  const { year, month } = repq.params;
   mvp
     .getSchedule(year + "-" + month)
     .then((data) => {

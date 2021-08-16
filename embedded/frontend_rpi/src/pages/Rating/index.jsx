@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
 import styled1 from "styled-components";
 import Ratingstar from "@material-ui/lab/Rating";
 import { withStyles } from "@material-ui/core/styles";
 import moment from "moment";
-import { green } from "@material-ui/core/colors";
+import 'moment/locale/ko';
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -106,6 +106,7 @@ const Ratingbtn = styled1.button`
   height: 60px;
   border-radius: 8px;
   border: 0px;
+  cursor: pointer;
   color: white;
   background-color: ${props => props.isdark === true ? "#424242" : "#69a569"};
   padding: 4px;
@@ -157,25 +158,15 @@ const Ratinglayout = (props) => {
   const [starttime, setStarttime] = useState("");
   const [deadline, setDeadline] = useState("");
   const [context, setContext] = useState("");
-  const [manageid, setManageid] = useState("");
   const { id } = props;
-  console.log(id);
 
   const Confirm = async () => {
-    console.log(context);
+
     const string = `집중점수 :${Number(selectedValue1) * 20} 점 진행점수 :${
       Number(selectedValue2) * 20
     } 점 달성점수 :${Number(selectedValue3) * 20} 점 환경점수 :${
       Number(selectedValue4) * 20
     } 점`;
-    console.log(
-      ((Number(selectedValue1) +
-        Number(selectedValue2) +
-        Number(selectedValue3) +
-        Number(selectedValue4)) /
-        4) *
-        20
-    );
     const starthour = Number(`${starttime[9]}${starttime[10]}`);
     const startmin = Number(`${starttime[11]}${starttime[12]}`);
     const endhour = Number(
@@ -192,10 +183,12 @@ const Ratinglayout = (props) => {
       if (window.confirm("정말 완료하시겠 습니까?")) {
         await axios
           .put(`http://127.0.0.1:4500/schedule/${id}`, {
+            date: `${moment().format("YYYYMMDD")}`,
             started_at: starttime,
             finished_at: moment().format("YYYYMMDD HHmm"),
             deadline_at: deadline,
-            notification: moment().format("YYYYMMDD HHmm"),
+            notificationtime: null,
+            notification: null,
             is_finished: true,
             context: `${context} ${string}`,
             point: `${
@@ -208,12 +201,11 @@ const Ratinglayout = (props) => {
             }`,
           })
           .then(({ data }) => {
-            console.log(data.data);
           })
           .catch((e) => {});
         window.location.replace(`/Today`);
       } else {
-        console.log("변화 없음");
+        // console.log("변화 없음");
       }
     }
     else {
@@ -225,7 +217,7 @@ const Ratinglayout = (props) => {
     if (window.confirm("정말 취소하시겠 습니까?")) {
       window.location.replace(`/Today`);
     } else {
-      console.log("변화 없음");
+      // console.log("변화 없음");
     }
   };
 
@@ -234,34 +226,27 @@ const Ratinglayout = (props) => {
       await axios
         .get(`http://127.0.0.1:4500/schedule/${id}`)
         .then(({ data }) => {
-          console.log(data.data);
-          setStarttime(moment(data.data.started_at).format("YYYYMMDD HHmm"));
-          setDeadline(moment(data.data.deadline_at).format("YYYYMMDD HHmm"));
-          setManageid(data.data.id);
-          setContext(data.data.context);
+          setStarttime(moment(data.started_at).format("YYYYMMDD HHmm"));
+          setDeadline(moment(data.deadline_at).format("YYYYMMDD HHmm"));
+          setContext(data.context);
         })
         .catch((e) => {});
     }
     loadCalendar();
+    console.log("ASDFASD")
   }, []);
   const handleChange1 = (event) => {
     setSelectedValue1(event.target.value);
-    console.log(event.target.value);
   };
   const handleChange2 = (event) => {
     setSelectedValue2(event.target.value);
-    console.log(event.target.value);
   };
   const handleChange3 = (event) => {
     setSelectedValue3(event.target.value);
-    console.log(event.target.value);
   };
   const handleChange4 = (event) => {
     setSelectedValue4(event.target.value);
-    console.log(event.target.value);
   };
-  // console.log(time[0] + time[1]);
-  // console.log(moment().format("H"));
   const { isdarked } = useUserContext();
   return (
     <Ratingcon>

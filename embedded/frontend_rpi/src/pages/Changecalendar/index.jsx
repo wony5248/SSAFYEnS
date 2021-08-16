@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
 import styled1 from "styled-components";
-import { styled } from "@material-ui/core/styles";
-import Input from "@material-ui/core/Input";
 import axios from "axios";
 import moment from "moment";
 import { useUserContext } from "../../context";
+import 'moment/locale/ko';
+
 const Changeselect = styled1.select`
   width: 15%;
   border: 0px;
@@ -75,7 +75,7 @@ const Changetitle = styled1.div`
   align-items: center;
   border-radius: 4px;
   width: auto;
-  height: 10%;
+  height: 7%;
   color: white;
   padding:4px;
   padding-right: 12px;
@@ -94,6 +94,7 @@ const Changebtn = styled1.button`
   border-radius:8px;
   border:0px;
   color: white;
+  cursor: pointer;
   margin-right: 0.5%;
   background-color: ${(props) =>
     props.isdark === true ? "#424242" : "#69a569"};
@@ -105,7 +106,7 @@ const ChangeContent = styled1.div`
   justify-content: space-between;
   border-radius: 4px;
   width: auto;
-  height: 60%;
+  height: 48%;
   color: white;
   padding:4px;
   background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
@@ -156,54 +157,46 @@ const Changecalendarlayout = (props) => {
   const [deadline, setDeadline] = useState("");
   const [title, setTitle] = useState("");
   const [context, setContext] = useState("");
-  const [manageid, setManageid] = useState("");
+  const [notitime, setNotitime] = useState("")
+  const [notiarr, setNotiarr] = useState([])
   const [isfinished, setIsfinished] = useState(false);
   const [point, setPoint] = useState(0);
   const { id } = props;
 
   const handlestartChange = (event) => {
     setStarttime(event.target.value);
-    console.log(event.target.value);
-    console.log(
-      `${moment().format("YYYYMMDD")} ` +
-        `${
-          event.target.value[0] +
-          event.target.value[1] +
-          event.target.value[2] +
-          event.target.value[3]
-        }`
-    );
   };
   const handleendChange = (event) => {
     setEndtime(event.target.value);
-    console.log(event.target.value);
-    console.log(
-      `${moment().format("YYYYMMDD")} ` +
-        `${
-          event.target.value[0] +
-          event.target.value[1] +
-          event.target.value[2] +
-          event.target.value[3]
-        }`
-    );
   };
   const handleContext = (e) => {
     setContext(e.target.value);
-    console.log(e.target.value);
   };
   const handleTitle = (e) => {
     setTitle(e.target.value);
+  };
+  const handlenotiChange = (event) => {
+    setNotitime(event.target.value);
+    if (event.target.value[0] + event.target.value[1] === "설정") {
+      setNotitime(null);
+    }
   };
   const Change = async () => {
     const starthour = Number(`${starttime[0]}${starttime[1]}`);
     const startmin = Number(`${starttime[2]}${starttime[3]}`);
     const endhour = Number(`${endtime[0]}${endtime[1]}`);
     const endmin = Number(`${endtime[2]}${endtime[3]}`);
-    console.log(context);
+    console.log(`${moment().format("YYYYMMDD")}`,)
+    console.log(starttime)
+    console.log(endtime)
+    console.log(deadline)
+    console.log(title)
+    console.log(context)
     if (starthour < endhour) {
       if (window.confirm("정말 완료하시겠 습니까?")) {
         await axios
           .put(`http://127.0.0.1:4500/schedule/${id}`, {
+            date: `${moment().format("YYYYMMDD")}`,
             started_at: `${moment().format("YYYYMMDD")} ${
               starttime[0] + starttime[1] + starttime[2] + starttime[3]
             }`,
@@ -211,27 +204,29 @@ const Changecalendarlayout = (props) => {
               endtime[0] + endtime[1] + endtime[2] + endtime[3]
             }`,
             deadline_at: deadline,
-            notification: moment().format("YYYYMMDD HHmm"),
+            notification: null,
+            notificationtime: notitime
+              ? `${moment().format("YYYYMMDD")} ${
+                  notitime[0] + notitime[1] + notitime[2] + notitime[3]
+                }`
+              : null,
             title: title,
             context: context,
             point: point,
             is_finished: isfinished,
           })
           .then(({ data }) => {
-            console.log(data.data);
-            // setItemList(data.data);
-            // console.log(data.data);
-            setManageid(data.data.id);
           })
           .catch((e) => {});
         window.location.replace(`/Change`);
       } else {
-        console.log("변화 없음");
+        // console.log("변화 없음");
       }
     } else if (starthour === endhour && startmin <= endmin) {
       if (window.confirm("정말 완료하시겠 습니까?")) {
         await axios
           .put(`http://127.0.0.1:4500/schedule/${id}`, {
+            date: `${moment().format("YYYYMMDD")}`,
             started_at: `${moment().format("YYYYMMDD")} ${
               starttime[0] + starttime[1] + starttime[2] + starttime[3]
             }`,
@@ -239,22 +234,23 @@ const Changecalendarlayout = (props) => {
               endtime[0] + endtime[1] + endtime[2] + endtime[3]
             }`,
             deadline_at: deadline,
-            notification: moment().format("YYYYMMDD HHmm"),
+            notification: null,
+            notificationtime: notitime
+              ? `${moment().format("YYYYMMDD")} ${
+                  notitime[0] + notitime[1] + notitime[2] + notitime[3]
+                }`
+              : null,
             title: title,
             context: context,
             point: point,
             is_finished: isfinished,
           })
           .then(({ data }) => {
-            console.log(data.data);
-            // setItemList(data.data);
-            // console.log(data.data);
-            setManageid(data.data.id);
           })
           .catch((e) => {});
-        window.location.replace(`/Change`);
+        window.location.replace(`/Today`);
       } else {
-        console.log("변화 없음");
+        // console.log("변화 없음");
       }
     } else {
       window.alert("일정 시작시간이 일정종료 시간보다 빠르게 설정해 주십시오.");
@@ -265,22 +261,24 @@ const Changecalendarlayout = (props) => {
       await axios
         .get(`http://127.0.0.1:4500/schedule/${id}`)
         .then(({ data }) => {
-          console.log(data.data);
-          // setItemList(data.data);
-          // console.log(data.data);
-          setDeadline(moment(data.data.deadline_at).format("YYYYMMDD HHmm"));
-          setManageid(data.data.id);
-          setTitle(data.data.title);
-          setContext(data.data.context);
-          setIsfinished(data.data.is_finished);
-          setPoint(data.data.point);
+          setDeadline(moment(data.deadline_at).format("YYYYMMDD HHmm"));
+          setTitle(data.title);
+          setContext(data.context);
+          setStarttime(moment(data.started_at).format("HHmm"))
+          setEndtime(moment(data.finished_at).format("HHmm"))
+          console.log(data)
+          setIsfinished(data.is_finished);
+          setNotitime(moment(data.notificationtime).format("HHmm"))
+          setPoint(data.point);
         })
         .catch((e) => {});
     }
     loadCalendar();
     const rendering = () => {
       const result = [];
+      const result2 = []
       result.push("시간");
+      result2.push("설정 안함")
       for (let i = 0; i < 24; i++) {
         if (i < 10) {
           result.push(`0${i}:00`);
@@ -290,8 +288,17 @@ const Changecalendarlayout = (props) => {
           result.push(`${i}:30`);
         }
       }
+      for (let i = 0; i < 24; i++) {
+        if (i < 10) {
+          result2.push(`0${i}:00`);
+          result2.push(`0${i}:30`);
+        } else {
+          result2.push(`${i}:00`);
+          result2.push(`${i}:30`);
+        }
+      }
       setOptionarr(result);
-      console.log(result);
+      setNotiarr(result2)
     };
 
     rendering();
@@ -325,6 +332,22 @@ const Changecalendarlayout = (props) => {
           onChange={handleendChange}
         >
           {optionarr.map((item) => (
+            <Changeoption isdark = {isdarked} value={item[0] + item[1] + item[3] + item[4]}>
+              {item}
+            </Changeoption>
+          ))}
+        </Changeselect>
+      </Changeend>
+      <Changeend isdark={isdarked}>
+        <Changeendtext>변경할 알람 시간</Changeendtext>
+        <Changeselect
+          isdark={isdarked}
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={notitime}
+          onChange={handlenotiChange}
+        >
+          {notiarr.map((item) => (
             <Changeoption isdark = {isdarked} value={item[0] + item[1] + item[3] + item[4]}>
               {item}
             </Changeoption>
