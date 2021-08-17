@@ -144,10 +144,32 @@ const Group = () => {
   const closeCreateModal = () => {
     setCreateopen(false);
   };
+  const Exile = async () => {
+    console.log(joinedgroup)
+    console.log(possiblegroup)
+    console.log(select2)
+    if (select2) {
+      if (window.confirm(`${joinedgroup[select2-1].name}그룹 을 탈퇴하시겠습니까?`)) {
+        await groupAPI
+          .exitGroup(joinedgroup[select2-1].group_id, sessionStorage.getItem("id"))
+          .then((data) => {
+            window.alert(`${joinedgroup[select2-1].name}그룹에서 탈퇴 되었습니다.`);
+            window.location.reload();
+          })
+          .catch((e) => {
+            window.alert("탈퇴가 되지 않았습니다.");
+          });
+      } else {
+        window.alert("탈퇴가 취소 되었습니다.");
+      }
+    } else {
+      window.alert("탈퇴할 그룹을 골라주세요.");
+    }
+  };
   const handleMove = async () => {
     var a = 0;
     await groupAPI
-      .getGroup(select2[0])
+      .getGroup(joinedgroup[select2-1].group_id)
       .then(({ data }) => {
         for (let i = 0; i < data.members.length; i++) {
           if (
@@ -165,9 +187,9 @@ const Group = () => {
       })
       .catch((e) => {});
     if (a === 1) {
-      window.location.href = `/group/${select2[0]}/manage`;
+      window.location.href = `/group/${joinedgroup[select2-1].group_id}/manage`;
     } else {
-      window.location.href = `/group/${select2[0]}`;
+      window.location.href = `/group/${joinedgroup[select2-1].group_id}`;
     }
   };
   useEffect(() => {
@@ -177,7 +199,7 @@ const Group = () => {
         .then(({ data }) => {
           console.log(data);
           for (let i = 0; i < data.length; i++) {
-            data[i].id = data[i].group_id;
+            data[i].id = i+1;
           }
           setPossiblegroup(data);
         })
@@ -189,7 +211,7 @@ const Group = () => {
         .then(({ data }) => {
           console.log(data);
           for (let i = 0; i < data.mygroups.length; i++) {
-            data.mygroups[i].id = data.mygroups[i].group_id;
+            data.mygroups[i].id = i+1;
           }
           setJoinedgroup(data.mygroups);
         })
@@ -220,7 +242,7 @@ const Group = () => {
             onClick={() =>
               window.confirm("선택한 그룹 정보화면으로 이동하시겠습니까?")
                 ? select[0]
-                  ? (window.location.href = `/group/${select[0]}`)
+                  ? (window.location.href = `/group/${possiblegroup[select-1].group_id}`)
                   : window.alert("그룹을 선택해 주세요")
                 : console.log("아무일 없음")
             }
@@ -248,14 +270,11 @@ const Group = () => {
               columns={columns}
               pageSize={5}
               onSelectionModelChange={(itm) => setSelect2(itm)}
-              onRowClick={(itm) => setSelect2(itm)}
             />
           </div>
           <Joindiv>
             <Joinbtn
-              onClick={() =>
-                window.confirm(`${select2[0]}그룹을 정말 탈퇴하시겠습니까?`)
-              }
+              onClick={Exile}
             >
               탈퇴
             </Joinbtn>
@@ -272,7 +291,7 @@ const Group = () => {
             </Nogrouptextdiv>
           </Nogroupdiv>
           <Joindiv>
-            <Joinbtn onClick={() => window.confirm("정말 탈퇴하시겠습니까?")}>
+            <Joinbtn onClick={Exile}>
               탈퇴
             </Joinbtn>
           </Joindiv>

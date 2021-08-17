@@ -198,4 +198,8 @@ export const groupAPI = {
   exileGroup: async (groupid, userid) => {
     return await request.delete(`/group/${groupid}/applicant/${userid}`);
   },
+  //그룹 추방 / 탈퇴
+  exitGroup: async (groupid, userid) => {
+    return await request.delete(`/group/${groupid}/member/${userid}`);
+  },
 };

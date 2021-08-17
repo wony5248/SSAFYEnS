@@ -285,7 +285,7 @@ const Groupmanage = (props) => {
     if (select) {
       if (window.confirm(`${member[select - 1].user_id}을 추방하시겠습니까?`)) {
         await groupAPI
-          .exileGroup(id, member[select - 1].user_id)
+          .exitGroup(id, member[select - 1].user_id)
           .then((data) => {
             window.alert(`${member[select - 1].user_id}이 추방 되었습니다.`);
             window.location.reload();
