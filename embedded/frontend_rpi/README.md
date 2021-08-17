@@ -16,10 +16,10 @@
     package-lock.json 삭제
     npm install
 
-### Start in window
+### Start in window - 윈도우에서 이용시 실행 방법
     npm start
     Browser로 이용하고 싶을 시 localhost:3000 접속
-### Start in Raspberry pi - 터미널 두개 이용하여야 함
+### Start in Raspberry pi - 라즈베리파이에서 이용시 실행 방법, 터미널 두개 이용하여야 함
     npm run react-start
     다른 터미널에서 npm run electron
     chromium으로 열린 창은 꺼주시면 됩니다.
