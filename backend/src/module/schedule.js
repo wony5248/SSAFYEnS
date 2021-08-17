@@ -12,165 +12,6 @@ exports.buildSchedule = async (req) => {
         user_id, date, week, month, year, title, context, expectstart_at, started_at, finished_at, deadline_at, notification, notificationtime, is_finished, point, noise, temperature
     });
 }
-exports.createOrUpdateDaily = async (req) => {
-
-    const { date, month, year, week, title, daily_context, started_at, point, sum_humidity, sum_illuminance, sum_noise, sum_temperature } = req.body;
-    const { user_id } = req
-
-    const start_day = moment(started_at).startOf("day");
-    const dailyResult = await db["daily"].findOne({
-        where: {
-            [op.and]: [{ user_id }, { date: start_day }],
-        },
-    });
-    //update할 일자 정보가 없음.
-    if (dailyResult == null) {
-        db["daily"].create({
-            date: start_day,
-            week,
-            month,
-            year,
-            user_id,
-            daily_context,
-            sum_point: point,
-            cnt_schedule: 1,
-            title,
-
-            sum_humidity,
-            sum_illuminance,
-            sum_noise,
-            sum_temperature
-        });
-    } else {
-        dailyResult.sum_point += point;
-        dailyResult.cnt_schedule += 1;
-        dailyResult.daily_context = daily_context
-
-        dailyResult.sum_humidity += sum_humidity
-        dailyResult.sum_illuminance += sum_illuminance
-        dailyResult.sum_noise += sum_noise
-        dailyResult.sum_temperature += sum_temperature
-    }
-    return dailyResult
-}
-exports.createOrUpdateWeekly = async (req) => {
-    const { date, point, month, year, week, sum_humidity, sum_illuminance, sum_noise, sum_temperature } = req.body;
-    const { user_id } = req
-    const weeklyResult = await db["weekly"].findOne({
-        where: {
-            [op.and]: [
-                {
-                    year,
-                },
-                {
-                    week,
-                },
-                {
-                    user_id,
-                },
-            ],
-        },
-    });
-
-    if (weeklyResult == null) {
-        //weekly가 해당 존재하지않음
-        console.log(`week ${week}가 존재하지 않습니다.`);
-        db["weekly"].create({
-            week,
-            month,
-            year,
-            user_id,
-            sum_point: point,
-            cnt_schedule: 1,
-            sum_humidity, sum_illuminance, sum_noise, sum_temperature
-        });
-    } else {
-        weeklyResult.sum_point += point;
-        weeklyResult.cnt_schedule += 1;
-
-        weeklyResult.sum_humidity += sum_humidity
-        weeklyResult.sum_illuminance += sum_illuminance
-        weeklyResult.sum_noise += sum_noise
-        weeklyResult.sum_temperature += sum_temperature
-    }
-    return weeklyResult
-}
-exports.createOrUpdateMonthly = async (req) => {
-    const { point, month, year, sum_humidity, sum_illuminance, sum_noise, sum_temperature } = req.body;
-    const { user_id } = req
-    const monthlyResult = await db["monthly"].findOne({
-        where: {
-            [op.and]: [
-                {
-                    year,
-                },
-                {
-                    month,
-                },
-                {
-                    user_id,
-                },
-            ],
-        },
-    });
-
-    if (monthlyResult == null) {
-        console.log(`month ${month}가 존재하지 않습니다.`);
-        db["monthly"].create({
-            month,
-            year,
-            user_id,
-            sum_point: point,
-            cnt_schedule: 1,
-
-            sum_humidity, sum_illuminance, sum_noise, sum_temperature
-        });
-    } else {
-        monthlyResult.sum_point += point;
-        monthlyResult.cnt_schedule += 1;
-
-        monthlyResult.sum_humidity += sum_humidity
-        monthlyResult.sum_illuminance += sum_illuminance
-        monthlyResult.sum_noise += sum_noise
-        monthlyResult.sum_temperature += sum_temperature
-    }
-    return monthlyResult
-}
-exports.createOrUpdateYearly = async (req) => {
-    const { point, year, week, sum_humidity, sum_illuminance, sum_noise, sum_temperature } = req.body;
-    const { user_id } = req
-    const yearlyResult = await db["yearly"].findOne({
-        [op.and]: [
-            {
-                year,
-            },
-            {
-                user_id,
-            },
-        ],
-    });
-
-    if (yearlyResult == null) {
-        console.log(`year ${week}가 존재하지 않습니다.`);
-        db["yearly"].create({
-            year,
-            user_id,
-            sum_point: point,
-            cnt_schedule: 1,
-
-            sum_humidity, sum_illuminance, sum_noise, sum_temperature
-        });
-    } else {
-        yearlyResult.sum_point += point;
-        yearlyResult.cnt_schedule += 1;
-
-        yearlyResult.sum_humidity += sum_humidity
-        yearlyResult.sum_illuminance += sum_illuminance
-        yearlyResult.sum_noise += sum_noise
-        yearlyResult.sum_temperature += sum_temperature
-    }
-    return yearlyResult
-}
 
 exports.findSchedule_id = async (req) => {
     const { schedule_id } = req.params;
@@ -474,7 +315,7 @@ exports.migrate = async (req, next_schedule) => {
         }
 
         const yearlyResult = await db["yearly"].findOne(
-            {},
+
             {
                 where: {
                     [op.and]: [
@@ -552,21 +393,164 @@ exports.getSchedule_unit = async (req, unit) => {
     return data
 }
 
-// exports = async (req) => {
+//!unuse
+// exports.createOrUpdateDaily = async (req) => {
 
+//     const { date, month, year, week, title, daily_context, started_at, point, sum_humidity, sum_illuminance, sum_noise, sum_temperature } = req.body;
+//     const { user_id } = req
+
+//     const start_day = moment(started_at).startOf("day");
+//     const dailyResult = await db["daily"].findOne({
+//         where: {
+//             [op.and]: [{ user_id }, { date: start_day }],
+//         },
+//     });
+//     //update할 일자 정보가 없음.
+//     if (dailyResult == null) {
+//         db["daily"].create({
+//             date: start_day,
+//             week,
+//             month,
+//             year,
+//             user_id,
+//             daily_context,
+//             sum_point: point,
+//             cnt_schedule: 1,
+//             title,
+
+//             sum_humidity,
+//             sum_illuminance,
+//             sum_noise,
+//             sum_temperature
+//         });
+//     } else {
+//         dailyResult.sum_point += point;
+//         dailyResult.cnt_schedule += 1;
+//         dailyResult.daily_context = daily_context
+
+//         dailyResult.sum_humidity += sum_humidity
+//         dailyResult.sum_illuminance += sum_illuminance
+//         dailyResult.sum_noise += sum_noise
+//         dailyResult.sum_temperature += sum_temperature
+//     }
+//     return dailyResult
+// }
+// exports.createOrUpdateWeekly = async (req) => {
+//     const { date, point, month, year, week, sum_humidity, sum_illuminance, sum_noise, sum_temperature } = req.body;
+//     const { user_id } = req
+//     const weeklyResult = await db["weekly"].findOne({
+//         where: {
+//             [op.and]: [
+//                 {
+//                     year,
+//                 },
+//                 {
+//                     week,
+//                 },
+//                 {
+//                     user_id,
+//                 },
+//             ],
+//         },
+//     });
+
+//     if (weeklyResult == null) {
+//         //weekly가 해당 존재하지않음
+//         console.log(`week ${week}가 존재하지 않습니다.`);
+//         db["weekly"].create({
+//             week,
+//             month,
+//             year,
+//             user_id,
+//             sum_point: point,
+//             cnt_schedule: 1,
+//             sum_humidity, sum_illuminance, sum_noise, sum_temperature
+//         });
+//     } else {
+//         weeklyResult.sum_point += point;
+//         weeklyResult.cnt_schedule += 1;
+
+//         weeklyResult.sum_humidity += sum_humidity
+//         weeklyResult.sum_illuminance += sum_illuminance
+//         weeklyResult.sum_noise += sum_noise
+//         weeklyResult.sum_temperature += sum_temperature
+//     }
+//     return weeklyResult
+// }
+// exports.createOrUpdateMonthly = async (req) => {
+//     const { point, month, year, sum_humidity, sum_illuminance, sum_noise, sum_temperature } = req.body;
+//     const { user_id } = req
+//     const monthlyResult = await db["monthly"].findOne({
+//         where: {
+//             [op.and]: [
+//                 {
+//                     year,
+//                 },
+//                 {
+//                     month,
+//                 },
+//                 {
+//                     user_id,
+//                 },
+//             ],
+//         },
+//     });
+
+//     if (monthlyResult == null) {
+//         console.log(`month ${month}가 존재하지 않습니다.`);
+//         db["monthly"].create({
+//             month,
+//             year,
+//             user_id,
+//             sum_point: point,
+//             cnt_schedule: 1,
+
+//             sum_humidity, sum_illuminance, sum_noise, sum_temperature
+//         });
+//     } else {
+//         monthlyResult.sum_point += point;
+//         monthlyResult.cnt_schedule += 1;
+
+//         monthlyResult.sum_humidity += sum_humidity
+//         monthlyResult.sum_illuminance += sum_illuminance
+//         monthlyResult.sum_noise += sum_noise
+//         monthlyResult.sum_temperature += sum_temperature
+//     }
+//     return monthlyResult
+// }
+// exports.createOrUpdateYearly = async (req) => {
+//     const { point, year, week, sum_humidity, sum_illuminance, sum_noise, sum_temperature } = req.body;
+//     const { user_id } = req
+//     const yearlyResult = await db["yearly"].findOne({
+//         [op.and]: [
+//             {
+//                 year,
+//             },
+//             {
+//                 user_id,
+//             },
+//         ],
+//     });
+
+//     if (yearlyResult == null) {
+//         console.log(`year ${week}가 존재하지 않습니다.`);
+//         db["yearly"].create({
+//             year,
+//             user_id,
+//             sum_point: point,
+//             cnt_schedule: 1,
+
+//             sum_humidity, sum_illuminance, sum_noise, sum_temperature
+//         });
+//     } else {
+//         yearlyResult.sum_point += point;
+//         yearlyResult.cnt_schedule += 1;
+
+//         yearlyResult.sum_humidity += sum_humidity
+//         yearlyResult.sum_illuminance += sum_illuminance
+//         yearlyResult.sum_noise += sum_noise
+//         yearlyResult.sum_temperature += sum_temperature
+//     }
+//     return yearlyResult
 // }
 // exports = async (req) => {
-
-// }
-// exports = async (req) => {
-
-// }
-// exports = async (req) => {
-
-// }
-// exports = async (req) => {
-
-// }
-// exports = async (req) => {
-
-// }
