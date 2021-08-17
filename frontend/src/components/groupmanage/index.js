@@ -378,7 +378,10 @@ const Groupmanage = (props) => {
             />
           </div>
           <Joindiv>
+            <div style={{display:"flex", justifyContent:"space-between", width:"250px", height:"51px"}}>
+            <Joinbtn onClick={() => console.log("그룹장 위임하기")}>그룹장 위임</Joinbtn>
             <Joinbtn onClick={Exile}>추방하기</Joinbtn>
+            </div>
           </Joindiv>
           <Divider style={{ backgroundColor: "#a3cca3", margin: "40px 0" }} />
           <Joineddiv>
