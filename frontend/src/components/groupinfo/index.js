@@ -205,7 +205,7 @@ const Groupinfo = (props) => {
             </Topdiv>
             <Seconddiv>
               <Secondcontent>
-                <Titlediv> 현재 진행중인 챌린지 </Titlediv>{" "}
+                <Titlediv> 챌린지 </Titlediv>{" "}
                 <Secondleftdiv>
                   <div>
                     <div
@@ -444,7 +444,7 @@ const Groupinfo = (props) => {
               </Topdiv>
               <Seconddiv>
                 <Secondcontent>
-                  <Titlediv> 현재 진행중인 챌린지 </Titlediv>{" "}
+                  <Titlediv> 챌린지 </Titlediv>{" "}
                   <Secondleftdiv>
                     <div>
                       <Challengetitlediv>

@@ -100,16 +100,21 @@ const Joindiv = styled1.div`
   justify-content: flex-end;
 `;
 
-const GroupNamediv = styled1.div`
+const GroupNamediv = styled1.button`
   height: 100%;
   background-color: #a3cca3;
   padding: 0 48px;
+  border: none;
   border-radius: 45px;
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size:20px;
+  cursor: pointer;
+  &:hover{
+    background-color: #69a569;
+  }
 `;
 
 const Grouptitlediv = styled1.div`
@@ -354,7 +359,7 @@ const Groupmanage = (props) => {
             <Challengebtn onClick={() => (window.location.href = "/group")}>
               뒤로 가기
             </Challengebtn>
-            <GroupNamediv>{title}</GroupNamediv>
+            <GroupNamediv onClick={() => window.location.href= `/group/${id}`}>{title}</GroupNamediv>
             <Challengebtn onClick={openCreateModal}>
               그룹 정보 변경
             </Challengebtn>
