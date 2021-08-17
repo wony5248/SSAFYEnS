@@ -3,8 +3,9 @@ import os
 
 CUR_DIR = os.path.dirname(os.path.realpath(__file__))
 WAV_PATH = CUR_DIR + '/output.wav'
+NOTI_PATH = os.path.dirname(CUR_DIR) + '/backend_rpi/output.wav'
 
-def synthesize_ssml(ssml):
+def synthesize_ssml(ssml, noti=False):
     client = texttospeech.TextToSpeechClient()
     input_text = texttospeech.SynthesisInput(ssml=ssml)
 
@@ -26,7 +27,13 @@ def synthesize_ssml(ssml):
         out.write(response.audio_content)
         print('Audio content written to file "output.wav"')
 
-    os.system('aplay '+ WAV_PATH)
+    try:
+        if noti:
+            os.system('aplay '+ NOTI_PATH)
+        else:
+            os.system('aplay '+ WAV_PATH)
+    except Exception as e:
+        print("Aplay Error: ", e)
 
 
 def synthesize_text(text):
