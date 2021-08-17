@@ -66,6 +66,8 @@ tags:
     * 그 스케쥴의 시간은 어떻게 정할 것인가? (생성시 시간설정이 이미 다른 구성원의 스케쥴과 겹친다면?)
       * 그룹 멤버들의 시간대를 모두 가져와서 빈 시간에만 넣을 수 있게 (이건 연산 너무 복잡함)
     * schedule에 challenge_id 속성 추가가 필요합니다(allowNull true).
+    * 0817 논의결과 두번째 방법으로, 그룹 관리자는 챌린지 내용만을 생성하고, 각 회원이 챌린지를 스케쥴에 할당하거나 스케쥴에 챌린지를 할당하는 방식입니다.(각 회원당 챌린지에 스케쥴 최대1개라고 생각하면...)
+    * 챌린지에는 시간적인 개념이 없습니다. 시작이나 마감기한이 없는 형태 (일단 지금은...)
   # externalDocs:
   #   description: Find out more about our store
   #   url: http://swagger.io
@@ -279,9 +281,13 @@ paths:
     post:
       summary: Upload environment
       description: |-
+        * 후순위 추가기능으로, 구현은 나중에 시간 나면 합시다
+        * 환경변수들을 꺽은선 그래프로 FE에 보여주기 위한 내용입니다(FE의 동의는 없었음ㅋ)
         * id 를 어떻게 나눌지 아직 고민중입니다
           * serialnumber는 schedule에 해당되는 environment의 id 값을 따로 만들고 싶어서 넣었습니다.
         * environment_id, created_at은 sequelize에서 자동으로 만드므로 요청 보낼때 넣지 마세요
+        * 아직 협의 중이지만 1분마다 측정 후 보내주는 걸로 생각 중
+        * schedule order를 schedule_id 바뀔때마다 다시 1부터 시작하는 방법의 sequelize DB 설계 방법이 있는지 조사가 필요합니다.
       requestBody:
         content:
           application/json:
@@ -295,6 +301,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/environment'
         
+  /schedule/environment/is_finished:
+    post:
+      summary: Upload environment
+      description: |-
+        * 혹시 몰라서 완료하고 한 번에 보내는 것도 설계
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/environment'
+      responses:
+        200:
+          description: 'Successful'
+
       
 
   /user/duplicatecheckid/{user_id}:
@@ -714,6 +736,13 @@ paths:
       summary: Delete user
       description: |-
         * 이미 존재하지 않는 user_id를 넣으면 400으로 돌려줍니다.
+        * (미구현) jwt 인증 확인 필요
+        * (미구현) jwt로 본인 계정을 삭제하고 있는 것인지 확인 필요
+        * user가 삭제될 때 외래키 관계된 것들이 삭제를 방지한다.
+          * 현재로서는 applicants, usersmngroups, usersmntrophies가 있다.
+          * CASCADE 방식으로 위에 3개를 순서대로 삭제 후 유저를 삭제한다
+        * user가 삭제될 때 외래키 관계가 안 잡힌 것들은 자동으로 삭제되지 않는다.
+          * schedule, daily 등을 추가해줄 필요가 있다.
       operationId: deleteUserById
       parameters:
       - name: user_id
@@ -949,7 +978,7 @@ paths:
     #   security:
     #   - JWT: []
           
-  /average/weekly/{year}/{week}:
+  /average/weekly/{date}:
     get:
       tags:
       - average
@@ -957,6 +986,7 @@ paths:
       description: |-
         * This can only be done by the logged in user
         * 본인의 주간만 가져옴
+        * 날짜를 주면 그에 해당되는 주를 계산하여 해당 주와 관련된 정보를 가져옵니다.
         * Y축이 각 일간 스케쥴의 개수인거죠?(시간의 합이 아니라...)
         * week에 대한 환경 등은 계산해서(avg) 돌려드리지만, array로 묶어서 보내는 그 하위단위인 daily에 대해서는 DB에 있는 그대로(cnt, sum) 전달드리겠습니다
       operationId: getWeeklyByWeek
@@ -966,17 +996,22 @@ paths:
       #   description: jwt 토큰 header["access_token"]를 뜯으면 payload에 있습니다
       #   schema:
       #     $ref: "#/components/schemas/user/properties/user_id"
+      # - in: path
+      #   name: year
+      #   required: true
+      #   description: 주 단위의 값은 연도없이 조회가 불가하여 연도를 추가함
+      #   schema:
+      #     $ref: "#/components/schemas/schedule/properties/year"
+      # - in: path
+      #   name: week
+      #   required: true
+      #   schema:
+      #     $ref: "#/components/schemas/schedule/properties/week"
       - in: path
-        name: year
-        required: true
-        description: 주 단위의 값은 연도없이 조회가 불가하여 연도를 추가함
-        schema:
-          $ref: "#/components/schemas/schedule/properties/year"
-      - in: path
-        name: week
+        name: date
         required: true
         schema:
-          $ref: "#/components/schemas/schedule/properties/week"
+          $ref: "#/components/schemas/schedule/properties/date"
       responses:
         200:
           description: OK
@@ -1324,6 +1359,10 @@ paths:
       tags:
       - group
       summary: delete group by group_id
+      description: |-
+        * CASCADE 방식으로 group에 가입신청자(applicant), 가입자(usersmngroups) 모두 삭제하고 그룹까지 삭제합니다.
+        * 추후 그룹 챌린지가 추가되면 챌린지도 삭제될 예정입니다?
+          * 이 때 스케쥴에 있는 챌린지_id 외래키도 NULL로 변경해야겠네요ㅠ
       operationId: deleteGroupById
       parameters:
       - in: path
@@ -1374,25 +1413,27 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                - $ref: '#/components/schemas/group'
-                # - type: object
-                #   properties:
-                #     members:
-                #       type: array
-                #       items:
-                #         allOf:
-                #           - $ref: '#/components/schemas/user'
-                #           - type: object
-                #             # required:
-                #             # - joined_at
-                #             # - is_groupadmin
-                #             properties:
-                #               joined_at:
-                #                 type: string
-                #                 format: date-time
-                #               is_group_admin:
-                #                 type: boolean
+                type: array
+                items:
+                  allOf:
+                  - $ref: '#/components/schemas/group'
+                  - type: object
+                    properties:
+                      members:
+                        type: array
+                        items:
+                          allOf:
+                            - $ref: '#/components/schemas/user'
+                            - type: object
+                              # required:
+                              # - joined_at
+                              # - is_groupadmin
+                              properties:
+                                joined_at:
+                                  type: string
+                                  format: date-time
+                                is_group_admin:
+                                  type: boolean
         400:
           $ref: '#/components/responses/400'
         401:
@@ -1579,6 +1620,36 @@ paths:
       security:
       - JWT: []          
       
+  /group/{group_id}/group_admin/{user_id}:
+  
+    post:
+      tags:
+      - group
+      summary: transfers group admin rights to other group member
+      description: |-
+        * 그룹 관리자 권한을 다른 그룹 멤버에게 이양합니다.
+        * 그룹 관리자는 1명만 가능합니다.
+        * 그러므로 다른 그룹 멤버에게 관리자 권한을 줌과 동시에 본인의 관리자 권한은 박탈됩니다.
+      operationId: postGroupAdminById
+      parameters:
+        - in: path
+          required: true
+          name: group_id
+          schema:
+            $ref: '#/components/schemas/group/properties/group_id'
+        - in: path
+          required: true
+          name: user_id
+          schema:
+            $ref: '#/components/schemas/user/properties/user_id'
+      responses:
+        200:
+          description: 'Successful'
+        400:
+          description: 'Bad Request'
+      security:
+      - JWT: []
+            
       
   /trophy:
   
@@ -1714,7 +1785,7 @@ paths:
       summary: get all challenges
       description: |-
         * asdf
-      operationId: getAllChallengeByGroupId
+      operationId: getAllChallenge
       # parameters:
       # - in: path
       #   required: true
@@ -1730,6 +1801,36 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/challenge'
+                  
+      security:
+      - JWT: []
+      
+    post:
+      tags:
+      - challenge
+      summary: create challenge
+      description: |-
+        * challenge_id, created_at은 자동으로 생성되는 영역입니다. RequestBody에 넣지 마세요
+      operationId: createChallenge
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  $ref: '#/components/schemas/challenge/properties/name'
+                content:
+                  $ref: '#/components/schemas/challenge/properties/content'
+                group_id:
+                  $ref: '#/components/schemas/challenge/properties/group_id'
+      responses:
+        200:
+          description: 'Successful'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/challenge'
                   
       security:
       - JWT: []
@@ -2121,12 +2222,11 @@ components:
           * description에 단위도 표기하면 좋을 것 같다
         * id를 어떻게 나눌지 고민 필요
       properties:
-        environment_id:
+        schedule_id:
+          $ref: '#/components/schemas/schedule/properties/schedule_id'
+        schedule_order:
           type: integer
-          description: 필요한가요?
-        serialnumber:
-          type: integer
-          description: schedule마다의 
+          description: 필요한가요? (1부터 시작)
         humidity:
           type: integer
           description: 습도
@@ -2139,8 +2239,6 @@ components:
         temperature:
           type: integer
           description: 온도
-        schedule_id:
-          $ref: '#/components/schemas/schedule/properties/schedule_id'
         created_at:
           type: string
           description: 측정된 시각이 아니라 서버에 업로드된 시점으로 기록될 것 같음
@@ -2155,12 +2253,14 @@ components:
           type: integer
         name:
           type: string
-        expectstart_at:
+        content:
           type: string
-          format: date-time
-        deadline_at:
-          type: string
-          format: date-time
+        # expectstart_at:
+        #   type: string
+        #   format: date-time
+        # deadline_at:
+        #   type: string
+        #   format: date-time
         group_id:
           $ref: '#/components/schemas/group/properties/group_id'
         created_at:
