@@ -41,10 +41,17 @@ exports.getAverage = async (req, unit) => {
     const condition3 = {}
     const condition4 = {}
     console.log("파라미터 : ", req, unit)
-    if (req.body.year != null) condition1.year = req.body.year
-    if (req.body.month != null) condition2.month = req.body.month
-    if (req.body.week != null) condition3.week = req.body.week
-    if (req.params.date != null) condition4.date = req.params.date
+
+    switch (unit) {
+        case "daily":
+            if (req.params.date != null) condition4.date = req.params.date
+        case "weekly":
+            if (req.body.week != null) condition3.week = req.body.week
+        case "monthly":
+            if (req.body.month != null) condition2.month = req.body.month
+        case "yearly":
+            if (req.body.year != null) condition1.year = req.body.year
+    }
 
     const { user_id } = req
     console.log(condition1, condition2, condition3, condition4)
