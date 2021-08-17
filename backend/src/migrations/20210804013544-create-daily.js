@@ -32,6 +32,9 @@ module.exports = {
       cnt_schedule: {
         type: Sequelize.INTEGER,
       },
+      cnt_finished_schedule: {
+        type: Sequelize.INTEGER,
+      },
       sum_humidity: {
         type: Sequelize.INTEGER,
       },
