@@ -13,50 +13,60 @@ const columns = [
     field: "id",
     headerName: "번호",
     headerClassName: "super-app-theme--header",
-    width: 120,
+    width: 150,
+  },
+  {
+    field: "user_id",
+    headerName: "그룹원 ID",
+    headerClassName: "super-app-theme--header",
+    width: 350,
   },
   {
     field: "name",
     headerName: "그룹원 이름",
     headerClassName: "super-app-theme--header",
-    width: 500,
+    width: 350,
   },
   {
     field: "joined_at",
     headerName: "가입 날자",
     headerClassName: "super-app-theme--header",
-    width: 500,
+    width: 350,
+  },
+  {
+    field: "is_group_admin",
+    headerName: "그룹장 여부",
+    headerClassName: "super-app-theme--header",
+    width: 230,
   },
 ];
+
 const application = [
   {
     field: "id",
     headerName: "번호",
     headerClassName: "super-app-theme--header",
-    width: 120,
+    width: 160,
   },
   {
-    field: "name",
-    headerName: "지원자 이름",
+    field: "user_id",
+    headerName: "지원자 ID",
     headerClassName: "super-app-theme--header",
-    width: 200,
+    width: 250,
   },
   {
     field: "reason",
     headerName: "가입 문구",
     headerClassName: "super-app-theme--header",
-    width: 600,
+    width: 640,
   },
   {
     field: "applied_at",
     headerName: "가입 요청 날자",
     headerClassName: "super-app-theme--header",
-    width: 200,
+    width: 240,
   },
 ];
-
-
-
 
 // const useStyles = makeStyles({
 //   root: {
@@ -187,10 +197,11 @@ const Groupinput = styled1.input`
 const Groupmanage = (props) => {
   const [isleader, setIsleader] = useState(true);
   const [createopen, setCreateopen] = useState(false);
-  const [select, setSelect] = useState([]);
-  const [title, setTitle] = useState("")
-  const [applier, setApplier] = useState([])
-  const [member, setMember] = useState([])
+  const [select, setSelect] = useState("");
+  const [select2, setSelect2] = useState("");
+  const [title, setTitle] = useState("");
+  const [applier, setApplier] = useState([]);
+  const [member, setMember] = useState([]);
   const openCreateModal = () => {
     setCreateopen(true);
   };
@@ -199,59 +210,158 @@ const Groupmanage = (props) => {
     setCreateopen(false);
   };
   const { id } = props;
-  // console.log(id);
-  // console.log(select);
+  const Delete = async () => {
+    if (window.confirm(`${title} 그룹을 삭제 하시겠습니까?`)) {
+      await groupAPI
+        .deleteGroup(id)
+        .then((data) => {
+          window.alert(`${title} 그룹이 삭제되었습니다.`);
+          window.location.href = "/group";
+        })
+        .catch((e) => {
+          window.alert("그룹원을 다 추방시키고 다시 시도해 주십시오.");
+        });
+    } else {
+      window.alert("그룹 삭제가 취소되었습니다.");
+    }
+  };
+  const Accept = async () => {
+    if (select2) {
+      if (
+        window.confirm(
+          `${applier[select2 - 1].user_id}의 가입 신청을 승인하시겠습니까?`
+        )
+      ) {
+        await groupAPI
+          .joinGroup(id, applier[select2 - 1].user_id)
+          .then((data) => {
+            window.alert(
+              `${applier[select2 - 1].user_id}의 가입 신청이 승인되었습니다.`
+            );
+            window.location.reload();
+          })
+          .catch((e) => {
+            window.alert("가입 승인이 되지 않았습니다.");
+          });
+      } else {
+        window.alert("가입 승인이 취소 되었습니다.");
+      }
+    } else {
+      window.alert("승인할 신청자를 골라주세요.");
+    }
+  };
+  const Reject = async () => {
+    if (select2) {
+      if (
+        window.confirm(
+          `${applier[select - 1].user_id}의 가입 신청을 거절하시겠습니까?`
+        )
+      ) {
+        await groupAPI
+          .exileGroup(id, applier[select2 - 1].user_id)
+          .then((data) => {
+            window.alert(
+              `${applier[select2 - 1].user_id}의 가입 신청이 거절되었습니다.`
+            );
+            window.location.reload();
+          })
+          .catch((e) => {
+            window.alert("가입 거절이 되지 않았습니다.");
+          });
+      } else {
+        window.alert("가입 거절이 취소 되었습니다.");
+      }
+    } else {
+      window.alert("거절할 신청자를 골라주세요.");
+    }
+  };
+  const Exile = async () => {
+    console.log(select - 1);
+    if (select) {
+      if (window.confirm(`${member[select - 1].user_id}을 추방하시겠습니까?`)) {
+        await groupAPI
+          .exileGroup(id, member[select - 1].user_id)
+          .then((data) => {
+            window.alert(`${member[select - 1].user_id}이 추방 되었습니다.`);
+            window.location.reload();
+          })
+          .catch((e) => {
+            window.alert("추방이 되지 않았습니다.");
+          });
+      } else {
+        window.alert("추방이 취소 되었습니다.");
+      }
+    } else {
+      window.alert("추방할 그룹원을 골라주세요.");
+    }
+  };
+
   useEffect(() => {
     async function loadMember() {
-      console.log(id)
+      console.log(id);
       await groupAPI
         .getGroup(id)
         .then(({ data }) => {
-          setTitle(data.name)
-          setMember(data.members)
-          for (let i =0; i< data.members.length; i++)
-          {
-            data.members[i].id = i+1
-            data.members[i].joined_at = moment(data.members[i].joined_at).format("YYYY년MM월DD일")
+          setTitle(data.name);
+          setMember(data.members);
+          for (let i = 0; i < data.members.length; i++) {
+            data.members[i].id = i + 1;
+            data.members[i].joined_at = moment(
+              data.members[i].joined_at
+            ).format("YYYY년MM월DD일");
+            if (
+              data.members[i].user_id === window.sessionStorage.getItem("id") &&
+              data.members[i].is_group_admin === true
+            ) {
+              setIsleader(true);
+            }
           }
-          console.log(data.members)
+          console.log(data.members);
         })
-        .catch((e) => {console.log("여기..")});
+        .catch((e) => {
+          console.log("여기..");
+        });
     }
     async function loadApplier() {
-      console.log(id)
+      console.log(id);
       await groupAPI
         .applicantListGroup(id)
         .then(({ data }) => {
-          setApplier(data)
-          for (let i =0; i< data.length; i++)
-          {
-            data[i].id = i+1
-            data.members[i].applied_at = moment(data[i].applied_at).format("YYYY년MM월DD일")
+          console.log(data);
+          for (let i = 0; i < data.length; i++) {
+            data[i].id = i + 1;
+            data[i].applied_at = moment(data[i].applied_at).format(
+              "YYYY년MM월DD일"
+            );
           }
-          console.log(data)
+          console.log(data);
+          setApplier(data);
         })
-        .catch((e) => {console.log("여기..")});
+
+        .catch((e) => {
+          console.log("여기..");
+        });
     }
     loadMember();
-    // loadApplier();
-    
+    loadApplier();
   }, []);
   return (
     <div style={{ padding: "24px 0" }}>
       {isleader ? (
         <Wrapper>
           <Grouptitlediv>
-            <Challengebtn onClick={() => window.location.href = "/group"}>
+            <Challengebtn onClick={() => (window.location.href = "/group")}>
               뒤로 가기
             </Challengebtn>
             <GroupNamediv>{title}</GroupNamediv>
-            <Challengebtn onClick={openCreateModal}>그룹 정보 변경</Challengebtn>
+            <Challengebtn onClick={openCreateModal}>
+              그룹 정보 변경
+            </Challengebtn>
           </Grouptitlediv>
           <Joineddiv>
             <Availablediv>그룹 구성원</Availablediv>
             <Create open={createopen} close={closeCreateModal} groupid={id} />
-            <Challengebtn onClick={openCreateModal}>그룹 삭제</Challengebtn>
+            <Challengebtn onClick={Delete}>그룹 삭제</Challengebtn>
           </Joineddiv>
           <div style={{ height: 400, width: "100%" }}>
             <Muidatagrid
@@ -262,9 +372,7 @@ const Groupmanage = (props) => {
             />
           </div>
           <Joindiv>
-            <Joinbtn onClick={() => window.confirm("정말 추방하시겠습니까?")}>
-              추방하기
-            </Joinbtn>
+            <Joinbtn onClick={Exile}>추방하기</Joinbtn>
           </Joindiv>
           <Divider style={{ backgroundColor: "#a3cca3", margin: "40px 0" }} />
           <Joineddiv>
@@ -283,27 +391,29 @@ const Groupmanage = (props) => {
           </Joineddiv>
           <div style={{ height: 400, width: "100%" }}>
             <Muidatagrid
-              rows={member}
+              rows={applier}
               columns={application}
               pageSize={5}
-              onSelectionModelChange={(itm) => setSelect(itm)}
+              onSelectionModelChange={(itm) => setSelect2(itm)}
             />
           </div>
           <Joindiv>
             <div style={{ height: "51px" }}>
-              <Acceptbtn
-                onClick={() => window.confirm("정말 승인하시겠습니까?")}
-              >
-                승인하기{select[0]}
-              </Acceptbtn>
-              <Joinbtn onClick={() => window.confirm("정말 거절하시겠습니까?")}>
-                거절하기
-              </Joinbtn>
+              <Acceptbtn onClick={Accept}>승인하기</Acceptbtn>
+              <Joinbtn onClick={Reject}>거절하기</Joinbtn>
             </div>
           </Joindiv>
         </Wrapper>
       ) : (
-        <Wrapper>
+        <Wrapper
+          style={{
+            display: "flex",
+            marginTop: "0px",
+            justifyContent: "center",
+            fontSize: "60px",
+            textAlign: "center",
+          }}
+        >
           그룹장만 관리할 수 있습니다.
         </Wrapper>
       )}

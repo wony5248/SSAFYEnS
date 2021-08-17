@@ -132,10 +132,10 @@ const Joinedbtn = styled1.button`
 const Group = () => {
   const [isgroup, setIsgroup] = useState(true);
   const [createopen, setCreateopen] = useState(false);
-  const [select, setSelect] = useState([]);
-  const [select2, setSelect2] = useState([]);
+  const [select, setSelect] = useState("");
+  const [select2, setSelect2] = useState("");
   const [possiblegroup, setPossiblegroup] = useState([]);
-  const [joinedgroup, setJoinedgroup] = useState([])
+  const [joinedgroup, setJoinedgroup] = useState([]);
   const [isleader, setIsleader] = useState(false);
   const openCreateModal = () => {
     setCreateopen(true);
@@ -145,36 +145,37 @@ const Group = () => {
     setCreateopen(false);
   };
   const handleMove = async () => {
-    var a =0
+    var a = 0;
     await groupAPI
-        .getGroup(select2[0])
-        .then(({ data }) => {
-          for (let i = 0; i < data.members.length; i++) {
-            if (data.members[i].user_id === sessionStorage.getItem("id") && data.members[i].is_group_admin) {
-                setIsleader(true); 
-                console.log("여기")
-                a = 1
-            }
+      .getGroup(select2[0])
+      .then(({ data }) => {
+        for (let i = 0; i < data.members.length; i++) {
+          if (
+            data.members[i].user_id === sessionStorage.getItem("id") &&
+            data.members[i].is_group_admin
+          ) {
+            setIsleader(true);
+            console.log("여기");
+            a = 1;
           }
-
-          console.log(isleader)
-          console.log(a)
         }
-        )
-        .catch((e) => {});
+
+        console.log(isleader);
+        console.log(a);
+      })
+      .catch((e) => {});
     if (a === 1) {
-      window.location.href = `/group/${select2[0]}/manage`
+      window.location.href = `/group/${select2[0]}/manage`;
+    } else {
+      window.location.href = `/group/${select2[0]}`;
     }
-    else{
-      window.location.href = `/group/${select2[0]}`
-    }
-  }
+  };
   useEffect(() => {
     async function loadGroup() {
       await groupAPI
         .findAllGroup()
         .then(({ data }) => {
-          console.log(data)
+          console.log(data);
           for (let i = 0; i < data.length; i++) {
             data[i].id = data[i].group_id;
           }
@@ -186,11 +187,11 @@ const Group = () => {
       await userAPI
         .mypage(window.sessionStorage.getItem("id"))
         .then(({ data }) => {
-          console.log(data)
+          console.log(data);
           for (let i = 0; i < data.mygroups.length; i++) {
             data.mygroups[i].id = data.mygroups[i].group_id;
           }
-          setJoinedgroup(data.mygroups)
+          setJoinedgroup(data.mygroups);
         })
         .catch((e) => {});
     }
@@ -219,7 +220,7 @@ const Group = () => {
             onClick={() =>
               window.confirm("선택한 그룹 정보화면으로 이동하시겠습니까?")
                 ? select[0]
-                  ? window.location.href = `/group/${select[0]}`
+                  ? (window.location.href = `/group/${select[0]}`)
                   : window.alert("그룹을 선택해 주세요")
                 : console.log("아무일 없음")
             }
@@ -235,9 +236,7 @@ const Group = () => {
             <Availablediv>내가 가입한 그룹</Availablediv>
             <Joinedbtn
               onClick={() =>
-                select2[0]
-                  ? handleMove()
-                  : window.alert("그룹을 선택해 주세요")
+                select2[0] ? handleMove() : window.alert("그룹을 선택해 주세요")
               }
             >
               그룹 관리
@@ -249,7 +248,7 @@ const Group = () => {
               columns={columns}
               pageSize={5}
               onSelectionModelChange={(itm) => setSelect2(itm)}
-              onRowClick = {(itm) => setSelect2(itm)}
+              onRowClick={(itm) => setSelect2(itm)}
             />
           </div>
           <Joindiv>
