@@ -247,7 +247,7 @@ const Group = () => {
                 : console.log("아무일 없음")
             }
           >
-            가입
+            그룹 정보
           </Joinbtn>
         </Joindiv>
       </Wrapper>
@@ -297,6 +297,7 @@ const Group = () => {
           </Joindiv>
         </Wrapper>
       )}
+      
     </div>
   );
 };

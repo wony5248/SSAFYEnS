@@ -120,7 +120,7 @@ const Join = (props) => {
             window.alert("가입 신청이 완료되었습니다.")
             window.location.href=`/group/${groupid}`
           })
-          .catch((e) => {console.log(e)});
+          .catch((e) => {window.alert("이미 가입 신청 하셨습니다.")});
         // window.location.href = `/group/${groupid}`;
       } else {
         window.alert("가입 신청이 되지 않았습니다.")

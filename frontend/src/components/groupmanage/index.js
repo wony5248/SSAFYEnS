@@ -259,7 +259,7 @@ const Groupmanage = (props) => {
     if (select2) {
       if (
         window.confirm(
-          `${applier[select - 1].user_id}의 가입 신청을 거절하시겠습니까?`
+          `${applier[select2 - 1].user_id}의 가입 신청을 거절하시겠습니까?`
         )
       ) {
         await groupAPI
@@ -378,9 +378,9 @@ const Groupmanage = (props) => {
             />
           </div>
           <Joindiv>
-            <div style={{display:"flex", justifyContent:"space-between", width:"250px", height:"51px"}}>
-            <Joinbtn onClick={() => console.log("그룹장 위임하기")}>그룹장 위임</Joinbtn>
-            <Joinbtn onClick={Exile}>추방하기</Joinbtn>
+          <div style={{ height: "51px" }}>
+              <Acceptbtn onClick={console.log("그룹장 위임")}>그룹장 위임</Acceptbtn>
+              <Joinbtn onClick={Exile}>추방하기</Joinbtn>
             </div>
           </Joindiv>
           <Divider style={{ backgroundColor: "#a3cca3", margin: "40px 0" }} />
@@ -389,13 +389,6 @@ const Groupmanage = (props) => {
             <div
               style={{ width: "25%", display: "flex", alignItems: "center" }}
             >
-              <Groupinput></Groupinput>
-              <Searchbtn>
-                <SearchIcon
-                  fontSize="large"
-                  style={{ color: "#a3cca3" }}
-                ></SearchIcon>
-              </Searchbtn>
             </div>
           </Joineddiv>
           <div style={{ height: 400, width: "100%" }}>
