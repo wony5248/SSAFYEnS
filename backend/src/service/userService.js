@@ -410,7 +410,7 @@ exports.deleteUserById = function (req, res, next) {
 
     // jwt 인증 확인 필요
     // if (!req.user_id) return reject("jwt must be provided");
-    // jwt로 본인 계정을 수정하고 있는 것인지 확인 필요
+    // jwt로 본인 계정을 삭제하고 있는 것인지 확인 필요
     // else if (req.user_id !== user_id) return reject("Only oneself can delete their info")
 
 

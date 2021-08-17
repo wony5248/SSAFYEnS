@@ -18,7 +18,7 @@ class Notification():
         parser = argparse.ArgumentParser()
         parser.add_argument('--title', help='Title of schedule',
                             required=True)
-        parser.add_argument('--startAt', help='Started time of schedule',
+        parser.add_argument('--diff', help='Started time of schedule',
                             default=None)
         parser.add_argument('--finishAt', help='Finished time of schedule',
                             default=None)
@@ -27,10 +27,11 @@ class Notification():
 
         args = parser.parse_args()
         self.title = args.title
-        self.startAt = args.startAt
+        self.diff = args.diff
         self.finishAt = args.finishAt
         self.option = args.option
-        print(self.title, self.startAt, self.finishAt, self.option)
+        print(args)
+        print(self.title, self.diff, self.finishAt, self.option)
 
     def notify(self):
         # Debug용 try~catch (Node server test)
@@ -52,19 +53,15 @@ class Notification():
 # server test function
 def node_test():
     print("Hello JBJ can you read me?")
-    # print(base64.b64encode(str(sys.argv).encode("utf-8")))
-    f=open('a.txt', 'w', encoding="utf-8")
-    f.write(sys.argv[1])
-    f.close
-    print(args)
+
 
 
 def main():
     noti = Notification()
     noti.parse()
-    noti.notify()
+    # noti.notify()
 
 if __name__ == '__main__':
     print("notification called")
     node_test()
-    # main()
+    main()
