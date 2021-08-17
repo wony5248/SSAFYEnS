@@ -187,6 +187,7 @@ exports.migrate = async (req, next_schedule) => {
             noise,
             temperature,
         } = next_schedule;
+
         const { user_id } = req
         const started_day = moment(next_schedule.started_at).startOf("day");
 
