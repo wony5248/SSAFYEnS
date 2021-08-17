@@ -17,6 +17,9 @@ module.exports = {
 
       //statics
       cnt_schedule: Sequelize.INTEGER,
+      cnt_finished_schedule: {
+        type: Sequelize.INTEGER,
+      },
       sum_point: Sequelize.INTEGER,
 
       //environment 추가

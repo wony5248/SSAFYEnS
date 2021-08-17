@@ -1,7 +1,11 @@
-const verifyDate = (valuse, { req }) => moment(value).isValid()
-const verifyDateOrNull = (value, { req }) => value == null || moment(value).isValid()
-const startOfDay = (value, { req }) => moment(value).startOf("day").toDate();
-const start_atBeforeFinished_at = (value, { req }) => {
+const logic = require("./index.js")
+const moment = require("moment");
+moment.tz.setDefault("Asia/Seoul");
+
+exports.verifyDate = (value, { req }) => moment(value).isValid()
+exports.verifyDateOrNull = (value, { req }) => value == null || moment(value).isValid()
+exports.startOfDay = (value, { req }) => moment(value).startOf("day").toDate();
+exports.start_atBeforeFinished_at = (value, { req }) => {
     let { started_at, finished_at } = req.body;
     const contidion1 =
         moment(started_at).isSame(finished_at, "day") &&
@@ -13,7 +17,10 @@ const start_atBeforeFinished_at = (value, { req }) => {
         );
     else return true;
 }
-const momentToDate = (value, { req }) => {
+exports.momentToDate = (value, { req }) => {
     if (value == null) return value;
     else return moment(value).toDate();
+}
+exports.started_atSameBodyDate = (value, { req }) => {
+    return (moment(value).startOf("day").isSame(moment(req.body.date).startOf("day")))
 }

@@ -6,10 +6,10 @@ const daily = require("../models/daily");
 
 
 exports.buildSchedule = async (req) => {
-    const { date, week, month, year, title, context, expectstart_at, started_at, finished_at, deadline_at, notification, notificationtime, is_finished, point, noise, temperature } = req.body;
+    const { date, week, month, year, title, context, expectstart_at, started_at, finished_at, deadline_at, notification, notificationtime, is_finished, point, humidity, illuminance, noise, temperature } = req.body;
     const { user_id } = req
     return await db["schedules"].build({
-        user_id, date, week, month, year, title, context, expectstart_at, started_at, finished_at, deadline_at, notification, notificationtime, is_finished, point, noise, temperature
+        user_id, date, week, month, year, title, context, expectstart_at, started_at, finished_at, deadline_at, notification, notificationtime, is_finished, point, humidity, illuminance, noise, temperature
     });
 }
 
@@ -34,23 +34,30 @@ exports.findSchedule_id = async (req) => {
 exports.migrate_undo = async (prev_schedule) => {
     return new Promise(async (resolve, reject) => {
         const {
+            date,
             year,
             month,
             week,
+            user_id,
+            is_finished
+        } = prev_schedule;
+        let {
             point,
             humidity,
             illuminance,
             noise,
             temperature,
-            user_id,
-        } = prev_schedule;
-        const started_day = moment(prev_schedule.started_at).startOf("day");
+        } = prev_schedule
+        //완료되지 않은 일정을 삭제할 땐 아래의 값들을 갱신하지 않음.
+        if (!is_finished) {
+            point = 0, humidity = 0, illuminance = 0, noise = 0, temperature = 0
+        }
 
         const dailyResult = await db["daily"].findOne({
             where: {
                 [op.and]: [
                     {
-                        date: started_day,
+                        date,
                     },
                     {
                         user_id,
@@ -67,6 +74,8 @@ exports.migrate_undo = async (prev_schedule) => {
             console.log("해당 daily를 취소합니다");
             dailyResult.sum_point -= point;
             dailyResult.cnt_schedule -= 1;
+            dailyResult.cnt_finished_schedule -= is_finished;
+
             dailyResult.sum_humidity -= humidity;
             dailyResult.sum_illuminance -= illuminance;
             dailyResult.sum_noise -= noise;
@@ -104,13 +113,21 @@ exports.migrate_undo = async (prev_schedule) => {
                 },
             });
         } else {
+            ////////////////
+            console.log("migrate_undo")
+            console.log(weeklyResult.cnt_schedule, weeklyResult.cnt_finished_schedule)
             weeklyResult.sum_point -= point;
             weeklyResult.cnt_schedule -= 1;
+            weeklyResult.cnt_finished_schedule -= is_finished;
 
             weeklyResult.sum_humidity -= humidity;
             weeklyResult.sum_illuminance -= illuminance;
             weeklyResult.sum_noise -= noise;
             weeklyResult.sum_temperature -= temperature;
+            console.log(weeklyResult.cnt_schedule, weeklyResult.cnt_finished_schedule)
+            console.log(weeklyResult)
+            ////////////////
+
         }
 
         const monthlyResult = await db["monthly"].findOne({
@@ -137,6 +154,7 @@ exports.migrate_undo = async (prev_schedule) => {
         } else {
             monthlyResult.sum_point -= point;
             monthlyResult.cnt_schedule -= 1;
+            monthlyResult.cnt_finished_schedule -= is_finished;
 
             monthlyResult.sum_humidity -= humidity;
             monthlyResult.sum_illuminance -= illuminance;
@@ -155,7 +173,7 @@ exports.migrate_undo = async (prev_schedule) => {
 
         if (yearlyResult == null) {
             return reject(`year 가 존재하지 않습니다.1`);
-        } else if (yearlyResult.dataValues.cnt_schedule == 1) {
+        } else if (yearlyResult.dataValues.cnt_schedule == is_finished) {
             console.log("해당 yearly를 제거합니다");
             await db["yearly"].destroy({
                 where: {
@@ -165,6 +183,7 @@ exports.migrate_undo = async (prev_schedule) => {
         } else {
             yearlyResult.sum_point -= point;
             yearlyResult.cnt_schedule -= 1;
+            yearlyResult.cnt_finished_schedule -= is_finished;
 
             yearlyResult.sum_humidity -= humidity;
             yearlyResult.sum_illuminance -= illuminance;
@@ -178,24 +197,31 @@ exports.migrate_undo = async (prev_schedule) => {
 exports.migrate = async (req, next_schedule) => {
     return new Promise(async (resolve, reject) => {
         const {
+            date,
             year,
             month,
             week,
+            is_finished
+        } = next_schedule;
+
+        let {
             point,
             humidity,
             illuminance,
             noise,
             temperature,
-        } = next_schedule;
+        } = next_schedule
 
+        if (!is_finished) {
+            point = 0, humidity = 0, illuminance = 0, noise = 0, temperature = 0
+        }
         const { user_id } = req
-        const started_day = moment(next_schedule.started_at).startOf("day");
 
         const dailyResult = await db["daily"].findOne({
             where: {
                 [op.and]: [
                     {
-                        date: started_day,
+                        date,
                     },
                     {
                         user_id,
@@ -207,23 +233,26 @@ exports.migrate = async (req, next_schedule) => {
         //update할 일자 정보가 없음.
         if (dailyResult == null || dailyResult[0] == 0) {
             console.log("해당 daily를 생성합니다");
-            const dailyResult = await db["daily"].create({
-                date: started_day,
+            await db["daily"].create({
+                date,
                 week,
                 month,
                 year,
                 user_id,
                 sum_point: point,
                 cnt_schedule: 1,
-                is_finished: false,
+                cnt_finished_schedule: is_finished,
+                is_finished: is_finished,
                 sum_humidity: humidity,
                 sum_illuminance: illuminance,
                 sum_noise: noise,
                 sum_temperature: temperature,
             });
         } else {
+
             dailyResult.sum_point += point;
             dailyResult.cnt_schedule += 1;
+            dailyResult.cnt_finished_schedule += is_finished;
 
             dailyResult.sum_humidity += humidity;
             dailyResult.sum_illuminance += illuminance;
@@ -238,6 +267,7 @@ exports.migrate = async (req, next_schedule) => {
                     {
                         year,
                     },
+                    { month },
                     {
                         week,
                     },
@@ -257,7 +287,8 @@ exports.migrate = async (req, next_schedule) => {
                 user_id,
                 sum_point: point,
                 cnt_schedule: 1,
-                is_finished: true,
+                cnt_finished_schedule: is_finished,
+                is_finished,
 
                 sum_humidity: humidity,
                 sum_illuminance: illuminance,
@@ -265,13 +296,21 @@ exports.migrate = async (req, next_schedule) => {
                 sum_temperature: temperature,
             });
         } else {
+            /////////////////
+            console.log("migrate")
+            console.log(weeklyResult.cnt_schedule, weeklyResult.cnt_finished_schedule)
             weeklyResult.sum_point += point;
             weeklyResult.cnt_schedule += 1;
+            weeklyResult.cnt_finished_schedule += is_finished;
+
 
             weeklyResult.sum_humidity += humidity;
             weeklyResult.sum_illuminance += illuminance;
             weeklyResult.sum_noise += noise;
             weeklyResult.sum_temperature += temperature;
+            console.log(weeklyResult.cnt_schedule, weeklyResult.cnt_finished_schedule)
+            console.log(weeklyResult)
+            /////////////////
         }
 
         const monthlyResult = await db["monthly"].findOne({
@@ -298,7 +337,8 @@ exports.migrate = async (req, next_schedule) => {
                 user_id,
                 sum_point: point,
                 cnt_schedule: 1,
-                is_finished: true,
+                cnt_finished_schedule: is_finished,
+                is_finished,
 
                 sum_humidity: humidity,
                 sum_illuminance: illuminance,
@@ -308,6 +348,7 @@ exports.migrate = async (req, next_schedule) => {
         } else {
             monthlyResult.sum_point += point;
             monthlyResult.cnt_schedule += 1;
+            monthlyResult.cnt_finished_schedule += is_finished;
 
             monthlyResult.sum_humidity += humidity;
             monthlyResult.sum_illuminance += illuminance;
@@ -338,7 +379,8 @@ exports.migrate = async (req, next_schedule) => {
                 user_id,
                 sum_point: point,
                 cnt_schedule: 1,
-                is_finished: true,
+                cnt_finished_schedule: is_finished,
+                is_finished,
 
                 sum_humidity: humidity,
                 sum_illuminance: illuminance,
@@ -348,6 +390,7 @@ exports.migrate = async (req, next_schedule) => {
         } else {
             yearlyResult.sum_point += point;
             yearlyResult.cnt_schedule += 1;
+            yearlyResult.cnt_finished_schedule += is_finished;
 
             yearlyResult.sum_humidity += humidity;
             yearlyResult.sum_illuminance += illuminance;

@@ -65,11 +65,12 @@ exports.put_$schedule_id$ = function (req) {
       return reject("평가 완료된 일정입니다.");
 
 
+
     //2-1 수정하려는 스케쥴 관련된 daily => weekly => monthly => yearly 삭제
     await logic.migrate_undo(prev_schedule).then(async (result) => {
       await result.reduce(async (promise, cur) => {
         const acc = await promise.then();
-        cur && cur.save();
+        if (cur != null) await cur.save();
         return Promise.resolve();
       }, Promise.resolve({}));
     });
@@ -78,12 +79,13 @@ exports.put_$schedule_id$ = function (req) {
     await logic.migrate(req, next_schedule).then(async (result) => {
       await result.reduce(async (promise, cur) => {
         const acc = await promise.then();
-        cur && cur.save();
+        if (cur != null) await cur.save();
         return Promise.resolve();
       }, Promise.resolve({}));
     });
+
     try {
-      //3-1 스케쥴 수정
+      // 3 - 1 스케쥴 수정
       prev_schedule.update({
         ...next_schedule,
       });

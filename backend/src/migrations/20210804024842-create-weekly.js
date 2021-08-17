@@ -18,19 +18,10 @@ module.exports = {
 
       //statics
       cnt_schedule: Sequelize.INTEGER,
+      cnt_finished_schedule: {
+        type: Sequelize.INTEGER,
+      },
       sum_point: Sequelize.INTEGER,
-
-      //tail
-      // created_at: {
-      //   allowNull: false,
-      //   type: Sequelize.DATE,
-      //   defaultValue: Sequelize.literal(`CURRENT_TIMESTAMP`),
-      // },
-      // updated_at: {
-      //   allowNull: false,
-      //   type: Sequelize.DATE,
-      //   defaultValue: Sequelize.literal(`CURRENT_TIMESTAMP`),
-      // },
 
       //environment 추가
       sum_humidity: Sequelize.INTEGER,
