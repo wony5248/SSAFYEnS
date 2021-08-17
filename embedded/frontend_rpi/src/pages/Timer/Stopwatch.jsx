@@ -12,7 +12,7 @@ const Stopwatchdiv = styled.div`
   width: auto;
   height: 45.4%;
   color: ${props => props.isdark ? "white" : "#121212"};
-  margin: 12px 0px;
+  margin: 0px 0px;
   font-size: 40px;
   padding: 4px;
   padding-left:16px;
@@ -27,6 +27,9 @@ color: white;
 background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
 margin: 12px 0px;
 font-size: 40px;
+display: flex;
+align-items: center;
+justify-content:center;
 padding: 4px;
 padding-left:16px;
 padding-right:16px;

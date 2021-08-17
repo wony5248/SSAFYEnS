@@ -7,14 +7,14 @@ import HourglassTopIcon from "@material-ui/icons/HourglassEmpty";
 const Countdiv = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   align-content: center;
   border-radius: 4px;
   width: auto;
-  color: ${props => props.isdark ? "white" : "#121212"};
+  color: ${(props) => (props.isdark ? "white" : "#121212")};
   height: 46.9%;
-  margin: 12px 0px;
+  margin: 0px 0px;
   font-size: 40px;
   padding: 4px;
   padding-left: 16px;
@@ -26,7 +26,10 @@ const Countbtn = styled.button`
   width: 20%;
   height: 15%;
   color: white;
-  background-color:  ${props => props.isdark ? "gray" : "#a3cca3"};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${(props) => (props.isdark ? "gray" : "#a3cca3")};
   margin: 12px 0px;
   font-size: 40px;
   padding: 4px;
@@ -39,7 +42,7 @@ const Titlediv = styled.div`
   align-items: center;
   justify-content: space-around;
   margin-top: 24px;
-  margin-bottom: 24px;
+  margin-bottom: 0px;
 `;
 
 const Addbtn = styled.button`
@@ -48,7 +51,7 @@ const Addbtn = styled.button`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background-color: ${props => props.isdark ? "gray" : "#a3cca3"};
+  background-color: ${(props) => (props.isdark ? "gray" : "#a3cca3")};
   color: white;
   border: 1px solid black;
   margin-left: 24px;
@@ -137,45 +140,54 @@ class Countdown extends Component {
     return (
       <Countdiv isdark={isdark}>
         <Titlediv>
-        <svg width="40px" height="40px"><HourglassTopIcon fontSize = "small"/></svg>
+          <svg width="40px" height="40px">
+            <HourglassTopIcon fontSize="small" />
+          </svg>
           Timer
         </Titlediv>
-        <Titlediv>
+        <Titlediv style={{marginTop:"12px"}}>
           <Addbtn isdark={isdark} onClick={this.tenminusTimer}>
             <RemoveIcon fontSize="large" />
             <RemoveIcon fontSize="large" />
           </Addbtn>
-          <Addbtn isdark = {isdark} onClick={this.minusTimer}>
+          <Addbtn isdark={isdark} onClick={this.minusTimer}>
             <RemoveIcon fontSize="large" />
           </Addbtn>
           {hours} : {minutes} : {seconds}{" "}
-          <Addbtn isdark = {isdark} onClick={this.plusTimer}>
+          <Addbtn isdark={isdark} onClick={this.plusTimer}>
             <AddIcon fontSize="large" />
           </Addbtn>
-          <Addbtn isdark = {isdark} onClick={this.tenplusTimer}>
+          <Addbtn isdark={isdark} onClick={this.tenplusTimer}>
             <AddIcon fontSize="large" />
             <AddIcon fontSize="large" />
           </Addbtn>
         </Titlediv>
 
-        {timerOn === false &&
-          (timerStart === 0 || timerTime === timerStart) && (
-            <Countbtn isdark = {isdark} onClick={this.startTimer}>Start</Countbtn>
-          )}
+        {timerOn === false && (timerStart === 0 || timerTime === timerStart) && (
+          <Countbtn isdark={isdark} onClick={this.startTimer}>
+            Start
+          </Countbtn>
+        )}
         {timerOn === true && timerTime >= 1000 && (
-          <Countbtn isdark = {isdark} onClick={this.stopTimer}>Stop</Countbtn>
+          <Countbtn isdark={isdark} onClick={this.stopTimer}>
+            Stop
+          </Countbtn>
         )}
         {timerOn === false &&
           timerStart !== 0 &&
           timerStart !== timerTime &&
           timerTime !== 0 && (
-            <Countbtn isdark = {isdark} onClick={this.startTimer}>Resume</Countbtn>
+            <Countbtn isdark={isdark} onClick={this.startTimer}>
+              Resume
+            </Countbtn>
           )}
 
         {(timerOn === false || timerTime < 1000) &&
           timerStart !== timerTime &&
           timerStart > 0 && (
-            <Countbtn isdark = {isdark} onClick={this.resetTimer}>Reset</Countbtn>
+            <Countbtn isdark={isdark} onClick={this.resetTimer}>
+              Reset
+            </Countbtn>
           )}
       </Countdiv>
     );
