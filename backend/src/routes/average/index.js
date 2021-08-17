@@ -29,7 +29,7 @@ router.put(
 
 // Get weekly information
 router.get(
-  "/week/:date",
+  "/weekly/:date",
   validation.week,
   validation.month,
   validation.year,
@@ -39,7 +39,7 @@ router.get(
 
 // Get monthly information
 router.get(
-  "/month/:date",
+  "/monthly/:date",
   validation.year,
   validation.month,
   validation.user_id,
@@ -47,7 +47,7 @@ router.get(
 );
 //Get yearly information
 router.get(
-  "/year/:date",
+  "/yearly/:date",
   validation.year,
   validation.user_id,
   controller.get_year_$date$
