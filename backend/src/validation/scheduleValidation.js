@@ -43,6 +43,11 @@ exports.illuminance = check("illuminance").default(0).isInt();
 exports.noise = check("noise").default(0).isInt();
 exports.temperature = check("temperature").default(0).isInt();
 
+exports.notHumidity = check("humidity").not().notEmpty();
+exports.notIlluminance = check("illuminance").not().notEmpty();
+exports.notNoise = check("noise").not().notEmpty();
+exports.notTemperature = check("temperature").not().notEmpty();
+
 
 //auto generic
 exports.generateWeekFromBody = check("week").customSanitizer((value, { req }) =>

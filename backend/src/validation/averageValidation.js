@@ -5,7 +5,6 @@ const {
   body,
   param,
 } = require("express-validator");
-const { isEmpty } = require("lodash");
 const moment = require("moment");
 moment.tz.setDefault("Asia/Seoul");
 

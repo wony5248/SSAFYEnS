@@ -24,10 +24,10 @@ router.post(
   validation.point,
   validation.cnt_schedule,
 
-  validation.humidity,
-  validation.illuminance,
-  validation.noise,
-  validation.temperature,
+  validation.notHumidity,
+  validation.notIlluminance,
+  validation.notNoise,
+  validation.notTemperature,
 
   controller.post
 );
