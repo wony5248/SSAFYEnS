@@ -8,9 +8,9 @@ getPayload = (req) => { return { body: req.body, params: req.params, user_id: re
 router.post(
   "/",
   validation.date,
-  validation.month,
-  validation.year,
-  validation.week,
+  validation.generateMonthFromBody,
+  validation.generateWeekFromBody,
+  validation.generateYearFromBody,
 
   validation.started_at,
   validation.finished_at,
@@ -37,9 +37,9 @@ router.get("/:schedule_id", controller.get_$schedule_id$);
 router.put(
   "/:schedule_id",
   validation.date,
-  validation.month,
-  validation.year,
-  validation.week,
+  validation.generateMonthFromBody,
+  validation.generateWeekFromBody,
+  validation.generateYearFromBody,
 
   validation.started_at,
   validation.finished_at,
@@ -59,7 +59,7 @@ router.put(
   controller.put_$schedule_id$
 );
 //Deletes a schedule
-router.delete("/:schedule_id", controller.delete_$schedule_id$);
+router.delete("/:schedule_id", validation.date, controller.delete_$schedule_id$);
 
 //Get all schedules of user of specific month
 router.get("/month/:date", validation.date, controller.get_month_$date$);
