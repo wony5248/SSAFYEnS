@@ -14,9 +14,9 @@ module.exports = {
       context: {
         type: Sequelize.STRING
       },
-      pax: {
-        type: Sequelize.INTEGER
-      },
+      // pax: {
+      //   type: Sequelize.INTEGER
+      // },
       ranking: {
         type: Sequelize.INTEGER 
       },

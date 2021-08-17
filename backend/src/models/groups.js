@@ -31,10 +31,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     context: DataTypes.STRING,
-    pax: {
-      type: DataTypes.INTEGER,
-      defaultValue: 1,
-    },
+    // pax: {
+    //   type: DataTypes.INTEGER,
+    //   defaultValue: 1,
+    // },
     ranking: DataTypes.INTEGER
   }, {
     sequelize,
