@@ -15,17 +15,19 @@ export const scheduleAPI = {
             date
         })
     },
-    addSchedule: async (title, started_at, deadline_at, date, notification)=>{
+    addSchedule: async (title, started_at, deadline_at, date, notification, notificationtime=null)=>{
         return await request.post('/schedule', {
-           date, title, context : 'test', started_at, deadline_at, notification, finished_at:deadline_at
+           date, title, context : 'test', started_at, deadline_at, notification, finished_at:deadline_at, notificationtime
         }
         
-        )
+        ).then(function (response) {
+          console.log(response);
+        })
     },
-    modifySchedule: async (schedule_id, date, title, notification, started_at, deadline_at, finished_at)=>{
+    modifySchedule: async (schedule_id, date, title, notification, started_at, deadline_at, finished_at, notificationtime)=>{
         // console.log(`${title}, ${notification}`);
         return await request.put(`/schedule/${schedule_id}`,{
-            schedule_id, date, title, started_at, deadline_at, finished_at, notification
+            schedule_id, date, title, started_at, deadline_at, finished_at, notification, notificationtime
         })
     },
     deleteSchedule: async (schedule_id)=>{
@@ -47,9 +49,9 @@ export const scheduleAPI = {
             date
         })
     },
-    getWeeklyAverage: async (year, week)=>{
-        return await request.get(`/average/weekly/${year}/${week}`,{
-            year, week
+    getWeeklyAverage: async (date)=>{
+        return await request.get(`/average/weekly/${date}`,{
+          date
         })
     },
     getMonthlyAverage: async (date)=>{
