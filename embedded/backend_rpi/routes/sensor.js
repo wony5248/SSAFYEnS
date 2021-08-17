@@ -8,10 +8,10 @@ var sensorData = [];
 router.get("/", function (req, res, next) {
   //   res.send({ "temp": "36", "humid": "56", "noise": "168", "light": "32" });
   res.json({
-    temp: `${sensorData[0]}`,
-    humid: `${sensorData[1]}`,
-    noise: `${sensorData[2]}`,
-    light: `${sensorData[3]}`,
+    temp: sensorData[0],
+    humid: sensorData[1],
+    noise: sensorData[2],
+    light: sensorData[3],
   });
 });
 
