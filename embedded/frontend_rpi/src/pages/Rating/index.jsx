@@ -4,7 +4,7 @@ import styled1 from "styled-components";
 import Ratingstar from "@material-ui/lab/Rating";
 import { withStyles } from "@material-ui/core/styles";
 import moment from "moment";
-import 'moment/locale/ko';
+import "moment/locale/ko";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -21,7 +21,7 @@ const StyledRating = withStyles({
 })(Ratingstar);
 const GreenRadio = withStyles({
   root: {
-    color: `${props => props.isdark === true ? "gray" : "#a3cca3"}`,
+    color: `${(props) => (props.isdark === true ? "gray" : "#a3cca3")}`,
   },
   checked: {},
 })((props) => <Radio color="default" {...props} />);
@@ -33,7 +33,7 @@ const Starttime = styled1.div`
   width: auto;
   height: 5%;
   color: white;
-  background-color: ${props => props.isdark === true ? "gray" : "#a3cca3"};
+  background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
   margin: 12px 0px;
   padding: 4px;
   padding-left:16px;
@@ -47,7 +47,7 @@ const Endtime = styled1.div`
   width: auto;
   height: 5%;
   color: white;
-  background-color: ${props => props.isdark === true ? "gray" : "#a3cca3"};
+  background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
   margin: 12px 0px;
   padding: 4px;
   padding-left:16px;
@@ -60,7 +60,7 @@ const Ratingbody = styled1.div`
   width: auto;
   height: 80%;
   color: white;
-  background-color: ${props => props.isdark === true ? "gray" : "#a3cca3"};
+  background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
   margin-top: 12px;
   padding: 4px;
   padding-left:16px;
@@ -72,7 +72,7 @@ const Ratingcontent = styled1.div`
   width: auto;
   height: 80%;
   color: black;
-  background-color: ${props => props.isdark === true ? "#C9C9C9" : "white"};
+  background-color: ${(props) => (props.isdark === true ? "#C9C9C9" : "white")};
   font-size: 20px;
   overflow: auto;
   margin-top: 12px;
@@ -108,7 +108,8 @@ const Ratingbtn = styled1.button`
   border: 0px;
   cursor: pointer;
   color: white;
-  background-color: ${props => props.isdark === true ? "#424242" : "#69a569"};
+  background-color: ${(props) =>
+    props.isdark === true ? "#424242" : "#69a569"};
   padding: 4px;
   margin-left:16px;
 `;
@@ -149,13 +150,12 @@ const Changeendtext = styled1.div`
   color: white;
 `;
 
-
 const Ratinglayout = (props) => {
   const [selectedValue1, setSelectedValue1] = React.useState("1");
   const [selectedValue2, setSelectedValue2] = React.useState("1");
   const [selectedValue3, setSelectedValue3] = React.useState("1");
   const [selectedValue4, setSelectedValue4] = React.useState("1");
-  const [notitime, setNotitime] = useState("")
+  const [notitime, setNotitime] = useState("");
   const [starttime, setStarttime] = useState("");
   const [deadline, setDeadline] = useState("");
   const [context, setContext] = useState("");
@@ -164,9 +164,8 @@ const Ratinglayout = (props) => {
   const [humid, setHumid] = useState(0);
   const [noise, setNoise] = useState(0);
   const [light, setLight] = useState(0);
-  
-  const Confirm = async () => {
 
+  const Confirm = async () => {
     const string = `집중점수 :${Number(selectedValue1) * 20} 점 진행점수 :${
       Number(selectedValue2) * 20
     } 점 달성점수 :${Number(selectedValue3) * 20} 점 환경점수 :${
@@ -196,29 +195,28 @@ const Ratinglayout = (props) => {
             notification: null,
             is_finished: true,
             context: `${context} ${string}`,
-            point: `${
+            point:
               ((Number(selectedValue1) +
                 Number(selectedValue2) +
                 Number(selectedValue3) +
                 Number(selectedValue4)) /
                 4) *
-              20
-            }`,
+              20,
             humidity: humid,
             illuminance: light,
             noise: noise,
-            temperature: temp
+            temperature: temp,
           })
-          .then(({ data }) => {
-          })
+          .then(({ data }) => {})
           .catch((e) => {});
         window.location.replace(`/Today`);
       } else {
         // console.log("변화 없음");
       }
-    }
-    else {
-      window.alert("일정 종료 시간이 시작시간 보다 빠릅니다. 일정 변경에서 시작시간을 변경하여 주세요")
+    } else {
+      window.alert(
+        "일정 종료 시간이 시작시간 보다 빠릅니다. 일정 변경에서 시작시간을 변경하여 주세요"
+      );
     }
   };
 
@@ -229,7 +227,7 @@ const Ratinglayout = (props) => {
       // console.log("변화 없음");
     }
   };
-  
+
   useEffect(() => {
     async function loadSensor() {
       await axios
@@ -244,15 +242,15 @@ const Ratinglayout = (props) => {
           console.error(e);
         });
     }
-    
+
     async function loadCalendar() {
       await axios
         .get(`http://127.0.0.1:4500/schedule/${id}`)
         .then(({ data }) => {
           setStarttime(moment(data.started_at).format("YYYYMMDD HHmm"));
           setDeadline(moment(data.deadline_at).format("YYYYMMDD HHmm"));
-          if (data.notificationtime){
-            setNotitime(moment(data.notificationtime).format("YYYYMMDD HHmm"))
+          if (data.notificationtime) {
+            setNotitime(moment(data.notificationtime).format("YYYYMMDD HHmm"));
           }
           setContext(data.context);
         })
@@ -263,7 +261,7 @@ const Ratinglayout = (props) => {
     setInterval(() => {
       loadSensor();
     }, 60000);
-    console.log("ASDFASD")
+    console.log("ASDFASD");
   }, []);
   const handleChange1 = (event) => {
     setSelectedValue1(event.target.value);
@@ -280,16 +278,16 @@ const Ratinglayout = (props) => {
   const { isdarked } = useUserContext();
   return (
     <Ratingcon>
-      <Starttime isdark = {isdarked}>
+      <Starttime isdark={isdarked}>
         <Changestarttext>일정 시작 시간</Changestarttext>
         <Changestarttext>{moment(starttime).format("HH : mm")}</Changestarttext>
       </Starttime>
-      <Endtime isdark = {isdarked}>
+      <Endtime isdark={isdarked}>
         <Changeendtext>일정 종료 시간</Changeendtext>
         <Changeendtext>{moment().format("H : mm")}</Changeendtext>
       </Endtime>
-      <Ratingbody isdark = {isdarked}>
-        <Ratingcontent  isdark = {isdarked}>
+      <Ratingbody isdark={isdarked}>
+        <Ratingcontent isdark={isdarked}>
           <Ratingquestiontitle>일정 평가</Ratingquestiontitle>
           <Ratingquestion>
             1. 유해물질 탐지 시간이 일정 진행시간의 몇 %인가요?
@@ -302,27 +300,27 @@ const Ratinglayout = (props) => {
             >
               <FormControlLabel
                 value="1"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="80%이상 100%이하"
               />
               <FormControlLabel
                 value="2"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="60% 이상 80% 이하"
               />
               <FormControlLabel
                 value="3"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="40% 이상 60% 이하"
               />
               <FormControlLabel
                 value="4"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="20% 이상 40% 이하"
               />
               <FormControlLabel
                 value="5"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="0% 이상 20% 이하"
               />
             </RadioGroup>
@@ -339,27 +337,27 @@ const Ratinglayout = (props) => {
             >
               <FormControlLabel
                 value="1"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="0%이상 20%이하"
               />
               <FormControlLabel
                 value="2"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="20% 이상 40% 이하"
               />
               <FormControlLabel
                 value="3"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="40% 이상 60% 이하"
               />
               <FormControlLabel
                 value="4"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="60% 이상 80% 이하"
               />
               <FormControlLabel
                 value="5"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="80% 이상 100% 이하"
               />
             </RadioGroup>
@@ -373,27 +371,27 @@ const Ratinglayout = (props) => {
             >
               <FormControlLabel
                 value="1"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="0%이상 20%이하"
               />
               <FormControlLabel
                 value="2"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="20% 이상 40% 이하"
               />
               <FormControlLabel
                 value="3"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="40% 이상 60% 이하"
               />
               <FormControlLabel
                 value="4"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="60% 이상 80% 이하"
               />
               <FormControlLabel
                 value="5"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="80% 이상 100% 이하"
               />
             </RadioGroup>
@@ -407,27 +405,27 @@ const Ratinglayout = (props) => {
             >
               <FormControlLabel
                 value="1"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="매우 별로였다."
               />
               <FormControlLabel
                 value="2"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="별로였다."
               />
               <FormControlLabel
                 value="3"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="그저 그랬다."
               />
               <FormControlLabel
                 value="4"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="좋았다."
               />
               <FormControlLabel
                 value="5"
-                control={<GreenRadio isdark = {isdarked} />}
+                control={<GreenRadio isdark={isdarked} />}
                 label="매우 좋았다."
               />
             </RadioGroup>
@@ -448,8 +446,12 @@ const Ratinglayout = (props) => {
             readOnly
           />
           <Ratingbtncon>
-            <Ratingbtn isdark = {isdarked} onClick={() => Cancel()}>취소</Ratingbtn>
-            <Ratingbtn isdark = {isdarked} onClick={() => Confirm()}>완료</Ratingbtn>
+            <Ratingbtn isdark={isdarked} onClick={() => Cancel()}>
+              취소
+            </Ratingbtn>
+            <Ratingbtn isdark={isdarked} onClick={() => Confirm()}>
+              완료
+            </Ratingbtn>
           </Ratingbtncon>
         </Ratingstarcon>
       </Ratingbody>
