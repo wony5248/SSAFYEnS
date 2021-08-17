@@ -81,6 +81,10 @@ router.put("/:id", async function (req, res, next) {
         title: req.body.title,
         point: req.body.point,
         context: req.body.context,
+        humidity: req.body.humidity,
+        illuminance: req.body.illuminance,
+        noise: req.body.noise,
+        temperature: req.body.temperature
       },
       {
         headers:{access_token:

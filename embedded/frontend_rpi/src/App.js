@@ -47,24 +47,27 @@ function App() {
         .then(({ data }) => {
           // console.log(data);
           for (let i = 0; i < data.length; i++) {
-            // if (
-            //   Number(moment(data[i].notificationtime).format("HH")) ===
-            //     Number(moment().format("HH")) &&
-            //   Number(moment(data[i].notificationtime).format("mm")) ===
-            //     Number(moment().format("mm"))
-            // ) 
-            arr.push({
-              title: data[i].title,
-              context: data[i].context,
-              started_at: moment(data[i].started_at).format("YYYYMMDD HHmm"),
-              finished_at: moment(data[i].finished_at).format("YYYYMMDD HHmm"),
-              notificationtime: moment(data[i].notificationtime).format(
-                "YYYYMMDD HHmm"
-              ),
-            });
-            console.log(arr);
+            if (
+              data[i].notificationtime &&
+              Number(moment(data[i].notificationtime).format("HH")) ===
+                Number(moment().format("HH")) &&
+              Number(moment(data[i].notificationtime).format("mm")) ===
+                Number(moment().format("mm"))
+            ) {
+              arr.push({
+                title: data[i].title,
+                context: data[i].context,
+                started_at: moment(data[i].started_at).format("YYYYMMDD HHmm"),
+                finished_at: moment(data[i].finished_at).format(
+                  "YYYYMMDD HHmm"
+                ),
+                notificationtime: moment(data[i].notificationtime).format(
+                  "YYYYMMDD HHmm"
+                ),
+              });
+              console.log(arr);
+            }
           }
-          // }
           axios.post(`http://127.0.0.1:4500/sensor/notification`, {
             arr,
           });
