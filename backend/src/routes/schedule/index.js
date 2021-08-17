@@ -59,7 +59,7 @@ router.put(
   controller.put_$schedule_id$
 );
 //Deletes a schedule
-router.delete("/:schedule_id", validation.date, controller.delete_$schedule_id$);
+router.delete("/:schedule_id", controller.delete_$schedule_id$);
 
 //Get all schedules of user of specific month
 router.get("/month/:date", validation.date, controller.get_month_$date$);
