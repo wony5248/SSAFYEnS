@@ -3,6 +3,8 @@ const { isEmpty } = require("lodash");
 const moment = require("moment");
 moment.tz.setDefault("Asia/Seoul");
 
+
+//not null
 exports.date = check("date")
   .notEmpty()
   .custom((value, { req }) => moment(value).isValid())
@@ -29,6 +31,7 @@ exports.finished_at = check("finished_at")
   .custom((value, { req }) => moment(value).isValid())
   .customSanitizer((value, { req }) => moment(value).toDate());
 
+//normal
 exports.deadline_at = check("deadline_at")
   .custom((value, { req }) => moment(value).isValid())
   .customSanitizer((value, { req }) => moment(value).toDate());
@@ -49,8 +52,7 @@ exports.year = check("year").customSanitizer((value, { req }) =>
 );
 
 exports.cnt_schedule = check("cnt_schedule").default(0);
-exports.point = check("point").customSanitizer((value, { req }) => 0);
-// exports.user_id = check("user_id").default("honggildong1!");
+exports.point = check("point").isInt().customSanitizer((value, { req }) => 0);
 
 //environment
 exports.humidity = check("humidity").default(0);

@@ -217,36 +217,36 @@ exports.login = function (req, res) {
     console.log("This is login req.body:", req.body);
     const { user_id } = req.body
 
-    db["users"].findOne({where: { user_id }})
-    .then((user) => {
-      console.log("This is login user:", user);
+    db["users"].findOne({ where: { user_id } })
+      .then((user) => {
+        console.log("This is login user:", user);
 
-      // 해당 user_id 없으면 에러
-      if (user == null) {
-        console.log("User not found");
-        return reject();
-      // 비밀번호 안 맞으면 에러
-      } else if (!bcrypt.compareSync(req.body.password,user.password)) {
-        console.log("Password is not valid");
-        return reject();
-      } else {
-        console.log('test')
-        const token = jsonwebtoken.sign(
-          { user_id: user.user_id }, // payload
-          config.secret || "secret", // secretkey // config 작동 안하는 것으로 확인
-          { expiresIn: config.expiresIn || 86400 } // 유효기간 정함. 해당 시간이 넘으면 나중에 verify할 때 오류 발생
-        )
-        console.log("This is login token:", token);
-        
-        const data = {
-          user_id: user.user_id,
-          access_token: token,
-        };
-        console.log("This is login data:", data);
-        return resolve(data);
-      }
-    })
-    .catch((error) => { return reject(error); });
+        // 해당 user_id 없으면 에러
+        if (user == null) {
+          console.log("User not found");
+          return reject();
+          // 비밀번호 안 맞으면 에러
+        } else if (!bcrypt.compareSync(req.body.password, user.password)) {
+          console.log("Password is not valid");
+          return reject();
+        } else {
+          console.log('test')
+          const token = jsonwebtoken.sign(
+            { user_id: user.user_id }, // payload
+            config.secret || "secret", // secretkey // config 작동 안하는 것으로 확인
+            { expiresIn: config.expiresIn || 86400 } // 유효기간 정함. 해당 시간이 넘으면 나중에 verify할 때 오류 발생
+          )
+          console.log("This is login token:", token);
+
+          const data = {
+            user_id: user.user_id,
+            access_token: token,
+          };
+          console.log("This is login data:", data);
+          return resolve(data);
+        }
+      })
+      .catch((error) => { return reject(error); });
 
   });
 };
@@ -309,48 +309,48 @@ exports.getUserById = function (req, res, next) {
 
     const { user_id } = req.params;
     db["users"]
-    .findOne({where: { user_id }})
-    .then((user) => {
-      console.log("This is getUserById user:", user)
-      if (user == null) {
-        // 401 에러로 올릴 필요
-        return reject("User not found")
-      }
+      .findOne({ where: { user_id } })
+      .then((user) => {
+        console.log("This is getUserById user:", user)
+        if (user == null) {
+          // 401 에러로 올릴 필요
+          return reject("User not found")
+        }
 
-      // mytrophies, mygroups
-      user.getTrophies() 
-      .then((trophies) => {
-        mytrophies = trophies.map(datum => {  
-          const { trophy_id, title, context, is_hidden, exp, img, created_at, updated_at, usersmntrophies } = datum;
-          // console.log({ trophy_id, title, context, is_hidden, exp, img, created_at, updated_at, trophy_id: usersmntrophies.trophy_id, user_id: usersmntrophies.user_id, achieved_at: usersmntrophies.achieved_at })
-          return { trophy_id, title, context, is_hidden, exp, img, created_at, updated_at, achieved_at: usersmntrophies.achieved_at }
-        })
-        console.log("This is getUserById mytrophies:", mytrophies)
-        // mygroups
-        user.getGroups()
-        .then((groups) => {
-          mygroups = groups.map(group => {
-            const { group_id, name, context, pax, ranking, created_at, updated_at, usersmngroups } = group
-            return { group_id, name, context, pax, ranking, created_at, updated_at, joined_at: usersmngroups.joined_at, is_group_admin: usersmngroups.is_group_admin }
+        // mytrophies, mygroups
+        user.getTrophies()
+          .then((trophies) => {
+            mytrophies = trophies.map(datum => {
+              const { trophy_id, title, context, is_hidden, exp, img, created_at, updated_at, usersmntrophies } = datum;
+              // console.log({ trophy_id, title, context, is_hidden, exp, img, created_at, updated_at, trophy_id: usersmntrophies.trophy_id, user_id: usersmntrophies.user_id, achieved_at: usersmntrophies.achieved_at })
+              return { trophy_id, title, context, is_hidden, exp, img, created_at, updated_at, achieved_at: usersmntrophies.achieved_at }
+            })
+            console.log("This is getUserById mytrophies:", mytrophies)
+            // mygroups
+            user.getGroups()
+              .then((groups) => {
+                mygroups = groups.map(group => {
+                  const { group_id, name, context, pax, ranking, created_at, updated_at, usersmngroups } = group
+                  return { group_id, name, context, pax, ranking, created_at, updated_at, joined_at: usersmngroups.joined_at, is_group_admin: usersmngroups.is_group_admin }
+                })
+                console.log("This is getUserById mygroups:", mygroups)
+
+                // user, mygroups, mytrophies 합체
+                const data = { ...user.toJSON(), mytrophies, mygroups }
+                return resolve(data)
+
+              })
+              .catch((err) => { return reject(err); })
+
           })
-          console.log("This is getUserById mygroups:", mygroups)
+          .catch((error) => { return reject(error) })
 
-          // user, mygroups, mytrophies 합체
-          const data = { ...user.toJSON(), mytrophies, mygroups}
-          return resolve(data)
-          
-        })
-        .catch((err) => { return reject(err); })
 
       })
-      .catch((error) => {return reject(error)})
-
-
-    })
-    .catch((error) => {
-      console.log("Unknown Error", error)
-      return reject(error)
-    })
+      .catch((error) => {
+        console.log("Unknown Error", error)
+        return reject(error)
+      })
   })
 }
 
@@ -413,29 +413,29 @@ exports.deleteUserById = function (req, res, next) {
     // jwt로 본인 계정을 수정하고 있는 것인지 확인 필요
     // else if (req.user_id !== user_id) return reject("Only oneself can delete their info")
 
-    
+
     // user가 삭제될 때 외래키 관계된 것들이 삭제를 방지한다
     // 현재로서는 usersmngroups, applicants, usersmntrophies가 있다.
-    
-    db["applicants"].destroy({ where: { user_id }})
-    .then(() => {
-      db["usersmngroups"].destroy({ where: { user_id }})
+
+    db["applicants"].destroy({ where: { user_id } })
       .then(() => {
-        db["usersmntrophies"].destroy({ where: { user_id }})
-        .then(() => {
-          db["users"].destroy({ where: { user_id }})
-          .then((data) => {
-            console.log(data)
-            if (!data) return reject("삭제된 user가 없습니다")
-            return resolve()  // data를 담으면 오류남
+        db["usersmngroups"].destroy({ where: { user_id } })
+          .then(() => {
+            db["usersmntrophies"].destroy({ where: { user_id } })
+              .then(() => {
+                db["users"].destroy({ where: { user_id } })
+                  .then((data) => {
+                    console.log(data)
+                    if (!data) return reject("삭제된 user가 없습니다")
+                    return resolve()  // data를 담으면 오류남
+                  })
+
+              })
+
           })
 
-        })
-
       })
-      
-    })
-    .catch((error) => { return reject(error)})
+      .catch((error) => { return reject(error) })
 
   });
 };
@@ -453,26 +453,26 @@ exports.addExpById = function (req, res, next) {
     // updateUserById처럼 findOne-update도 가능하지만 단순히 숫자만 증가/감소 시키는 것이라면
     // instance에 대해 increment를 할 수도 있다 https://github.com/sequelize/sequelize/issues/7268
     db["users"]
-    .findOne({ where: { user_id } })
-    .then((user) => {
-      // console.log("This is addExpById user:", user)
-      user
-      .increment(["exp"], { by: add_exp })
-      .then((data) => {
-        // console.log("This is addExpById data:", data)
-        // data는 업데이트 되기 이전을 돌려준다
-        // https://sequelize.org/master/class/lib/model.js~Model.html#instance-method-increment
-        // The updated instance will be returned by default in Postgres. However, in other dialects, you will need to do a reload to get the new values.
-        // 굳이 업데이트된 상태의 user를 주려면 reload해야된다
-        return resolve(data.reload());
+      .findOne({ where: { user_id } })
+      .then((user) => {
+        // console.log("This is addExpById user:", user)
+        user
+          .increment(["exp"], { by: add_exp })
+          .then((data) => {
+            // console.log("This is addExpById data:", data)
+            // data는 업데이트 되기 이전을 돌려준다
+            // https://sequelize.org/master/class/lib/model.js~Model.html#instance-method-increment
+            // The updated instance will be returned by default in Postgres. However, in other dialects, you will need to do a reload to get the new values.
+            // 굳이 업데이트된 상태의 user를 주려면 reload해야된다
+            return resolve(data.reload());
+          })
+          .catch((error) => {
+            return reject(error);
+          });
       })
       .catch((error) => {
+        console.log(error);
         return reject(error);
       });
-    })
-    .catch((error) => {
-      console.log(error);
-      return reject(error);
-    });
   });
 };
