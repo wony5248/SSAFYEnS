@@ -35,10 +35,18 @@ const Plan = (props) =>{
         }
         else{
             try{
-                await scheduleAPI.addSchedule(title, started_at, deadline_at, moment().format('YYYY-MM-DD'), state.alarmYES);
-                alert('등록성공');
+                if(!state.alarmYES){
+                    await scheduleAPI.addSchedule(title, started_at, deadline_at, moment().format('YYYY-MM-DD'), state.alarmYES);
+                    alert('등록성공');
+                }else{
+                    let alarmtime = moment(started_at).subtract(timer, 'minutes').format('YYYY-MM-DD HH:mm');
+                    await scheduleAPI.addSchedule(title, started_at, deadline_at, moment().format('YYYY-MM-DD'), state.alarmYES, alarmtime);
+                    alert('등록성공');
+                }
+                
             }catch(e){
                 alert('등록에 실패했습니다');
+                console.log(e);
             }
         }
     }
@@ -157,11 +165,6 @@ const Plan = (props) =>{
         }
         return result;
     };
-
-    // const planSubmit = () =>{
-        
-    //     alert(`${started_at}, ${deadline_at}`);  
-    // };
 
 
     return(

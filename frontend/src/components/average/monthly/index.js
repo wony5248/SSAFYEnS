@@ -21,7 +21,7 @@ const Daily = () =>{
             color: '#A3CCA3',
         },
       })(Rating);
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState(new Date(moment().format('YYYY-MM-DD')));
     let [category, setCategory] = useState([]);
     let [time, setTime] = useState([]);
 
@@ -60,6 +60,7 @@ const Daily = () =>{
                 let t = [];
                 let dic = {};
                 let text = [];
+
                 for(let i = 0; i < end-start+1; i++){
                     c[i] = `${i+1}주차`;
                     dic[start+i-1] = i;
@@ -78,7 +79,6 @@ const Daily = () =>{
                 setRate(data.sum_point/20);
                 setContext(text); 
             }catch(e){
-                alert('일정이 없습니다.');
                 setCategory([]);
                 setTime([]);
                 setRate(0);

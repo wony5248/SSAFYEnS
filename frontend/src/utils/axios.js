@@ -25,7 +25,6 @@ export const scheduleAPI = {
         })
     },
     modifySchedule: async (schedule_id, date, title, notification, started_at, deadline_at, finished_at, notificationtime)=>{
-        // console.log(`${title}, ${notification}`);
         return await request.put(`/schedule/${schedule_id}`,{
             schedule_id, date, title, started_at, deadline_at, finished_at, notification, notificationtime
         })
