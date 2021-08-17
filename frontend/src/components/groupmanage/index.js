@@ -302,8 +302,7 @@ const Groupmanage = (props) => {
       await groupAPI
         .getGroup(id)
         .then(({ data }) => {
-          setTitle(data.name);
-          setMember(data.members);
+          
           for (let i = 0; i < data.members.length; i++) {
             data.members[i].id = i + 1;
             data.members[i].joined_at = moment(
@@ -316,6 +315,8 @@ const Groupmanage = (props) => {
               setIsleader(true);
             }
           }
+          setTitle(data.name);
+          setMember(data.members);
           console.log(data.members);
         })
         .catch((e) => {
