@@ -155,11 +155,16 @@ const Ratinglayout = (props) => {
   const [selectedValue2, setSelectedValue2] = React.useState("1");
   const [selectedValue3, setSelectedValue3] = React.useState("1");
   const [selectedValue4, setSelectedValue4] = React.useState("1");
+  const [notitime, setNotitime] = useState("")
   const [starttime, setStarttime] = useState("");
   const [deadline, setDeadline] = useState("");
   const [context, setContext] = useState("");
   const { id } = props;
-
+  const [temp, setTemp] = useState(0);
+  const [humid, setHumid] = useState(0);
+  const [noise, setNoise] = useState(0);
+  const [light, setLight] = useState(0);
+  
   const Confirm = async () => {
 
     const string = `집중점수 :${Number(selectedValue1) * 20} 점 진행점수 :${
@@ -187,7 +192,7 @@ const Ratinglayout = (props) => {
             started_at: starttime,
             finished_at: moment().format("YYYYMMDD HHmm"),
             deadline_at: deadline,
-            notificationtime: null,
+            notificationtime: notitime ? notitime : null,
             notification: null,
             is_finished: true,
             context: `${context} ${string}`,
@@ -199,6 +204,10 @@ const Ratinglayout = (props) => {
                 4) *
               20
             }`,
+            humidity: humid,
+            illuminance: light,
+            noise: noise,
+            temperature: temp
           })
           .then(({ data }) => {
           })
@@ -220,19 +229,40 @@ const Ratinglayout = (props) => {
       // console.log("변화 없음");
     }
   };
-
+  
   useEffect(() => {
+    async function loadSensor() {
+      await axios
+        .get("http://127.0.0.1:4500/sensor")
+        .then(({ data }) => {
+          setTemp(data.temp);
+          setNoise(data.noise);
+          setHumid(data.humid);
+          setLight(data.light);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    }
+    
     async function loadCalendar() {
       await axios
         .get(`http://127.0.0.1:4500/schedule/${id}`)
         .then(({ data }) => {
           setStarttime(moment(data.started_at).format("YYYYMMDD HHmm"));
           setDeadline(moment(data.deadline_at).format("YYYYMMDD HHmm"));
+          if (data.notificationtime){
+            setNotitime(moment(data.notificationtime).format("YYYYMMDD HHmm"))
+          }
           setContext(data.context);
         })
         .catch((e) => {});
     }
     loadCalendar();
+    loadSensor();
+    setInterval(() => {
+      loadSensor();
+    }, 60000);
     console.log("ASDFASD")
   }, []);
   const handleChange1 = (event) => {

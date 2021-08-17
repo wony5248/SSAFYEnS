@@ -17,20 +17,21 @@ const Sensor = () => {
   const [humid, setHumid] = useState("");
   const [noise, setNoise] = useState("");
   const [light, setLight] = useState("");
-  async function loadSensor() {
-    await axios
-      .get("http://127.0.0.1:4500/sensor")
-      .then(({ data }) => {
-        setTemp(data.temp);
-        setNoise(data.noise);
-        setHumid(data.humid);
-        setLight(data.light);
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-  }
+  
   useEffect(() => {
+    async function loadSensor() {
+      await axios
+        .get("http://127.0.0.1:4500/sensor")
+        .then(({ data }) => {
+          setTemp(data.temp);
+          setNoise(data.noise);
+          setHumid(data.humid);
+          setLight(data.light);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    }
     loadSensor();
     setInterval(() => {
       loadSensor();
