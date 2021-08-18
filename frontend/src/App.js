@@ -25,21 +25,22 @@ const App = () =>{
     <BrowserRouter>
       <Switch>
         <Route exact path = "/" component={Main}/>
+        <Route exact path = "/login" component={LogIn}/>
+        <Route exact path = "/resetpassword/:id" component={ResetPassword}/>
+        <Route exact path = "/signup" component={Signup}/>
+        <Route exact path = "/find" component={Find}/>
         <Route exact path = "/plan" component={Plan}/>
         <Route exact path = "/planlist/:date" component={PlanList}/>
         <Route exact path = "/planmodify/:date/:id" component={PlanModify}/>
-        <Route exact path = "/login" component={LogIn}/>
-        <Route exact path = "/signup" component={Signup}/>
         <Route exact path = "/group/:id/manage" component = {Groupmanage}/>
         <Route exact path = "/group/:id" component = {Groupinfo}/>
         <Route exact path = "/group" component={Group}/>
-        <Route exact path = "/find" component={Find}/>
         <Route exact path = "/mypage" component={MyPage}/>
         <Route exact path = "/dailyevaluate" component={DailyEvaluate}/>
         <Route exact path = "/modifyuserinfo/:id" component={ModifyUserInfo}/>
         <Route exact path = "/checkpassword/:id" component={CheckPw}/>
-        <Route exact path = "/resetpassword/:id" component={ResetPassword}/>
         <Route exact path = "/average/:id" component={Average}/>
+        
       </Switch>
     </BrowserRouter>
   );

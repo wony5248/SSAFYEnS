@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { useLocation } from "react-router-dom";
-import {Grid,  Box, withStyles } from '@material-ui/core';
+import {Grid,  Box, withStyles} from '@material-ui/core';
 import Wrapper from './styles';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -14,18 +13,25 @@ import { scheduleAPI } from "../../../utils/axios";
 import moment from "moment";
 
 const Daily = () =>{
-    const location = useLocation();
-    const [query, setQuery] = useState("react");
+    const [context, setContext] = useState('');
+    const [rate, setRate] = useState(0);
     const [data, setData] = useState([]);
-    const [rating, setRating] = useState(0);
     const StyledRating = withStyles({
         iconFilled: {
             color: '#A3CCA3',
         },
       })(Rating);
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState(new Date(moment().format('YYYY-MM-DD')));
 
-    const graph = {
+    let [category, setCategory] = useState([]);
+    let [time, setTime] = useState([]);
+
+    const [illumi, setIllumi] = useState(0);
+    const [noise, setNoise] = useState(0);
+    const [temp, setTemp] = useState(0);
+    const [humi, setHumi] = useState(0);
+
+    let graph = {
         options:{
             chart:{
                 // chart 형태
@@ -33,33 +39,56 @@ const Daily = () =>{
             },
             // x축
             xaxis:{
-                categories:['회원가입 개발', 'fe 회의', '오후 스크럼']
+                categories:category
             }
         },
         series:[
             {   
                 // y축
-                name:'score',
-                data:[1, 4, 5]
+                name:'minute',
+                data:time
             }
         ]
     };
 
-    const context = "test";
-
     useEffect(() => {
         let completed = false;
-    
         async function getMonthlySchedule() {
-          const result = await scheduleAPI.getDailyAverage(moment(date).format('YYYY-MM-DD'));
-          setData(result.data);
-          console.log(result.data);
+            try{
+                const result = await scheduleAPI.getDailyAverage(moment(date).format('YYYY-MM-DD'));
+                setData(result.data);
+                let c = [];
+                let t = [];
+                let text = [];
+                for(let i=0; i<result.data.schedules.length; i++){
+                    c[i] = result.data.schedules[i].title;
+                    t[i] = moment.duration(moment(result.data.schedules[i].finished_at).diff(moment(result.data.schedules[i].started_at))).asMinutes();
+                    text = text.concat(result.data.schedules[i].context);
+                }
+                setCategory(c);
+                setTime(t);
+                setHumi((data.sum_humidity/data.schedules.length).toFixed(2));
+                setIllumi((data.sum_illuminance/data.schedules.length).toFixed(2));
+                setNoise((data.sum_noise/data.schedules.length).toFixed(2));
+                setTemp((data.sum_temperature/data.schedules.length).toFixed(2));
+                setRate(data.sum_point/20);
+                setContext(text); 
+            }catch(e){
+                setCategory([]);
+                setTime([]);
+                setRate(0);
+                setHumi(0);
+                setIllumi(0);
+                setNoise(0);
+                setTemp(0);
+                setContext('');
+            }
         }
         getMonthlySchedule();
         return () => {
           completed = true;
         };
-      }, [query]);
+      }, [date]);
 
     return(
         <Wrapper>
@@ -76,14 +105,16 @@ const Daily = () =>{
                         <Grid container direction="column">
                             <div style={{ color:'#ffffff', borderRadius:45, width:'130px',background:'#A3CCA3', height:'45px'}}>
                                 <div style={{marginTop:'10px', fontWeight:'bold', textAlign:'center' }}>
-                                    일정수정
+                                    평가 내용
                                 </div>
                             </div>
                             <div style={{border:'1px solid #A3CCA3', width:'400px', height:'200px', textAlign:'center', 
                                 paddingTop:'5px', margin : '10px', borderRadius:45, color:'black', justifyContent: 'center'}}>
-                                {context}
+                                <div style={{marginTop:'15px'}}>
+                                    {context}
+                                </div>
                             </div>
-                            <div style={{ color:'#ffffff', borderRadius:45, width:'130px',background:'#A3CCA3', height:'45px'}}>
+                            <div style={{ color:'#ffffff', borderRadius:45, width:'130px',background:'#A3CCA3', height:'45px', marginTop:'10px'}}>
                                 <div style={{marginTop:'10px', fontWeight:'bold', textAlign:'center' }}>
                                     평균 평점
                                 </div>
@@ -91,7 +122,7 @@ const Daily = () =>{
                             <Grid style={{width:'380px', marginLeft:'15px'}}>
                                 <Box component="fieldset" mb={3} borderColor="transparent" style={{marginLeft:'-15px'}}>
                                     <StyledRating name="simple-controlled"
-                                        value={rating}
+                                        value={rate}
                                         readOnly style={{marginTop:'12px'}} />
                                 </Box>
                             </Grid>
@@ -100,22 +131,22 @@ const Daily = () =>{
                                     평균 환경
                                 </div>
                             </div>
-                            <Grid style={{width:'400px', marginLeft:'10px', marginTop:'20px', align:'center', display: 'flex'}}>
+                            <Grid style={{width:'500px', marginLeft:'10px', marginTop:'20px', align:'center', display: 'flex'}}>
                                 <WbIncandescentIcon style={{color:'#A3CCA3'}}/> 
-                                <div style={{marginLeft:'20px'}} onClick={()=>{alert(typeof startMonth)}}>
-                                    밝기
+                                <div style={{marginLeft:'20px'}} >
+                                    {illumi}
                                 </div>
                                 <MicIcon style={{color:'#A3CCA3' , marginLeft:'30px'}}/> 
                                 <div style={{marginLeft:'20px'}}>
-                                    소음
+                                    {noise}
                                 </div>                                    
                                 <OpacityIcon style={{color:'#A3CCA3' , marginLeft:'30px', marginTop:'-2px'}}/> 
                                 <div style={{marginLeft:'20px'}}>
-                                    습도
+                                    {humi}
                                 </div>
                                 <Thermometer style={{color:'#A3CCA3' , marginLeft:'30px'}} />
                                 <div style={{marginLeft:'20px'}}>
-                                    온도
+                                    {temp}
                                 </div>
                             </Grid>
                         </Grid>
