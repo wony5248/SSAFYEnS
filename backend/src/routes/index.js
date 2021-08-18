@@ -1,28 +1,23 @@
 const router = require("express").Router();
-const aaRoutes = require("./aa");
-// const mvpRoutes = require("./mvp");
 const userRoutes = require("./user");
 const groupRoutes = require("./group");
-// const middleware = require("../middleware");
+const middleware = require("../middleware");
 const averageRoutes = require("./average");
 const scheduleRoutes = require("./schedule");
+const trophyRoutes = require("./trophy");
 
-//접속요청 경로 출력
 router.use((req, res, next) => {
-  console.log(`\n(${req.socket.remoteAddress}): ${req.method} ${req.path}`);
-  next();
-});
+    console.log(req.socket.remoteAddress, req.method, req.path)
+    next()
+})
 
-// jwt 토큰
-// router.use(middleware.verifyToken)
-// jwt 토큰 없는 경우도 고려
-// jwt 토큰 뜯어서 전달
-// verifyToken(req, res, next);
 
-// router.use("/mvp", mvpRoutes);
+
 router.use("/user", userRoutes);
+router.use(middleware.verifyToken);
 router.use("/group", groupRoutes);
 router.use("/average", averageRoutes);
 router.use("/schedule", scheduleRoutes);
+router.use("/trophy", trophyRoutes);
 
 module.exports = router;

@@ -35,9 +35,6 @@ router.get("/duplicatecheckcellphone/:cellphone", (req, res) => {
     });
 });
 
-
-
-
 router.post("/", (req, res) => {
   user
     .createUser(req)
@@ -49,7 +46,7 @@ router.post("/", (req, res) => {
     });
 });
 
-router.get("/id", (req, res) => {
+router.post("/id", (req, res) => {
   user
     .findId(req)
     .then((data) => {
@@ -60,7 +57,7 @@ router.get("/id", (req, res) => {
     });
 });
 
-router.get("/password", (req, res) => {
+router.post("/password", (req, res) => {
   user
     .validatePasswordRenew(req, res)
     .then((data) => {
@@ -70,7 +67,6 @@ router.get("/password", (req, res) => {
       res.status(400).send(error);
     });
 });
-
 
 router.put("/password", (req, res) => {
   user
@@ -105,7 +101,7 @@ router.get("/logout", (req, res) => {
     });
 });
 
-router.get("/all", (req, res) => {
+router.get("/", (req, res) => {
   user
     .getUserAll(req)
     .then((data) => {
@@ -159,6 +155,8 @@ router.post("/:user_id/exp/:add_exp", (req, res) => {
       res.status(400).send(error);
     });
 });
+
+
 
 
 module.exports = router;

@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { validationResult } = require("express-validator");
-const service = require("../../service/averageService");
 const validation = require("../../validation/averageValidation");
+const controller = require("../../controller/averageController")
 
 //Get daily information
 router.get(
@@ -10,30 +10,10 @@ router.get(
   validation.month,
   validation.year,
   validation.week,
-  validation.user_id,
-  (req, res) => {
-    payload = { ...req.params, ...req.body };
-    console.log("payload : ", payload);
-
-    const result = validationResult(req);
-    if (!result.isEmpty()) {
-      console.log(validationResult(req));
-      res.status("400").json({ error: result });
-    } else {
-      service
-        .get_daily(payload)
-        .then((data) => {
-          res.json(data);
-        })
-        .catch((error) => {
-          res.status("405").json({ error });
-        });
-    }
-  }
+  controller.get_daily_$date$
 );
 
 //comment on daily
-//todo url post /average/daily/{date} context 기능 수정
 router.put(
   "/daily/",
   validation.date,
@@ -42,107 +22,35 @@ router.put(
   validation.week,
   validation.daily_context,
   validation.user_id,
-  (req, res) => {
-    payload = { ...req.params, ...req.body };
-    console.log("payload : ", payload);
-
-    const result = validationResult(req);
-    if (!result.isEmpty()) {
-      console.log(validationResult(req));
-      res.status("400").json({ error: result });
-    } else {
-      service
-        .put_daily(payload)
-        .then((data) => {
-          res.json(data);
-        })
-        .catch((error) => {
-          res.status("405").json({ error });
-        });
-    }
-  }
+  controller.put_daily_$date$
 );
 // Delete Comment on daily
 // todo delete ​/average​/daily​/{date}
 
 // Get weekly information
 router.get(
-  "/week/:date",
-  validation.date,
+  "/weekly/:date",
+  validation.week,
   validation.month,
   validation.year,
-  validation.week,
   validation.user_id,
-  (req, res) => {
-    const payload = { ...req.body, ...req.params };
-    console.log("payload : ", payload);
-
-    const result = validationResult(req);
-    if (!result.isEmpty()) {
-      console.log(validationResult(req));
-      res.status("400").json(result);
-    } else {
-      service
-        .get_week(payload)
-        .then((data) => {
-          res.json(data);
-        })
-        .catch((error) => {
-          res.status("405").json({ error });
-        });
-    }
-  }
+  controller.get_week_$date$
 );
 
 // Get monthly information
 router.get(
-  "/month/:date",
-  validation.date,
+  "/monthly/:date",
   validation.year,
   validation.month,
   validation.user_id,
-  (req, res) => {
-    const payload = { ...req.params, ...req.body };
-    console.log(payload);
-    const result = validationResult(req);
-    if (!result.isEmpty()) {
-      console.log(validationResult(req));
-      res.status("400").json({ error: result });
-    } else {
-      service
-        .get_month(payload)
-        .then((data) => {
-          res.json(data);
-        })
-        .catch((error) => {
-          res.status("405").json({ error });
-        });
-    }
-  }
+  controller.get_month_$date$
 );
 //Get yearly information
 router.get(
-  "/year/:date",
-  validation.date,
+  "/yearly/:date",
   validation.year,
   validation.user_id,
-  (req, res) => {
-    const payload = { ...req.params, ...req.body };
-    const result = validationResult(req);
-    if (!result.isEmpty()) {
-      console.log(validationResult(req));
-      res.status("400").json({ error: result });
-    } else {
-      service
-        .get_year(payload)
-        .then((data) => {
-          res.json(data);
-        })
-        .catch((error) => {
-          res.status("405").json({ error });
-        });
-    }
-  }
+  controller.get_year_$date$
 );
 
 // Get yearly information

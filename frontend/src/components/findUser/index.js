@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
 import {Grid, Button, TextField} from '@material-ui/core';
 import Wrapper from './styles';
+import {userAPI} from '../../utils/axios';
 
 const FindUser = () =>{
+    const clicked = false;
     const [id, setId] = useState('');
     const [name1, setName1] = useState('');
     const [email1, setEmail1] = useState('');
@@ -29,10 +31,26 @@ const FindUser = () =>{
         setEmail2(event.target.value);
     };
 
-    const checkId = () =>{
-        alert(`${name1}님의 ID는 abcd 입니다.`);
+    const checkId = async() =>{
+        try{
+            const result = await userAPI.findId(name1, email1);
+            alert(`${name1}님의 ID는 ${result.data.user_id} 입니다.`);
+            setName1('');
+            setEmail1('');
+        }catch(err){
+            alert('존재하지 않는 회원입니다.');
+        }
+        
     };
 
+    const checkPw = async()=>{
+        try{
+            await userAPI.findPw(name2, id, email2);
+            window.location.replace(`/resetpassword/${id}`);
+        }catch(e){
+            alert('존재하지 않는 회원입니다.');
+        }
+    }
 
     return(
         <Wrapper>
@@ -141,7 +159,7 @@ const FindUser = () =>{
                                 </Grid>
                                 <Grid container justifyContent= 'center' style={{marginTop:'50px'}}>
                                     <Button size = "large" style={{width:'200px', height:'60px', fontSize:20, marginTop:'5px', background:'#A3CCA3', fontWeight:'bold', color:'#ffffff'}}
-                                    >PASSWORD 찾기</Button>
+                                    onClick={clicked?null:checkPw}>PASSWORD 찾기</Button>
                                 </Grid>
                             </form>
                         </Grid>

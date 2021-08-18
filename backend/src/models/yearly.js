@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       //statics
       sum_point: DataTypes.INTEGER,
       cnt_schedule: DataTypes.INTEGER,
+      cnt_finished_schedule: DataTypes.INTEGER,
 
       //environment
       sum_humidity: DataTypes.INTEGER,

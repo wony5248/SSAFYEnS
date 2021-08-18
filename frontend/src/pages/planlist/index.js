@@ -8,7 +8,7 @@ const Plan = props => {
     return(
         <div style={{height: '100%', display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
             <Header />
-            <Grid style={{minHeight:'100%'}}>
+            <Grid >
                 <PlanList/>
             </Grid>
             <Footer />

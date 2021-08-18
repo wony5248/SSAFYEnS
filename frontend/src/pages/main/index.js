@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '../../components/headers';
 import Footer from '../../components/footers';
 import Mainimg from '../../images/evolution-3885331_1920.jpg'
+import MainSession from '../../components/main';
 
 const Main = props => {
     return(
