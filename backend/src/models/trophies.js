@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
   };
   trophies.init({
     trophy_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       allowNull: false,
       primaryKey: true, // Needed for Sequelize id, https://sequelize.org/master/manual/legacy.html
