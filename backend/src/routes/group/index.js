@@ -134,4 +134,15 @@ router.delete("/:group_id/member/:user_id", (req, res) => {
     });
 });
 
+router.post("/:group_id/group_admin/:user_id", (req, res) => {
+  group
+    .postGroupAdminById(req)
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((error) => {
+      res.status(400).send(error);
+    });
+});
+
 module.exports = router;
