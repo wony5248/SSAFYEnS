@@ -17,6 +17,8 @@ const Userinfo = () =>{
 
     const [trophyList, setTrophy] = useState([]);
     const [groupList, setGroup] = useState([]);
+    const [isgroup, setIsGroup] = useState(false);
+    const [istrophy, setIsTrophy] = useState(false);
 
     const BorderLinearProgress = withStyles((theme) => ({
         root: {
@@ -60,11 +62,13 @@ const Userinfo = () =>{
                 setExp(result.data.exp);
                 if(result.data.mytrophies.length>0) {
                     setTrophy(result.data.mytrophies);
+                    setIsTrophy(true);
                 }else{
                     setTrophy([{trophy_id:0, title:'현재 트로피가 없습니다.'}]);
                 }
                 if(result.data.mygroups.length>0) {
                     setGroup(result.data.mygroups);
+                    setIsGroup(true);
                 }else{
                     setGroup([{group_id:0, name:'가입한 그룹이 없습니다.', ranking:'그룹에 가입해보세요 !'}]);
                 }
@@ -124,7 +128,7 @@ const Userinfo = () =>{
                                 <Card key={item.trophy_id} variant="outlined" style={{alignItems: 'center', justifyContent: 'center'}}>
                                     <CardContent style={{alignItems: 'center', justifyContent: 'center'}}>
                                         <div style={{width:'200px', height:'250px'}}>
-                                            <img src={trophyImg} alt="main" width="100%"></img>
+                                            {istrophy?(<img src={trophyImg} alt="main" width="100%"></img>):null}
                                             <div style={{textAlign:'center', marginTop:'15px'}}>{item.title}</div>
                                         </div>
                                     </CardContent>
@@ -145,13 +149,10 @@ const Userinfo = () =>{
                                 <Card key={item.group_id} variant="outlined">
                                     <CardContent>
                                         <Typography variant="h4" style={{margin:'1px'}}>{item.name}</Typography>
-                                        {/* <Typography variant="body1" style={{marginTop:'5px'}}>이번주 목표 : {item.goal}</Typography>
-                                        <Typography variant="body2" style={{margin:'2px'}}>팀 달성률 : {item.team}%</Typography>
-                                        <Typography variant="body2" style={{margin:'2px'}}>내 달성률 : {item.my}%</Typography> */}
                                     </CardContent>
-                                    <CardActions>
+                                    {isgroup?(<CardActions>
                                         <Button size="small" onClick={()=>select? window.location.replace(`/group/${item.group_id}`) : window.location.replace(`/group/${item.group_id}`) }>GROUP HOME</Button>
-                                    </CardActions>
+                                    </CardActions>):null}
                                 </Card>
                             );
                         })}

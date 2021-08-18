@@ -54,48 +54,64 @@ const SignUp = () =>{
     };
 
     const handleIdLabel = async () => {
-        try {
-            const result = await userAPI.checkUserId(id);
-            console.log(result)
-            setIdLabel(true);
-            setCheckId('사용 가능한 아이디입니다.');
-        } catch (error) {
-            setCheckId('ID가 이미 존재합니다.');
+        if(id===''){
+            setCheckId('아이디를 입력해주세요.');
+        }else{
+            try {
+                await userAPI.checkUserId(id);
+                setIdLabel(true);
+                setCheckId('사용 가능한 아이디입니다.');
+            } catch (error) {
+                setCheckId('ID가 이미 존재합니다.');
+                setIdLabel(false);
+            }
         }
     };
 
     const handleNumberLabel = async () => {
-        try{    
-            const result = await userAPI.checkUserPhone(number);
-            setNumberLabel(true);
-            setCheckNumber('사용 가능한 전화번호입니다.');
-        }catch (error){
-            setCheckNumber('전화번호가 이미 존재합니다.');
+        if(number===''){
+            setCheckNumber('전화번호를 입력해주세요.');
+        }else{
+            try{    
+                await userAPI.checkUserPhone(number);
+                setNumberLabel(true);
+                setCheckNumber('사용 가능한 전화번호입니다.');
+            }catch (error){
+                setCheckNumber('전화번호가 이미 존재합니다.');
+            }
         }
     };
 
     const handleEmailLabel = async () => {
-        try{ 
-            const result = await userAPI.checkUserEmail(email);
-            setEmailLabel(true);
-            setCheckEmail('사용 가능한 email입니다.');
-        }catch (error){
-            setCheckEmail('email이 이미 존재합니다.');
+        if(email===''){
+            setCheckEmail('email을 입력해주세요.');
+        }else{
+            try{ 
+                await userAPI.checkUserEmail(email);
+                setEmailLabel(true);
+                setCheckEmail('사용 가능한 email입니다.');
+            }catch (error){
+                setCheckEmail('email이 이미 존재합니다.');
+            }
         }
     };
 
     const addUserSignUp = async () => {
         if (idLabel==='false' || emailLabel==='false' || numberLabel==='false' ){
             alert('중복확인을 해주세요.');
-        }
-        else{
+        }else if(password.length<8){
+            alert('비밀번호를 8자 이상으로 입력해주세요.');
+        }else if(id && name &&email && number &&password){
             try{
-                const result = await userAPI.addUser(id, name, email, number, password);
+                await userAPI.addUser(id, name, email, number, password);
                 alert("회원가입을 축하합니다!");
                 history.push('/');
             }catch(error){
                 alert("회원가입에 실패했습니다.");
             }
+        }
+        else{
+            alert('모두 입력해주세요.');
         }
     };
 
@@ -144,7 +160,7 @@ const SignUp = () =>{
                                             <div style={{fontSize:28}}>비밀번호</div>
                                         </div>
                                         <div style={{marginLeft:'50px', marginTop:'10px'}}>
-                                            <TextField type="Password" label="" variant="outlined" id="outlined-password-input" 
+                                            <TextField type="Password" label="8자 이상 입력해주세요" variant="outlined" id="outlined-password-input" 
                                                     value = {password} onChange={handlePassword} style={{width:'300px'}} />
                                         </div>
                                     </Grid>
@@ -155,7 +171,7 @@ const SignUp = () =>{
                                             <div style={{fontSize:28}}>비밀번호 확인</div>
                                         </div>
                                         <div style={{marginLeft:'50px', marginTop:'10px'}}>
-                                            <TextField type="Password" label="" variant="outlined" id="outlined-password-input" 
+                                            <TextField type="Password" label="8자 이상 입력해주세요" variant="outlined" id="outlined-password-input" 
                                                     value = {check_password} onChange={handleCheckPassword} style={{width:'300px'}} />
                                         </div>
                                     </Grid>
@@ -185,7 +201,7 @@ const SignUp = () =>{
                                             <TextField disabled type="email" label="" variant="outlined" id="outlined-basic" 
                                                     value = {email} onChange={handleEmail} style={{width:'300px'}}/>
                                             ):(
-                                                <TextField type="text" label="" variant="outlined" id="outlined-basic" 
+                                                <TextField type="text" label="test@test.com 형식으로 입력해주세요." variant="outlined" id="outlined-basic" 
                                                     value = {email} onChange={handleEmail} style={{width:'300px'}}/>
                                             )}
                                         </div>
@@ -207,7 +223,7 @@ const SignUp = () =>{
                                                 <TextField disabled type="text" label="" variant="outlined" id="outlined-basic" 
                                                     value = {number} onChange={handleNumber} style={{width:'300px'}}/>
                                             ):(
-                                                <TextField type="text" label="" variant="outlined" id="outlined-basic" 
+                                                <TextField type="text" label="010-0000-0000 형식으로 입력해주세요." variant="outlined" id="outlined-basic" 
                                                     value = {number} onChange={handleNumber} style={{width:'300px'}}/>
                                             )}
                                         </div>

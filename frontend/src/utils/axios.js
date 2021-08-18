@@ -37,10 +37,6 @@ export const scheduleAPI = {
     getSchedule: async (schedule_id) =>{
         return await request.get(`/schedule/${schedule_id}`,{
             schedule_id
-        },{
-            headers:{
-                access_token: window.sessionStorage.getItem('token')
-            }
         })
     },
     getDailyAverage: async (date)=>{

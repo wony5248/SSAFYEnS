@@ -381,60 +381,50 @@ const PlanModify = () =>{
                             </FormGroup>
                         </Grid>
                     </Grid>
-                    <Grid container direction="row" alignItems = "center"  justifyContent = "center">
-                        <Grid style={{width:'100px', background:'#A3CCA3', height:'30px'
-                        , textAlign:'center', borderRadius:25, color:'#ffffff', marginTop:'10px'}}>
-                            <Grid style={{marginTop:'3px'}}>완료여부</Grid>
+                    
+                    {state.completed?(
+                        <Grid container direction="row" alignItems = "center"  justifyContent = "center">
+                            <Grid style={{width:'100px', background:'#A3CCA3', height:'30px'
+                            , textAlign:'center', borderRadius:25, color:'#ffffff'}}>
+                                <Grid style={{marginTop:'3px'}}>평점</Grid>
+                            </Grid>
+                            {/* rating */}
+                            <Grid style={{width:'380px', marginLeft:'50px'}}>
+                                <Box component="fieldset" mb={3} borderColor="transparent" style={{marginLeft:'-15px'}}>
+                                    <StyledRating name="simple-controlled"
+                                        value={rating}
+                                        readOnly
+                                        style={{marginTop:'20px'}} />
+                                </Box>
+                            </Grid>
+                        </Grid>):null}
+                    {state.completed?(
+                        <Grid container direction="row" alignItems = "center"  justifyContent = "center">
+                            <Grid style={{width:'100px', background:'#A3CCA3', height:'30px'
+                            , textAlign:'center', borderRadius:25, color:'#ffffff', marginLeft:'20px'}}>
+                                <Grid style={{marginTop:'3px'}}>환경</Grid>
+                            </Grid>
+                            {/* environment */}
+                            <Grid style={{width:'400px', marginLeft:'50px', marginTop:'3px', align:'center', display: 'flex'}}>
+                                <WbIncandescentIcon style={{color:'#A3CCA3' , marginRight:'20px'}}/> 
+                                <div style={{marginRight:'20px'}} onClick={()=>{alert(typeof startMonth)}}>
+                                    {illumi}
+                                </div>
+                                <MicIcon style={{color:'#A3CCA3' , marginRight:'20px'}}/> 
+                                <div style={{marginRight:'20px'}}>
+                                    {noise}
+                                </div>                                    
+                                <OpacityIcon style={{color:'#A3CCA3' , marginRight:'20px', marginTop:'-2px'}}/> 
+                                <div style={{marginRight:'20px'}}>
+                                    {humi}
+                                </div>
+                                <Thermometer style={{color:'#A3CCA3' , marginRight:'20px'}} />
+                                <div style={{marginRight:'20px'}}>
+                                    {temp}
+                                </div>
+                            </Grid>
                         </Grid>
-                        {/* checkbox */}
-                        <Grid style={{width:'380px', marginLeft:'50px', marginTop:'3px'}}>
-                            <FormGroup row>
-                                <FormControlLabel control={<Checkbox checked={state.completed} onChange={handleComplete}
-                                name = "completed" style={{color:'#A3CCA3'}}/>} label="YES" style={{marginTop:'10px'}}/>
-                            </FormGroup>
-                        </Grid>
-                    </Grid>
-                    <Grid container direction="row" alignItems = "center"  justifyContent = "center">
-                        <Grid style={{width:'100px', background:'#A3CCA3', height:'30px'
-                        , textAlign:'center', borderRadius:25, color:'#ffffff'}}>
-                            <Grid style={{marginTop:'3px'}}>평점</Grid>
-                        </Grid>
-                        {/* rating */}
-                        <Grid style={{width:'380px', marginLeft:'50px'}}>
-                            <Box component="fieldset" mb={3} borderColor="transparent" style={{marginLeft:'-15px'}}>
-                                <StyledRating name="simple-controlled"
-                                    value={rating}
-                                    onChange={(event, newValue) => {
-                                        setRating(newValue);
-                                    }} style={{marginTop:'20px'}} />
-                            </Box>
-                        </Grid>
-                    </Grid>
-                    <Grid container direction="row" alignItems = "center"  justifyContent = "center">
-                        <Grid style={{width:'100px', background:'#A3CCA3', height:'30px'
-                        , textAlign:'center', borderRadius:25, color:'#ffffff', marginLeft:'20px'}}>
-                            <Grid style={{marginTop:'3px'}}>환경</Grid>
-                        </Grid>
-                        {/* environment */}
-                        <Grid style={{width:'400px', marginLeft:'50px', marginTop:'3px', align:'center', display: 'flex'}}>
-                            <WbIncandescentIcon style={{color:'#A3CCA3' , marginRight:'20px'}}/> 
-                            <div style={{marginRight:'20px'}} onClick={()=>{alert(typeof startMonth)}}>
-                                {illumi}
-                            </div>
-                            <MicIcon style={{color:'#A3CCA3' , marginRight:'20px'}}/> 
-                            <div style={{marginRight:'20px'}}>
-                                {noise}
-                            </div>                                    
-                            <OpacityIcon style={{color:'#A3CCA3' , marginRight:'20px', marginTop:'-2px'}}/> 
-                            <div style={{marginRight:'20px'}}>
-                                {humi}
-                            </div>
-                            <Thermometer style={{color:'#A3CCA3' , marginRight:'20px'}} />
-                            <div style={{marginRight:'20px'}}>
-                                {temp}
-                            </div>
-                        </Grid>
-                    </Grid>
+                    ):null}
                 </Grid>
                 {/* footer */}
                 <Grid container justifyContent="center" alignItems="center" style={{marginTop:'30px', display:"flex",}}>
