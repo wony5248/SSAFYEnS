@@ -251,6 +251,31 @@ paths:
       security:
       - JWT: []
       
+  /schedule/{date}:
+    get:
+      tags:
+      - schedule
+      summary: Get all schedules of user of specific date
+      # operationId: 
+      parameters:
+      - name: date
+        in: path
+        description: date 형식으로 받지만 년도, 월만 반영합니다
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/schedule'
+      security:
+      - JWT: []
+  
   /schedule/month/{date}:
     get:
       tags:
@@ -1808,9 +1833,12 @@ paths:
     post:
       tags:
       - challenge
-      summary: create challenge
+      summary: create challenge(for group_admin)
       description: |-
         * challenge_id, created_at은 자동으로 생성되는 영역입니다. RequestBody에 넣지 마세요
+        * 그룹 관리자가 챌린지를 추가합니다.
+        * 이 때, 1인이 2개 이상의 그룹의 그룹 관리자일 수 있으므로, 그룹 번호를 같이 넣어줍니다.
+        * (미구현) 그룹 관리자인지 확인합니다.
       operationId: createChallenge
       requestBody:
         content:
@@ -1834,6 +1862,54 @@ paths:
                   
       security:
       - JWT: []
+      
+  /challenge/{challenge_id}:
+  
+    get:
+      tags:
+      - challenge
+      summary: gets information about each challenge
+      description: |-
+        * 특정 challenge에 대한 내용을 가져옵니다
+        * (미구현) 챌린지에 달린 모든 schedule도 가져옵니다?
+      parameters:
+      - in: path
+        required: true
+        name: challenge_id
+        schema:
+          $ref: '#/components/schemas/challenge/properties/challenge_id'
+      responses:
+        200:
+          description: 'Successful'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/challenge'
+  
+  /challenge/{challenge_id}/schedule/{schedule_id}:
+  
+    post:
+      tags:
+      - challenge
+      summary: matches schedule with challenge
+      description: |-
+        * 특정 스케쥴에 특정 챌린지를 연결합니다
+      parameters:
+      - in: path
+        required: true
+        name: challenge_id
+        schema:
+          $ref: '#/components/schemas/challenge/properties/challenge_id'
+      - in: path
+        required: true
+        name: schedule_id
+        schema:
+          $ref: '#/components/schemas/challenge/properties/challenge_id'
+      responses:
+        200:
+          description: 'Successful'
+      
+      
       
 components:
 
