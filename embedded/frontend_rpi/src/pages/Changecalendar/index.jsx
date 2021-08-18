@@ -186,12 +186,7 @@ const Changecalendarlayout = (props) => {
     const startmin = Number(`${starttime[2]}${starttime[3]}`);
     const endhour = Number(`${endtime[0]}${endtime[1]}`);
     const endmin = Number(`${endtime[2]}${endtime[3]}`);
-    console.log(`${moment().format("YYYYMMDD")}`,)
-    console.log(starttime)
-    console.log(endtime)
-    console.log(deadline)
-    console.log(title)
-    console.log(context)
+    console.log(notitime)
     if (starthour < endhour) {
       if (window.confirm("정말 완료하시겠 습니까?")) {
         await axios
@@ -266,9 +261,8 @@ const Changecalendarlayout = (props) => {
           setContext(data.context);
           setStarttime(moment(data.started_at).format("HHmm"))
           setEndtime(moment(data.finished_at).format("HHmm"))
-          console.log(data)
           setIsfinished(data.is_finished);
-          setNotitime(moment(data.notificationtime).format("HHmm"))
+          data.notificationtime ? setNotitime(moment(data.notificationtime).format("HHmm")) : setNotitime(null)
           setPoint(data.point);
         })
         .catch((e) => {});

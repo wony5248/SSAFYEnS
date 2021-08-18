@@ -19,6 +19,7 @@ info:
     * trophy와 관련된 API들이 변경되었습니다. `user/~~~~~`에서 `trophy/~~~~~~`로 모두 변경, 이동했습니다
     * created_at과 updated_at은 POST/PUT requestBody로 보내시면 안 됩니다. sequelize에서 자동으로 넣는 값입니다
     * sequelize에서는 세계협정표준시(UTC)포맷('2021-08-14T09:15:38.000Z')으로 저장/불러오기하기 때문에 moment로 변환해서 현지시각으로 변경해서 사용해야합니다. 참고로 초 단위 이하는 절사합니다. (일시적으로 보일 수는 있음)
+    * schedules.expectstart_at을 실질적으로 사용하지 않아서, 삭제했습니다.
   # termsOfService: http://swagger.io/terms/
   # contact:
   #   email: apiteam@swagger.io
@@ -59,12 +60,13 @@ tags:
     * 더 많은 논의가 필요합니다.
     * 챌린지를 각 그룹 멤버에게 할당하기
       * 그룹에서 챌린지를 생성하면 그룹 구성원들에게 동일한 스케쥴을 생성할까요?
-      * 아니면 각 스케쥴에 회원들이 직접 챌린지를 할당하는 방법? (또는 반대로 챌린지에 스케쥴 할당)
+      * **아니면 각 스케쥴에 회원들이 직접 챌린지를 할당하는 방법? (또는 반대로 챌린지에 스케쥴 할당)**
     * 새롭게 가입하는 그룹 구성원들에게도 그 스케쥴을 생성해줘야하는가?
       * 생성해준다
       * 생성하지 않는다
     * 그 스케쥴의 시간은 어떻게 정할 것인가? (생성시 시간설정이 이미 다른 구성원의 스케쥴과 겹친다면?)
       * 그룹 멤버들의 시간대를 모두 가져와서 빈 시간에만 넣을 수 있게 (이건 연산 너무 복잡함)
+    ---
     * schedule에 challenge_id 속성 추가가 필요합니다(allowNull true).
     * 0817 논의결과 두번째 방법으로, 그룹 관리자는 챌린지 내용만을 생성하고, 각 회원이 챌린지를 스케쥴에 할당하거나 스케쥴에 챌린지를 할당하는 방식입니다.(각 회원당 챌린지에 스케쥴 최대1개라고 생각하면...)
     * 챌린지에는 시간적인 개념이 없습니다. 시작이나 마감기한이 없는 형태 (일단 지금은...)
@@ -101,10 +103,10 @@ paths:
                   $ref: '#/components/schemas/schedule/properties/title'
                 context:
                   $ref: '#/components/schemas/schedule/properties/context'
-                expectstart_at:
-                  $ref: '#/components/schemas/schedule/properties/expectstart_at'
-                # started_at:
-                #   $ref: '#/components/schemas/schedule/properties/started_at'
+                # expectstart_at:
+                #   $ref: '#/components/schemas/schedule/properties/expectstart_at'
+                started_at:
+                  $ref: '#/components/schemas/schedule/properties/started_at'
                 deadline_at:
                   $ref: '#/components/schemas/schedule/properties/deadline_at'
                 notification:
@@ -1872,6 +1874,7 @@ paths:
       description: |-
         * 특정 challenge에 대한 내용을 가져옵니다
         * (미구현) 챌린지에 달린 모든 schedule도 가져옵니다?
+      operationId: getChallengeById
       parameters:
       - in: path
         required: true
@@ -1894,6 +1897,7 @@ paths:
       summary: matches schedule with challenge
       description: |-
         * 특정 스케쥴에 특정 챌린지를 연결합니다
+      operationId: createChallengeScheduleFK
       parameters:
       - in: path
         required: true
@@ -1948,10 +1952,10 @@ components:
         context:
           type: string
           format: text
-        expectstart_at:
-          type: string
-          description: 설정 시작시간
-          format: date-time
+        # expectstart_at:
+        #   type: string
+        #   description: 설정 시작시간
+        #   format: date-time
         started_at:
           type: string
           description: 실제 시작시간

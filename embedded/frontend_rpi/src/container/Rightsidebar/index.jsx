@@ -47,8 +47,8 @@ function Rightsidebar() {
     <Rightsidecontainer isdark={isdarked}>
       <Datediv isdark = {isdarked}>{Date()}</Datediv>
       <Sensorbtn isdark = {isdarked} btnName={Sensor()}></Sensorbtn>
-      <MannerBtn isdark = {isdarked} btnName="매너모드"></MannerBtn>
-      <SpeakerBtn isdark = {isdarked} btnName="다크모드"></SpeakerBtn>
+      <MannerBtn isdark = {isdarked} btnName="매너  모드"></MannerBtn>
+      <SpeakerBtn isdark = {isdarked} btnName="다크  모드"></SpeakerBtn>
       <Addbtn isdark={isdarked} onClick={() => Confirm()}>
         <AddBoxIcon></AddBoxIcon>일정 추가
       </Addbtn>

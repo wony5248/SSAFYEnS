@@ -49,10 +49,8 @@ function App() {
           for (let i = 0; i < data.length; i++) {
             if (
               data[i].notificationtime &&
-              Number(moment(data[i].notificationtime).format("HH")) ===
-                Number(moment().format("HH")) &&
-              Number(moment(data[i].notificationtime).format("mm")) ===
-                Number(moment().format("mm"))
+              moment(data[i].notificationtime).format("YYYYMMDD HHmm") ===
+                moment().format("YYYYMMDD HHmm")
             ) {
               arr.push({
                 title: data[i].title,
@@ -68,9 +66,13 @@ function App() {
               console.log(arr);
             }
           }
-          axios.post(`http://127.0.0.1:4500/sensor/notification`, {
-            arr,
-          });
+          axios
+            .post(`http://127.0.0.1:4500/sensor/notification`, {
+              arr,
+            })
+            .then(() => {
+              window.alert(`${arr.length}개의 일정 알람이 있습니다.`);
+            });
         })
         .catch((e) => {});
     }

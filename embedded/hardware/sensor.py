@@ -40,6 +40,6 @@ class Sensor():
         value = GPIO.input(SOUND_DIG)
         sound = self.analog_read(1)
         humi, temp = self.get_temp_humid()
-        self.data = {"temp": temp, "humid": humi, "noise": sound, "light": light}
+        self.data = {"temp": temp, "humid": humi, "noise": sound//20, "light": light}
         print(self.data)
         return self.data
