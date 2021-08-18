@@ -126,6 +126,11 @@ export const userAPI = {
 }
 
 export const groupAPI = {
+  assignmentAdmin : async (group_id, user_id) => {
+    return await request.post(
+      `/group/${group_id}/group_admin/${user_id}`      
+    );
+  },
   addGroup: async (name, context) => {
     return await request.post(
       "/group",
@@ -200,3 +205,17 @@ export const groupAPI = {
     return await request.delete(`/group/${groupid}/member/${userid}`);
   },
 };
+
+export const challengeAPI = {
+  addChallenge : async (group_id, name, content) => {
+    return await request.post(
+      `/challenge`,{group_id:group_id, name:name, content:content}     
+    );
+  },
+  getChallenge : async () => {
+    return await request.get(
+      `/challenge`      
+    );
+  },
+};
+

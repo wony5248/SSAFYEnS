@@ -108,10 +108,10 @@ const Header = props=>{
                                     <GroupIcon fontSize = "large" style={{color:'#A3CCA3', margin:'10px'}} />
                                     <ListItemText primary="그룹" style={{color:'#A3CCA3', margin:'10px', fontWeight:'bold'}}/>
                             </ListItem>
-                            <ListItem button onClick={() => window.location.replace (`/group`)}>
+                            {/* <ListItem button onClick={() => window.location.replace (`/group`)}>
                                     <CasinoIcon fontSize = "large" style={{color:'#A3CCA3', margin:'10px'}} />
                                     <ListItemText primary="챌린지" style={{color:'#A3CCA3', margin:'10px', fontWeight:'bold'}}/>
-                            </ListItem>
+                            </ListItem> */}
                             <ListItem button onClick={() => window.location.replace (`/mypage`)}>
                                     <PersonIcon fontSize = "large" style={{color:'#A3CCA3', margin:'10px'}} />
                                     <ListItemText primary="내 정보" style={{color:'#A3CCA3', margin:'10px', fontWeight:'bold'}}/>
