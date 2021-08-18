@@ -1,0 +1,2 @@
+/home/pi/ssafyens/ics43432/ics43432.o
+
