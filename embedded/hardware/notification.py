@@ -1,5 +1,5 @@
-# from TTS import *
-# from makeSSML import *
+from TTS import *
+from makeSSML import *
 
 import base64
 import argparse
@@ -13,16 +13,14 @@ class Notification():
         self.option = None
 
     def parse(self):
-        # 추가적인 기능 확장을 위해 startAt, finishAt 파라미터 삽입
-        # 현재는 startAt, finishAt 요소 사용 안 함
         parser = argparse.ArgumentParser()
         parser.add_argument('--title', help='Title of schedule',
                             required=True)
-        parser.add_argument('--diff', help='Started time of schedule',
+        parser.add_argument('--diff', help='diffrentiate of finished-notification',
                             default=None)
         parser.add_argument('--finishAt', help='Finished time of schedule',
                             default=None)
-        parser.add_argument('--option', help='Notification option',
+        parser.add_argument('--option', help='Notification time',
                             default='')
 
         args = parser.parse_args()
@@ -41,7 +39,7 @@ class Notification():
                 "startAt": self.startAt,
                 "finishAt": self.finishAt,
                 "option": self.option
-            }))
+            }), True)
         except:
             print(make_notification({
                     "title": self.title,
@@ -50,18 +48,11 @@ class Notification():
                     "option": self.option
                 }))
 
-# server test function
-def node_test():
-    print("Hello JBJ can you read me?")
-
-
-
 def main():
     noti = Notification()
     noti.parse()
-    # noti.notify()
+    noti.notify()
 
 if __name__ == '__main__':
     print("notification called")
-    node_test()
     main()

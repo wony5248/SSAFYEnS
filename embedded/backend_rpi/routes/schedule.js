@@ -204,7 +204,7 @@ router.get("/getdaily/:date/current", async function (req, res, next) {
         );
       });
       if (arr.length === 0) {
-        res.send("현재 등록된 일정이 없습니다.");
+        res.send(arr);
       } else {
         res.send(arr);
       }

@@ -10,7 +10,7 @@ const Speakerdiv = styled.div`
   display: flex;
   align-items: center;
   justify-content:flex-start;
-  font-size: 20px;
+  font-size: 23px;
   margin: 0px;
 `;
 
