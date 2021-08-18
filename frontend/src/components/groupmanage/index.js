@@ -100,16 +100,21 @@ const Joindiv = styled1.div`
   justify-content: flex-end;
 `;
 
-const GroupNamediv = styled1.div`
+const GroupNamediv = styled1.button`
   height: 100%;
   background-color: #a3cca3;
   padding: 0 48px;
+  border: none;
   border-radius: 45px;
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size:20px;
+  cursor: pointer;
+  &:hover{
+    background-color: #69a569;
+  }
 `;
 
 const Grouptitlediv = styled1.div`
@@ -254,7 +259,7 @@ const Groupmanage = (props) => {
     if (select2) {
       if (
         window.confirm(
-          `${applier[select - 1].user_id}의 가입 신청을 거절하시겠습니까?`
+          `${applier[select2 - 1].user_id}의 가입 신청을 거절하시겠습니까?`
         )
       ) {
         await groupAPI
@@ -280,7 +285,7 @@ const Groupmanage = (props) => {
     if (select) {
       if (window.confirm(`${member[select - 1].user_id}을 추방하시겠습니까?`)) {
         await groupAPI
-          .exileGroup(id, member[select - 1].user_id)
+          .exitGroup(id, member[select - 1].user_id)
           .then((data) => {
             window.alert(`${member[select - 1].user_id}이 추방 되었습니다.`);
             window.location.reload();
@@ -302,8 +307,7 @@ const Groupmanage = (props) => {
       await groupAPI
         .getGroup(id)
         .then(({ data }) => {
-          setTitle(data.name);
-          setMember(data.members);
+          
           for (let i = 0; i < data.members.length; i++) {
             data.members[i].id = i + 1;
             data.members[i].joined_at = moment(
@@ -316,6 +320,8 @@ const Groupmanage = (props) => {
               setIsleader(true);
             }
           }
+          setTitle(data.name);
+          setMember(data.members);
           console.log(data.members);
         })
         .catch((e) => {
@@ -353,7 +359,7 @@ const Groupmanage = (props) => {
             <Challengebtn onClick={() => (window.location.href = "/group")}>
               뒤로 가기
             </Challengebtn>
-            <GroupNamediv>{title}</GroupNamediv>
+            <GroupNamediv onClick={() => window.location.href= `/group/${id}`}>{title}</GroupNamediv>
             <Challengebtn onClick={openCreateModal}>
               그룹 정보 변경
             </Challengebtn>
@@ -372,7 +378,10 @@ const Groupmanage = (props) => {
             />
           </div>
           <Joindiv>
-            <Joinbtn onClick={Exile}>추방하기</Joinbtn>
+          <div style={{ height: "51px" }}>
+              <Acceptbtn onClick={console.log("그룹장 위임")}>그룹장 위임</Acceptbtn>
+              <Joinbtn onClick={Exile}>추방하기</Joinbtn>
+            </div>
           </Joindiv>
           <Divider style={{ backgroundColor: "#a3cca3", margin: "40px 0" }} />
           <Joineddiv>
@@ -380,13 +389,6 @@ const Groupmanage = (props) => {
             <div
               style={{ width: "25%", display: "flex", alignItems: "center" }}
             >
-              <Groupinput></Groupinput>
-              <Searchbtn>
-                <SearchIcon
-                  fontSize="large"
-                  style={{ color: "#a3cca3" }}
-                ></SearchIcon>
-              </Searchbtn>
             </div>
           </Joineddiv>
           <div style={{ height: 400, width: "100%" }}>

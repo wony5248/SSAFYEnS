@@ -15,17 +15,18 @@ export const scheduleAPI = {
             date
         })
     },
-    addSchedule: async (title, started_at, deadline_at, date, notification)=>{
+    addSchedule: async (title, started_at, deadline_at, date, notification, notificationtime=null)=>{
         return await request.post('/schedule', {
-           date, title, context : 'test', started_at, deadline_at, notification, finished_at:deadline_at
+           date, title, context : 'test', started_at, deadline_at, notification, finished_at:deadline_at, notificationtime
         }
         
-        )
+        ).then(function (response) {
+          console.log(response);
+        })
     },
-    modifySchedule: async (schedule_id, date, title, notification, started_at, deadline_at, finished_at)=>{
-        // console.log(`${title}, ${notification}`);
+    modifySchedule: async (schedule_id, date, title, notification, started_at, deadline_at, finished_at, notificationtime)=>{
         return await request.put(`/schedule/${schedule_id}`,{
-            schedule_id, date, title, started_at, deadline_at, finished_at, notification
+            schedule_id, date, title, started_at, deadline_at, finished_at, notification, notificationtime
         })
     },
     deleteSchedule: async (schedule_id)=>{
@@ -47,9 +48,9 @@ export const scheduleAPI = {
             date
         })
     },
-    getWeeklyAverage: async (year, week)=>{
-        return await request.get(`/average/weekly/${year}/${week}`,{
-            year, week
+    getWeeklyAverage: async (date)=>{
+        return await request.get(`/average/weekly/${date}`,{
+          date
         })
     },
     getMonthlyAverage: async (date)=>{
@@ -197,5 +198,9 @@ export const groupAPI = {
   //그룹 신청 거절
   exileGroup: async (groupid, userid) => {
     return await request.delete(`/group/${groupid}/applicant/${userid}`);
+  },
+  //그룹 추방 / 탈퇴
+  exitGroup: async (groupid, userid) => {
+    return await request.delete(`/group/${groupid}/member/${userid}`);
   },
 };

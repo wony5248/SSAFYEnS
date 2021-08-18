@@ -257,15 +257,44 @@ exports.getGroupBySearch = function (req, res, next) {
         }
       })
       .then((groups) => {
-        console.log("This is getGroupBySearch groups:", groups)
+        // console.log("This is getGroupBySearch groups:", groups)
         // 검색 조건에 맞는 그룹이 없는 경우
         if (!groups.length) {
           // 401 에러로 올릴 필요
           console.log("Group not found")
-          return reject()
+          return reject("Group not found")
         }
         // 검색 조건에 맞는 그룹이 있는 경우
-        return resolve(groups)
+        // members 추가
+        let groupsJSON = []
+        groups.forEach(group => {
+          group.getUsers()
+          .then((users) => {
+            // console.log("groups.length:",groups.length)
+            // console.log("This is getGroupBySearch users:",users)
+            // usersJSON은 비어있을 수 없다(그룹장이라도 있기 때문에...)
+            if (users.length) {
+              let usersJSON = users.map(user => {
+                const { user_id, name, email, cellphone, password, exp, is_admin, created_at, usersmngroups } = user.toJSON()
+                const spread = { user_id, name, email, cellphone, password, exp, is_admin, created_at, joined_at: usersmngroups.joined_at, is_group_admin: usersmngroups.is_group_admin }
+                return spread
+              })
+              // console.log("This is getGroupBySearch group.usersJSON:",usersJSON);
+              const groupJSON = { ...group.toJSON(), members: usersJSON};
+              // console.log("This is getGroupBySearch groupJSON:",groupJSON);
+              groupsJSON.push(groupJSON)
+              // console.log("groupsJSON.length:",groupsJSON.length)
+              // console.log("groupsJSON:",groupsJSON)
+            }
+            // 
+            if (groupsJSON.length === groups.length) {
+              return resolve(groupsJSON)
+            }
+            
+          })
+          .catch((err) => { return reject(err)})
+        })
+
       })
       .catch((error) => {
         console.log("Unknown Error", error)
@@ -418,7 +447,7 @@ exports.createMemberById = function (req, res, next) {
         .create({group_id, user_id: applicant_id})
         .then((member) => {
           console.log("This is createMemberById member:",member)
-          // group.pax 에 1명 추가 됐다고 더해줘야할 필요...?
+          // group.pax 에 1명 추가 됐다고 더해줘야할 필요...? pax 없애기로 합의
 
           return resolve()
         })

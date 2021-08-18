@@ -73,7 +73,7 @@ const Evalutaion = () => {
                             </div>
                             <Grid style={{width:'400px', marginLeft:'10px', marginTop:'20px', align:'center', display: 'flex'}}>
                                 <WbIncandescentIcon style={{color:'#A3CCA3'}}/> 
-                                <div style={{marginLeft:'20px'}} onClick={()=>{alert(typeof startMonth)}}>
+                                <div style={{marginLeft:'20px'}}>
                                     밝기
                                 </div>
                                 <MicIcon style={{color:'#A3CCA3' , marginLeft:'30px'}}/> 

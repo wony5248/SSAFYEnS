@@ -38,7 +38,7 @@ const PlanModify = () =>{
     const [temp, setTemp] = useState(0);
 
     const [state, setState] = useState({
-        alarmYES: true,
+        alarmCheck: true,
         completed: false
     });
 
@@ -51,12 +51,12 @@ const PlanModify = () =>{
         async function getMonthlySchedule(){
             const result = await scheduleAPI.getSchedule(id);
             setData(result.data);
-            
+
             setStartMonth(Number(moment(result.data.started_at).format('MM')));
             setStartDay(Number(moment(result.data.started_at).format('DD')));
             setStartHour(Number(moment(result.data.started_at).format('HH')));
             setStartMin(moment(result.data.started_at).format('mm'));
-            console.log(Number(moment(result.data.started_at).format('HH')))
+            
             setEndMonth(Number(moment(result.data.finished_at).format('MM')));
             setEndDay(Number(moment(result.data.finished_at).format('DD')));
             setEndHour(Number(moment(result.data.finished_at).format('HH')));
@@ -67,10 +67,11 @@ const PlanModify = () =>{
             setNoise(result.data.noise);
             setIllumi(result.data.illuminance);
             setTemp(result.data.temperature);
-
+            let start = moment(result.data.started_at).format('YYYY-MM-DD HH:mm');
+            let end = moment(result.data.notificationtime).format('YYYY-MM-DD HH:mm');
+            setTimer(moment(start).subtract(end, 'minutes').format('mm'));
             setState({completed:result.data.is_finished,
-                alarmYES:result.data.notification});
-            
+                alarmCheck:result.data.notification});            
 
         }
         getMonthlySchedule();
@@ -78,8 +79,6 @@ const PlanModify = () =>{
             completed = true;
         };
     }, [query]);
-
-    
 
     const StyledRating = withStyles({
         iconFilled: {
@@ -211,12 +210,18 @@ const PlanModify = () =>{
     const modify = async () =>{
         let started_at = moment(`${moment().format('YYYY')}-${startMonth}-${startDay} ${startHour}:${startMin}`).format('YYYY-MM-DD HH:mm');
         let deadline_at = moment(`${moment().format('YYYY')}-${endMonth}-${endDay} ${endHour}:${endMin}`).format('YYYY-MM-DD HH:mm');
+
         if(started_at>deadline_at){
             alert("마감일이 시작일보다 빠릅니다");
         }
         else{
             try{
-                await scheduleAPI.modifySchedule(id, moment(data.date).format('YYYYMMDD'), title, state.alarmYES, started_at, deadline_at, moment(data.finished_at).format('YYYY-MM-DD HH:mm'));
+                if(!state.alarmCheck){
+                    await scheduleAPI.modifySchedule(id, moment(data.date).format('YYYYMMDD'), title, state.alarmCheck, started_at, deadline_at, moment(data.finished_at).format('YYYY-MM-DD HH:mm'));
+                }else{
+                    let alarmtime = moment(started_at).subtract(timer, 'minutes').format('YYYY-MM-DD HH:mm');
+                    await scheduleAPI.modifySchedule(id, moment(data.date).format('YYYYMMDD'), title, state.alarmCheck, started_at, deadline_at, moment(data.finished_at).format('YYYY-MM-DD HH:mm'), alarmtime);
+                }
                 alert("변경이 완료되었습니다.")
                 window.location.href = `/planlist/${date}`;
             }
@@ -361,12 +366,12 @@ const PlanModify = () =>{
                         <Grid style={{marginLeft:'50px', width:'380px', marginTop:'3px'}}>
                             <FormGroup row>
                                 <FormControlLabel control={<Checkbox checked={state.alarmCheck} onChange={handleAlarm}
-                                name = "alarmYES" style={{color:'#A3CCA3'}}/>} label="YES" style={{marginTop:'10px'}}/>
+                                name = "alarmCheck" style={{color:'#A3CCA3'}}/>} label="YES" style={{marginTop:'10px'}}/>
                                 
                                 <FormControl style={{marginLeft:'15px', marginRight:'25px'}}>
                                     <InputLabel id = "demo-simple-select-lable">시간</InputLabel>
                                     <Select labelId="demo-simple-select-lable" style={{width:'100px'}}
-                                    id = "demo-simple-select" value = {timer} onChange={handleTimer}>
+                                    id = "demo-simple-select" value = {timer} key={timer} onChange={handleTimer}>
                                         <MenuItem value ={10}>10분 전</MenuItem>
                                         <MenuItem value ={15}>15분 전</MenuItem>
                                         <MenuItem value ={30}>30분 전</MenuItem>
