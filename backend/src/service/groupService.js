@@ -524,6 +524,9 @@ exports.deleteMemberById = function (req, res, next) {
       // user_id가 group_id의 그룹관리자, 혹은 본인인지 확인 필요
       if (data.is_group_admin || req.user_id===data.user_id) {
         /* pass */
+        if (data.is_group_admin && req.user_id===data.user_id) {
+          return reject("그룹관리자는 그룹을 탈퇴할 수 없습니다")
+        }
       } else { 
         return reject("그룹 관리자 또는 본인이 아닙니다");
       }
@@ -537,6 +540,60 @@ exports.deleteMemberById = function (req, res, next) {
         if (!data) return reject("Group이 존재하지 않음/해당 그룹에 멤버가 아님/user_id가 존재하지 않음"); // 아무것도 삭제 안한 경우 에러
         // usersmngroups 테이블에서 삭제
         return resolve()
+      })
+      // 존재하지 않은 group_id면 에러
+      .catch((error) => {
+        return reject(error)
+      })
+
+    })
+    .catch((err) => { return reject(err)})
+
+    
+  })
+}
+
+exports.postGroupAdminById = function (req, res, next) {
+  return new Promise(async function (resolve, reject) {
+
+    const { group_id } = req.params
+    const user_id = req.params.user_id
+
+    // jwt 인증 확인 필요
+    if (!req.user_id) return reject("jwt must be provided")
+    
+    // jwt를 통해 user_id 필요
+    // 이 요청은 회원 본인이 그룹 관리자인 경우만 실행할 수 있다
+    db["usersmngroups"]
+    .findOne({where: { user_id: req.user_id, group_id }}) // 본인
+    .then((data) => {
+      // user_id가 group_id의 그룹관리자인 본인인지 확인 필요
+      if (data.is_group_admin && req.user_id===data.user_id) {
+        /* pass */
+      } else { 
+        return reject("본인은 해당 그룹 관리자가 아닙니다");
+      }
+
+      // 그룹 멤버 관리자로 승격
+      db["usersmngroups"]
+      .update(
+        { is_group_admin: true },
+        { where: { group_id, user_id }}
+      )
+      // where에 해당하는 모든 (2개 이상도 가능) usersmngroups instance 업데이트
+      .then((data) => {
+        console.log("This is postGroupAdminById data:",data) // 0 또는 1 이상의 integer
+        if (!data) return reject("해당 그룹에 멤버가 아님/user_id가 존재하지 않음"); // 아무것도 삭제 안한 경우 에러
+        // 본인(관리자)의 관리자 권한 박탈
+        db["usersmngroups"]
+        .update(
+          { is_group_admin: false },
+          { where: { group_id, user_id: req.user_id }}
+        )
+        .then((data) => {
+          return resolve()
+        })
+        .catch((err) => { return reject(err)})
       })
       // 존재하지 않은 group_id면 에러
       .catch((error) => {
