@@ -1,118 +1,215 @@
-import React, {useState, useEffect} from 'react';
-import {Grid, Button, Typography, Card, CardContent, CardActions } from '@material-ui/core';
+import React from 'react';
+import {Grid, Typography, Paper, CardContent, Divider, CardActions, Button} from '@material-ui/core';
 import Wrapper from './styles';
-import Slider from 'react-slick';
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import moment from "moment";
-import {userAPI, scheduleAPI, groupAPI} from '../../utils/axios';
+import AlarmImg from '../../images/alarm.png';
+import GraphImg from '../../images/graph.png';
+import GroupImg from '../../images/group.png';
+import ScheduleImg from '../../images/schedule.png';
+import TimeImg from '../../images/time.png';
+import ListImg from '../../images/list.png';
+import IoTImg from '../../images/embedded.png';
 
 const MainSession = () =>{
-    const [select, setSelect] = useState(false);
-    const [query, setQuery] = useState("react");
-    const [data, setData] = useState([]);
-    const [groupList, setGroup] = useState([]);
-    const [scheduleList, setSchedule] = useState([]);
-
-    const groupSettings = {
-        dots: true,
-        infinite : true,
-        speed: 500,
-        slidesToShow: 1,
-        slideseToScroll:1,
-    };
-
-    const scheduleSettings = {
-        dots: true,
-        infinite : true,
-        speed: 500,
-        slidesToShow: 1,
-        slideseToScroll:1,
-    };
-
-    useEffect(() => {
-        let completed = false;
-    
-        async function getMyPage() {
-            try{
-                let result = await userAPI.mypage(
-                window.sessionStorage.getItem('id')
-                );
-                setData(result.data);
-                
-                if(result.data.mygroups.length>0) {
-                    setGroup(result.data.mygroups);
-                }else{
-                    setGroup([{group_id:0, name:'가입한 그룹이 없습니다.', ranking:'그룹에 가입해보세요 !'}]);
-                }
-
-                result = await scheduleAPI.getMonthly(moment().format('YYYY-MM-DD'));
-                let lst = [];
-                for(let i=0; i<result.data.length;i++){
-                    if(moment(result.data[i].date).format('YYYY-MM-DD')===moment().format('YYYY-MM-DD')){
-                        lst = lst.concat(result.data[i]);
-                    }
-                }
-                if(lst.length>0){
-                    setSchedule(lst);
-                }else{
-                    setSchedule([{schedule_id:0, title:'오늘 일정이 없습니다.'}]);
-                }
-                console.log(result.data);
-            }catch (err) {
-                console.log(err);
-            }
-        }
-        getMyPage();
-        return () => {
-          completed = true;
-        };
-      }, [query]);
-    
     return(
         <Wrapper>
-            {/* schedule */}
-            <div style={{margin:'30px', border: '1px solid #A3CCA3', borderRadius: 25, width:'500px', height:'300px'}}>
-                <Typography variant="overline" style={{fontSize: 30, margin:'15px'}}>MY SCHEDULE</Typography>
-                <Grid style={{width:'450px', margin:'15px'}}>
-                    <Slider {...scheduleSettings}>
-                        {scheduleList.map(item=>{
-                            return(
-                                <Card key={item.schedule_id} variant="outlined">
-                                    <CardContent>
-                                        <Typography variant="h4" style={{margin:'1px'}}>{item.title}</Typography>
-                                        <Typography variant="h6" style={{margin:'1px'}}>{moment(item.started_at).format('HH:mm')} 에 일정 시작</Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button size="small" onClick={()=>select? null : window.location.replace(`/planlist/${moment().format('YYYY-MM-DD')}`) }>SCHEDULE LIST</Button>
-                                    </CardActions>
-                                </Card>
-                            );
-                        })}
-                    </Slider>
+            {/* main */}
+            <div style={{display:"flex", alignItems: "center", justifyContent: "space-around", width: "100%", height:'500px'}}>
+                <div>
+                    <Typography variant="overline" display="block" style={{fontSize:70, fontWeight:'bold'}} >
+                        스마트한 일정관리의 시작.
+                    </Typography>
+                    <Typography variant="caption" display="block" style={{fontSize:60, marginTop:'-60px', marginBottom:'60px', fontWeight:'bold'}} >
+                        SSAFYEnS
+                    </Typography>
+                    <div style={{width:'36%', backgroundColor:'#A3CCA3', height:'30px', marginTop:'-110px'}}></div>
+                </div>
+                <Grid>
+                    모니터화면 넣자
                 </Grid>
             </div>
-            {/* group */}
-            <div style={{margin:'30px', border: '1px solid #A3CCA3', borderRadius: 25, width:'500px', height:'300px'}}>
-                <Typography variant="overline" style={{fontSize: 30, margin:'15px'}}>MY GROUP</Typography>
-                <Grid style={{width:'450px', margin:'15px'}}>
-                    <Slider {...groupSettings}>
-                        {groupList.map(item=>{
-                            return(
-                                <Card key={item.group_id} variant="outlined">
-                                    <CardContent>
-                                        <Typography variant="h4" style={{margin:'1px'}}>{item.name}</Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button size="small" onClick={()=>select? null : window.location.replace(`/group/${item.group_id}`) }>GROUP HOME</Button>
-                                    </CardActions>
-                                </Card>
-                            );
-                        })}
-                    </Slider>
+            {/* 설명 */}
+            <div style={{alignItems: "center", justifyContent: 'center', width: "100%", height: "500px"}}>
+                <Grid container direciton="column" justifyContent="center" alignItems="center">
+                    <div>
+                        <Typography variant="overline" display="block" style={{fontSize:40, marginTop:'200px', fontWeight:'bold'}} >
+                            일정을 실천하고 싶은 당신을 위해,  혼자서 일정 관리가 힘든 당신을 위해
+                        </Typography>
+                        <div style={{width:'100%', backgroundColor:'#A3CCA3', height:'20px', marginTop:'-50px'}}></div>
+                    </div>
                 </Grid>
             </div>
-            
+            {/* 기능 간략 소개 */}
+            <div style={{alignItems: "center", justifyContent: 'center', width: "100%", height: "500px"}}>
+                <div style={{marginLeft:'150px', marginTop:'50px'}}>
+                    <Typography variant="overline" display="block" style={{fontSize:40, fontWeight:'bold'}}>
+                        SERVICE
+                    </Typography>
+                </div>
+                <Grid container direction="row" justifyContent="center" alignItems="center">
+                    <div>
+                        <Paper elevation={0} style={{width:'250px'}}>
+                            <CardContent>
+                                <img src={ListImg} width="150px"/>
+                            </CardContent>
+                            <CardContent>
+                                <Typography variant="button" display="block" gutterBottom style={{fontSize:20, fontWeight:'bold'}}>
+                                    Schedule
+                                </Typography>
+                            </CardContent>
+                            <Divider style={{width:'200px'}}/>
+                            <CardContent>
+                                <Typography variant="body2" display="block" gutterBottom>
+                                    하루 일정을 
+                                </Typography>
+                                <Typography variant="body2" display="block" gutterBottom>
+                                    쉽게 등록하고 실천해봐요
+                                </Typography>
+                            </CardContent>
+                        </Paper>
+                    </div>
+                    <div>
+                        <Paper elevation={0} style={{width:'250px'}}>
+                            <CardContent>
+                                <img src={AlarmImg} width="150px"/>
+                            </CardContent>
+                            <CardContent>
+                                <Typography variant="button" display="block" gutterBottom style={{fontSize:20, fontWeight:'bold'}}>
+                                    alarm
+                                </Typography>
+                            </CardContent>
+                            <Divider style={{width:'200px'}}/>
+                            <CardContent>
+                                <Typography variant="body2" display="block" gutterBottom>
+                                    일정을 잊지 않도록
+                                </Typography>
+                                <Typography variant="body2" display="block" gutterBottom>
+                                    알림을 드려요
+                                </Typography>
+                            </CardContent>
+                        </Paper>
+                    </div>
+                    <div>
+                        <Paper elevation={0} style={{width:'250px'}}>
+                            <CardContent>
+                                <img src={TimeImg} width="150px"/>
+                            </CardContent>
+                            <CardContent>
+                                <Typography variant="button" display="block" gutterBottom style={{fontSize:20, fontWeight:'bold'}}>
+                                    timer
+                                </Typography>
+                            </CardContent>
+                            <Divider style={{width:'200px'}}/>
+                            <CardContent>
+                                <Typography variant="body2" display="block" gutterBottom>
+                                    스톱워치와 타이머도
+                                </Typography>
+                                <Typography variant="body2" display="block" gutterBottom>
+                                    사용할 수 있어요
+                                </Typography>
+                            </CardContent>
+                        </Paper>
+                    </div>
+                    <div>
+                        <Paper elevation={0} style={{width:'250px'}}>
+                            <CardContent>
+                                <img src={GroupImg} width="150px"/>
+                            </CardContent>
+                            <CardContent>
+                                <Typography variant="button" display="block" gutterBottom style={{fontSize:20, fontWeight:'bold'}}>
+                                    group
+                                </Typography>
+                            </CardContent>
+                            <Divider style={{width:'200px'}}/>
+                            <CardContent>
+                                <Typography variant="body2" display="block" gutterBottom>
+                                    목적이 맞는
+                                </Typography>
+                                <Typography variant="body2" display="block" gutterBottom>
+                                    사람들과 함께 해봐요
+                                </Typography>
+                            </CardContent>
+                        </Paper>
+                    </div>
+                    <div>
+                        <Paper elevation={0} style={{width:'250px'}}>
+                            <CardContent>
+                                <img src={GraphImg} width="150px"/>
+                            </CardContent>
+                            <CardContent>
+                                <Typography variant="button" display="block" gutterBottom style={{fontSize:20, fontWeight:'bold'}}>
+                                    graph
+                                </Typography>
+                            </CardContent>
+                            <Divider style={{width:'200px'}}/>
+                            <CardContent>
+                                <Typography variant="body2" display="block" gutterBottom>
+                                    나의 일정 성취를
+                                </Typography>
+                                <Typography variant="body2" display="block" gutterBottom>
+                                    그래프로 확인할 수 있어요
+                                </Typography>
+                            </CardContent>
+                        </Paper>
+                    </div>
+                </Grid>
+            </div>
+            <div style={{alignItems: "center", justifyContent: 'center', width: "100%", height: "500px"}}>
+                <div style={{marginLeft:'150px', marginTop:'50px'}}>
+                    <Typography variant="overline" display="block" style={{fontSize:40, fontWeight:'bold'}}>
+                        SSAFYEnS START
+                    </Typography>
+                </div>
+                <Grid container direction="row" justifyContent="center" alignItems="center">
+                    <div>
+                        <Paper elevation={0} style={{width:'250px'}}>
+                            <CardContent>
+                                <img src={IoTImg} width="150px"/>
+                            </CardContent>
+                            <CardContent>
+                                <Typography variant="button" display="block" gutterBottom style={{fontSize:20, fontWeight:'bold'}}>
+                                    IoT
+                                </Typography>
+                            </CardContent>
+                            <Divider style={{width:'200px'}}/>
+                            <CardContent>
+                                <Typography variant="body2" display="block" gutterBottom>
+                                    IoT 기기를 이용하여
+                                </Typography>
+                                <Typography variant="body2" display="block" gutterBottom>
+                                    일정 관리를 해보세요
+                                </Typography>
+                            </CardContent>
+                            <CardActions>
+                                <Button size="medium" >HOW TO USE</Button>
+                            </CardActions>
+                        </Paper>
+                    </div>
+                    <div>
+                        <Paper elevation={0} style={{width:'250px'}}>
+                            <CardContent>
+                                <img src={ScheduleImg} width="150px"/>
+                            </CardContent>
+                            <CardContent>
+                                <Typography variant="button" display="block" gutterBottom style={{fontSize:20, fontWeight:'bold'}}>
+                                    Web
+                                </Typography>
+                            </CardContent>
+                            <Divider style={{width:'200px'}}/>
+                            <CardContent>
+                                <Typography variant="body2" display="block" gutterBottom>
+                                    웹 페이지에서
+                                </Typography>
+                                <Typography variant="body2" display="block" gutterBottom>
+                                    일정 관리를 해보세요
+                                </Typography>
+                            </CardContent>
+                            <CardActions>
+                                <Button size="medium" >HOW TO USE</Button>
+                            </CardActions>
+                        </Paper>
+                    </div>
+                </Grid>
+            </div>
         </Wrapper>
     );
 };
