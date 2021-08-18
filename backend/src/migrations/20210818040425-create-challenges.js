@@ -17,7 +17,10 @@ module.exports = {
           key: 'group_id',
         },
       },
-      title: {
+      name: {
+        type: Sequelize.STRING
+      },
+      content: {
         type: Sequelize.STRING
       },
       created_at: {

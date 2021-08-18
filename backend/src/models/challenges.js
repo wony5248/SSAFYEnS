@@ -1,4 +1,4 @@
-// npx sequelize model:generate --name challenges --attributes challenge_id:integer,group_id:integer,title:string
+// npx sequelize model:generate --name challenges --attributes challenge_id:integer,group_id:integer,name:string,content:string
 
 'use strict';
 const {
@@ -27,7 +27,8 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true, // Needed for Sequelize id, https://sequelize.org/master/manual/legacy.html
     },
     group_id: DataTypes.INTEGER,
-    title: DataTypes.STRING
+    name: DataTypes.STRING,
+    content: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'challenges',
