@@ -137,6 +137,7 @@ const Create = (props) => {
   };
   const handleTitle = (e) => {
     setTitle(e.target.value);
+    setIscheck(false)
   };
   const handleCreate = async (e) => {
     if(ischeck === true){

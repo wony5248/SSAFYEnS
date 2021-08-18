@@ -133,6 +133,7 @@ const Create = (props) => {
   const [groupinfo, setGroupinfo] = useState([]);
   const [title, setTitle] = useState("");
   const [context, setContext] = useState("");
+  const [ischeck, setIscheck] = useState(false)
   const handleContext = (e) => {
     setContext(e.target.value);
     console.log(e.target.value);
@@ -140,8 +141,9 @@ const Create = (props) => {
   const handleTitle = (e) => {
     setTitle(e.target.value);
     console.log(e.target.value);
+    setIscheck(false)
   };
-  const [ischeck, setIscheck] = useState(false)
+ 
   const handleChange = async () => {
     if(ischeck === true){
       if (window.confirm("정말 변경하시겠 습니까?")) {
