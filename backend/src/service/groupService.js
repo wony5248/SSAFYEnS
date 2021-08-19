@@ -522,9 +522,9 @@ exports.deleteMemberById = function (req, res, next) {
     .findOne({where: { user_id: req.user_id, group_id }}) // 본인
     .then((data) => {
       // user_id가 group_id의 그룹관리자, 혹은 본인인지 확인 필요
-      if (data.is_group_admin || req.user_id===data.user_id) {
+      if (data.is_group_admin || user_id===data.user_id) {
         /* pass */
-        if (data.is_group_admin && req.user_id===data.user_id) {
+        if (data.is_group_admin && user_id===data.user_id) {
           return reject("그룹관리자는 그룹을 탈퇴할 수 없습니다")
         }
       } else { 
