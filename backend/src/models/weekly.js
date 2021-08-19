@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class weekly extends Model {
     /**
@@ -12,16 +10,35 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-  };
-  weekly.init({
-    week: DataTypes.STRING,
-    month: DataTypes.STRING,
-    year: DataTypes.STRING,
-    user_id: DataTypes.STRING,
-    avgpoint: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'weekly',
-  });
+  }
+  weekly.init(
+    {
+      weekly_id: {
+        type: DataTypes.STRING,
+        primaryKey: true,
+      },
+      week: DataTypes.STRING,
+      month: DataTypes.STRING,
+      year: DataTypes.STRING,
+      user_id: DataTypes.STRING,
+
+      //
+      sum_point: DataTypes.INTEGER,
+      cnt_schedule: DataTypes.INTEGER,
+      cnt_finished_schedule: DataTypes.INTEGER,
+
+      //environment
+      sum_humidity: DataTypes.INTEGER,
+      sum_illuminance: DataTypes.INTEGER,
+      sum_noise: DataTypes.INTEGER,
+      sum_temperature: DataTypes.INTEGER,
+    },
+    {
+      sequelize,
+      modelName: "weekly",
+      createdAt: false,
+      updatedAt: false,
+    }
+  );
   return weekly;
 };

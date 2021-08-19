@@ -1,4 +1,5 @@
 ## API 
+
 ### Sensor
     POST 127.0.0.1:4500/sensor
     body = {"temp" : "27", "humid" : "50", "noise" : "132", "light" : "22"}
@@ -143,8 +144,4 @@
         "updatedAt": "2021-08-10T04:19:13.000Z"
     }
     ]
-
-
-
-
 

@@ -4,8 +4,8 @@ const Wrapper = styled.div`
   margin-top : 120px;
   width: 100%;
   background: #ffffff ;
-  height : 100% ;
-  padding-bottom : 100px;
+  margin-bottom : 100px;
+  overflow:auto;
 `;
 
 export default Wrapper;

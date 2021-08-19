@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import {Grid, Button, TextField} from '@material-ui/core';
 import Wrapper from './styles';
-import store from 'store';
-import {useHistory} from 'react-router-dom';
+import {userAPI} from '../../utils/axios';
+import { useHistory } from 'react-router-dom';
 
 const Login = () =>{
+    let history = useHistory();
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
-    let history = useHistory();
 
     const handleId = (event) =>{
         setId(event.target.value);
@@ -17,24 +17,36 @@ const Login = () =>{
         setPassword(event.target.value);
     }
 
-    const onClickRedirectPathHandler = name => e =>{
-        window.scrollTo(0, 0);
-        if ( name === '/signin'){
-            if(history.location.pathname === name){
-                history.goBack();
-                store.remove('/signin');
-            }else{
-                history.push(name);
-            }
-        }else if ( name === '/find'){
-            if(history.location.pathname === name){
-                history.goBack();
-                store.remove('/find');
-            }else{
-                history.push(name);
+    const login = async()=>{
+        if (id===''){
+            alert('ID를 입력해주세요.');
+        }
+        if (password===''){
+            alert('비밀번호를 입력해주세요.');
+        }
+        if(id!=='' && password!==''){
+            try{
+                await userAPI.login(id, password);
+                if(!window.sessionStorage.getItem('token')){
+                    alert('아이디 혹은 비밀번호를 틀리셨습니다.');
+                    setId('');
+                    setPassword('');
+                }else{
+                    window.sessionStorage.setItem("islogin", JSON.stringify(true));
+                    const result = await userAPI.mypage(id);
+                    window.sessionStorage.setItem('id',result.data.user_id);
+                    window.sessionStorage.setItem("username", result.data.name);
+                    alert(`${window.sessionStorage.getItem("username")}님 환영합니다!`);
+                    history.push('/');
+                }
+                
+            }catch(e){
+                alert('아이디 혹은 비밀번호를 틀리셨습니다.');
+                setId('');
+                setPassword('');
             }
         }
-    };
+    }
 
     return (
         <Wrapper>
@@ -74,7 +86,8 @@ const Login = () =>{
                                     </div>
                                 </Grid>
                             </Grid>
-                            <Button size = "large" style={{width:'120px', height:'150px', fontSize:20, marginTop:'5px', marginLeft:'40px', background:'#A3CCA3', fontWeight:'bold', color:'#ffffff'}}>LOGIN</Button>
+                            <Button size = "large" style={{width:'120px', height:'150px', fontSize:20, marginTop:'5px', marginLeft:'40px', background:'#A3CCA3', fontWeight:'bold', color:'#ffffff'}}
+                            onClick={login}>LOGIN</Button>
                         </Grid>
                     </form>
                     <Grid container direction="row" justifyContent="center" style={{marginTop:'30px', marginLeft:'40px'}}>

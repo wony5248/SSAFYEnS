@@ -15,10 +15,12 @@ const PlanModify = () =>{
     let history = useHistory();
     const location = useLocation();
     const [query, setQuery] = useState('react');
-    const [data, setData] = useState([]);
+    const select = false;
 
-    const idx = location.state.idx;
-    const [rating, setRating] = useState(location.state || 0);
+    const id = location.pathname.split('/')[3];
+    const date = location.pathname.split('/')[2];
+
+    const [rating, setRating] = useState(0);
     const [startMonth, setStartMonth] =useState('');
     const [startDay, setStartDay] =useState('');
     const [startHour, setStartHour] =useState('');
@@ -30,22 +32,46 @@ const PlanModify = () =>{
     const [endMin, setEndMin] =useState();
     const [title, setTitle] =useState('');
 
+    const [humi, setHumi] = useState(0);
+    const [illumi, setIllumi] = useState(0);
+    const [noise, setNoise] = useState(0);
+    const [temp, setTemp] = useState(0);
+
+    const [state, setState] = useState({
+        alarmCheck: true,
+        completed: false
+    });
+
+    const [timer, setTimer] = useState('');
+    const [data, setData] = useState({});
+
     useEffect(()=>{
         let completed = false;
         
         async function getMonthlySchedule(){
-            const result = await scheduleAPI.getMonthly(moment(location.state.year).format('YYYY'), moment(location.state.month).format('MM'));
+            const result = await scheduleAPI.getSchedule(id);
             setData(result.data);
-            setStartMonth(Number(moment(data[idx].started_at).format('MM')));
-            setStartDay(Number(moment(data[idx].started_at).format('DD')));
-            setStartHour(Number(moment(data[idx].started_at).format('HH')));
-            setStartMin(moment(data[idx].started_at).format('mm'));
 
-            setEndMonth(Number(moment(data[idx].deadline_at).format('MM')));
-            setEndDay(Number(moment(data[idx].deadline_at).format('DD')));
-            setEndHour(Number(moment(data[idx].deadline_at).format('HH')));
-            setEndMin(moment(data[idx].deadline_at).format('mm'));
-            setTitle(data[idx].title);
+            setStartMonth(Number(moment(result.data.started_at).format('MM')));
+            setStartDay(Number(moment(result.data.started_at).format('DD')));
+            setStartHour(Number(moment(result.data.started_at).format('HH')));
+            setStartMin(moment(result.data.started_at).format('mm'));
+            
+            setEndMonth(Number(moment(result.data.finished_at).format('MM')));
+            setEndDay(Number(moment(result.data.finished_at).format('DD')));
+            setEndHour(Number(moment(result.data.finished_at).format('HH')));
+            setEndMin(moment(result.data.finished_at).format('mm'));
+            setTitle(result.data.title);
+            setRating(result.data.point/20);
+            setHumi(result.data.humidity);
+            setNoise(result.data.noise);
+            setIllumi(result.data.illuminance);
+            setTemp(result.data.temperature);
+            let start = moment(result.data.started_at).format('YYYY-MM-DD HH:mm');
+            let end = moment(result.data.notificationtime).format('YYYY-MM-DD HH:mm');
+            setTimer(moment(start).subtract(end, 'minutes').format('mm'));
+            setState({completed:result.data.is_finished,
+                alarmCheck:result.data.notification});            
 
         }
         getMonthlySchedule();
@@ -54,11 +80,6 @@ const PlanModify = () =>{
         };
     }, [query]);
 
-    const [state, setState] = useState({
-        alarmYES: true,
-        completed: false
-    });
-
     const StyledRating = withStyles({
         iconFilled: {
             color: '#A3CCA3',
@@ -66,10 +87,6 @@ const PlanModify = () =>{
       })(Rating);
 
     const thisYear = moment().format('YY');
-
-    const [timer, setTimer] = useState('');
-
-    
 
     const handleAlarm = (event) => {
         setState({...state, [event.target.name]: event.target.checked});
@@ -186,12 +203,34 @@ const PlanModify = () =>{
         let result = [];
         result = result.concat(<MenuItem value ={'00'}>00</MenuItem>);
         result = result.concat(<MenuItem value ={'30'}>30</MenuItem>);
+        
         return result;
     };
 
-    const modify = () =>{
-        // 수정시 axios로 수정보내기
-        console.log('modify');
+    const modify = async () =>{
+        let started_at = moment(`${moment().format('YYYY')}-${startMonth}-${startDay} ${startHour}:${startMin}`).format('YYYY-MM-DD HH:mm');
+        let deadline_at = moment(`${moment().format('YYYY')}-${endMonth}-${endDay} ${endHour}:${endMin}`).format('YYYY-MM-DD HH:mm');
+
+        if(started_at>deadline_at){
+            alert("마감일이 시작일보다 빠릅니다");
+        }
+        else{
+            try{
+                if(!state.alarmCheck){
+                    await scheduleAPI.modifySchedule(id, moment(data.date).format('YYYYMMDD'), title, state.alarmCheck, started_at, deadline_at, moment(data.finished_at).format('YYYY-MM-DD HH:mm'));
+                }else{
+                    let alarmtime = moment(started_at).subtract(timer, 'minutes').format('YYYY-MM-DD HH:mm');
+                    await scheduleAPI.modifySchedule(id, moment(data.date).format('YYYYMMDD'), title, state.alarmCheck, started_at, deadline_at, moment(data.finished_at).format('YYYY-MM-DD HH:mm'), alarmtime);
+                }
+                alert("변경이 완료되었습니다.")
+                window.location.href = `/planlist/${date}`;
+            }
+            catch (e) {
+                alert('수정에 실패했습니다.');
+            }
+
+        }
+        
     };
 
 
@@ -252,7 +291,7 @@ const PlanModify = () =>{
                             <div style={{marginRight:'20px'}}>시</div>
                             <FormControl style={{marginLeft:'15px', marginRight:'25px', marginBottom:'3px'}}>
                                 <Select labelId="demo-simple-select-lable"
-                                    id = "demo-simple-select" value = {startMin} onChange={handleStartMin}>
+                                    id = "demo-simple-select" value = {startMin} key = {startMin} onChange={handleStartMin}>
                                     {minArr()}
                                 </Select>
                             </FormControl>
@@ -300,7 +339,7 @@ const PlanModify = () =>{
                             <div style={{marginRight:'20px'}}>시</div>
                             <FormControl style={{marginLeft:'15px', marginRight:'25px', marginBottom:'3px'}}>
                                 <Select labelId="demo-simple-select-lable"
-                                    id = "demo-simple-select" value = {endMin} onChange={handleEndMin}>
+                                    id = "demo-simple-select" value = {endMin} key = {endMin} onChange={handleEndMin}>
                                     {minArr()}
                                 </Select>
                             </FormControl>
@@ -327,12 +366,12 @@ const PlanModify = () =>{
                         <Grid style={{marginLeft:'50px', width:'380px', marginTop:'3px'}}>
                             <FormGroup row>
                                 <FormControlLabel control={<Checkbox checked={state.alarmCheck} onChange={handleAlarm}
-                                name = "alarmYES" style={{color:'#A3CCA3'}}/>} label="YES" style={{marginTop:'10px'}}/>
+                                name = "alarmCheck" style={{color:'#A3CCA3'}}/>} label="YES" style={{marginTop:'10px'}}/>
                                 
                                 <FormControl style={{marginLeft:'15px', marginRight:'25px'}}>
                                     <InputLabel id = "demo-simple-select-lable">시간</InputLabel>
                                     <Select labelId="demo-simple-select-lable" style={{width:'100px'}}
-                                    id = "demo-simple-select" value = {timer} onChange={handleTimer}>
+                                    id = "demo-simple-select" value = {timer} key={timer} onChange={handleTimer}>
                                         <MenuItem value ={10}>10분 전</MenuItem>
                                         <MenuItem value ={15}>15분 전</MenuItem>
                                         <MenuItem value ={30}>30분 전</MenuItem>
@@ -380,26 +419,27 @@ const PlanModify = () =>{
                         <Grid style={{width:'400px', marginLeft:'50px', marginTop:'3px', align:'center', display: 'flex'}}>
                             <WbIncandescentIcon style={{color:'#A3CCA3' , marginRight:'20px'}}/> 
                             <div style={{marginRight:'20px'}} onClick={()=>{alert(typeof startMonth)}}>
-                                밝기
+                                {illumi}
                             </div>
                             <MicIcon style={{color:'#A3CCA3' , marginRight:'20px'}}/> 
                             <div style={{marginRight:'20px'}}>
-                                소음
+                                {noise}
                             </div>                                    
                             <OpacityIcon style={{color:'#A3CCA3' , marginRight:'20px', marginTop:'-2px'}}/> 
                             <div style={{marginRight:'20px'}}>
-                                습도
+                                {humi}
                             </div>
                             <Thermometer style={{color:'#A3CCA3' , marginRight:'20px'}} />
                             <div style={{marginRight:'20px'}}>
-                                온도
+                                {temp}
                             </div>
                         </Grid>
                     </Grid>
                 </Grid>
                 {/* footer */}
-                <Grid container justifyContent="center" alignItems="center" style={{marginTop:'30px'}}>
-                    <Button type = "submit" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF'}} onClick={modify}>수정하기</Button>
+                <Grid container justifyContent="center" alignItems="center" style={{marginTop:'30px', display:"flex",}}>
+                <Button type = "button" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF',marginRight:"32px"}} onClick={()=> window.location.href = "/plan"}>뒤로가기</Button>
+                <Button type = "submit" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF'}} onClick={select?null:modify}>수정하기</Button>
                 </Grid>
             </form>
         </Wrapper>

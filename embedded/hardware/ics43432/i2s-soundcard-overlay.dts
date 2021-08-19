@@ -1,0 +1,47 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2708";
+
+    fragment@0 {
+        target = <&sound>;
+        __overlay__ {
+            compatible = "simple-audio-card";
+            simple-audio-card,name = "i2sPiSound";
+
+            status="okay";
+
+            capture_link: simple-audio-card,dai-link@0 {
+                format = "i2s";
+
+                r_cpu_dai: cpu {
+                    sound-dai = <&i2s>;
+                };
+
+                r_codec_dai: codec {
+                    sound-dai = <&codec_in>;
+                };
+            };
+        };
+    };
+
+    fragment@1 {
+        target-path = "/";
+        __overlay__ {
+            codec_in: card-codec {
+                #sound-dai-cells = <0>;
+                compatible = "invensense,ics43432";
+                status = "okay";
+            };
+        };
+    };
+
+    fragment@2 {
+        target = <&i2s>;
+        __overlay__ {
+            #sound-dai-cells = <0>;
+            status = "okay";
+        };
+    };
+};

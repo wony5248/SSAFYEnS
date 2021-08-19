@@ -1,164 +1,45 @@
 import React, { useState, useEffect } from "react";
 import Wrapper from "./styles";
-import { DataGrid } from "@material-ui/data-grid";
+import { convertGridRowsPropToState, DataGrid } from "@material-ui/data-grid";
 import styled1 from "styled-components";
 import { styled, makeStyles } from "@material-ui/styles";
 import { Divider } from "@material-ui/core";
-import Create from "../groupcreate"
+import Create from "../groupcreate";
+import axios from "axios";
+import { groupAPI, userAPI } from "../../utils/axios";
 const columns = [
   {
-    field: "id",
+    field: "group_id",
     headerName: "그룹 번호",
     headerClassName: "super-app-theme--header",
     width: 140,
   },
   {
-    field: "groupName",
+    field: "name",
     headerName: "그룹 이름",
     headerClassName: "super-app-theme--header",
     width: 460,
-    editable: true,
   },
   {
-    field: "description",
+    field: "context",
     headerName: "그룹 설명",
     headerClassName: "super-app-theme--header",
     width: 460,
-    editable: true,
   },
   {
-    field: "leader",
-    headerName: "그룹장 이름",
-    headerClassName: "super-app-theme--header",
-    width: 180,
-    editable: true,
-  },
-  {
-    field: "member",
+    field: "pax",
     headerName: "그룹 인원",
     headerClassName: "super-app-theme--header",
     width: 140,
-    editable: true,
+  },
+  {
+    field: "ranking",
+    headerName: "그룹 랭킹",
+    headerClassName: "super-app-theme--header",
+    width: 140,
   },
 ];
 
-const possiblegroup = [
-  {
-    id: 1,
-    groupName: "JBJ와 함께하는 Electron",
-    description: "Electron 정복기",
-    leader: "장범진",
-    member: "1",
-  },
-  {
-    id: 2,
-    groupName: "LTY와 함께하는 Swagger",
-    description: "Swagger 정복기",
-    leader: "이태용",
-    member: "4",
-  },
-  {
-    id: 3,
-    groupName: "KJH와 함께하는 Node.js",
-    description: "Node.js 정복기",
-    leader: "김지환",
-    member: "4",
-  },
-  {
-    id: 4,
-    groupName: "HAR와 함께하는 죽여줘...",
-    description: "React.js 정복기",
-    leader: "허애리",
-    member: "2",
-  },
-  {
-    id: 5,
-    groupName: "SEJ와 함께하는 Embedded",
-    description: "Embedded 정복기",
-    leader: "신은지",
-    member: "2",
-  },
-  {
-    id: 6,
-    groupName: "JBJ와 함께하는 Raspberry pi",
-    description: "Raspberry pi 정복기",
-    leader: "장범진",
-    member: "2",
-  },
-  {
-    id: 7,
-    groupName: "LTY와 함께하는 mongoDB",
-    description: "mongoDB 정복기",
-    leader: "이태용",
-    member: "4",
-  },
-  {
-    id: 8,
-    groupName: "KJH와 함께하는 Jenkins",
-    description: "Jenkins 정복기",
-    leader: "김지환",
-    member: "5",
-  },
-  {
-    id: 9,
-    groupName: "HAR와 함께하는 Framer",
-    description: "Framer 정복기",
-    leader: "허애리",
-    member: "2",
-  },
-  {
-    id: 10,
-    groupName: "SEJ와 함께하는 stt & tts",
-    description: "stt & tts 정복기",
-    leader: "신은지",
-    member: "1",
-  },
-  {
-    id: 11,
-    groupName: "모두가 함께하는 식사",
-    description: "식사 정복기",
-    leader: "모두",
-    member: "5",
-  },
-  {
-    id: 12,
-    groupName: "모두가 같이하는 코딩",
-    description: "코딩 정복기",
-    leader: "모두",
-    member: "5",
-  },
-];
-
-const joinedgroup = [
-  {
-    id: 1,
-    groupName: "JBJ와 함께하는 Electron",
-    description: "Electron 정복기",
-    leader: "장범진",
-    member: "1",
-  },
-  {
-    id: 6,
-    groupName: "JBJ와 함께하는 Raspberry pi",
-    description: "Raspberry pi 정복기",
-    leader: "장범진",
-    member: "2",
-  },
-  {
-    id: 11,
-    groupName: "모두가 함께하는 식사",
-    description: "식사 정복기",
-    leader: "모두",
-    member: "5",
-  },
-  {
-    id: 12,
-    groupName: "모두가 같이하는 코딩",
-    description: "코딩 정복기",
-    leader: "모두",
-    member: "5",
-  },
-];
 // const useStyles = makeStyles({
 //   root: {
 //     '& .super-app-theme--header': {
@@ -251,8 +132,11 @@ const Joinedbtn = styled1.button`
 const Group = () => {
   const [isgroup, setIsgroup] = useState(true);
   const [createopen, setCreateopen] = useState(false);
-  const [select, setSelect] = useState([]);
-  const [select2, setSelect2] = useState([]);
+  const [select, setSelect] = useState("");
+  const [select2, setSelect2] = useState("");
+  const [possiblegroup, setPossiblegroup] = useState([]);
+  const [joinedgroup, setJoinedgroup] = useState([]);
+  const [isleader, setIsleader] = useState(false);
   const openCreateModal = () => {
     setCreateopen(true);
   };
@@ -260,28 +144,110 @@ const Group = () => {
   const closeCreateModal = () => {
     setCreateopen(false);
   };
+  const Exile = async () => {
+    console.log(joinedgroup)
+    console.log(possiblegroup)
+    console.log(select2)
+    if (select2) {
+      if (window.confirm(`${joinedgroup[select2-1].name}그룹 을 탈퇴하시겠습니까?`)) {
+        await groupAPI
+          .exitGroup(joinedgroup[select2-1].group_id, sessionStorage.getItem("id"))
+          .then((data) => {
+            window.alert(`${joinedgroup[select2-1].name}그룹에서 탈퇴 되었습니다.`);
+            window.location.reload();
+          })
+          .catch((e) => {
+            window.alert("탈퇴가 되지 않았습니다.");
+          });
+      } else {
+        window.alert("탈퇴가 취소 되었습니다.");
+      }
+    } else {
+      window.alert("탈퇴할 그룹을 골라주세요.");
+    }
+  };
+  const handleMove = async () => {
+    var a = 0;
+    await groupAPI
+      .getGroup(joinedgroup[select2-1].group_id)
+      .then(({ data }) => {
+        for (let i = 0; i < data.members.length; i++) {
+          if (
+            data.members[i].user_id === sessionStorage.getItem("id") &&
+            data.members[i].is_group_admin
+          ) {
+            setIsleader(true);
+            console.log("여기");
+            a = 1;
+          }
+        }
+
+        console.log(isleader);
+        console.log(a);
+      })
+      .catch((e) => {});
+    if (a === 1) {
+      window.location.href = `/group/${joinedgroup[select2-1].group_id}/manage`;
+    } else {
+      window.location.href = `/group/${joinedgroup[select2-1].group_id}`;
+    }
+  };
+  useEffect(() => {
+    async function loadGroup() {
+      await groupAPI
+        .findAllGroup()
+        .then(({ data }) => {
+          console.log(data);
+          for (let i = 0; i < data.length; i++) {
+            data[i].id = i+1;
+          }
+          setPossiblegroup(data);
+        })
+        .catch((e) => {});
+    }
+    async function loadUserInfo() {
+      await userAPI
+        .mypage(window.sessionStorage.getItem("id"))
+        .then(({ data }) => {
+          console.log(data);
+          for (let i = 0; i < data.mygroups.length; i++) {
+            data.mygroups[i].id = i+1;
+          }
+          setJoinedgroup(data.mygroups);
+        })
+        .catch((e) => {});
+    }
+    loadGroup();
+    loadUserInfo();
+  }, []);
   return (
     <div>
       <Wrapper>
         <Joineddiv>
-          <Availablediv>가입 가능한 그룹</Availablediv>
+          <Availablediv>모든 그룹</Availablediv>
           <Create open={createopen} close={closeCreateModal} />
-          <Joinedbtn onClick={openCreateModal}>
-              그룹 생성
-            </Joinedbtn>
+          <Joinedbtn onClick={openCreateModal}>그룹 생성</Joinedbtn>
         </Joineddiv>
-        
+
         <div style={{ height: 400, width: "100%" }}>
           <Muidatagrid
             rows={possiblegroup}
             columns={columns}
             pageSize={5}
-            onSelectionModelChange={itm => setSelect(itm)}
+            onSelectionModelChange={(itm) => setSelect(itm)}
           />
         </div>
         <Joindiv>
-          <Joinbtn onClick={() => window.confirm("선택한 그룹 정보화면으로 이동하시겠습니까?")? (select[0] ? window.location.replace(`/group/${select[0]}`) : window.alert("그룹을 선택해 주세요")) : console.log("아무일 없음")}>
-            가입
+          <Joinbtn
+            onClick={() =>
+              window.confirm("선택한 그룹 정보화면으로 이동하시겠습니까?")
+                ? select[0]
+                  ? (window.location.href = `/group/${possiblegroup[select-1].group_id}`)
+                  : window.alert("그룹을 선택해 주세요")
+                : console.log("아무일 없음")
+            }
+          >
+            그룹 정보
           </Joinbtn>
         </Joindiv>
       </Wrapper>
@@ -290,7 +256,11 @@ const Group = () => {
         <Wrapper>
           <Joineddiv>
             <Availablediv>내가 가입한 그룹</Availablediv>
-            <Joinedbtn onClick={() => select2[0] ? window.location.replace(`/group/${select2[0]}/manage`) : window.alert("그룹을 선택해 주세요")}>
+            <Joinedbtn
+              onClick={() =>
+                select2[0] ? handleMove() : window.alert("그룹을 선택해 주세요")
+              }
+            >
               그룹 관리
             </Joinedbtn>
           </Joineddiv>
@@ -299,11 +269,13 @@ const Group = () => {
               rows={joinedgroup}
               columns={columns}
               pageSize={5}
-              onSelectionModelChange={itm => setSelect2(itm)}
+              onSelectionModelChange={(itm) => setSelect2(itm)}
             />
           </div>
           <Joindiv>
-            <Joinbtn onClick={() => window.confirm(`${select2[0]}그룹을 정말 탈퇴하시겠습니까?`)}>
+            <Joinbtn
+              onClick={Exile}
+            >
               탈퇴
             </Joinbtn>
           </Joindiv>
@@ -312,7 +284,6 @@ const Group = () => {
         <Wrapper>
           <Joineddiv>
             <Availablediv>내가 가입한 그룹</Availablediv>
-            
           </Joineddiv>
           <Nogroupdiv>
             <Nogrouptextdiv>
@@ -320,12 +291,13 @@ const Group = () => {
             </Nogrouptextdiv>
           </Nogroupdiv>
           <Joindiv>
-            <Joinbtn onClick={() => window.confirm("정말 탈퇴하시겠습니까?")}>
+            <Joinbtn onClick={Exile}>
               탈퇴
             </Joinbtn>
           </Joindiv>
         </Wrapper>
       )}
+      
     </div>
   );
 };

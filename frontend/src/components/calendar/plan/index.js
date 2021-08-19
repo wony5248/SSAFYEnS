@@ -9,7 +9,7 @@ import {scheduleAPI} from '../../../utils/axios';
 const Plan = (props) =>{
     const { open, close } = props;
     const [state, setState] = useState({
-        alarmYES: true,
+        alarmYES: false,
     });
 
     const thisYear = moment().format('YY');
@@ -28,9 +28,27 @@ const Plan = (props) =>{
     const [title, setTitle] =useState('');
 
     const addSchedule = async () => {
-        const started_at = moment(`${moment().format('YYYY')}-${startMonth}-${startDay} ${startHour}:${startMin}`).format('YYYY-MM-DD hh:mm');
-        const deadline_at = moment(`${moment().format('YYYY')}-${endMonth}-${endDay} ${endHour}:${endMin}`).format('YYYY-MM-DD hh:mm');
-        const result = await scheduleAPI.addSchedule(title, started_at, deadline_at, moment().format('YYYY-MM-DD'));
+        const started_at = moment(`${moment().format('YYYY')}-${startMonth}-${startDay} ${startHour}:${startMin}`).format('YYYY-MM-DD HH:mm');
+        const deadline_at = moment(`${moment().format('YYYY')}-${endMonth}-${endDay} ${endHour}:${endMin}`).format('YYYY-MM-DD HH:mm');
+        if(started_at>deadline_at){
+            alert("마감일이 시작일보다 빠릅니다");
+        }
+        else{
+            try{
+                if(!state.alarmYES){
+                    await scheduleAPI.addSchedule(title, started_at, deadline_at, moment().format('YYYY-MM-DD'), state.alarmYES);
+                    alert('등록성공');
+                }else{
+                    let alarmtime = moment(started_at).subtract(timer, 'minutes').format('YYYY-MM-DD HH:mm');
+                    await scheduleAPI.addSchedule(title, started_at, deadline_at, moment().format('YYYY-MM-DD'), state.alarmYES, alarmtime);
+                    alert('등록성공');
+                }
+                
+            }catch(e){
+                alert('등록에 실패했습니다');
+                console.log(e);
+            }
+        }
     }
 
     const handleAlarm = (event) => {
@@ -147,11 +165,6 @@ const Plan = (props) =>{
         }
         return result;
     };
-
-    // const planSubmit = () =>{
-        
-    //     alert(`${started_at}, ${deadline_at}`);  
-    // };
 
 
     return(

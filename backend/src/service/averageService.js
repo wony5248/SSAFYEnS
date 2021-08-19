@@ -1,218 +1,141 @@
 const moment = require("moment");
 const db = require("../models");
 const op = require("sequelize").Op;
-exports.get_daily = function (params) {
+const logic = require("../module/average")
+
+exports.get_daily_$date$ = function (req) {
   return new Promise(async function (resolve, reject) {
     try {
-      console.log(params);
-      const { year, month, week } = params;
-      // console.log(date, year, month, week, day);
+      const daily = await logic.getAverage(req, "daily")
+      if (daily == null) {
+        return reject("존재하지 않는 일정입니다.")
+      }
 
-      // console.log(`${today}의 날짜를 조회합니다`, today, today_end);
-      const data = await db["daily"].findAll({
-        where: {
-          [op.and]: [
-            {
-              year,
-            },
-            {
-              month,
-            },
-            {
-              week,
-            },
-          ],
-        },
-      });
-      resolve(data);
+      const schedules = await logic.getSchedule_unit(req, "day");
+      const result = { ...daily, schedules };
+      return resolve(result);
+
     } catch (error) {
       console.log(error);
-      reject("db 에서 daily 조회 중 문제가 발생했습니다.");
+      return reject("db 에서 daily 조회 중 문제가 발생했습니다.");
     }
   });
 };
 
-exports.post_daily = function (payload) {
+exports.put_daily_$date$ = function (req) {
   return new Promise(async function (resolve, reject) {
+    //daily 평가 기능
     try {
-      const { date, point, context, user_id, month, year, week } = payload;
-
+      const { date, daily_context } = req.body;
+      const { user_id } = req
       const dailyResult = await db["daily"].findOne({
         where: {
-          [op.and]: [{ user_id }, { date }],
+          date,
         },
       });
-      //update할 일자 정보가 없음.
+
       if (dailyResult == null) {
-        console.log("Daily를 생성합니다");
-
-        db["daily"].create({
-          user_id,
-          date,
-          month,
-          year,
-          week,
-          avgpoint: point,
-          context,
-          cntschedule: 1,
-        });
+        reject("해당 일에 대한 정보가 없습니다.");
       } else {
-        dailyResult.avgpoint += point;
-        dailyResult.context = context;
-        dailyResult.cntschedule += 1;
+        dailyResult.daily_context = daily_context;
       }
-
-      //weekly 확인
-      const weeklyResult = await db["weekly"].findOne({
+      //is_finished 처리할 schedule 검색
+      const started_at = date;
+      const finished_at = moment(date).add(1, "days").toDate();
+      const dailySchedules = await db["schedules"].findAll({
         where: {
           [op.and]: [
             {
-              year,
+              started_at: {
+                [op.gte]: started_at,
+              },
             },
             {
-              week,
+              finished_at: {
+                [op.lte]: finished_at,
+              },
             },
+            { user_id },
           ],
         },
       });
-
-      if (weeklyResult == null) {
-        //weekly가 해당 존재하지않음
-        console.log(`week ${week}를 생성합니다`);
-        db["weekly"].create({
-          week,
-          month,
-          year,
-          user_id,
-          avgpoint: point,
-        });
-      } else weeklyResult.avgpoint += point;
-
-      //monthly
-      const monthlyResult = await db["monthly"].findOne({
-        where: {
-          year,
-          month,
-        },
-      });
-
-      if (monthlyResult == null) {
-        console.log(`month ${month}를 생성합니다`);
-        db["monthly"].create({
-          month,
-          year,
-          user_id,
-          avgpoint: point,
-        });
+      if (dailySchedules == null) {
+        return reject("해당 일자 스케쥴이 존재하지 않습니다");
       } else {
-        monthlyResult.avgpoint += point;
-      }
 
-      const yearlyResult = await db["yearly"].findOne(
-        {},
-        {
-          where: {
-            year,
-          },
-        }
-      );
-
-      if (yearlyResult == null) {
-        console.log(`year ${week}를 생성합니다`);
-        db["yearly"].create({
-          year,
-          user_id,
-          avgpoint: point,
-        });
-      } else {
-        yearlyResult.avgpoint += point;
+        await dailySchedules.reduce(async (promise, cur) => {
+          const acc = await promise.then();
+          cur.is_finished = true;
+          cur.save();
+          return Promise.resolve(acc);
+        }, Promise.resolve({}));
+        dailyResult.save();
+        return resolve({ result: "put" });
       }
-      if (dailyResult != null) dailyResult.save();
-      if (weeklyResult != null) weeklyResult.save();
-      if (monthlyResult != null) monthlyResult.save();
-      if (yearlyResult != null) yearlyResult.save();
-      resolve({ result: "put" });
     } catch (error) {
       console.log(error);
-      reject("error");
+      return reject("error");
     }
   });
 };
-exports.get_week = function (payload) {
+exports.get_week_$date$ = function (req) {
   return new Promise(async function (resolve, reject) {
     try {
-      const { year, week, month, date, user_id } = payload;
+      console.log(` weekly 통계 결과를 조회합니다`, payload);
 
-      console.log(` weekly 통계 결과를 조회합니다`, payload.date);
-      const data = await db["weekly"]
-        .findAll({
-          where: {
-            [op.and]: [
-              {
-                year,
-                week,
-                month,
-                user_id,
-              },
-            ],
-          },
-        })
-        .then((result) => {
-          return resolve(result);
-        })
-        .catch((error) => {
-          console.log(error);
-          return reject("db error");
-        });
+      const weekly = await logic.getAverage(req, "weekly")
+      if (weekly == null) {
+        return reject("존재하지 않는 일정입니다.")
+      }
+
+      const schedules = await logic.getSchedule_unit(req, "week");
+      const result = { ...weekly, schedules };
+      return resolve(result);
+
     } catch (error) {
       console.log(error);
-      return reject("db error");
+      return reject("db 에서 week 조회 중 문제가 발생했습니다.");
     }
   });
 };
 
-exports.get_month = function (payload) {
+exports.get_month_$date$ = function (req) {
   return new Promise(async function (resolve, reject) {
-    const { year, month, user_id } = payload;
-    // const start = moment(date).startOf("month").toDate();
-    // const end = moment(start).add(1, "month").toDate();
+    try {
+      console.log(` monthly 통계 결과를 조회합니다`, req);
 
-    console.log(`${user_id} 의 ${year} 년 ${month} 월을 조회합니다`);
-    const data = await db["monthly"]
-      .findAll({
-        where: {
-          [op.and]: [{ year }, { month }, { user_id }],
-        },
-      })
-      .then((result) => {
-        // console.log("답 : ", result);
-        resolve(result);
-      })
-      .catch((error) => {
-        console.log(error);
-        reject("db error");
-      });
-    // reject("db instance not finded");
+      const weekly = await logic.getAverage(req, "monthly")
+      if (weekly == null) {
+        return reject("존재하지 않는 일정입니다.")
+      }
+
+      const schedules = await logic.getSchedule_unit(req, "month");
+      const result = { ...weekly, schedules };
+      return resolve(result);
+
+    } catch (error) {
+      console.log(error);
+      return reject("db 에서 month 조회 중 문제가 발생했습니다.");
+    }
   });
 };
-exports.get_year = function (payload) {
+exports.get_year_$date$ = function (payload) {
   return new Promise(async function (resolve, reject) {
-    const { user_id, year, date } = payload;
+    try {
+      console.log(` yearly 통계 결과를 조회합니다`, req);
 
-    console.log(`${start} 년을 조회합니다`, start, end);
-    const data = await db["yearly"]
-      .findAll({
-        where: {
-          [op.and]: [{ year }, { user_id }],
-        },
-      })
-      .then((result) => {
-        // console.log("답 : ", result);
-        resolve(result);
-      })
-      .catch((error) => {
-        console.log(error);
-        reject("db error");
-      });
+      const weekly = await logic.getAverage(req, "yearly")
+      if (weekly == null) {
+        return reject("존재하지 않는 일정입니다.")
+      }
+
+      const schedules = await logic.getSchedule_unit(req, "year");
+      const result = { ...weekly, schedules };
+      return resolve(result);
+
+    } catch (error) {
+      console.log(error);
+      return reject("db 에서 yearly 조회 중 문제가 발생했습니다.");
+    }
   });
 };

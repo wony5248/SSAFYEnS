@@ -18,11 +18,10 @@ const Month = () => {
 
   useEffect(() => {
     let completed = false;
-
+    
     async function getMonthlySchedule() {
       const result = await scheduleAPI.getMonthly(
-        today.format("YYYY"),
-        today.format("MM")
+        today.format("YYYY-MM-DD")
       );
       setData(result.data);
     }
@@ -71,7 +70,6 @@ const Month = () => {
 
   const dayPlan = (date)=>{
     let result = [];
-    // console.log(data);
     for (let i=0; i<data.length; i++){
       if (date.format("MM-DD") === moment(data[i].started_at).format("MM-DD")){
         result = result.concat(
@@ -121,15 +119,7 @@ const Month = () => {
                       height: "100px",
                       verticalAlign: "top",
                     }}
-                    onClick={() => {
-                      history.push({
-                        pathname: "/planlist",
-                        state: {
-                          month: days.format("MM"),
-                          day: days.format("DD"),
-                        },
-                      });
-                    }}
+                    onClick={() => {history.push(`/planlist/${days.format("YYYYMMDD")}`)}}
                   >
                     <Grid container direction="column">
                       <span>{days.format("D")}</span>
@@ -160,20 +150,11 @@ const Month = () => {
                       height: "100px",
                       verticalAlign: "top",
                     }}
-                    onClick={() => {
-                      history.push({
-                        pathname: "/planlist",
-                        state: {
-                          month: days.format("MM"),
-                          day: days.format("DD"),
-                        },
-                      });
-                    }}
+                    onClick={() => {history.push(`/planlist/${days.format("YYYYMMDD")}`)}}
                   >
                     <Grid container direction="column">
                       <span>{days.format("D")}</span>
                       {dayPlan(days)}
-                      {/* <span style={{color:'black'}}>title</span> */}
                     </Grid>
                   </td>
                 );

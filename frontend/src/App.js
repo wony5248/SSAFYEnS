@@ -13,23 +13,34 @@ import Groupmanage from './pages/groupmanage'
 import MyPage from './pages/mypage'
 import Groupinfo from './pages/groupinfo';
 import DailyEvaluate from './pages/dailyevaluate';
+import ModifyUserInfo from './pages/modifyuserinfo';
+import CheckPw from './pages/checkpasswd';
+import ResetPassword from './pages/resetpasswd';
+import Average from './pages/average';
+
 
 const App = () =>{
+
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path = "/" component={Main}/>
-        <Route exact path = "/plan" component={Plan}/>
-        <Route exact path = "/planlist" component={PlanList}/>
-        <Route exact path = "/planmodify" component={PlanModify}/>
         <Route exact path = "/login" component={LogIn}/>
+        <Route exact path = "/resetpassword/:id" component={ResetPassword}/>
         <Route exact path = "/signup" component={Signup}/>
+        <Route exact path = "/find" component={Find}/>
+        <Route exact path = "/plan" component={Plan}/>
+        <Route exact path = "/planlist/:date" component={PlanList}/>
+        <Route exact path = "/planmodify/:date/:id" component={PlanModify}/>
         <Route exact path = "/group/:id/manage" component = {Groupmanage}/>
         <Route exact path = "/group/:id" component = {Groupinfo}/>
         <Route exact path = "/group" component={Group}/>
-        <Route exact path = "/find" component={Find}/>
         <Route exact path = "/mypage" component={MyPage}/>
         <Route exact path = "/dailyevaluate" component={DailyEvaluate}/>
+        <Route exact path = "/modifyuserinfo/:id" component={ModifyUserInfo}/>
+        <Route exact path = "/checkpassword/:id" component={CheckPw}/>
+        <Route exact path = "/average/:id" component={Average}/>
+        
       </Switch>
     </BrowserRouter>
   );
