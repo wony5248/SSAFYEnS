@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
+      // 1:N 관계
+      models.groups.hasMany(models.challenges, { foreignKey: 'group_id'}) // https://sequelize.org/master/manual/assocs.html#customizing-the-foreign-key
+      
+
       // M:N 관계
       models.groups.belongsToMany(models.users, {foreignKey:"group_id",through: models.usersmngroups })
       models.groups.belongsToMany(models.users, {as: "user_id", foreignKey:"group_id",through: models.applicants })

@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       models.schedules.hasMany(models.users, { foreignKey: "user_id" });
+      
+      models.schedules.belongsTo(models.challenges, { foreignKey: "challenge_id" });
+      
     }
   }
   schedules.init(
@@ -53,7 +56,7 @@ module.exports = (sequelize, DataTypes) => {
       noise: DataTypes.INTEGER,
       temperature: DataTypes.INTEGER,
 
-      //challenge_id: DataTypes.INTEGER,
+      challenge_id: DataTypes.INTEGER,
     },
     {
       sequelize,

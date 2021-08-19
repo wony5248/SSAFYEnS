@@ -5,6 +5,7 @@ const middleware = require("../middleware");
 const averageRoutes = require("./average");
 const scheduleRoutes = require("./schedule");
 const trophyRoutes = require("./trophy");
+const challengeRoutes = require("./challenge");
 
 router.use((req, res, next) => {
     console.log(req.socket.remoteAddress, req.method, req.path)
@@ -19,5 +20,6 @@ router.use("/group", groupRoutes);
 router.use("/average", averageRoutes);
 router.use("/schedule", scheduleRoutes);
 router.use("/trophy", trophyRoutes);
+router.use("/challenge", challengeRoutes);
 
 module.exports = router;
