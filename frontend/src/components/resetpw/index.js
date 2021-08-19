@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { useLocation } from "react-router-dom";
 import {Button, TextField, Grid} from '@material-ui/core';
 import Wrapper from './styles';
+import {userAPI} from '../../utils/axios';
 
 const ResetPW = () =>{
     const location = useLocation();
@@ -14,11 +15,19 @@ const ResetPW = () =>{
         setPassword(event.target.value);
     };
 
-    const reset = ()=>{
+    const reset = async ()=>{
         // 비밀번호 맞는지 확인 후 보내주기
-        alert(`비밀번호가 변경되었습니다.
-        다시 로그인해주세요!`);
-        window.location.replace (`/login`);
+        if(password.length<8){
+            alert(`비밀번호는 8자 이상으로 설정해주세요.`);
+        }else if(password!==check_password){
+            alert('두 비밀번호가 일치하지 않습니다.');
+        }else{
+            await userAPI.resetPw(id, password);
+            alert(`비밀번호가 변경되었습니다.
+            다시 로그인해주세요!`);
+            window.location.replace (`/login`);
+        }
+        
     }
     const handleCheckPassword = (event) =>{
         setCheckPassword(event.target.value);
