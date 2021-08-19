@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Typography, Paper, CardContent, Divider, CardActions, Button} from '@material-ui/core';
+import {Grid, Typography, Paper, CardContent, Divider, CardActions, Button, colors} from '@material-ui/core';
 import Wrapper from './styles';
 import AlarmImg from '../../images/alarm.png';
 import GraphImg from '../../images/graph.png';
@@ -9,8 +9,47 @@ import TimeImg from '../../images/time.png';
 import ListImg from '../../images/list.png';
 import IoTImg from '../../images/embedded.png';
 import MainImg from '../../images/mainimg.png';
+import createImg from "../../images/create.png";
+import monitoringImg from "../../images/monitoring.png";
+import creatingImg from "../../images/creating.png";
+import botImg from "../../images/bot.jpg"
+import progressImg from "../../images/progress.png";
+import todayImg from "../../images/today.png";
+import stopwatchImg from "../../images/stopwatch.png";
+import { Carousel } from "react-carousel-minimal";
+import darkmodeImg from "../../images/darkmode.png"
 
 const MainSession = () =>{
+    const data = [
+        {
+          image: createImg,
+          caption: "Create",
+        },
+        {
+          image: creatingImg,
+          caption: "Creating",
+        },
+        {
+          image: todayImg,
+          caption: "Today",
+        },
+        {
+          image: progressImg,
+          caption: "Progress",
+        },
+        {
+          image: stopwatchImg,
+          caption: "Stopwatch",
+        },
+        {
+          image: monitoringImg,
+          caption: "Monitoring",
+        },
+    ];
+    const captionStyle = {
+    fontSize: "3em",
+    fontWeight: "bold",
+    };
     return(
         <Wrapper>
             {/* main */}
@@ -39,6 +78,39 @@ const MainSession = () =>{
                     </div>
                 </Grid>
             </div>
+            <div>
+                <div
+                style={{
+                    width: "100%",
+                    position: "relative",
+                    display: "flex",
+                    justifyContent: "center",
+                }}
+                >
+                <Carousel
+                    data={data}
+                    time={5000}
+                    width="100%"
+                    height="600px"
+                    captionStyle={captionStyle}
+                    radius="10px"
+                    captionPosition="top"
+                    automatic={true}
+                    dots={true}
+                    pauseIconColor="white"
+                    pauseIconSize="40px"
+                    slideBackgroundColor="white"
+                    slideImageFit="fill"
+                    style={{
+                    textAlign: "center",
+                    maxWidth: "1200px",
+                    maxHeight: "800px",
+                    margin: "80px auto",
+                    }}
+                />
+                </div>
+            </div>
+            <Divider style={{ backgroundColor: "#a3cca3" }}></Divider>
             {/* 기능 간략 소개 */}
             <div style={{alignItems: "center", justifyContent: 'center', width: "100%", height: "500px"}}>
                 <div style={{marginLeft:'150px', marginTop:'50px'}}>
@@ -205,7 +277,7 @@ const MainSession = () =>{
                                 </Typography>
                             </CardContent>
                             <CardActions>
-                                <Button size="medium" >HOW TO USE</Button>
+                                <Button size="medium" onClick={()=>{window.location.href="https://lab.ssafy.com/s05-webmobile3-sub3/S05P13A109/-/blob/exec/exec/SSAFYEnS_%EC%8B%9C%EC%97%B0%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4.pdf"}}>HOW TO USE</Button>
                             </CardActions>
                         </Paper>
                     </div>
