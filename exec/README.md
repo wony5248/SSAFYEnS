@@ -8,9 +8,10 @@ https://www.notion.so/Github-6a3830af0927431880ceeacd5f4345f2
 
 # 외부 정보 문서
 
-외부 API를 사용하지 않습니다.
+Web : 외부 API를 사용하지 않습니다.
 
-
+Embedded : Google Cloud Platform(STT, TTS) 사용
+- [매뉴얼](https://lab.ssafy.com/s05-webmobile3-sub3/S05P13A109/-/blob/embedded-STT/embedded/hardware/GET_GOOGLE_KEY.md)
 
 # 데이터베이스 덤프 최신본
 
