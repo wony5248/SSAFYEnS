@@ -144,11 +144,12 @@ const Challengecreate = (props) => {
         .addChallenge(groupid, title, context)
         .then(({ data }) => {
           window.alert("챌린지가 생성되었습니다.");
+          window.location.href = `/group/${groupid}`;
         })
         .catch((e) => {
           window.alert("챌린지 생성에 실패하였습니다.");
         });
-      window.location.href = "/group";
+      
     } else {
     }
   };

@@ -92,12 +92,19 @@ const Challengetitlediv = styled.div`
   align-self: center;
   width: 263px;
   color: #000000;
-  border: 1px solid #a3cca3;
-  border-radius: 45px;
-  margin-top: 27px;
-  margin-left: 27px;
+  border-bottom: 1px solid #a3cca3;
   font-size: 16px;
   height: 51px;
+`;
+const Challengecontentdiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  width: 263px;
+  color: #000000;
+  font-size: 16px;
+  height: 200px;
 `;
 const Progressdiv = styled.div`
   justify-content: center;
@@ -119,6 +126,7 @@ const Challengeaddbtn = styled.button`
   height: 50px;
   border: none;
   border-radius: 45px;
+  margin-right: 12px;
   background-color: #a3cca3;
   &:hover {
     background-color: #69a569;
@@ -151,7 +159,6 @@ const Progressbardiv = styled.div`
 `;
 const Groupinfo = (props) => {
   const { id } = props;
-  console.log(id);
   const [ismember, setIsmember] = useState(false);
   const [isadmin, setIsadmin] = useState(false);
   const [challenge, setChallenge] = useState([]);
@@ -167,7 +174,6 @@ const Groupinfo = (props) => {
   };
   useEffect(() => {
     async function loadGroup() {
-      console.log(sessionStorage.getItem("id"));
       await groupAPI
         .getGroup(id)
         .then(({ data }) => {
@@ -181,7 +187,6 @@ const Groupinfo = (props) => {
               }
             }
           }
-          console.log(data);
           setTitle(data.name);
           setContext(data.context);
         })
@@ -192,12 +197,14 @@ const Groupinfo = (props) => {
       await challengeAPI
         .getChallenge()
         .then(({ data }) => {
+          console.log(data);
           for (let i = 0; i < data.length; i++) {
-            if (data[i].group_id === id) {
+            if (data[i].group_id === Number(id)) {
               arr.push(data[i]);
             }
           }
           setChallenge(arr);
+          console.log(arr);
         })
         .catch((e) => {});
     }
@@ -238,7 +245,13 @@ const Groupinfo = (props) => {
                         fontSize: "30px",
                       }}
                     >
-                      <div style={{display:"flex", alignItems:"center", paddingTop:"24px"}}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          paddingTop: "24px",
+                        }}
+                      >
                         등록된 챌린지가 없습니다.
                         {isadmin ? (
                           <Challengeaddbtn onClick={openCreateModal}>
@@ -258,40 +271,42 @@ const Groupinfo = (props) => {
                     </Secondleftdiv>
                   ) : (
                     <Secondleftdiv>
-                      <div>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Challengetitlediv>
-                            {" "}
-                            이산 수학 마스터 하기{" "}
-                          </Challengetitlediv>{" "}
-                          {isadmin ? (
-                            <Challengeaddbtn onClick={openCreateModal}>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="40"
-                                height="40"
-                              >
-                                <path
-                                  d="M 14.955 7.909 C 14.955 7.407 15.362 7 15.864 7 L 23.136 7 C 23.638 7 24.045 7.407 24.045 7.909 L 24.045 14.955 L 31.091 14.955 C 31.593 14.955 32 15.362 32 15.864 L 32 23.136 C 32 23.638 31.593 24.045 31.091 24.045 L 24.045 24.045 L 24.045 31.091 C 24.045 31.593 23.638 32 23.136 32 L 15.864 32 C 15.362 32 14.955 31.593 14.955 31.091 L 14.955 24.045 L 7.909 24.045 C 7.407 24.045 7 23.638 7 23.136 L 7 15.864 C 7 15.362 7.407 14.955 7.909 14.955 L 14.955 14.955 Z"
-                                  fill="rgb(255, 255, 255)"
-                                ></path>{" "}
-                              </svg>{" "}
-                            </Challengeaddbtn>
-                          ) : null}
-                        </div>{" "}
-                      </div>
-                      <div>
-                        <Challengetitlediv>
-                          {" "}
-                          이산 수학 마스터 하기{" "}
-                        </Challengetitlediv>{" "}
-                      </div>
+                      <div
+                        style={{
+                          alignItems: "center",
+                        }}
+                      >
+                        {challenge.map((item) => (
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              widows: "100%",
+                              alignItems: "center",
+                              marginTop: "20px",
+                            }}
+                          >
+                            <div style = {{border:"1px solid #a3cca3", marginLeft:"27px"}}>
+                              <Challengetitlediv>{item.name}</Challengetitlediv>
+                              <Challengecontentdiv> {item.content}</Challengecontentdiv>
+                            </div>
+                            {isadmin ? (
+                              <Challengeaddbtn onClick={openCreateModal}>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="40"
+                                  height="40"
+                                >
+                                  <path
+                                    d="M 14.955 7.909 C 14.955 7.407 15.362 7 15.864 7 L 23.136 7 C 23.638 7 24.045 7.407 24.045 7.909 L 24.045 14.955 L 31.091 14.955 C 31.593 14.955 32 15.362 32 15.864 L 32 23.136 C 32 23.638 31.593 24.045 31.091 24.045 L 24.045 24.045 L 24.045 31.091 C 24.045 31.593 23.638 32 23.136 32 L 15.864 32 C 15.362 32 14.955 31.593 14.955 31.091 L 14.955 24.045 L 7.909 24.045 C 7.407 24.045 7 23.638 7 23.136 L 7 15.864 C 7 15.362 7.407 14.955 7.909 14.955 L 14.955 14.955 Z"
+                                    fill="rgb(255, 255, 255)"
+                                  ></path>{" "}
+                                </svg>{" "}
+                              </Challengeaddbtn>
+                            ) : null}
+                          </div>
+                        ))}
+                      </div>{" "}
                     </Secondleftdiv>
                   )}
                 </Secondcontent>{" "}
@@ -522,7 +537,7 @@ const Groupinfo = (props) => {
                   <Titlediv> 그룹 소개 </Titlediv>{" "}
                   <Secondrightdiv>{context}</Secondrightdiv>{" "}
                   <Joinbtn onClick={openCreateModal}> 가입 하기 </Joinbtn>{" "}
-                </Secondcontent>{" "}
+                </Secondcontent>
               </Seconddiv>
             </div>
           )}
