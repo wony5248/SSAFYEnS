@@ -34,7 +34,7 @@ const FindUser = () =>{
     const checkId = async() =>{
         try{
             const result = await userAPI.findId(name1, email1);
-            alert(`${name1}님의 ID는 ${result.data.user_id} 입니다.`);
+            alert(`${name1}님의 ID는 ${result.data[0].user_id} 입니다.`);
             setName1('');
             setEmail1('');
         }catch(err){

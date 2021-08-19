@@ -98,12 +98,12 @@ export const userAPI = {
         return await request.get(`/user/logout`)
     },
     findId: async (name, email)=>{
-        return await request.get(`/user/id`,{
+        return await request.post(`/user/id`,{
             name, email
         })
     },
     findPw: async (name, id, email)=>{
-        return await request.get('/user/password',{
+        return await request.post('/user/password',{
             name, user_id:id, email
         })
     },
