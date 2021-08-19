@@ -111,20 +111,28 @@ def add_schedule(seq=0):
 def brief_schedule(seq=0):
     print("briefing")
     data = server.get(WHOLE_SCHEDULE, date=True)
-    if len(data) == 0:
-        os.system(f'aplay {CUR_DIR}/tts_wav/no_schedule.wav')
-    else:
-        brief_cur_schedule()
-        synthesize_ssml(make_day_briefing(data))
+    try:
+        if len(data) == 0:
+            os.system(f'aplay {CUR_DIR}/tts_wav/no_schedule.wav')
+        else:
+            brief_cur_schedule()
+            synthesize_ssml(make_day_briefing(data))
+    except Exception as e:
+        print("Server error: ", e)
+        os.system(f'aplay {CUR_DIR}/tts_wav/problem_occurred.wav')
     return False
 
 def brief_cur_schedule(seq=0):
     print("cur schedule")
     data = server.get(CUR_SCHEDULE, date=True)
-    if len(data) == 0:
-        os.system(f'aplay {CUR_DIR}/tts_wav/no_cur_schedule.wav')
-    else:
-        synthesize_ssml(make_cur_schedule(data))
+    try:
+        if len(data) == 0:
+            os.system(f'aplay {CUR_DIR}/tts_wav/no_cur_schedule.wav')
+        else:
+            synthesize_ssml(make_cur_schedule(data))
+    except Exception as e:
+        print("Server error: ", e)
+        os.system(f'aplay {CUR_DIR}/tts_wav/problem_occurred.wav')
     return False
 
 def edit_schedule(seq=0):
@@ -132,12 +140,17 @@ def edit_schedule(seq=0):
     print("edit")
     if seq == 0:
         origin_data = server.get(WHOLE_SCHEDULE, date=True)
-        if len(origin_data) == 0:
-            os.system(f'aplay {CUR_DIR}/tts_wav/no_schedule.wav')
+        try:
+            if len(origin_data) == 0:
+                os.system(f'aplay {CUR_DIR}/tts_wav/no_schedule.wav')
+                return False
+            else:
+                synthesize_ssml(make_edit_schedule_list(origin_data))
+                return True
+        except Exception as e:
+            print("Server error: ", e)
+            os.system(f'aplay {CUR_DIR}/tts_wav/problem_occurred.wav')
             return False
-        else:
-            synthesize_ssml(make_edit_schedule_list(origin_data))
-            return True
     elif seq == 1:
         os.system(f'aplay {CUR_DIR}/tts_wav/edit_schedule_time.wav')
         return True
@@ -156,13 +169,17 @@ def delete_schedule(seq=0):
     if seq == 0:
         # 데이터 가져오는 api 호출 코드 추가
         origin_data = server.get(WHOLE_SCHEDULE, date=True)
-        if len(origin_data) == 0:
-            os.system(f'aplay {CUR_DIR}/tts_wav/no_schedule.wav')
+        try:
+            if len(origin_data) == 0:
+                os.system(f'aplay {CUR_DIR}/tts_wav/no_schedule.wav')
+                return False
+            else:
+                synthesize_ssml(make_edit_schedule_list(origin_data))
+                return True
+        except Exception as e:
+            print("Server error: ", e)
+            os.system(f'aplay {CUR_DIR}/tts_wav/problem_occurred.wav')
             return False
-        else:
-            synthesize_ssml(make_edit_schedule_list(origin_data))
-            return True
-        return True
     elif seq == 1:
         # 삭제 api 호출
         # self, route, id=None
@@ -178,23 +195,27 @@ def clear_schedule(seq=0):
     # 현재 진행중인 일정 가져오기
     # 있으면 완료, 없으면 없다고 알리기
     data = server.get(CUR_SCHEDULE, date=True)
-    if len(data) == 0:
-        os.system(f'aplay {CUR_DIR}/tts_wav/no_cur_schedule.wav')
-    else:
-        # 완료 api 요청
-        changed_value = {
-            "started_at": data['started_at'],
-            "finished_at": server.get_timeline(True),
-            "deadline_at": data['deadline_at'],
-            "is_finished": True
-        }
-        # 일단 임의로 첫번째 진행중인 일정 삭제
-        success = server.put(changed_value, SPECIFIC_SCHEDULE, data[0]['schedule_id'])
-        reset_data()
-        if success:
-            os.system(f'aplay {CUR_DIR}/tts_wav/clear_schedule_finish.wav')
+    try:
+        if len(data) == 0:
+            os.system(f'aplay {CUR_DIR}/tts_wav/no_cur_schedule.wav')
         else:
-            os.system(f'aplay {CUR_DIR}/tts_wav/problem_occurred.wav')
+            # 완료 api 요청
+            changed_value = {
+                "started_at": data['started_at'],
+                "finished_at": server.get_timeline(True),
+                "deadline_at": data['deadline_at'],
+                "is_finished": True
+            }
+            # 일단 임의로 첫번째 진행중인 일정 삭제
+            success = server.put(changed_value, SPECIFIC_SCHEDULE, data[0]['schedule_id'])
+            reset_data()
+            if success:
+                os.system(f'aplay {CUR_DIR}/tts_wav/clear_schedule_finish.wav')
+            else:
+                os.system(f'aplay {CUR_DIR}/tts_wav/problem_occurred.wav')
+    except Exception as e:
+        print("Server error: ", e)
+        os.system(f'aplay {CUR_DIR}/tts_wav/problem_occurred.wav')
     return False
 
 

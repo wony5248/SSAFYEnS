@@ -7,6 +7,11 @@ const config = require("../config/config.js");
 const jsonwebtoken = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+// trophy 수여하는 방법
+const trophy = require("./trophyService");
+// 아래방법은 trophyService의 함수 로직을 따라야한다.
+// trophy.createUserTrophyById({params: {user_id: 1, trophy_id: 1}})
+
 exports.createGroup = function (req, res, next) {
 	return new Promise(async function (resolve, reject) {
 		// jwt 인증 확인 필요
@@ -44,6 +49,10 @@ exports.createGroup = function (req, res, next) {
           )
           .then((data) => {
             console.log("This is createGroup update data:",data)
+
+            // 첫 그룹 생성 트로피 부여
+            trophy.createUserTrophyById({params: {user_id: req.user_id, trophy_id: 7}})
+
             return resolve(data)
           })
           .catch((error) => {
@@ -374,6 +383,10 @@ exports.createApplicant = function (req, res, next) {
         .then((applicant) => {
           console.log("This is createApplicant applicant:",applicant)
           // 가입신청 완료!
+
+          // 첫 그룹 가입 신청 트로피 부여
+          trophy.createUserTrophyById({params: {user_id: user_id, trophy_id: 9}})
+
           return resolve(applicant)
         })
         // 존재하지 않은 group_id면 에러!
@@ -449,6 +462,7 @@ exports.createMemberById = function (req, res, next) {
           console.log("This is createMemberById member:",member)
           // group.pax 에 1명 추가 됐다고 더해줘야할 필요...? pax 없애기로 합의
 
+          trophy.createUserTrophyById({params: {user_id: applicant_id, trophy_id: 5}})
           return resolve()
         })
         .catch((error) => {
@@ -493,6 +507,10 @@ exports.deleteApplicantById = function (req, res, next) {
         console.log("This is deleteApplicantById data:",data) // 0 또는 1 이상의 integer
         if (!data) return reject("Group이 존재하지 않음/해당 그룹에 가입신청한 적 없음/user_id가 존재하지 않음"); // 아무것도 삭제 안한 경우 에러
         // applicants 테이블에서 삭제
+
+        // 첫 그룹 가입 거절
+        trophy.createUserTrophyById({params: {user_id: applicant_id, trophy_id: 8}})
+
         return resolve()
       })
       // 존재하지 않은 group_id면 에러
@@ -522,9 +540,9 @@ exports.deleteMemberById = function (req, res, next) {
     .findOne({where: { user_id: req.user_id, group_id }}) // 본인
     .then((data) => {
       // user_id가 group_id의 그룹관리자, 혹은 본인인지 확인 필요
-      if (data.is_group_admin || req.user_id===data.user_id) {
+      if (data.is_group_admin || user_id===data.user_id) {
         /* pass */
-        if (data.is_group_admin && req.user_id===data.user_id) {
+        if (data.is_group_admin && user_id===data.user_id) {
           return reject("그룹관리자는 그룹을 탈퇴할 수 없습니다")
         }
       } else { 
@@ -539,6 +557,10 @@ exports.deleteMemberById = function (req, res, next) {
         console.log("This is deleteMemberById data:",data) // 0 또는 1 이상의 integer
         if (!data) return reject("Group이 존재하지 않음/해당 그룹에 멤버가 아님/user_id가 존재하지 않음"); // 아무것도 삭제 안한 경우 에러
         // usersmngroups 테이블에서 삭제
+
+        // 첫 그룹 탈퇴 트로피 부여
+        trophy.createUserTrophyById({params: {user_id: user_id, trophy_id: 6}})
+        
         return resolve()
       })
       // 존재하지 않은 group_id면 에러
