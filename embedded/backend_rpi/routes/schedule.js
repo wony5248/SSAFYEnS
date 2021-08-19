@@ -12,7 +12,7 @@ router.post("/", async function (req, res, next) {
     .post(
       "http://i5a109.p.ssafy.io:8079/schedule",
       {
-        date: req.body.date,
+        date: moment().format("YYYYMMDD"),
         started_at: req.body.started_at,
         finished_at: req.body.finished_at,
         deadline_at: req.body.deadline_at,
@@ -71,7 +71,7 @@ router.put("/:id", async function (req, res, next) {
     .put(
       `http://i5a109.p.ssafy.io:8079/schedule/${req.params.id}`,
       {
-        date: req.body.date,
+        date: moment().format("YYYYMMDD"),
         started_at: req.body.started_at,
         finished_at: req.body.finished_at,
         deadline_at: req.body.deadline_at,
