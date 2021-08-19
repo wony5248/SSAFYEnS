@@ -20,6 +20,7 @@ import IoTImg from "../../images/embedded.png";
 import createImg from "../../images/create.png";
 import monitoringImg from "../../images/monitoring.png";
 import creatingImg from "../../images/creating.png";
+import botImg from "../../images/bot.jpg"
 import progressImg from "../../images/progress.png";
 import todayImg from "../../images/today.png";
 import stopwatchImg from "../../images/stopwatch.png";
@@ -379,7 +380,7 @@ const MainSession = () => {
               height: "20%",
               marginBottom: "40px",
             }}
-          ><img src={creatingImg} alt="schedule bot" width="100%" height="100%"></img></div>
+          ><img src={botImg} alt="schedule bot" width="100%" height="100%"></img></div>
           <div
             style={{
               width: "70%",
