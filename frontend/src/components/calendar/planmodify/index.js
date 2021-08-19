@@ -21,13 +21,12 @@ const PlanModify = () =>{
     const date = location.pathname.split('/')[2];
 
     const [rating, setRating] = useState(0);
+    const [startYear, setStartYear] =useState('');
     const [startMonth, setStartMonth] =useState('');
     const [startDay, setStartDay] =useState('');
     const [startHour, setStartHour] =useState('');
     const [startMin, setStartMin] =useState();
 
-    const [endMonth, setEndMonth] =useState('');
-    const [endDay, setEndDay] =useState('');
     const [endHour, setEndHour] =useState('');
     const [endMin, setEndMin] =useState();
     const [title, setTitle] =useState('');
@@ -52,13 +51,12 @@ const PlanModify = () =>{
             const result = await scheduleAPI.getSchedule(id);
             setData(result.data);
 
+            setStartYear(Number(moment(result.data.started_at).format('YYYY')));
             setStartMonth(Number(moment(result.data.started_at).format('MM')));
             setStartDay(Number(moment(result.data.started_at).format('DD')));
             setStartHour(Number(moment(result.data.started_at).format('HH')));
             setStartMin(moment(result.data.started_at).format('mm'));
             
-            setEndMonth(Number(moment(result.data.finished_at).format('MM')));
-            setEndDay(Number(moment(result.data.finished_at).format('DD')));
             setEndHour(Number(moment(result.data.finished_at).format('HH')));
             setEndMin(moment(result.data.finished_at).format('mm'));
             setTitle(result.data.title);
@@ -100,20 +98,16 @@ const PlanModify = () =>{
         setTimer(event.target.value);
     };
 
+    const handleStartYear = (event) => {
+        setStartYear(event.target.value);
+    };
+
     const handleStartMonth = (event) => {
         setStartMonth(event.target.value);
     };
 
-    const handleEndMonth = (event) => {
-        setEndMonth(event.target.value);
-    };
-
     const handleStartDay = (event) => {
         setStartDay(event.target.value);
-    };
-
-    const handleEndDay = (event) => {
-        setEndDay(event.target.value);
     };
 
     const handleStartHour = (event) => {
@@ -135,6 +129,14 @@ const PlanModify = () =>{
     const handleTitle = (event) => {
         setTitle(event.target.value);
     };
+
+    const yearArr = ()=>{
+        let result = [];
+        for (let i=0; i<5; i++){
+            result = result.concat(<MenuItem value ={startYear+i}>{startYear+i}</MenuItem>);
+        }
+        return result;
+    }
 
     const monthArr = () =>{
         let result = [];
@@ -166,31 +168,6 @@ const PlanModify = () =>{
         
         return result;
     };
-
-    const enddayArr = () =>{
-        let result = [];
-        if (endMonth===1 || endMonth===3 || endMonth===5 || endMonth===7 || endMonth===8 || endMonth===10 || endMonth===12){
-            for (let i = 1; i <=31 ; i++){
-                result = result.concat(<MenuItem value ={i}>{i}</MenuItem>);
-            }
-        }else if (endMonth===4 || endMonth===6 || endMonth===9 || endMonth===11){
-            for (let i = 1; i <=30 ; i++){
-                result = result.concat(<MenuItem value ={i}>{i}</MenuItem>);
-            }
-        }else if (thisYear%4===0 && endMonth===2){
-            for (let i = 1; i <=29 ; i++){
-                result = result.concat(<MenuItem value ={i}>{i}</MenuItem>);
-            }
-        }else if(endMonth===2){
-            for (let i = 1; i <=28 ; i++){
-                result = result.concat(<MenuItem value ={i}>{i}</MenuItem>);
-            }
-        }
-        
-        return result;
-    };
-
-
     const hourArr = () =>{
         let result = [];
         for (let i = 0; i <=23 ; i++){
@@ -209,7 +186,7 @@ const PlanModify = () =>{
 
     const modify = async () =>{
         let started_at = moment(`${moment().format('YYYY')}-${startMonth}-${startDay} ${startHour}:${startMin}`).format('YYYY-MM-DD HH:mm');
-        let deadline_at = moment(`${moment().format('YYYY')}-${endMonth}-${endDay} ${endHour}:${endMin}`).format('YYYY-MM-DD HH:mm');
+        let deadline_at = moment(`${moment().format('YYYY')}-${startMonth}-${startDay} ${endHour}:${endMin}`).format('YYYY-MM-DD HH:mm');
 
         if(started_at>deadline_at){
             alert("마감일이 시작일보다 빠릅니다");
@@ -260,6 +237,13 @@ const PlanModify = () =>{
                             , borderRadius:25, width:'380px', height:'40px', textAlign:'center'}}>
                             <FormControl style={{marginLeft:'15px', marginRight:'25px', marginBottom:'3px'}}>
                                 <Select labelId="demo-simple-select-lable"
+                                    id = "demo-simple-select" key = {startYear} value = {startYear} onChange={handleStartYear}>
+                                    {yearArr()}
+                                </Select>
+                            </FormControl>
+                            <div style={{marginRight:'20px'}}>년</div>
+                            <FormControl style={{marginLeft:'15px', marginRight:'25px', marginBottom:'3px'}}>
+                                <Select labelId="demo-simple-select-lable"
                                     id = "demo-simple-select" value = {startMonth} onChange={handleStartMonth}>
                                     {monthArr()}
                                 </Select>
@@ -296,30 +280,6 @@ const PlanModify = () =>{
                                 </Select>
                             </FormControl>
                             <div>분</div>
-                        </Grid>
-                    </Grid>
-                    <Grid container direction="row" alignItems = "center"  justifyContent = "center">
-                        <Grid style={{width:'100px', background:'#A3CCA3', height:'30px'
-                            , textAlign:'center', borderRadius:25, color:'#ffffff'}}>
-                            <Grid style={{marginTop:'3px'}}>마감일</Grid>
-                        </Grid>
-                        <Grid container direction="row" justifyContent = "center" alignItems = "center"
-                            style={{marginLeft:'50px', marginBottom:'3px', border:'1px solid #D6E6F5'
-                            , borderRadius:25, width:'380px', height:'40px', textAlign:'center'}}>
-                            <FormControl style={{marginLeft:'15px', marginRight:'25px', marginBottom:'3px'}}>
-                                <Select labelId="demo-simple-select-lable"
-                                    id = "demo-simple-select" value = {endMonth} onChange={handleEndMonth}>
-                                    {monthArr()}
-                                </Select>
-                            </FormControl>
-                            <div style={{marginRight:'20px'}}>월</div>
-                            <FormControl style={{marginLeft:'15px', marginRight:'25px', marginBottom:'3px'}}>
-                                <Select labelId="demo-simple-select-lable"
-                                    id = "demo-simple-select" value = {endDay} onChange={handleEndDay}>
-                                    {enddayArr()}
-                                </Select>
-                            </FormControl>
-                            <div>일</div>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" alignItems = "center"  justifyContent = "center">
@@ -428,7 +388,7 @@ const PlanModify = () =>{
                 </Grid>
                 {/* footer */}
                 <Grid container justifyContent="center" alignItems="center" style={{marginTop:'30px', display:"flex",}}>
-                <Button type = "button" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF',marginRight:"32px"}} onClick={()=> window.location.href = "/plan"}>뒤로가기</Button>
+                <Button type = "button" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF',marginRight:"32px"}} onClick={()=> window.location.href = `/planlist/${date}`}>뒤로가기</Button>
                 <Button type = "submit" variant = "contained" style={{background:'#A3CCA3', color:'#FFFFFF'}} onClick={select?null:modify}>수정하기</Button>
                 </Grid>
             </form>

@@ -8,6 +8,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import trophyImg from '../../images/trophy_test.png'
 import {userAPI} from '../../utils/axios';
+import moment from 'moment';
 
 const Userinfo = () =>{
     const [select, setSelect] = useState(false);
@@ -121,15 +122,16 @@ const Userinfo = () =>{
             {/* trophy */}
             <div style={{margin:'15px'}}>
                 <Typography variant="overline" style={{fontSize: 30}}>MY TROPHY</Typography>
-                <Grid style={{height:'350px'}}>
+                <Grid style={{height:'350px', width:'90%'}}>
                     <Slider {...trophySettings}>
                         {trophyList.map(item=>{
                             return(
                                 <Card key={item.trophy_id} variant="outlined" style={{alignItems: 'center', justifyContent: 'center'}}>
                                     <CardContent style={{alignItems: 'center', justifyContent: 'center'}}>
-                                        <div style={{width:'200px', height:'250px'}}>
+                                        <div style={{width:'200px', height:'280px'}}>
                                             {istrophy?(<img src={trophyImg} alt="main" width="100%"></img>):null}
                                             <div style={{textAlign:'center', marginTop:'15px'}}>{item.title}</div>
+                                            {istrophy?(<div style={{textAlign:'center', marginTop:'15px'}}>{moment(item.achieved_at).format('YY.MM.DD')}</div>):null}
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -142,7 +144,7 @@ const Userinfo = () =>{
             {/* group */}
             <div style={{margin:'15px'}}>
                 <Typography variant="overline" style={{fontSize: 30}}>MY GROUP</Typography>
-                <Grid>
+                <Grid style={{ width:'90%'}}>
                     <Slider {...groupSettings}>
                         {groupList.map(item=>{
                             return(

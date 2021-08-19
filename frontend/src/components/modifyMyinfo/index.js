@@ -91,13 +91,20 @@ const ModifyInfo = () =>{
     };
 
     const modifyUser = async () => {
-        try{
-            await userAPI.modifyUser(data.user_id, name, email, number, password);
-            alert("정보를 수정했습니다.");
-            window.location.href= `/mypage`;
-        }catch(error){
-            console.log(error);
-            alert("정보 수정에 실패했습니다.");
+        if(password!==''&&password.length<8){
+            alert("비밀번호는 8자 이상으로 설정해주세요");
+        }else{
+            if(password===''){
+                setPassword(data.password);
+            }
+            try{
+                await userAPI.modifyUser(data.user_id, name, email, number, password);
+                alert("정보를 수정했습니다.");
+                window.location.href= `/mypage`;
+            }catch(error){
+                console.log(error);
+                alert("정보 수정에 실패했습니다.");
+            }
         }
     };
 

@@ -209,7 +209,7 @@ const Month = () => {
           <React.Fragment>
             <AddCircleIcon
               fontSize="large"
-              style={{ color: "#A3CCA3" }}
+              style={{ color: "#A3CCA3", cursor:'pointer' }}
               onClick={openPlanModal}
             />
             <Plan open={planOpen} close={closePlanModal} />

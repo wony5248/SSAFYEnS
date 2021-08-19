@@ -71,17 +71,31 @@ const Daily = () =>{
                     t[i] = 0;
                 }
                 for(let i=0; i<result.data.schedules.length; i++){
-                    t[dic[moment(result.data.schedules[i].started_at).format('MM-DD')]] += moment.duration(moment(result.data.schedules[i].finished_at).diff(moment(result.data.schedules[i].started_at))).asMinutes();
-                    text = text.concat(result.data.schedules[i].context);
+                    if(result.data.schedules[i].is_finished===1){
+                        t[dic[moment(result.data.schedules[i].started_at).format('MM-DD')]] += moment.duration(moment(result.data.schedules[i].finished_at).diff(moment(result.data.schedules[i].started_at))).asMinutes();
+                        text = text.concat(result.data.schedules[i].context);
+                    }
                 }
-                setCategory(c);
-                setTime(t);
-                setHumi((data.sum_humidity/data.schedules.length).toFixed(2));
-                setIllumi((data.sum_illuminance/data.schedules.length).toFixed(2));
-                setNoise((data.sum_noise/data.schedules.length).toFixed(2));
-                setTemp((data.sum_temperature/data.schedules.length).toFixed(2));
-                setRate(data.sum_point/20);
-                setContext(text); 
+
+                if(c.length>0){
+                    setCategory(c);
+                    setTime(t);
+                    setHumi((data.sum_humidity/data.schedules.length).toFixed(2));
+                    setIllumi((data.sum_illuminance/data.schedules.length).toFixed(2));
+                    setNoise((data.sum_noise/data.schedules.length).toFixed(2));
+                    setTemp((data.sum_temperature/data.schedules.length).toFixed(2));
+                    setRate(data.sum_point/20);
+                    setContext(text); 
+                }else{
+                    setCategory([]);
+                    setTime([]);
+                    setRate(0);
+                    setHumi(0);
+                    setIllumi(0);
+                    setNoise(0);
+                    setTemp(0);
+                    setContext(''); 
+                }
             }catch(e){
                 setCategory([]);
                 setTime([]);
