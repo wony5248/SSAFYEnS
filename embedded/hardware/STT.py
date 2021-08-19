@@ -1,6 +1,7 @@
 import re, sys, os
 from google.cloud import speech
 from microphoneStream import *
+import signal
 import function
 
 CUR_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -9,7 +10,7 @@ CHUNK = int(RATE / 10)
 SEQUENCE = ['첫', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열']
 
 class STT():
-    def __init__(self):
+    def __init__(self, evt_pid=None):
         self._rate = RATE
         self._chunk = int(self._rate / 10)
         self.language_code = 'ko-KR'
@@ -17,8 +18,9 @@ class STT():
         self.config = None
         self.streaming_config = None
         self.stream = None
+        self.pid = evt_pid
         self.settings_init()
-        # 타이머 추가해서 일정 시간 안에 이동 못하면 취소 기능 추가?
+        # TODO: Timer 기능 추가(몇 초 이상 input 없을 시 취소)
 
     def settings_init(self):
         self.client = speech.SpeechClient()
@@ -57,26 +59,38 @@ class STT():
                     re.search(r'\b(끝)\b', transcript, re.I):
                     print('그만: Exiting..')
                     return -1
+                if cmd == -2:
+                    if re.search(r'\b(싸피엔스)\b', transcript, re.I) or\
+                        re.search(r'\b(사피엔스)\b', transcript, re.I):
+                        os.system(f'aplay {CUR_DIR}/tts_wav/im_here.wav')
+                        return True
+
                 if cmd == -1:
                     # return main_cmd
-                    if re.search(r'\b(등록)\b', transcript, re.I):
+                    if re.search(r'\b(등록)\b', transcript, re.I) or\
+                        re.search(r'\b(등록해)', transcript, re.I):
                         print('등록: Exiting..')
                         return 0
-                    elif re.search(r'\b(브리핑)\b', transcript, re.I):
+                    elif re.search(r'\b(브리핑)\b', transcript, re.I) or\
+                        re.search(r'\b(브리핑해)', transcript, re.I):
                         print('브리핑: Exiting..')
                         return 1
-                    elif re.search(r'\b(수정)\b', transcript, re.I):
+                    elif re.search(r'\b(수정)\b', transcript, re.I) or\
+                        re.search(r'\b(수정해)', transcript, re.I):
                         print('수정: Exiting..')
                         return 2
-                    elif re.search(r'\b(삭제)\b', transcript, re.I):
+                    elif re.search(r'\b(삭제)\b', transcript, re.I) or\
+                        re.search(r'\b(삭제해)', transcript, re.I):
                         print('삭제: Exiting..')
                         return 3
-                    elif re.search(r'\b(완료)\b', transcript, re.I):
+                    elif re.search(r'\b(완료)\b', transcript, re.I) or\
+                        re.search(r'\b(완료해)', transcript, re.I):
                         print('완료: Exiting..')
                         return 4
                     elif re.search(r'\b(현재)\b', transcript, re.I):
                         print('현재 일정: Exiting..')
                         return 5
+
                 elif cmd == 0:
                     # 등록
                     # 순서는 self.seq 값 필요
@@ -118,10 +132,8 @@ class STT():
                         function.add_data('finished_at', 'deadline_at', value=finish)
                         print('시간 등록: Exiting..')
                         return 1
-                    elif re.search(r'\b(일정)\b', transcript, re.I) and\
-                        re.search(r'\b(이름)\b', transcript, re.I):
+                    elif re.search(r'\b(이름)\b', transcript, re.I):
                         strr = transcript
-                        strr = strr.replace("일정", "", 1)
                         strr = strr.replace("이름", "", 1)
                         function.add_data('title', content=strr)
                         print('일정 이름 등록: Exiting..')
@@ -131,10 +143,8 @@ class STT():
                         re.search(r'\b(괜찮아)\b', transcript, re.I):
                         print('일정 내용 등록 안 함: Exiting..')
                         return 3
-                    elif re.search(r'\b(일정)\b', transcript, re.I) and\
-                        re.search(r'\b(내용)\b', transcript, re.I):
+                    elif re.search(r'\b(내용)\b', transcript, re.I):
                         strr = transcript
-                        strr = strr.replace("일정", "", 1)
                         strr = strr.replace("내용", "", 1)
                         function.add_data('context', content=strr)
                         print('일정 내용 등록: Exiting..')
@@ -228,6 +238,13 @@ class STT():
             if cmd == -1:
                 main_cmd = self.listening_loop(responses,cmd,seq)
                 next_cmd = 0
+            elif cmd == -2:
+                # for call mode
+                start_cmd = self.listening_loop(responses,cmd,seq)
+                next_cmd = -1
+                if start_cmd == True:
+                    main_cmd = self.listening_loop(responses,-1,seq)
+                    next_cmd = 0
             else:
                 main_cmd = cmd
                 next_cmd = self.listening_loop(responses,cmd,seq)
@@ -241,7 +258,23 @@ class STT():
 
     def start_stt(self):
         print("Starting STT...")
-        repeatition, main_cmd, next_cmd = self.open_stream()
-        while repeatition:
-            print("next step")
-            repeatition, main_cmd, next_cmd = self.open_stream(main_cmd, next_cmd)
+        if self.pid is None:
+            repeatition, main_cmd, next_cmd = self.open_stream()
+            while repeatition:
+                print("next step")
+                repeatition, main_cmd, next_cmd = self.open_stream(main_cmd, next_cmd)
+        else:
+            while True:
+                repeatition, main_cmd, next_cmd = self.open_stream(cmd=-2)
+                while repeatition:
+                    print("next step")
+                    repeatition, main_cmd, next_cmd = self.open_stream(main_cmd, next_cmd)
+
+            # if self.pid is not None:
+            #     print("stt: end signal is sent")
+            #     os.kill(self.pid, signal.SIGUSR1)
+
+
+if __name__ == '__main__':
+    stt = STT(0)
+    stt.start_stt()

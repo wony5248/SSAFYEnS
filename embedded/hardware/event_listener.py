@@ -1,9 +1,17 @@
 from time import sleep
 import RPi.GPIO as GPIO
 from STT import *
+import argparse
+import os, signal
 
 btn = 25
 stt = None
+
+# def finish_signal_handler(signum, frame):
+#     global stt
+#     signal.signal(signal.SIGUSR1, finish_signal_handler)
+#     print(signum, "Restart STT")
+#     stt.start_stt()
 
 def btn_callback(channel):
     global stt
@@ -12,12 +20,26 @@ def btn_callback(channel):
 
 def main():
     global stt
-    try:
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(btn, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-        GPIO.add_event_detect(btn, GPIO.FALLING, callback=btn_callback, bouncetime=300)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--mode', help='button mode / call mode', default='button')
+    args = parser.parse_args()
+    STT_MODE = args.mode
+    print("START STT:", STT_MODE)
 
-        stt = STT()
+    try:
+        global stt
+        if STT_MODE == 'call':
+            pid = os.getpid()
+            stt = STT(pid)
+            stt.start_stt()
+            # signal.signal(signal.SIGUSR1, finish_signal_handler)
+
+        else:
+            # default: button 으로 실행
+            stt = STT()
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(btn, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+            GPIO.add_event_detect(btn, GPIO.FALLING, callback=btn_callback, bouncetime=300)
 
         while True:
             sleep(1)
