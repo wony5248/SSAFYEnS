@@ -3,6 +3,19 @@ embedded/backend/node_modules
 embedded/frontend_rpi/node_modules
 embedded/frontend_rpi/package-lock.json
 
+### Hardware ###
+# Google Cloud Credential Key
+embedded/hardware/*.json
+# Log
+embedded/*.log
+embedded/hardware/*.log
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+### ###
+
+
 node_modules/
 node_modules
 .gitignore
