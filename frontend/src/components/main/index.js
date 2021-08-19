@@ -8,13 +8,14 @@ import ScheduleImg from '../../images/schedule.png';
 import TimeImg from '../../images/time.png';
 import ListImg from '../../images/list.png';
 import IoTImg from '../../images/embedded.png';
+import MainImg from '../../images/mainimg.png';
 
 const MainSession = () =>{
     return(
         <Wrapper>
             {/* main */}
             <div style={{display:"flex", alignItems: "center", justifyContent: "space-around", width: "100%", height:'500px'}}>
-                <div>
+                <div style={{marginLeft:'50px'}}>
                     <Typography variant="overline" display="block" style={{fontSize:70, fontWeight:'bold'}} >
                         스마트한 일정관리의 시작.
                     </Typography>
@@ -23,8 +24,8 @@ const MainSession = () =>{
                     </Typography>
                     <div style={{width:'36%', backgroundColor:'#A3CCA3', height:'30px', marginTop:'-110px'}}></div>
                 </div>
-                <Grid>
-                    모니터화면 넣자
+                <Grid style={{marginTop:'50px'}}>
+                    <img src={MainImg} width="700px"/>
                 </Grid>
             </div>
             {/* 설명 */}
