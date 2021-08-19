@@ -158,9 +158,9 @@ router.get("/getdaily/:date/current", async function (req, res, next) {
         response.data[i].deadline_at = moment(
           response.data[i].deadline_at
         ).format("YYYYMMDD HHmm");
-        response.data[i].notification = moment(
-          response.data[i].notification
-        ).format("YYYYMMDD HHmm");
+        response.data[i].notificationtime ? moment(
+          response.data[i].notificationtime
+        ).format("YYYYMMDD HHmm") : null 
         const startTime = Number(
           moment(response.data[i].started_at).format("HH")
         );
@@ -239,9 +239,9 @@ router.get("/getdaily/secretary/:date", async function (req, res, next) {
         arr[i].started_at = moment(arr[i].started_at).format("YYYYMMDD HHmm");
         arr[i].finished_at = moment(arr[i].finished_at).format("YYYYMMDD HHmm");
         arr[i].deadline_at = moment(arr[i].deadline_at).format("YYYYMMDD HHmm");
-        arr[i].notification = moment(arr[i].notification).format(
+        arr[i].notificationtime ? moment(arr[i].notificationtime).format(
           "YYYYMMDD HHmm"
-        );
+        ): null
       }
       res.send(arr);
       console.log(22222);
