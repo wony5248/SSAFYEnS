@@ -14,9 +14,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-      models.challenges.hasMany(models.schedules, { foreignKey: 'challenge_id'}) // https://sequelize.org/master/manual/assocs.html#customizing-the-foreign-key
-      
-      models.challenges.belongsTo(models.groups, { foreignKey: 'group_id'}) // https://sequelize.org/master/manual/assocs.html#customizing-the-foreign-key
+      // models.challenges.hasMany(models.schedules, { foreignKey: 'challenge_id'}) // https://sequelize.org/master/manual/assocs.html#customizing-the-foreign-key
+
+      models.challenges.belongsTo(models.groups, { foreignKey: 'group_id' }) // https://sequelize.org/master/manual/assocs.html#customizing-the-foreign-key
     }
   };
   challenges.init({

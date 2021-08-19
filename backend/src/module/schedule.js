@@ -401,6 +401,7 @@ exports.migrate = async (req, next_schedule) => {
     });
 };
 exports.getSchedule_unit = async (req, unit) => {
+    console.log(req)
     if (!unit in ["day", "month", "week"]) return null
     const { user_id } = req;
     const month = moment(req.params.date).startOf(unit);
