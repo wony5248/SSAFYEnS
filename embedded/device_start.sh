@@ -6,7 +6,7 @@ BACKEND_PATH='backend_rpi'
 FRONTEND_PATH='frontend_rpi'
 HARDWARE_PATH='hardware'
 # Need to be fixed when change the key
-GCP_KEY='ssafy-pjt1-320605-a257c90a81c8.json'
+GCP_KEY='ssafyens-71ea8d7e740e.json'
 
 start_backend(){
 	cd $SHELL_PATH/$BACKEND_PATH
