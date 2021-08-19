@@ -21,6 +21,7 @@ python3 ./testcodes/test_{sensor}.py
 >
 > [Key 얻기](./GET_GOOGLE_KEY.md)  
 > key 파일은 실행할 파이썬 파일과 동일한 위치에 복사해 주세요.
+  
     ```
     # 키 쉘에 등록하기
     cd ./testcodes
