@@ -280,8 +280,28 @@ const Groupmanage = (props) => {
       window.alert("거절할 신청자를 골라주세요.");
     }
   };
-  const Exile = async () => {
+  const Assignment = async () => {
     console.log(select - 1);
+    if (select) {
+      if (window.confirm(`${member[select - 1].user_id}에게 그룹장을 양도하시겠습니까?`)) {
+        await groupAPI
+          .assignmentAdmin(id, member[select - 1].user_id)
+          .then((data) => {
+            window.alert(`${member[select - 1].user_id}에게 그룹장이 양도 되었습니다.`);
+            window.location.reload();
+          })
+          .catch((e) => {
+            window.alert("그룹장만 양도할 수 있습니다.");
+          });
+      } else {
+        window.alert("양도가 취소 되었습니다.");
+      }
+    } else {
+      window.alert("양도할 그룹원을 골라주세요.");
+    }
+  };
+  const Exile = async () => {
+    console.log(id, member[select-1]);
     if (select) {
       if (window.confirm(`${member[select - 1].user_id}을 추방하시겠습니까?`)) {
         await groupAPI
@@ -379,7 +399,7 @@ const Groupmanage = (props) => {
           </div>
           <Joindiv>
           <div style={{ height: "51px" }}>
-              <Acceptbtn onClick={console.log("그룹장 위임")}>그룹장 위임</Acceptbtn>
+              <Acceptbtn onClick={Assignment}>그룹장 양도</Acceptbtn>
               <Joinbtn onClick={Exile}>추방하기</Joinbtn>
             </div>
           </Joindiv>

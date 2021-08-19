@@ -8,7 +8,7 @@ const GroupInfo = ({match}) => {
     const {id} = match.params;
     console.log(id)
     return(
-        <div style={{height: '100%', display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
+        <div style={{height: '100%', display:"flex", flexDirection:"column", justifyContent:"flex-start"}}>
             <Header />
             <Grid style ={{marginTop: "100px"}}>
                 <Groupinfo id={id}/>
