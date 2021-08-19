@@ -7,9 +7,14 @@ const config = require("../config/config.js");
 const jsonwebtoken = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+// trophy 수여하는 방법
+const trophy = require("./trophyService");
+// 아래방법은 trophyService의 함수 로직을 따라야한다.
+// trophy.createUserTrophyById({params: {user_id: 1, trophy_id: 1}})
+
 exports.getDuplicateCheckById = function (req, res, next) {
   return new Promise(async function (resolve, reject) {
-
+    
     const { user_id } = req.params;
     db["users"]
       .findOne({
@@ -25,6 +30,7 @@ exports.getDuplicateCheckById = function (req, res, next) {
           return resolve(data);
         }
         // 찾은게 에러
+        console.log("이미 있는 아이디입니다")
         return reject();
       })
       .catch((error) => {
@@ -107,6 +113,9 @@ exports.createUser = function (req) {
       // 2-1. 5개, 이메일 이미 존재 - 컷
       // 2-2. 5개, 전화번호 이미 존재 - 컷
       // 2-3. 5개, 유저_아이디 이미 존재 - 컷
+
+      // 첫 회원가입 트로피 부여
+      trophy.createUserTrophyById({params: {user_id: data.user_id, trophy_id: 1}})
 
       // 보낸 정보 + created_at 만 돌려줄지
       // 예전 코드처럼 openAPI로 돌려줄지(SQL 조회 1회 더 필요)
@@ -243,6 +252,10 @@ exports.login = function (req, res) {
             access_token: token,
           };
           console.log("This is login data:", data);
+
+          // 첫 로그인 트로피 부여
+          trophy.createUserTrophyById({params: {user_id: user.user_id, trophy_id: 2}})
+
           return resolve(data);
         }
       })

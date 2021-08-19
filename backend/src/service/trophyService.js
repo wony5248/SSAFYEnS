@@ -70,23 +70,35 @@ exports.getUserTrophiesById = function (req) {
 
 exports.createUserTrophyById = function (req) {
   return new Promise(async function (resolve, reject) {
-    // const { user_id, trophy_id } = req.params
+    const { user_id, trophy_id } = req.params
 
+    // 이미 얻은 트로피를 중복으로 얻는 것을 방지해야한다.
     db["usersmntrophies"]
-    .create(req.params)
+    .findAll({where: {user_id, trophy_id}})
     .then((data) => { 
-      // 이미 얻은 트로피를 중복으로 얻는 것을 방지해야한다.
-      // 로직상 중복 방지도 가능하지만, DB에서 미연에 방지할 수 있다.
-      // https://stackoverflow.com/questions/53281798/avoid-duplicates-in-sequelize-query
-      // 위에 링크처럼 unique: "compositeIndex"는 작동하지 않았다.
-      // unique: true는 작동하지만 2개 중 하나를 PRI, 나머지는 UNI로 하여 PRI가 된 것의 중복을 막아 복합키로는 작동하지 않는다.
-      // SQL(DB)에 primary key를 2개 이상 적용시키니 PRI 2개로 적용되며 복합키로 작동한다.
+      if (data.length) {
+        console.log("이미 해당 유저는 해당 트로피를 보유하고 있습니다. ")
+        return resolve()
+      } else {
+        db["usersmntrophies"]
+        .create(req.params)
+        .then((data) => { 
+          // 로직상 중복 방지도 가능하지만, DB에서 미연에 방지할 수 있다.
+          // https://stackoverflow.com/questions/53281798/avoid-duplicates-in-sequelize-query
+          // 위에 링크처럼 unique: "compositeIndex"는 작동하지 않았다.
+          // unique: true는 작동하지만 2개 중 하나를 PRI, 나머지는 UNI로 하여 PRI가 된 것의 중복을 막아 복합키로는 작동하지 않는다.
+          // SQL(DB)에 primary key를 2개 이상 적용시키니 PRI 2개로 적용되며 복합키로 작동한다.
+    
+          return resolve(data); 
+        })
+        .catch((err) => { 
+          // 유효하지 않은 user_id, trophy_id는 컷
+          return reject(err);
+        })
+      }
+    })
+    .catch((err) => { return reject(err);})
 
-      return resolve(data); 
-    })
-    .catch((err) => { 
-      // 유효하지 않은 user_id, trophy_id는 컷
-      return reject(err);
-    })
+
   });
 }
