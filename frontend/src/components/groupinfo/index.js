@@ -165,12 +165,20 @@ const Groupinfo = (props) => {
   const [title, setTitle] = useState("");
   const [context, setContext] = useState("");
   const [createopen, setCreateopen] = useState(false);
+  const [joinopen, setJoinopen] = useState(false);
   const openCreateModal = () => {
     setCreateopen(true);
   };
 
   const closeCreateModal = () => {
     setCreateopen(false);
+  };
+  const openJoinModal = () => {
+    setJoinopen(true);
+  };
+
+  const closeJoinModal = () => {
+    setJoinopen(false);
   };
   useEffect(() => {
     async function loadGroup() {
@@ -286,9 +294,17 @@ const Groupinfo = (props) => {
                               marginTop: "20px",
                             }}
                           >
-                            <div style = {{border:"1px solid #a3cca3", marginLeft:"27px"}}>
+                            <div
+                              style={{
+                                border: "1px solid #a3cca3",
+                                marginLeft: "27px",
+                              }}
+                            >
                               <Challengetitlediv>{item.name}</Challengetitlediv>
-                              <Challengecontentdiv> {item.content}</Challengecontentdiv>
+                              <Challengecontentdiv>
+                                {" "}
+                                {item.content}
+                              </Challengecontentdiv>
                             </div>
                             {isadmin ? (
                               <Challengeaddbtn onClick={openCreateModal}>
@@ -310,6 +326,11 @@ const Groupinfo = (props) => {
                     </Secondleftdiv>
                   )}
                 </Secondcontent>{" "}
+                <Join
+                  open={joinopen}
+                  close={closeJoinModal}
+                  groupid={id}
+                ></Join>
                 <Secondcontent>
                   <Titlediv> 그룹 소개 </Titlediv>{" "}
                   <Secondrightdiv>{context}</Secondrightdiv>{" "}
@@ -346,197 +367,100 @@ const Groupinfo = (props) => {
               <Seconddiv>
                 <Secondcontent>
                   <Titlediv> 챌린지 </Titlediv>{" "}
-                  <Secondleftdiv>
-                    <div>
-                      <Challengetitlediv>
-                        {" "}
-                        이산 수학 마스터 하기{" "}
-                      </Challengetitlediv>{" "}
-                      <Progressdiv>
-                        <Progressbardiv>
-                          <div> 1 장 </div>{" "}
+                  {challenge.length === 0 ? (
+                    <Secondleftdiv
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        color: "black",
+                        fontSize: "30px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          paddingTop: "24px",
+                        }}
+                      >
+                        등록된 챌린지가 없습니다.
+                        {isadmin ? (
+                          <Challengeaddbtn onClick={openCreateModal}>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="40"
+                              height="40"
+                            >
+                              <path
+                                d="M 14.955 7.909 C 14.955 7.407 15.362 7 15.864 7 L 23.136 7 C 23.638 7 24.045 7.407 24.045 7.909 L 24.045 14.955 L 31.091 14.955 C 31.593 14.955 32 15.362 32 15.864 L 32 23.136 C 32 23.638 31.593 24.045 31.091 24.045 L 24.045 24.045 L 24.045 31.091 C 24.045 31.593 23.638 32 23.136 32 L 15.864 32 C 15.362 32 14.955 31.593 14.955 31.091 L 14.955 24.045 L 7.909 24.045 C 7.407 24.045 7 23.638 7 23.136 L 7 15.864 C 7 15.362 7.407 14.955 7.909 14.955 L 14.955 14.955 Z"
+                                fill="rgb(255, 255, 255)"
+                              ></path>{" "}
+                            </svg>{" "}
+                          </Challengeaddbtn>
+                        ) : null}
+                      </div>
+                    </Secondleftdiv>
+                  ) : (
+                    <Secondleftdiv>
+                      <div
+                        style={{
+                          alignItems: "center",
+                        }}
+                      >
+                        {challenge.map((item) => (
                           <div
                             style={{
-                              height: "100%",
-                              width: "30px",
-                              backgroundColor: "red",
-                              marginLeft: "24px",
-                              borderRadius: "4px",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              widows: "100%",
+                              alignItems: "center",
+                              marginTop: "20px",
                             }}
-                          ></div>{" "}
-                        </Progressbardiv>{" "}
-                        <Progressbardiv>
-                          <div> 2 장 </div>{" "}
-                          <div
-                            style={{
-                              height: "100%",
-                              width: "60px",
-                              backgroundColor: "orange",
-                              marginLeft: "24px",
-                              borderRadius: "4px",
-                            }}
-                          ></div>{" "}
-                        </Progressbardiv>{" "}
-                        <Progressbardiv>
-                          <div> 3 장 </div>{" "}
-                          <div
-                            style={{
-                              height: "100%",
-                              width: "90px",
-                              backgroundColor: "yellow",
-                              marginLeft: "24px",
-                              borderRadius: "4px",
-                            }}
-                          ></div>{" "}
-                        </Progressbardiv>{" "}
-                        <Progressbardiv>
-                          <div> 4 장 </div>{" "}
-                          <div
-                            style={{
-                              height: "100%",
-                              width: "120px",
-                              backgroundColor: "green",
-                              marginLeft: "24px",
-                              borderRadius: "4px",
-                            }}
-                          ></div>{" "}
-                        </Progressbardiv>{" "}
-                        <Progressbardiv>
-                          <div> 5 장 </div>{" "}
-                          <div
-                            style={{
-                              height: "100%",
-                              width: "150px",
-                              backgroundColor: "blue",
-                              marginLeft: "24px",
-                              borderRadius: "4px",
-                            }}
-                          ></div>{" "}
-                        </Progressbardiv>{" "}
-                        <Progressbardiv>
-                          <div> 6 장 </div>{" "}
-                          <div
-                            style={{
-                              height: "100%",
-                              width: "180px",
-                              backgroundColor: "navy",
-                              marginLeft: "24px",
-                              borderRadius: "4px",
-                            }}
-                          ></div>{" "}
-                        </Progressbardiv>{" "}
-                        <Progressbardiv>
-                          <div> 7 장 </div>{" "}
-                          <div
-                            style={{
-                              height: "100%",
-                              width: "210px",
-                              backgroundColor: "purple",
-                              marginLeft: "24px",
-                              borderRadius: "4px",
-                            }}
-                          ></div>{" "}
-                        </Progressbardiv>{" "}
-                      </Progressdiv>{" "}
-                    </div>
-                    <div>
-                      <Challengetitlediv>
-                        {" "}
-                        이산 수학 마스터 하기{" "}
-                      </Challengetitlediv>{" "}
-                      <Progressdiv>
-                        <Progressbardiv>
-                          <div> 1 장 </div>{" "}
-                          <div
-                            style={{
-                              height: "100%",
-                              width: "30px",
-                              backgroundColor: "red",
-                              marginLeft: "24px",
-                              borderRadius: "4px",
-                            }}
-                          ></div>{" "}
-                        </Progressbardiv>{" "}
-                        <Progressbardiv>
-                          <div> 2 장 </div>{" "}
-                          <div
-                            style={{
-                              height: "100%",
-                              width: "60px",
-                              backgroundColor: "orange",
-                              marginLeft: "24px",
-                              borderRadius: "4px",
-                            }}
-                          ></div>{" "}
-                        </Progressbardiv>{" "}
-                        <Progressbardiv>
-                          <div> 3 장 </div>{" "}
-                          <div
-                            style={{
-                              height: "100%",
-                              width: "90px",
-                              backgroundColor: "yellow",
-                              marginLeft: "24px",
-                              borderRadius: "4px",
-                            }}
-                          ></div>{" "}
-                        </Progressbardiv>{" "}
-                        <Progressbardiv>
-                          <div> 4 장 </div>{" "}
-                          <div
-                            style={{
-                              height: "100%",
-                              width: "120px",
-                              backgroundColor: "green",
-                              marginLeft: "24px",
-                              borderRadius: "4px",
-                            }}
-                          ></div>{" "}
-                        </Progressbardiv>{" "}
-                        <Progressbardiv>
-                          <div> 5 장 </div>{" "}
-                          <div
-                            style={{
-                              height: "100%",
-                              width: "150px",
-                              backgroundColor: "blue",
-                              marginLeft: "24px",
-                              borderRadius: "4px",
-                            }}
-                          ></div>{" "}
-                        </Progressbardiv>{" "}
-                        <Progressbardiv>
-                          <div> 6 장 </div>{" "}
-                          <div
-                            style={{
-                              height: "100%",
-                              width: "180px",
-                              backgroundColor: "navy",
-                              marginLeft: "24px",
-                              borderRadius: "4px",
-                            }}
-                          ></div>{" "}
-                        </Progressbardiv>{" "}
-                        <Progressbardiv>
-                          <div> 7 장 </div>{" "}
-                          <div
-                            style={{
-                              height: "100%",
-                              width: "210px",
-                              backgroundColor: "purple",
-                              marginLeft: "24px",
-                              borderRadius: "4px",
-                            }}
-                          ></div>{" "}
-                        </Progressbardiv>{" "}
-                      </Progressdiv>{" "}
-                    </div>
-                  </Secondleftdiv>{" "}
+                          >
+                            <div
+                              style={{
+                                border: "1px solid #a3cca3",
+                                marginLeft: "27px",
+                              }}
+                            >
+                              <Challengetitlediv>{item.name}</Challengetitlediv>
+                              <Challengecontentdiv>
+                                {" "}
+                                {item.content}
+                              </Challengecontentdiv>
+                            </div>
+                            {isadmin ? (
+                              <Challengeaddbtn onClick={openCreateModal}>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="40"
+                                  height="40"
+                                >
+                                  <path
+                                    d="M 14.955 7.909 C 14.955 7.407 15.362 7 15.864 7 L 23.136 7 C 23.638 7 24.045 7.407 24.045 7.909 L 24.045 14.955 L 31.091 14.955 C 31.593 14.955 32 15.362 32 15.864 L 32 23.136 C 32 23.638 31.593 24.045 31.091 24.045 L 24.045 24.045 L 24.045 31.091 C 24.045 31.593 23.638 32 23.136 32 L 15.864 32 C 15.362 32 14.955 31.593 14.955 31.091 L 14.955 24.045 L 7.909 24.045 C 7.407 24.045 7 23.638 7 23.136 L 7 15.864 C 7 15.362 7.407 14.955 7.909 14.955 L 14.955 14.955 Z"
+                                    fill="rgb(255, 255, 255)"
+                                  ></path>{" "}
+                                </svg>{" "}
+                              </Challengeaddbtn>
+                            ) : null}
+                          </div>
+                        ))}
+                      </div>{" "}
+                    </Secondleftdiv>
+                  )}
                 </Secondcontent>{" "}
                 <Secondcontent>
                   <Titlediv> 그룹 소개 </Titlediv>{" "}
-                  <Secondrightdiv>{context}</Secondrightdiv>{" "}
-                  <Joinbtn onClick={openCreateModal}> 가입 하기 </Joinbtn>{" "}
+                  {joinopen ? (
+                    <Join
+                      open={joinopen}
+                      close={closeJoinModal}
+                      groupid={id}
+                    ></Join>
+                  ) : (
+                    <Secondrightdiv>{context}</Secondrightdiv>
+                  )}
+                  <Joinbtn onClick={openJoinModal}> 가입 하기 </Joinbtn>{" "}
                 </Secondcontent>
               </Seconddiv>
             </div>
