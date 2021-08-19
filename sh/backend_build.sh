@@ -16,5 +16,8 @@ sudo docker
 echo run mariaDB image... &&
 docker run -p $MARIADB_PORT:3306  --name sfens-mariadb -e MARIADB_ROOT_PASSWORD=rlathdgus -d mariadb/server:$MARIADB_VERSION &&
   
+echo npm backend dependency
+cd $SHELL_PATH/../backend/src
+npm i
 
-
+echo "Complete!"
