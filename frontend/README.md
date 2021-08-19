@@ -32,12 +32,12 @@ npm start
 │  │  ├─ checkpw/               # 정보 수정시 비밀번호 확인
 │  │  ├─ findUser/              # 회원 정보 찾기
 │  │  ├─ footers/               # footer
-│  │  ├─ group/                 # 
-│  │  ├─ groupchange/           # 
-│  │  ├─ groupcreate/           # 
-│  │  ├─ groupinfo/             # 
-│  │  ├─ groupjoin/             # 
-│  │  ├─ groupmanage/           # 
+│  │  ├─ group/                 # 그룹 메인
+│  │  ├─ groupchange/           # 그룹 변경(modal)
+│  │  ├─ groupcreate/           # 그룹 생성(modal)
+│  │  ├─ groupinfo/             # 그룹 정보
+│  │  ├─ groupjoin/             # 그룹 가입(modal)
+│  │  ├─ groupmanage/           # 그룹 관리
 │  │  ├─ headers/               # header
 │  │  ├─ login/                 # 로그인
 │  │  ├─ main/                  # main 화면
@@ -53,9 +53,9 @@ npm start
 │  │  ├─ checkpasswd/           # 비밀번호 확인
 │  │  ├─ dailyevaluate/         # 하루 일정 평가
 │  │  ├─ find/                  # 아이디 비밀번호 찾기
-│  │  ├─ group/                 # 
-│  │  ├─ groupinfo/             # 
-│  │  ├─ groupmanage/           # 
+│  │  ├─ group/                 # 그룹
+│  │  ├─ groupinfo/             # 그룹 정보
+│  │  ├─ groupmanage/           # 그룹 관리
 │  │  ├─ login/                 # 로그인
 │  │  ├─ main/                  # 메인
 │  │  ├─ modifyuserinfo/        # 회원 정보 수정
