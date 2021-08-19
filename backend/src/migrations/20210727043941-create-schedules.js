@@ -74,9 +74,9 @@ module.exports = {
       noise: Sequelize.INTEGER,
       temperature: Sequelize.INTEGER,
 
-      challenge_id: {
-        type: Sequelize.INTEGER,
-      },
+      // challenge_id: {
+      //   type: Sequelize.INTEGER,
+      // },
     });
   },
   down: async (queryInterface, Sequelize) => {
