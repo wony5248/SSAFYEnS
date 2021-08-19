@@ -1,70 +1,79 @@
-# Getting Started with Create React App
+# SSAFY EnS Frontend
+## Installation
+```
+git clone https://lab.ssafy.com/s05-webmobile3-sub3/S05P13A109.git
+cd S05P13A109
+npm install
+```
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Start
+```
+cd frontend
+npm start
+```
 
-## Available Scripts
-
-In the project directory, you can run:
-
-### `yarn start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Repo structure
+```
+/
+├─ public/
+│
+├─ src/
+│  ├─ components/               # Components
+│  │  ├─ average/               # 일정 통계
+│  │  │  ├─ daily/              # 일별 일정 통계
+│  │  │  ├─ monthly/            # 월별 일정 통계
+│  │  │  └─ weekly/             # 주별 일정 통계
+│  │  ├─ calendar/              # 일정
+│  │  │  ├─ evaluation/         # 하루 일정 평가
+│  │  │  ├─ month/              # 달력 형태의 일정 확인
+│  │  │  ├─ plan/               # 일정 등록
+│  │  │  ├─ planlist/           # 하루 일정 목록
+│  │  │  └─ planmodify/         # 일정 수정
+│  │  ├─ checkpw/               # 정보 수정시 비밀번호 확인
+│  │  ├─ findUser/              # 회원 정보 찾기
+│  │  ├─ footers/               # footer
+│  │  ├─ group/                 # 
+│  │  ├─ groupchange/           # 
+│  │  ├─ groupcreate/           # 
+│  │  ├─ groupinfo/             # 
+│  │  ├─ groupjoin/             # 
+│  │  ├─ groupmanage/           # 
+│  │  ├─ headers/               # header
+│  │  ├─ login/                 # 로그인
+│  │  ├─ main/                  # main 화면
+│  │  ├─ modifyMyinfo/          # 회원 정보 수정
+│  │  ├─ resetpw/               # 비밀번호 찾기 시 비밀번호 재설정
+│  │  ├─ signup/                # 회원가입
+│  │  └─ userinfo/              # mypage
+│  │
+│  ├─ images/                   # page에서 사용하는 image
+│  │
+│  ├─ pages/                    # pages
+│  │  ├─ average/               # 일정 통계
+│  │  ├─ checkpasswd/           # 비밀번호 확인
+│  │  ├─ dailyevaluate/         # 하루 일정 평가
+│  │  ├─ find/                  # 아이디 비밀번호 찾기
+│  │  ├─ group/                 # 
+│  │  ├─ groupinfo/             # 
+│  │  ├─ groupmanage/           # 
+│  │  ├─ login/                 # 로그인
+│  │  ├─ main/                  # 메인
+│  │  ├─ modifyuserinfo/        # 회원 정보 수정
+│  │  ├─ mypage/                # mypage
+│  │  ├─ plan/                  # 일정 등록
+│  │  ├─ planlist/              # 일정 목록
+│  │  ├─ planmodify/            # 일정 수정
+│  │  ├─ resetpasswd/           # 비밀번호 재설정
+│  │  └─ signup                 # 회원가입
+│  │
+│  └─ utils/                    # axios file
+│
+│
+├─ .gitignore        
+├─ Dockefile         
+├─ nginx.conf
+├─ package-lock.json
+├─ package.json      
+├─ yarn.lock           
+└─ README.md         
+```
