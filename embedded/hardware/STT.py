@@ -19,6 +19,7 @@ class STT():
         self.streaming_config = None
         self.stream = None
         self.pid = evt_pid
+        self.data = {}
         self.settings_init()
         # TODO: Timer 기능 추가(몇 초 이상 input 없을 시 취소)
 
@@ -35,6 +36,9 @@ class STT():
             interim_results=True
         )
         print("Preparing for STT...")
+
+    def data_reset(self):
+        self.data = {}
 
     def listening_loop(self, responses, cmd, seq = None):
         print("Listening...")
@@ -161,24 +165,24 @@ class STT():
                     if re.search(r'\b(번째)\b', transcript, re.I):
                         strr = transcript
                         loc = strr.find('번째')
-                        success = False
+                        success = None
                         if loc >= 2 and strr[loc-2] in SEQUENCE:
                             idx = SEQUENCE.index(strr[loc-2])
-                            success = function.pick_data(idx)
+                            success = function.pick_data(idx, self.data)
                         elif loc >= 3 and strr[loc-3:loc-1] in SEQUENCE:
                             idx = SEQUENCE.index(strr[loc-3:loc-1])
-                            success = function.pick_data(idx)
-
-                        if not success:
+                            success = function.pick_data(idx, self.data)
+                        self.data = success
+                        if success is None:
                             os.system(f'aplay {CUR_DIR}/tts_wav/no_selected_schedule.wav')
                             return 0
 
                         print('몇번째 일정 변경: Exiting..')
                         return 1
                     # 음성 들어오는 거: 3시간
-                    elif re.search(r'\B(시간)\b', transcript, re.I):
+                    elif re.search(r'\B(시)', transcript, re.I):
                             strr = transcript
-                            loc = strr.find('시간')
+                            loc = strr.find('시')
                             hour = None
                             try:
                                 if loc >= 2:
@@ -190,8 +194,9 @@ class STT():
                             except:
                                 os.system(f'aplay {CUR_DIR}/tts_wav/i_dont_understand.wav')
                                 return 1
-                            success = function.fix_data(hour)
-                            if not success:
+                            success = function.fix_data(hour, self.data)
+                            self.data = success
+                            if success is None:
                                 os.system(f'aplay {CUR_DIR}/tts_wav/add_schedule_over_midnight.wav')
                                 return -1
                             print('시간 변경: Exiting..')
@@ -203,15 +208,15 @@ class STT():
                     if re.search(r'\b(번째)\b', transcript, re.I):
                         strr = transcript
                         loc = strr.find('번째')
-                        success = False
+                        success = None
                         if loc >= 2 and strr[loc-2] in SEQUENCE:
                             idx = SEQUENCE.index(strr[loc-2])
-                            success = function.pick_data(idx)
+                            success = function.pick_data(idx, self.data)
                         elif loc >= 3 and strr[loc-3:loc-1] in SEQUENCE:
                             idx = SEQUENCE.index(strr[loc-3:loc-1])
-                            success = function.pick_data(idx)
-
-                        if not success:
+                            success = function.pick_data(idx, self.data)
+                        self.data = success
+                        if success is None:
                             os.system(f'aplay {CUR_DIR}/tts_wav/no_selected_schedule.wav')
                             return 0
 
@@ -253,7 +258,9 @@ class STT():
             if main_cmd == -1 or next_cmd == -1:
                 return False, None, None
             # 아딴 음성 드가서 함수로 처리했을 때의 다음 응답 stt 할지 말지 처리
-            repeatition = function.cmd_functions[main_cmd](next_cmd)
+            repeatition, data = function.cmd_functions[main_cmd](self.data, next_cmd)
+            if data is not None:
+                self.data = data
             return repeatition, main_cmd, next_cmd
 
     def start_stt(self):
@@ -263,12 +270,14 @@ class STT():
             while repeatition:
                 print("next step")
                 repeatition, main_cmd, next_cmd = self.open_stream(main_cmd, next_cmd)
+            self.data_reset()
         else:
             while True:
                 repeatition, main_cmd, next_cmd = self.open_stream(cmd=-2)
                 while repeatition:
                     print("next step")
                     repeatition, main_cmd, next_cmd = self.open_stream(main_cmd, next_cmd)
+                self.data_reset()
 
             # if self.pid is not None:
             #     print("stt: end signal is sent")

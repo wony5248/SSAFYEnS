@@ -123,6 +123,12 @@ def make_edit_schedule_list(data, dele=False):
         except:
             continue
     made_ssml += "일정 번호를 말씀해주세요."
+    if index == 0:
+        made_ssml = """
+             바꿀 수 있는 일정이 없습니다.
+             <break time="500ms"/>
+             새로운 일정을 추가해보시는 건 어떨까요?
+             """
     return make_text_ssml(made_ssml)
 
 def make_cur_schedule(data):
