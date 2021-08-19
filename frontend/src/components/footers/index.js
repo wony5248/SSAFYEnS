@@ -5,7 +5,7 @@ import Wrapper from './styles';
 const Footer = () => {
     return (
         <Wrapper>
-            <Grid container justify = "space-around" >
+            {/* <Grid container justify = "space-around" >
                 <Grid item style={{marginRight:'150px'}}>
                     <h3>SSAFY Improve n Success</h3>
                     <h4>김송현 김지환 신은지 이태용 장범진 허애리</h4>
@@ -27,10 +27,13 @@ const Footer = () => {
                         </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
-            <Grid container justify = "center" alignItems = "center">
-                <Grid item style={{ marginBottom:'10px', marginTop:'10px' }}>
-                    Copyright 2021. SSAFYInS. All rights reserved. | Design by SSAFYInS.
+            </Grid> */}
+            <Grid container justify = "space-around" alignItems = "center">
+                <Grid item style={{ marginBottom:'10px', marginTop:'10px', fontWeight:'bold'}}>
+                    SSAFY 5th | SSAFY Improve n Success | 김송현 김지환 신은지 이태용 장범진 허애리
+                </Grid>
+                <Grid item style={{ marginBottom:'10px', marginTop:'10px', fontWeight:'bold'}}>
+                    Copyright &copy; 2021 SSAFYInS. All rights reserved. | Design by SSAFYInS.
                 </Grid>
             </Grid>
         </Wrapper>

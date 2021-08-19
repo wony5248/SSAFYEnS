@@ -37,10 +37,6 @@ export const scheduleAPI = {
     getSchedule: async (schedule_id) =>{
         return await request.get(`/schedule/${schedule_id}`,{
             schedule_id
-        },{
-            headers:{
-                access_token: window.sessionStorage.getItem('token')
-            }
         })
     },
     getDailyAverage: async (date)=>{
@@ -102,12 +98,12 @@ export const userAPI = {
         return await request.get(`/user/logout`)
     },
     findId: async (name, email)=>{
-        return await request.get(`/user/id`,{
+        return await request.post(`/user/id`,{
             name, email
         })
     },
     findPw: async (name, id, email)=>{
-        return await request.get('/user/password',{
+        return await request.post('/user/password',{
             name, user_id:id, email
         })
     },
@@ -130,6 +126,11 @@ export const userAPI = {
 }
 
 export const groupAPI = {
+  assignmentAdmin : async (group_id, user_id) => {
+    return await request.post(
+      `/group/${group_id}/group_admin/${user_id}`      
+    );
+  },
   addGroup: async (name, context) => {
     return await request.post(
       "/group",
@@ -204,3 +205,17 @@ export const groupAPI = {
     return await request.delete(`/group/${groupid}/member/${userid}`);
   },
 };
+
+export const challengeAPI = {
+  addChallenge : async (group_id, name, content) => {
+    return await request.post(
+      `/challenge`,{group_id:group_id, name:name, content:content}     
+    );
+  },
+  getChallenge : async () => {
+    return await request.get(
+      `/challenge`      
+    );
+  },
+};
+

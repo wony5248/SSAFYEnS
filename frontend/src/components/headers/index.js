@@ -57,16 +57,16 @@ const Header = props=>{
         <Wrapper >
             <AppBar style={{background:'#ffffff', color:'#A3CCA3', height:"auto"}}>
                 <Grid container justifyContent='space-between' direction = "row" alignItems = "center">     
-                    <Grid>
-                        <Toolbar>
+                    <Grid style={{width:'10%'}}>
+                        {islogin?(<Toolbar>
                             <IconButton onClick = {handleDrawerOpen}>
                                 <MenuIcon fontSize = "large" style={{color:'#A3CCA3'}} />
                             </IconButton>
-                        </Toolbar>
+                        </Toolbar>):null}
                     </Grid>
                     <Grid >
                         <Typography variant = "h3" onClick={() => window.location.replace (`/`)}>
-                            <img src={logo} style={{width:'250px', height:'80px', marginTop:'3px'}}/>
+                            <img src={logo} style={{width:'250px', height:'80px', marginTop:'3px', cursor:'pointer'}}/>
                         </Typography>
                     </Grid>
                     <Grid style ={{justifyContent:'space-between'}}>
@@ -90,6 +90,7 @@ const Header = props=>{
                     </Grid>
                 </Grid>           
             </AppBar>
+            {islogin?(
             <Drawer anchor = "left" open = {open}>
                 <div>
                     <IconButton onClick = {handleDrawerClose} edge = 'end' >
@@ -97,7 +98,6 @@ const Header = props=>{
                     </IconButton>
                 </div>
                 <Divider/>
-                {islogin?(
                     <div>
                         <List style = {{width : "250px"}}>
                             <ListItem button onClick={() => window.location.replace (`/plan`)}>
@@ -108,18 +108,18 @@ const Header = props=>{
                                     <GroupIcon fontSize = "large" style={{color:'#A3CCA3', margin:'10px'}} />
                                     <ListItemText primary="그룹" style={{color:'#A3CCA3', margin:'10px', fontWeight:'bold'}}/>
                             </ListItem>
-                            <ListItem button onClick={() => window.location.replace (`/group`)}>
+                            {/* <ListItem button onClick={() => window.location.replace (`/group`)}>
                                     <CasinoIcon fontSize = "large" style={{color:'#A3CCA3', margin:'10px'}} />
                                     <ListItemText primary="챌린지" style={{color:'#A3CCA3', margin:'10px', fontWeight:'bold'}}/>
-                            </ListItem>
+                            </ListItem> */}
                             <ListItem button onClick={() => window.location.replace (`/mypage`)}>
                                     <PersonIcon fontSize = "large" style={{color:'#A3CCA3', margin:'10px'}} />
                                     <ListItemText primary="내 정보" style={{color:'#A3CCA3', margin:'10px', fontWeight:'bold'}}/>
                             </ListItem>
                         </List>
                     </div>
-                ):null}
             </Drawer>
+            ):null}
         </Wrapper>
     );
 };
