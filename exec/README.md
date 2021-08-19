@@ -16,7 +16,7 @@ https://www.notion.so/Github-6a3830af0927431880ceeacd5f4345f2
 
 
 
-#시연 시나리오
+# [시연 시나리오](https://lab.ssafy.com/s05-webmobile3-sub3/S05P13A109/-/blob/exec/exec/SSAFYEnS_%EC%8B%9C%EC%97%B0%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4.pdf)
 
 Ubuntu 20.04LTS(focal)
 AWS EC2 
