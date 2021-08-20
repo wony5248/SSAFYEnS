@@ -58,5 +58,5 @@ $ npm install
 - 허애리 <img src="https://img.shields.io/badge/-FE-orange">  <a href="mailto:heoeari51@gmail.com" target="_blank"><img src="https://img.shields.io/badge/Email-EA4335?style=flat-square&logo=gmail&logoColor=white"/></a>
 
 ## Docs
-- [SSAFYEnS Notion](https://www.notion.so/Welcome-to-SSAFYens-813d216ad32d4e569034a096be959a41)
-- [Project Docs](https://lab.ssafy.com/s05-webmobile3-sub3/S05P13A109/-/blob/master/docs/README.md)
+<a href="https://www.notion.so/Welcome-to-SSAFYens-813d216ad32d4e569034a096be959a41" target="_blank"><img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=notion&logoColor=white"/></a>
+<a href="https://lab.ssafy.com/s05-webmobile3-sub3/S05P13A109/-/blob/master/docs/README.md" target="_blank"><img src="https://img.shields.io/badge/Project Docs-2B579A?style=flat-square&logo=microsoftword&logoColor=white"/></a>
