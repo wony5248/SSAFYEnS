@@ -12,6 +12,9 @@ git pull origin develop &&
 echo react: remove exist build file at $SHALL_PATH &&
 rm -rf  ./build &&
 
+echo npm install
+npm i
+
 echo nginx: build file &&
 npm run build &&
 
