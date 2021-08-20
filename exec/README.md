@@ -11,18 +11,18 @@ https://www.notion.so/Github-6a3830af0927431880ceeacd5f4345f2
 Web : 외부 API를 사용하지 않습니다.
 
 Embedded : Google Cloud Platform(STT, TTS) 사용
-- [매뉴얼](https://lab.ssafy.com/s05-webmobile3-sub3/S05P13A109/-/blob/embedded-STT/embedded/hardware/GET_GOOGLE_KEY.md)
+- [매뉴얼](https://lab.ssafy.com/s05-webmobile3-sub3/S05P13A109/-/blob/master/embedded/hardware/GET_GOOGLE_KEY.md)
 
 # 데이터베이스 덤프 최신본
 
 
 
-# [시연 시나리오](https://lab.ssafy.com/s05-webmobile3-sub3/S05P13A109/-/blob/exec/exec/SSAFYEnS_%EC%8B%9C%EC%97%B0%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4.pdf)
+# [시연 시나리오]
+- [웹 시나리오](https://lab.ssafy.com/s05-webmobile3-sub3/S05P13A109/-/blob/master/exec/SSAFYEnS_%EC%8B%9C%EC%97%B0%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4.pdf)  
+- [임베디드 모니터 시나리오](https://lab.ssafy.com/s05-webmobile3-sub3/S05P13A109/-/blob/master/exec/SSAFYEnS__%EC%9E%84%EB%B2%A0%EB%94%94%EB%93%9C_%EC%8B%9C%EC%97%B0%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4__1_.pdf)  
 
 Ubuntu 20.04LTS(focal)
 AWS EC2 
-
-
 
 # 의존성
 
