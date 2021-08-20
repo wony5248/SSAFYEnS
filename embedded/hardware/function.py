@@ -64,40 +64,35 @@ def add_data(*names, value=0, content = None):
         for name in names:
             post_data[name] = content
 
-
-def pick_data(idx):
-    global origin_data, changed_data
+def pick_data(idx, data):
     try:
-        changed_data = origin_data[idx]
-        return True
+        changed_data = data[idx]
+        return changed_data
     except Exception as e:
         print("pick data: ",e)
-        return False
+        return None
 
-def fix_data(value):
-    global changed_data
-    print(value)
-    cur_finish = changed_data['finished_at']
+def fix_data(value, data):
+    cur_finish = data['finished_at']
     cur_hour = int(cur_finish[-4:-2])
     new_hour = cur_hour + value
     if new_hour > 24:
-        return False
+        return None
     new_hour = '{0:02d}'.format(new_hour)
-    changed_data['finished_at'] = cur_finish[:-4] + new_hour + cur_finish[-2:]
-    return True
+    data['finished_at'] = cur_finish[:-4] + new_hour + cur_finish[-2:]
+    return data
 
-
-def add_schedule(seq=0):
+def add_schedule(cache, seq=0):
     print("Add")
     if seq == 0:
         os.system(f'aplay {CUR_DIR}/tts_wav/add_schedule_start.wav')
-        return True
+        return True, None
     elif seq == 1:
         os.system(f'aplay {CUR_DIR}/tts_wav/add_schedule_name.wav')
-        return True
+        return True, None
     elif seq == 2:
         os.system(f'aplay {CUR_DIR}/tts_wav/add_schedule_detail.wav')
-        return True
+        return True, None
     elif seq == 3 or seq == 4:
         # DB에 저장하는 API 호출
         success = server.post(post_data, BASE_SCHEDULE)
@@ -106,23 +101,23 @@ def add_schedule(seq=0):
             os.system(f'aplay {CUR_DIR}/tts_wav/add_schedule_finish.wav')
         else:
             os.system(f'aplay {CUR_DIR}/tts_wav/problem_occurred.wav')
-        return False
+        return False, None
 
-def brief_schedule(seq=0):
+def brief_schedule(cache, seq=0):
     print("briefing")
     data = server.get(WHOLE_SCHEDULE, date=True)
     try:
         if len(data) == 0:
             os.system(f'aplay {CUR_DIR}/tts_wav/no_schedule.wav')
         else:
-            brief_cur_schedule()
+            brief_cur_schedule(cache)
             synthesize_ssml(make_day_briefing(data))
     except Exception as e:
         print("Server error: ", e)
         os.system(f'aplay {CUR_DIR}/tts_wav/problem_occurred.wav')
-    return False
+    return False, None
 
-def brief_cur_schedule(seq=0):
+def brief_cur_schedule(cache, seq=0):
     print("cur schedule")
     data = server.get(CUR_SCHEDULE, date=True)
     try:
@@ -133,38 +128,38 @@ def brief_cur_schedule(seq=0):
     except Exception as e:
         print("Server error: ", e)
         os.system(f'aplay {CUR_DIR}/tts_wav/problem_occurred.wav')
-    return False
+    return False, None
 
-def edit_schedule(seq=0):
-    global origin_data
+def edit_schedule(cache, seq=0):
     print("edit")
     if seq == 0:
         origin_data = server.get(WHOLE_SCHEDULE, date=True)
         try:
             if len(origin_data) == 0:
                 os.system(f'aplay {CUR_DIR}/tts_wav/no_schedule.wav')
-                return False
+                return False, None
             else:
                 synthesize_ssml(make_edit_schedule_list(origin_data))
-                return True
+                # 바꿀 수 있는 일정 없을 때 False 리턴해주는 로직 추가해야 됨
+                return True, origin_data
         except Exception as e:
             print("Server error: ", e)
             os.system(f'aplay {CUR_DIR}/tts_wav/problem_occurred.wav')
-            return False
+            return False, None
     elif seq == 1:
         os.system(f'aplay {CUR_DIR}/tts_wav/edit_schedule_time.wav')
-        return True
+        return True, None
     elif seq == 2:
         # 몇시간 -> 파싱해서 db 수정 요청
-        success = server.put(changed_data, SPECIFIC_SCHEDULE, changed_data['schedule_id'])
+        success = server.put(cache, SPECIFIC_SCHEDULE, cache['schedule_id'])
         reset_data()
         if success:
             os.system(f'aplay {CUR_DIR}/tts_wav/edit_schedule_finish.wav')
         else:
             os.system(f'aplay {CUR_DIR}/tts_wav/problem_occurred.wav')
-        return False
+        return False, None
 
-def delete_schedule(seq=0):
+def delete_schedule(cache, seq=0):
     print("delete")
     if seq == 0:
         # 데이터 가져오는 api 호출 코드 추가
@@ -172,26 +167,26 @@ def delete_schedule(seq=0):
         try:
             if len(origin_data) == 0:
                 os.system(f'aplay {CUR_DIR}/tts_wav/no_schedule.wav')
-                return False
+                return False, None
             else:
-                synthesize_ssml(make_edit_schedule_list(origin_data))
-                return True
+                synthesize_ssml(make_edit_schedule_list(origin_data, dele=True))
+                return True, origin_data
         except Exception as e:
             print("Server error: ", e)
             os.system(f'aplay {CUR_DIR}/tts_wav/problem_occurred.wav')
-            return False
+            return False, None
     elif seq == 1:
         # 삭제 api 호출
         # self, route, id=None
-        success = server.delete(SPECIFIC_SCHEDULE, changed_data['schedule_id'])
+        success = server.delete(SPECIFIC_SCHEDULE, cache['schedule_id'])
         reset_data()
         if success:
             os.system(f'aplay {CUR_DIR}/tts_wav/delete_schedule_finish.wav')
         else:
             os.system(f'aplay {CUR_DIR}/tts_wav/problem_occurred.wav')
-        return False
+        return False, None
 
-def clear_schedule(seq=0):
+def clear_schedule(cache, seq=0):
     # 현재 진행중인 일정 가져오기
     # 있으면 완료, 없으면 없다고 알리기
     data = server.get(CUR_SCHEDULE, date=True)
@@ -201,9 +196,9 @@ def clear_schedule(seq=0):
         else:
             # 완료 api 요청
             changed_value = {
-                "started_at": data['started_at'],
+                "started_at": data[0]['started_at'],
                 "finished_at": server.get_timeline(True),
-                "deadline_at": data['deadline_at'],
+                "deadline_at": data[0]['deadline_at'],
                 "is_finished": True
             }
             # 일단 임의로 첫번째 진행중인 일정 삭제
@@ -216,7 +211,7 @@ def clear_schedule(seq=0):
     except Exception as e:
         print("Server error: ", e)
         os.system(f'aplay {CUR_DIR}/tts_wav/problem_occurred.wav')
-    return False
+    return False, None
 
 
 if __name__ == "function":
