@@ -34,12 +34,28 @@ npm 6.14.13
 │   ├── build
 │   ├── public
 │   └── src
-│        ├── assets                // 이용되는 이미지 디렉터리
-│        ├── components            // 각 페이지에 이용 되는 컴포넌트 디렉터리
-│        ├── container             // 컴포넌트 집합(컨테이너) 디렉터리
-│        ├── context               // 전역변수 사용 디렉 터리
-│        ├── layout                // 공통 layout 디렉터리
-│        └── pages                 // 각 라우터별 렌더링 될 페이지 디렉터리
+│       ├── assets                // 이용되는 이미지 디렉터리
+│       ├── components            // 각 페이지에 이용 되는 컴포넌트 디렉터리
+│           ├── Clock             // 실시각 시간 보여주는 컴포넌트 디렉터리
+│           ├── Dark              // 다크모드 토글 컴포넌트 디렉터리
+│           ├── mannerbutton      // 매너모드 토글 컴포넌트 디렉터리
+│           ├── Sensor            // 환경 센서값 보여주는 컴포넌트 디렉터리
+│           └── Sensorbutton      // Sensor를 렌더링 해주는 컴포넌트 디렉터리
+│       ├── container             // 컴포넌트 집합(컨테이너) 디렉터리
+│           ├── Center            // main layout 각 페이지가 렌더링 되는 중간 컨테이너 디렉터리
+│           ├── Leftsidebar       // main layout 왼쪽 사이드바 컨테이너 디렉터리
+│           └── Rightsidebar      // main layout 오른쪽 사이드바 컨테이너 디렉터리
+│       ├── context               // 전역변수 사용 디렉 터리
+│       ├── layout                // 공통 layout 디렉터리
+│       └── pages                 // 각 라우터별 렌더링 될 페이지 디렉터리
+│           ├── Change            // 일정 변경 페이지 디렉터리 - 사용 안함
+│           ├── ChangeCalendar    // 일정 변경 페이지 디렉터리
+│           ├── Create            // 일정 생성 페이지 디렉터리
+│           ├── Progress          // 진행중인 일정 페이지 디렉터리
+│           ├── Rating            // 일정 완료 페이지 디렉터리
+│           ├── Streaming         // 모니터링 페이지 디렉터리
+│           ├── Timer             // 타이머 페이지 디렉터리
+│           └── Today             // 오늘 일정 페이지 디렉터리
 │  
 ├── hardware/
 │   ├── README.md                   // 하드웨어 회로도 및 specification
