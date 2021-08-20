@@ -1,21 +1,34 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
-import { Link } from "react-router-dom";
-import Progresscontainer from "./styles";
 import styled from "styled-components";
 import axios from "axios";
 import moment from "moment";
+import { useUserContext } from "../../context";
+import "moment/locale/ko";
 
-const Progresstitle = styled.div`
+const Progresscontainer = styled.div`
+  overflow: auto;
   display: flex-row;
+  padding-top: 14px;
+  padding-right: 12px;
+  padding-left: 12px;
+  padding-bot: 14px;
+  flex-wrap: nowrap;
+  width: auto;
+  height: 98.7%;
+  margin: 0px;
+  font-size: 24px;
+`;
+const Progresstitle = styled.div`
+  display: flex;
+  flex-direction: column;
   border-radius: 4px;
   flex-wrap: no-wrap;
-  justify-content: space-around;
+  justify-content: flex-start;
   width: auto;
   height: 30%;
-  color: #a3cca3;
-  background-color: #a3cca3;
-  // margin: 14px 12px;
+  color: white;
+  background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
   padding: 0px;
 `;
 const Progresstitlenamecon = styled.div`
@@ -24,180 +37,227 @@ const Progresstitlenamecon = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white;
-  background-color: #a3cca3;
   margin: 0px 16px;
   padding-top: 4px;
 `;
-const Progressgoal = styled.div`
+const Progressdeadline = styled.div`
   width: auto;
   height: 30%;
-  color: white;
   display: flex;
   align-items: center;
   margin: 0px 16px;
-  font-size: 20px;
   padding-top: 4px;
 `;
 
 const Progresstitlename = styled.div`
   width: auto;
   height: 30%;
-  color: white;
-  font-size: 20px;
   padding-top: 4px;
 `;
 
 const Progresstitletime = styled.div`
   width: auto;
   height: auto;
-  color: white;
-  font-size: 20px;
   padding-top: 4px;
 `;
 
 const Progresscontentcon = styled.div`
-  display: flex-row;
   border-radius: 4px;
   flex-wrap: nowrap;
   width: auto;
-  height: 59%;
-  color: #a3cca3;
-  background-color: #a3cca3;
+  height: 63%;
+  color: white;
+  background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
   margin-top: 14px;
-  padding: 14px 14px;
+  padding: 14px 28px;
 `;
 
 const Progresscontenttitle = styled.div`
   width: auto;
   height: 10%;
   color: white;
-  display:flex;
+  display: flex;
   align-items: center;
-  background-color: #a3cca3;
+  justify-content: center;
   padding: 0px;
   margin-bottom: 14px;
-  font-size: 20px;
 `;
 
 const Progresscontent = styled.div`
   overflow: auto;
-  font-size: 20px;
   width: auto;
-  height: 80%;
-  color: #a3cca3;
-  background-color: white;
-  padding: 4px;
+  height: 66%;
+  color: #121212;
+  background-color: ${(props) => (props.isdark === true ? "#c9c9c9" : "white")};
+  padding: 16px;
 `;
 const Fulldiv = styled.div`
   height: 100%;
 `;
+
+const Completebtn = styled.button`
+  border: none;
+  color: white;
+  margin-left: 16px;
+  border-radius: 8px;
+  background-color: ${(props) =>
+    props.isdark === true ? "#424242" : "#69a569"};
+  padding: 4px;
+  height: 70%;
+  width: 10%;
+  cursor: pointer;
+`;
+
+const Btndiv = styled.div`
+  height: 15%;
+  margin-top: 1%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+`;
+const Nodiv = styled.div`
+  color: ${(props) => (props.isdark ? "white" : "#121212")};
+`;
 const Progresslayout = () => {
-  const [loading, setLoading] = useState(false);
-  const [itemList, setItemList] = useState([]);
-  const [starttime, setStarttime] = useState("");
-  const [endtime, setEndtime] = useState("");
-  const [title, setTitle] = useState("");
-  const [goal, setGoal] = useState("");
-  const [content, setContent] = useState("");
   const [istrue, setIstrue] = useState(false);
+  const [calarr, setCalarr] = useState([]);
+  const arr = [];
   useEffect(() => {
     async function loadCalendar() {
-      const result = await axios
-        .get("./today.json")
+      await axios
+        .get(
+          `http://127.0.0.1:4500/schedule/getdaily/${moment().format(
+            "YYYYMMDD"
+          )}`
+        )
         .then(({ data }) => {
-          setLoading(true);
-          setItemList(data.Item);
-          // console.log(data.Item)
-          for (let i = 0; i < data.Item.length; i++) {
-            // console.log(
-            //   Number(data.Item[i].StartTime[0] + data.Item[i].StartTime[1])
-            // );
-            const startTime = Number(
-              data.Item[i].StartTime[0] + data.Item[i].StartTime[1]
-            );
-            const startMin = Number(
-              data.Item[i].StartTime[5] + data.Item[i].StartTime[6]
-            );
-            const endTime = Number(
-              data.Item[i].EndTime[0] + data.Item[i].EndTime[1]
-            );
-            const endMin = Number(
-              data.Item[i].EndTime[5] + data.Item[i].EndTime[6]
-            );
-            const currentTime = Number(moment().format("H"));
-            console.log(startTime);
-            console.log(currentTime);
-            // console.log(endTime)
+          for (let i = 0; i < data.length; i++) {
+            const startTime = Number(moment(data[i].started_at).format("HH"));
+            const startMin = Number(moment(data[i].started_at).format("mm"));
+            const endTime = Number(moment(data[i].finished_at).format("HH"));
+            const endMin = Number(moment(data[i].finished_at).format("mm"));
+            const currentTime = Number(moment().format("HH"));
+
             const currentMin = Number(moment().format("mm"));
-            console.log(startMin);
-            console.log(currentMin);
-            // console.log(endMin)
-            if (startTime < currentTime && currentTime < endTime) {
-              console.log(data.Item[i].StartTime);
-              setStarttime(data.Item[i].StartTime);
-              setEndtime(data.Item[i].EndTime);
-              setGoal(data.Item[i].Goal);
-              setTitle(data.Item[i].Title);
-              setContent(data.Item[i].Content);
+
+            if (
+              startTime < currentTime &&
+              currentTime < endTime &&
+              data[i].is_finished === false
+            ) {
+              arr.push(data[i]);
               setIstrue(true);
-            } else if (currentTime == endTime && currentMin <= endMin) {
-              setStarttime(data.Item[i].StartTime);
-              setEndtime(data.Item[i].EndTime);
-              setGoal(data.Item[i].Goal);
-              setTitle(data.Item[i].Title);
-              setContent(data.Item[i].Content);
+            } else if (
+              currentTime === endTime &&
+              currentMin <= endMin &&
+              data[i].is_finished === false
+            ) {
+              arr.push(data[i]);
               setIstrue(true);
-            } else if (currentTime == startTime && startMin <= currentMin) {
-              setStarttime(data.Item[i].StartTime);
-              setEndtime(data.Item[i].EndTime);
-              setGoal(data.Item[i].Goal);
-              setTitle(data.Item[i].Title);
-              setContent(data.Item[i].Content);
+            } else if (
+              currentTime === startTime &&
+              startMin <= currentMin &&
+              data[i].is_finished === false
+            ) {
+              arr.push(data[i]);
               setIstrue(true);
             }
           }
-          // console.log(
-          //   data.Item[0].StartTime[0] +
-          //     data.Item[0].StartTime[1] +
-          //     data.Item[0].StartTime[5] +
-          //     data.Item[0].StartTime[6]
-          // );
+          setCalarr(arr);
         })
         .catch((e) => {
           console.error(e);
-          setLoading(false);
         });
-
-      // console.log(Number(moment().format("H")));
-      // console.log(Number(moment().format("mm")));
     }
     loadCalendar();
-    const interval = setInterval(() => {
-      loadCalendar();
-    }, 10000);
+    console.log("asdfas");
   }, []);
+  const { isdarked } = useUserContext();
   return (
-    <Progresscontainer>
+    <Progresscontainer isdark={isdarked}>
       {istrue ? (
-        <Fulldiv>
-          <Progresstitle>
-            <Progresstitlenamecon>
-              <Progresstitlename>{title}</Progresstitlename>
-              <Progresstitletime>
-                {starttime} ~ {endtime}
-              </Progresstitletime>
-            </Progresstitlenamecon>
-            <Progressgoal>일정 목표</Progressgoal>
-            <Progressgoal>{goal}</Progressgoal>
-          </Progresstitle>
-          <Progresscontentcon>
-            <Progresscontenttitle>일정 내용</Progresscontenttitle>
-            <Progresscontent>{content}</Progresscontent>
-          </Progresscontentcon>
-        </Fulldiv>
+        <div style={{ height: "100%" }}>
+          {calarr.map((item) => (
+            <Fulldiv>
+              <Progresstitle isdark={isdarked}>
+                <Progresstitlenamecon>
+                  <Progresstitlename>{item.title}</Progresstitlename>
+                  <Progresstitletime>
+                    {moment(item.started_at).format("HH:mm")} ~{" "}
+                    {moment(item.finished_at).format("HH:mm")}
+                  </Progresstitletime>
+                </Progresstitlenamecon>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    height: "30%",
+                  }}
+                >
+                  <Progressdeadline>등록 알람</Progressdeadline>
+                  {item.notificationtime ? (
+                    <Progressdeadline>
+                      {moment(item.notificationtime).format("HH:mm")}
+                    </Progressdeadline>
+                  ) : (
+                    <Progressdeadline>등록된 알람이 없습니다.</Progressdeadline>
+                  )}
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    height: "30%",
+                  }}
+                >
+                  <Progressdeadline>일정 데드라인</Progressdeadline>
+                  <Progressdeadline>
+                    {moment(item.deadline_at).format("YYYY.MM.DD HH:mm")}
+                  </Progressdeadline>
+                </div>
+              </Progresstitle>
+              <Progresscontentcon isdark={isdarked}>
+                <Progresscontenttitle>일정 내용</Progresscontenttitle>
+                <Progresscontent isdark={isdarked}>
+                  {item.context}
+                </Progresscontent>
+                <Btndiv>
+                  <Completebtn
+                    isdark={isdarked}
+                    onClick={() =>
+                      window.location.replace(`/Change/${item.schedule_id}`)
+                    }
+                  >
+                    변경
+                  </Completebtn>
+                  <Completebtn
+                    isdark={isdarked}
+                    onClick={() =>
+                      window.location.replace(`/Rating/${item.schedule_id}`)
+                    }
+                  >
+                    완료
+                  </Completebtn>
+                </Btndiv>
+              </Progresscontentcon>
+            </Fulldiv>
+          ))}
+        </div>
       ) : (
-        <Fulldiv>현재 일정이 없습니다.</Fulldiv>
+        <Nodiv
+          isdark={isdarked}
+          style={{
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: "40px",
+          }}
+        >
+          현재 일정이 없습니다.
+        </Nodiv>
       )}
     </Progresscontainer>
   );

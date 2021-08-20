@@ -9,28 +9,45 @@ import {scheduleAPI} from '../../../utils/axios';
 const Plan = (props) =>{
     const { open, close } = props;
     const [state, setState] = useState({
-        alarmYES: true,
+        alarmYES: false,
     });
 
     const thisYear = moment().format('YY');
 
     const [timer, setTimer] = useState('');
 
-    const [startMonth, setStartMonth] = useState('');
-    const [startDay, setStartDay] = useState('');
+    const [startYear, setStartYear] = useState(Number(moment().format('YYYY')));
+    const [startMonth, setStartMonth] = useState(Number(moment().format('MM')));
+    const [startDay, setStartDay] = useState(Number(moment().format('DD')));
     const [startHour, setStartHour] = useState('');
     const [startMin, setStartMin] = useState('');
-    const [endMonth, setEndMonth] = useState('');
-    const [endDay, setEndDay] = useState('');
     const [endHour, setEndHour] = useState('');
     const [endMin, setEndMin] = useState('');
 
     const [title, setTitle] =useState('');
 
     const addSchedule = async () => {
-        const started_at = moment(`${moment().format('YYYY')}-${startMonth}-${startDay} ${startHour}:${startMin}`).format('YYYY-MM-DD hh:mm');
-        const deadline_at = moment(`${moment().format('YYYY')}-${endMonth}-${endDay} ${endHour}:${endMin}`).format('YYYY-MM-DD hh:mm');
-        const result = await scheduleAPI.addSchedule(title, started_at, deadline_at);
+        const started_at = moment(`${startYear}-${startMonth}-${startDay} ${startHour}:${startMin}`).format('YYYY-MM-DD HH:mm');
+        const deadline_at = moment(`${moment(started_at).format('YYYY-MM-DD')} ${endHour}:${endMin}`).format('YYYY-MM-DD HH:mm');
+        if(started_at>deadline_at){
+            alert("마감일이 시작일보다 빠릅니다");
+        }
+        else{
+            try{
+                if(!state.alarmYES){
+                    await scheduleAPI.addSchedule(title, started_at, deadline_at, moment().format('YYYY-MM-DD'), state.alarmYES);
+                    alert('등록성공');
+                }else{
+                    let alarmtime = moment(started_at).subtract(timer, 'minutes').format('YYYY-MM-DD HH:mm');
+                    await scheduleAPI.addSchedule(title, started_at, deadline_at, moment().format('YYYY-MM-DD'), state.alarmYES, alarmtime);
+                    alert('등록성공');
+                }
+                
+            }catch(e){
+                alert('등록에 실패했습니다');
+                console.log(e);
+            }
+        }
     }
 
     const handleAlarm = (event) => {
@@ -41,20 +58,16 @@ const Plan = (props) =>{
         setTimer(event.target.value);
     };
 
+    const handleStartYear = (event) => {
+        setStartYear(event.target.value);
+    };
+
     const handleStartMonth = (event) => {
         setStartMonth(event.target.value);
     };
 
-    const handleEndMonth = (event) => {
-        setEndMonth(event.target.value);
-    };
-
     const handleStartDay = (event) => {
         setStartDay(event.target.value);
-    };
-
-    const handleEndDay = (event) => {
-        setEndDay(event.target.value);
     };
 
     const handleStartHour = (event) => {
@@ -75,6 +88,14 @@ const Plan = (props) =>{
     
     const handleTitle = (event) => {
         setTitle(event.target.value);
+    };
+
+    const yearArr = ()=>{
+        let result = [];
+        for (let i=0; i<5; i++) {
+            result = result.concat(<MenuItem value ={startYear+i}>{startYear+i}</MenuItem>);
+        }
+        return result;
     };
 
     const monthArr = () =>{
@@ -108,30 +129,6 @@ const Plan = (props) =>{
         return result;
     };
 
-    const enddayArr = () =>{
-        let result = [];
-        if (endMonth===1 || endMonth===3 || endMonth===5 || endMonth===7 || endMonth===8 || endMonth===10 || endMonth===12){
-            for (let i = 1; i <=31 ; i++){
-                result = result.concat(<MenuItem value ={i}>{i}</MenuItem>);
-            }
-        }else if (endMonth===4 || endMonth===6 || endMonth===9 || endMonth===11){
-            for (let i = 1; i <=30 ; i++){
-                result = result.concat(<MenuItem value ={i}>{i}</MenuItem>);
-            }
-        }else if (thisYear%4===0 && endMonth===2){
-            for (let i = 1; i <=29 ; i++){
-                result = result.concat(<MenuItem value ={i}>{i}</MenuItem>);
-            }
-        }else if(endMonth===2){
-            for (let i = 1; i <=28 ; i++){
-                result = result.concat(<MenuItem value ={i}>{i}</MenuItem>);
-            }
-        }
-        
-        return result;
-    };
-
-
     const hourArr = () =>{
         let result = [];
         for (let i = 0; i <=23 ; i++){
@@ -147,11 +144,6 @@ const Plan = (props) =>{
         }
         return result;
     };
-
-    // const planSubmit = () =>{
-        
-    //     alert(`${started_at}, ${deadline_at}`);  
-    // };
 
 
     return(
@@ -180,14 +172,21 @@ const Plan = (props) =>{
                                 , borderRadius:25, width:'380px', height:'40px', textAlign:'center'}}>
                                     <FormControl style={{marginLeft:'15px', marginRight:'25px', marginBottom:'3px'}}>
                                         <Select labelId="demo-simple-select-lable"
-                                            id = "demo-simple-select" value = {startMonth} onChange={handleStartMonth}>
+                                            id = "demo-simple-select" value = {startYear} key={startYear} onChange={handleStartYear}>
+                                            {yearArr()}
+                                        </Select>
+                                    </FormControl>
+                                    <div style={{marginRight:'20px'}}>년</div>
+                                    <FormControl style={{marginLeft:'15px', marginRight:'25px', marginBottom:'3px'}}>
+                                        <Select labelId="demo-simple-select-lable"
+                                            id = "demo-simple-select" value = {startMonth} key={startMonth} onChange={handleStartMonth}>
                                             {monthArr()}
                                         </Select>
                                     </FormControl>
                                     <div style={{marginRight:'20px'}}>월</div>
                                     <FormControl style={{marginLeft:'15px', marginRight:'25px', marginBottom:'3px'}}>
                                         <Select labelId="demo-simple-select-lable"
-                                            id = "demo-simple-select" value = {startDay} onChange={handleStartDay}>
+                                            id = "demo-simple-select" value = {startDay} key={startDay} onChange={handleStartDay}>
                                             {startdayArr()}
                                         </Select>
                                     </FormControl>
@@ -218,30 +217,7 @@ const Plan = (props) =>{
                                     <div>분</div>
                                 </Grid>
                             </Grid>
-                            <Grid container direction="row" alignItems = "center">
-                                <Grid style={{width:'100px', background:'#A3CCA3', height:'30px'
-                                , textAlign:'center', borderRadius:25, color:'#ffffff'}}>
-                                    <Grid style={{marginTop:'3px'}}>마감일</Grid>
-                                </Grid>
-                                <Grid container direction="row" justifyContent = "center" alignItems = "center"
-                                style={{marginLeft:'50px', marginBottom:'3px', border:'1px solid #D6E6F5'
-                                , borderRadius:25, width:'380px', height:'40px', textAlign:'center'}}>
-                                    <FormControl style={{marginLeft:'15px', marginRight:'25px', marginBottom:'3px'}}>
-                                        <Select labelId="demo-simple-select-lable"
-                                            id = "demo-simple-select" value = {endMonth} onChange={handleEndMonth}>
-                                            {monthArr()}
-                                        </Select>
-                                    </FormControl>
-                                    <div style={{marginRight:'20px'}}>월</div>
-                                    <FormControl style={{marginLeft:'15px', marginRight:'25px', marginBottom:'3px'}}>
-                                        <Select labelId="demo-simple-select-lable"
-                                            id = "demo-simple-select" value = {endDay} onChange={handleEndDay}>
-                                            {enddayArr()}
-                                        </Select>
-                                    </FormControl>
-                                    <div>일</div>
-                                </Grid>
-                            </Grid>
+                            
                             <Grid container direction="row" alignItems = "center">
                                 <Grid style={{width:'100px', background:'#A3CCA3', height:'30px'
                                 , textAlign:'center', borderRadius:25, color:'#ffffff'}}>
@@ -283,7 +259,7 @@ const Plan = (props) =>{
                                     <Grid style={{marginTop:'3px'}}>알림여부</Grid>
                                 </Grid>
                                 {/* checkbox */}
-                                <Grid style={{marginLeft:'50px', marginTop:'3px'}}>
+                                <Grid style={{marginLeft:'50px'}}>
                                     <FormGroup row>
                                         <FormControlLabel control={<Checkbox checked={state.alarmCheck} onChange={handleAlarm}
                                         name = "alarmYES" style={{color:'#A3CCA3'}}/>} label="YES" style={{marginTop:'10px'}}/>

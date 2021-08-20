@@ -1,38 +1,33 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../../layout";
-import { Link } from "react-router-dom";
 import styled1 from "styled-components";
-import { makeStyles, styled } from "@material-ui/core/styles";
-import Input from "@material-ui/core/Input";
-import { Icon } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import RemoveIcon from "@material-ui/icons/Remove";
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-}));
+import axios from "axios";
+import moment from "moment";
+import { useUserContext } from "../../context";
+import 'moment/locale/ko';
 
-const Changeselect = styled1.div`
-  width: auto;
-  height: 24px;
-  color: white;
+const Changeselect = styled1.select`
+  width: 15%;
   border: 0px;
+  font-size: 36px;
   margin-left: 12px;
+  background-color: ${props => props.isdark ? "#c9c9c9" : "white"};
+  height: 50%;
+  display: flex;
+  align-items: center;
 `;
-
+const Changeoption = styled1.option`
+  width: 100%;
+  height: 100%;
+  background-color: ${props => props.isdark ? "#c9c9c9" : "white"};
+`;
 const Changecalcon = styled1.div`
   width: auto;
-  height: 98.8%;
+  height: 99.8%;
   display: flex-row;
   flex-wrap: nowrap;
-  color: #a3cca3;
-  background-color: white;
   margin: 0px;
+  font-size: 20px;
   padding-left:12px;
   padding-right:12px;
   overflow: auto;
@@ -40,191 +35,349 @@ const Changecalcon = styled1.div`
 const Changestart = styled1.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   border-radius: 4px;
   width: auto;
-  height: auto;
+  height: 10%;
   color: white;
-  background-color: #a3cca3;
+  background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
   margin: 12px 0px;
   padding: 4px;
+  padding-right: 3.5%;
+  padding-left: 3.5%;
 `;
 const Changeend = styled1.div`
   display: flex;
   justify-content: space-between;
   width: auto;
-  height: auto;
+  align-items: center;
+  height: 10%;
   color: white;
-  background-color: #a3cca3;
+  background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
   border-radius: 4px;
   margin: 12px 0px;
   padding: 4px;
+  padding-right: 3.5%;
+  padding-left: 3.5%;
 `;
 const Changestarttext = styled1.div`
   width: auto;
   text-align: center;
-  height: auto;
-  color: white;
-  background-color: #a3cca3;
 `;
 const Changeendtext = styled1.div`
   width: auto;
   height: auto;
-  color: white;
-  background-color: #a3cca3;
 `;
 
 const Changetitle = styled1.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   border-radius: 4px;
   width: auto;
-  height: auto;
+  height: 7%;
   color: white;
   padding:4px;
-  background-color: #a3cca3;
+  padding-right: 12px;
+  background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
 `;
 const Changetitletext = styled1.div`
   width: auto;
   height: auto;
-  color: white;
-  background-color: #a3cca3;
-  font-size: 16px;
+  margin-left: 3.5%;
+  display: flex;
+  align-items: center;
 `;
 const Changebtn = styled1.button`
   width: 78px;
-  height: auto;
+  height: 100%;
   border-radius:8px;
   border:0px;
   color: white;
-  background-color: #69a569;
+  cursor: pointer;
+  margin-right: 0.5%;
+  background-color: ${(props) =>
+    props.isdark === true ? "#424242" : "#69a569"};
   padding: 4px;
 `;
-const Plusbtn = styled1.button`
-  width: 24px;
-  height: 24px;
-  border-radius:8px;
-  border:0px;
-  background-color: #a3cca3;
-  color: white;
-  margin-right : 4px;
-  padding-ringt: 4px;
-`;
-const Minusbtn = styled1.button`
-  width: 24px;
-  height: 24px;
-  border-radius:8px;
-  font-size: 24px;
-  border:0px;
-  background-color: #a3cca3;
-  color: white;
-`;
+
 const ChangeContent = styled1.div`
   display: flex-row;
   justify-content: space-between;
   border-radius: 4px;
   width: auto;
-  height: auto;
+  height: 48%;
   color: white;
   padding:4px;
-  background-color: #a3cca3;
+  background-color: ${(props) => (props.isdark === true ? "gray" : "#a3cca3")};
   margin-top:12px;
 `;
 const ChangeContentheader = styled1.div`
   display: flex;
+  margin-top: 1%;
   justify-content: space-between;
   width: auto;
-  height: auto;
-  color: white;
+  height: 8%;
   padding:4px;
-  background-color: #a3cca3;
+  margin-right: 2%;
 `;
 const Changecontentinput1 = styled1.textarea`
-    background-color: white;
+    background-color: ${(props) =>
+      props.isdark === true ? "#c9c9c9" : "white"};
     border-radius: 4px;
-    height: 108px;
-    font-size: 12px;
-    margin-left: 8px;
+    height: 80%;
+    width: 92%;
+    font-size: 20px;
+    margin-left: 4%;
+    margin-right: 4%;
     margin-bottom: 8px;
-    margin-top: 4px;
+    margin-top: 1.5%;
     padding: 4px;
-    width: 304px;
     border: 0px;
     overflow: auto;
     outline: none;
 `;
-const Timebox = styled1.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+const Changetitleinput = styled1.textarea`
+    background-color : ${(props) =>
+      props.isdark === true ? "#c9c9c9" : "white"};
+    height: 48.8%;
+    width: 30%;
+    padding-top: 1.3%;
+    font-size: 20px;
+    padding-left: 8px;
+    vertical-align: middle;
+    color: black;
+    margin-right: 2.5%;
 `;
-const Changetitleinput = styled(Input)({
-  backgroundColor: "white",
-  height: "25px",
-  fontSize: "12px",
-  paddingLeft: "8px",
-});
 
-const Changecalendarlayout = () => {
-  const classes = useStyles();
-  const [starttime, setStarttime] = useState(0);
-  const [endtime, setEndtime] = useState(0);
-  const [minute, setMinute] = useState(0);
+const Changecalendarlayout = (props) => {
+  const [starttime, setStarttime] = useState("");
+  const [endtime, setEndtime] = useState("");
+  const [optionarr, setOptionarr] = useState([]);
+  const [deadline, setDeadline] = useState("");
+  const [title, setTitle] = useState("");
+  const [context, setContext] = useState("");
+  const [notitime, setNotitime] = useState("")
+  const [notiarr, setNotiarr] = useState([])
+  const [isfinished, setIsfinished] = useState(false);
+  const [point, setPoint] = useState(0);
+  const { id } = props;
 
+  const handlestartChange = (event) => {
+    setStarttime(event.target.value);
+  };
+  const handleendChange = (event) => {
+    setEndtime(event.target.value);
+  };
+  const handleContext = (e) => {
+    setContext(e.target.value);
+  };
+  const handleTitle = (e) => {
+    setTitle(e.target.value);
+  };
+  const handlenotiChange = (event) => {
+    setNotitime(event.target.value);
+    if (event.target.value[0] + event.target.value[1] === "설정") {
+      setNotitime(null);
+    }
+  };
+  const Change = async () => {
+    const starthour = Number(`${starttime[0]}${starttime[1]}`);
+    const startmin = Number(`${starttime[2]}${starttime[3]}`);
+    const endhour = Number(`${endtime[0]}${endtime[1]}`);
+    const endmin = Number(`${endtime[2]}${endtime[3]}`);
+    console.log(notitime)
+    if (starthour < endhour) {
+      if (window.confirm("정말 완료하시겠 습니까?")) {
+        await axios
+          .put(`http://127.0.0.1:4500/schedule/${id}`, {
+            date: `${moment().format("YYYYMMDD")}`,
+            started_at: `${moment().format("YYYYMMDD")} ${
+              starttime[0] + starttime[1] + starttime[2] + starttime[3]
+            }`,
+            finished_at: `${moment().format("YYYYMMDD")} ${
+              endtime[0] + endtime[1] + endtime[2] + endtime[3]
+            }`,
+            deadline_at: deadline,
+            notification: null,
+            notificationtime: notitime
+              ? `${moment().format("YYYYMMDD")} ${
+                  notitime[0] + notitime[1] + notitime[2] + notitime[3]
+                }`
+              : null,
+            title: title,
+            context: context,
+            point: point,
+            is_finished: isfinished,
+          })
+          .then(({ data }) => {
+          })
+          .catch((e) => {});
+        window.location.replace(`/Change`);
+      } else {
+        // console.log("변화 없음");
+      }
+    } else if (starthour === endhour && startmin <= endmin) {
+      if (window.confirm("정말 완료하시겠 습니까?")) {
+        await axios
+          .put(`http://127.0.0.1:4500/schedule/${id}`, {
+            date: `${moment().format("YYYYMMDD")}`,
+            started_at: `${moment().format("YYYYMMDD")} ${
+              starttime[0] + starttime[1] + starttime[2] + starttime[3]
+            }`,
+            finished_at: `${moment().format("YYYYMMDD")} ${
+              endtime[0] + endtime[1] + endtime[2] + endtime[3]
+            }`,
+            deadline_at: deadline,
+            notification: null,
+            notificationtime: notitime
+              ? `${moment().format("YYYYMMDD")} ${
+                  notitime[0] + notitime[1] + notitime[2] + notitime[3]
+                }`
+              : null,
+            title: title,
+            context: context,
+            point: point,
+            is_finished: isfinished,
+          })
+          .then(({ data }) => {
+          })
+          .catch((e) => {});
+        window.location.replace(`/Today`);
+      } else {
+        // console.log("변화 없음");
+      }
+    } else {
+      window.alert("일정 시작시간이 일정종료 시간보다 빠르게 설정해 주십시오.");
+    }
+  };
+  useEffect(() => {
+    async function loadCalendar() {
+      await axios
+        .get(`http://127.0.0.1:4500/schedule/${id}`)
+        .then(({ data }) => {
+          setDeadline(moment(data.deadline_at).format("YYYYMMDD HHmm"));
+          setTitle(data.title);
+          setContext(data.context);
+          setStarttime(moment(data.started_at).format("HHmm"))
+          setEndtime(moment(data.finished_at).format("HHmm"))
+          setIsfinished(data.is_finished);
+          data.notificationtime ? setNotitime(moment(data.notificationtime).format("HHmm")) : setNotitime(null)
+          setPoint(data.point);
+        })
+        .catch((e) => {});
+    }
+    loadCalendar();
+    const rendering = () => {
+      const result = [];
+      const result2 = []
+      result.push("시간");
+      result2.push("설정 안함")
+      for (let i = 0; i < 24; i++) {
+        if (i < 10) {
+          result.push(`0${i}:00`);
+          result.push(`0${i}:30`);
+        } else {
+          result.push(`${i}:00`);
+          result.push(`${i}:30`);
+        }
+      }
+      for (let i = 0; i < 24; i++) {
+        if (i < 10) {
+          result2.push(`0${i}:00`);
+          result2.push(`0${i}:30`);
+        } else {
+          result2.push(`${i}:00`);
+          result2.push(`${i}:30`);
+        }
+      }
+      setOptionarr(result);
+      setNotiarr(result2)
+    };
+
+    rendering();
+  }, []);
+  const { isdarked } = useUserContext();
   return (
     <Changecalcon>
-      <Changestart>
+      <Changestart isdark={isdarked}>
         <Changestarttext>변경할 시작 시간</Changestarttext>
-        {minute == 0 ? (
-          <Timebox>
-            <Minusbtn>
-              <RemoveIcon></RemoveIcon>
-            </Minusbtn>
-            <Changeselect>0{starttime} : 00</Changeselect>
-            <Plusbtn>
-              <AddIcon></AddIcon>
-            </Plusbtn>
-          </Timebox>
-        ) : (
-          <Changeselect>{starttime} : 00</Changeselect>
-        )}
+        <Changeselect
+          isdark={isdarked}
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={starttime}
+          onChange={handlestartChange}
+        >
+          {optionarr.map((item) => (
+            <Changeoption isdark = {isdarked} value={item[0] + item[1] + item[3] + item[4]}>
+              {item}
+            </Changeoption>
+          ))}
+        </Changeselect>
       </Changestart>
-      <Changeend>
+      <Changeend isdark={isdarked}>
         <Changeendtext>변경할 종료 시간</Changeendtext>
-        {endtime < 10 ? (
-          <Timebox>
-            <Minusbtn>
-              <RemoveIcon></RemoveIcon>
-            </Minusbtn>
-            <Changeselect>0{endtime} : 00</Changeselect>
-            <Plusbtn>
-              <AddIcon></AddIcon>
-            </Plusbtn>
-          </Timebox>
-        ) : (
-          <Changeselect>{endtime} : 00</Changeselect>
-        )}
+        <Changeselect
+          isdark={isdarked}
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={endtime}
+          onChange={handleendChange}
+        >
+          {optionarr.map((item) => (
+            <Changeoption isdark = {isdarked} value={item[0] + item[1] + item[3] + item[4]}>
+              {item}
+            </Changeoption>
+          ))}
+        </Changeselect>
       </Changeend>
-      <Changetitle>
+      <Changeend isdark={isdarked}>
+        <Changeendtext>변경할 알람 시간</Changeendtext>
+        <Changeselect
+          isdark={isdarked}
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={notitime}
+          onChange={handlenotiChange}
+        >
+          {notiarr.map((item) => (
+            <Changeoption isdark = {isdarked} value={item[0] + item[1] + item[3] + item[4]}>
+              {item}
+            </Changeoption>
+          ))}
+        </Changeselect>
+      </Changeend>
+      <Changetitle isdark={isdarked}>
         <Changetitletext>일정 제목</Changetitletext>
-        <Changetitleinput placeholder="변경할 일정 제목"></Changetitleinput>
+        <Changetitleinput
+          isdark={isdarked}
+          value={title}
+          onChange={handleTitle}
+        ></Changetitleinput>
       </Changetitle>
-      <ChangeContent>
+      <ChangeContent isdark={isdarked}>
         <ChangeContentheader>
           <Changetitletext>일정 내용</Changetitletext>
-          <Changebtn>변경</Changebtn>
+          <Changebtn isdark={isdarked} onClick={() => Change()}>
+            변경
+          </Changebtn>
         </ChangeContentheader>
         <Changecontentinput1
+          isdark={isdarked}
           multiline
           rows={4}
-          placeholder="변경할 일정 내용"
+          value={context}
+          onChange={handleContext}
           variant="outlined"
         ></Changecontentinput1>
       </ChangeContent>
     </Changecalcon>
   );
 };
-const Changecalendar = () => {
-  return <Layout pages={Changecalendarlayout()}></Layout>;
+const Changecalendar = ({ match }) => {
+  const { id } = match.params;
+  return <Layout pages={Changecalendarlayout({ id })}></Layout>;
 };
 
 export default Changecalendar;
