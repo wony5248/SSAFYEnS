@@ -28,14 +28,19 @@ npm 6.14.13
 ```
 ├── README.md                       // README.md
 ├── backend_rpi/
-│   ├──
-│   ├──
-│   └──
+│   ├── bin
+│   ├── routes
 ├── frontend_rpi/
-│   ├──
-│   ├──
-│   ├──
-│   └──
+│   ├── build
+│   ├── public
+│   └── src
+│        ├── assets                // 이용되는 이미지 디렉터리
+│        ├── components            // 각 페이지에 이용 되는 컴포넌트 디렉터리
+│        ├── container             // 컴포넌트 집합(컨테이너) 디렉터리
+│        ├── context               // 전역변수 사용 디렉 터리
+│        ├── layout                // 공통 layout 디렉터리
+│        └── pages                 // 각 라우터별 렌더링 될 페이지 디렉터리
+│  
 ├── hardware/
 │   ├── README.md                   // 하드웨어 회로도 및 specification
 │   ├── STT_MANUAL.md               // STT Manual
@@ -77,12 +82,13 @@ $ . ./embedded_installation.sh
 $ cd S05P13A109/embedded
 $ . ./device_start.sh
 $ cd frontend_rpi
-$ npm run electron
+$ npm run electron - Other Terminal
 ```
 
 # Technical Stack
 ## Backend
 - Node.js
+- Express
 
 ## Frontend
 - React.js
