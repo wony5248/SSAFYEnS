@@ -253,7 +253,7 @@ const MainSession = () => {
                                 </Typography>
                             </CardContent>
                             <CardActions>
-                                <Button size="medium" >HOW TO USE</Button>
+                                <Button size="medium" onClick={()=>{window.open("https://docs.google.com/presentation/d/1SAOFiWEG-idjADc3M9wHVXd34p8VvH103RLwdWuDk4A/edit?usp=sharing")}}>HOW TO USE</Button>
                             </CardActions>
                         </Paper>
                     </div>
@@ -277,7 +277,7 @@ const MainSession = () => {
                                 </Typography>
                             </CardContent>
                             <CardActions>
-                                <Button size="medium" onClick={() => { window.location.href = "https://docs.google.com/presentation/d/1ZoBLbDhNQ7zvDe4CAn0tDY1ifNHD9slG2Wg5suTf28c/edit?usp=sharing" }}>HOW TO USE</Button>
+                                <Button size="medium" onClick={() => { window.open("https://docs.google.com/presentation/d/1ZoBLbDhNQ7zvDe4CAn0tDY1ifNHD9slG2Wg5suTf28c/edit?usp=sharing") }}>HOW TO USE</Button>
                             </CardActions>
                         </Paper>
                     </div>
