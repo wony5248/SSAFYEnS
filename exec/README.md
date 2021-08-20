@@ -15,6 +15,7 @@ Embedded : Google Cloud Platform(STT, TTS) 사용
 
 # 데이터베이스 덤프 최신본
 
+- [데이터베이스 덤프 최신본](https://lab.ssafy.com/s05-webmobile3-sub3/S05P13A109/-/blob/master/exec/dump-sfens-202108200949.sql)  
 
 
 # [시연 시나리오]
