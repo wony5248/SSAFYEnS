@@ -234,7 +234,7 @@ const MainSession = () => {
                 </div>
                 <Grid container direction="row" justifyContent="center" alignItems="center">
                     <div>
-                        <Paper elevation={0} style={{ width: '250px' }}>
+                        <Paper elevation={0} style={{ width: '450px' }}>
                             <CardContent>
                                 <img src={IoTImg} width="150px" />
                             </CardContent>
@@ -243,7 +243,7 @@ const MainSession = () => {
                                     IoT
                                 </Typography>
                             </CardContent>
-                            <Divider style={{ width: '200px' }} />
+                            <Divider style={{ width: '400px' }} />
                             <CardContent>
                                 <Typography variant="body2" display="block" gutterBottom>
                                     IoT 기기를 이용하여
@@ -253,7 +253,8 @@ const MainSession = () => {
                                 </Typography>
                             </CardContent>
                             <CardActions>
-                                <Button size="medium" onClick={()=>{window.open("https://docs.google.com/presentation/d/1SAOFiWEG-idjADc3M9wHVXd34p8VvH103RLwdWuDk4A/edit?usp=sharing")}}>HOW TO USE</Button>
+                                <Button size="medium" onClick={()=>{window.open("https://lab.ssafy.com/s05-webmobile3-sub3/S05P13A109/-/blob/master/embedded/hardware/STT_MANUAL.md")}}>HOW TO USE 음성 인식</Button>
+                                <Button size="medium" onClick={()=>{window.open("https://docs.google.com/presentation/d/1SAOFiWEG-idjADc3M9wHVXd34p8VvH103RLwdWuDk4A/edit?usp=sharing")}}>HOW TO USE IoT</Button>
                             </CardActions>
                         </Paper>
                     </div>
