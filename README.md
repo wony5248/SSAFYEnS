@@ -54,7 +54,7 @@ $ npm install
 - 김지환 <img src="https://img.shields.io/badge/-BE-brightgreen"> <a href="mailto:bure5kzam.gmail.com" target="_blank"><img src="https://img.shields.io/badge/Email-EA4335?style=flat-square&logo=gmail&logoColor=white"/></a>
 - 신은지 <img src="https://img.shields.io/badge/-EM-lightgrey"> <a href="mailto:ssej0221@gmail.com" target="_blank"><img src="https://img.shields.io/badge/Email-EA4335?style=flat-square&logo=gmail&logoColor=white"/></a>
 - 이태용 <img src="https://img.shields.io/badge/-BE-brightgreen"> <a href="mailto:tyl1996@gmail.com" target="_blank"><img src="https://img.shields.io/badge/Email-EA4335?style=flat-square&logo=gmail&logoColor=white"/></a>
-- 장범진 <img src="https://img.shields.io/badge/-FE-orange">  <a href="mailto:wony5248@gmail.com" target="_blank"><img src="https://img.shields.io/badge/Email-EA4335?style=flat-square&logo=gmail&logoColor=white"/></a>
+- 장범진 <img src="https://img.shields.io/badge/-FE-orange"> <img src="https://img.shields.io/badge/-BE-brightgreen"> <a href="mailto:wony5248@gmail.com" target="_blank"><img src="https://img.shields.io/badge/Email-EA4335?style=flat-square&logo=gmail&logoColor=white"/></a>
 - 허애리 <img src="https://img.shields.io/badge/-FE-orange">  <a href="mailto:heoeari51@gmail.com" target="_blank"><img src="https://img.shields.io/badge/Email-EA4335?style=flat-square&logo=gmail&logoColor=white"/></a>
 
 ## Docs
