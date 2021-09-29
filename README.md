@@ -60,3 +60,4 @@ $ npm install
 ## Docs
 <a href="https://www.notion.so/Welcome-to-SSAFYens-813d216ad32d4e569034a096be959a41" target="_blank"><img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=notion&logoColor=white"/></a>
 <a href="https://lab.ssafy.com/s05-webmobile3-sub3/S05P13A109/-/blob/master/docs/README.md" target="_blank"><img src="https://img.shields.io/badge/Project Docs-2B579A?style=flat-square&logo=microsoftword&logoColor=white"/></a>
+<a href="https://www.youtube.com/watch?v=TAcpgdKRvNY" target="_blank"><img src="https://img.shields.io/badge/Project Youtube-red?style=flat-square&logo=Youtube&logoColor=white"/></a>
