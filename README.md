@@ -27,6 +27,33 @@ $ npm install
 
 #### [Embedded](https://lab.ssafy.com/s05-webmobile3-sub3/S05P13A109/-/blob/master/embedded/README.md)
 
+## DEMO(Web)
+### 일정
+![일정등록변경](https://user-images.githubusercontent.com/48344143/136667518-e2b4e589-77d6-4d7c-9fb9-2076e5f58247.gif)
+![일정삭제](https://user-images.githubusercontent.com/48344143/136667523-8915fd7d-08c9-4d8f-8fe1-3a8136d3fdd5.gif)
+![일정평가확인](https://user-images.githubusercontent.com/48344143/136667524-af954330-d13d-479b-9b80-3c4222b1e124.gif)
+
+### 그룹
+![그룹생성](https://user-images.githubusercontent.com/48344143/136667551-148c59e5-fe1f-4e22-a8f4-b72a75a51cbe.gif)
+![그룹정보](https://user-images.githubusercontent.com/48344143/136667533-405e674b-926a-4f79-80ec-6965fedb74ca.gif)
+![그룹가입](https://user-images.githubusercontent.com/48344143/136667535-711f2f0f-834c-4889-851e-8cd0e3446d13.gif)
+![그륩관리](https://user-images.githubusercontent.com/48344143/136667537-fea22f96-5176-4474-a4ee-91d9b7e43058.gif)
+![챌린지생성](https://user-images.githubusercontent.com/48344143/136667555-c4251414-7f9c-4f66-ad8d-9238dbfd7713.gif)
+
+## DEMO(Rpi) - 음성
+
+### 현재일정
+https://user-images.githubusercontent.com/48344143/136667564-988e537e-ce01-4f3c-ad19-826769ebaf7e.mp4
+### 일정등록
+https://user-images.githubusercontent.com/48344143/136667732-8615bb23-e9c3-4c54-a393-2673e5d516e1.mp4
+### 일정완료
+https://user-images.githubusercontent.com/48344143/136667625-f945c51e-a9f8-4ddc-92d8-4e249364963a.mp4
+### 일정삭제
+https://user-images.githubusercontent.com/48344143/136667688-a917b94f-11a5-4fe7-b0e5-9608c7ca193e.mp4
+### 일정브리핑
+https://user-images.githubusercontent.com/48344143/136667740-c28e56b8-a1d9-41c8-b8db-7061ff8b4f11.mp4
+
+
 
 ## Technical Stack
 ### Backend
