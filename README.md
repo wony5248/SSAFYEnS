@@ -27,7 +27,7 @@ $ npm install
 
 #### [Embedded](https://lab.ssafy.com/s05-webmobile3-sub3/S05P13A109/-/blob/master/embedded/README.md)
 
-## DEMO(Web)
+## PREVIEW(Web)
 ### 일정등록
 ![일정등록변경](https://user-images.githubusercontent.com/48344143/136667518-e2b4e589-77d6-4d7c-9fb9-2076e5f58247.gif)
 ### 일정삭제
@@ -46,7 +46,7 @@ $ npm install
 ### 챌린지생성
 ![챌린지생성](https://user-images.githubusercontent.com/48344143/136667555-c4251414-7f9c-4f66-ad8d-9238dbfd7713.gif)
 
-## DEMO(Rpi) - 음성
+## PREVIEW(Rpi) - 음성
 
 ### 현재일정
 https://user-images.githubusercontent.com/48344143/136667841-a8750784-1750-4b4d-8a6c-9a242b5d249b.mp4
