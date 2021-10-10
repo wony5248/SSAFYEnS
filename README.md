@@ -59,7 +59,7 @@ https://user-images.githubusercontent.com/48344143/136667688-a917b94f-11a5-4fe7-
 ### 일정브리핑
 https://user-images.githubusercontent.com/48344143/136667847-f27ee6f3-c5ae-4d15-812f-5e550467a5df.mp4
 
-## DEMO(Rpi) - 터치
+## PREVIEW(Rpi) - 터치
 ### 일정변경
 https://user-images.githubusercontent.com/48344143/136668067-929d01a4-ac19-4f90-8e75-89c7b07892c1.mp4
 
