@@ -1,6 +1,10 @@
 # SSAFYEnS (SSAFY Environment n Schedule)
 웹/임베디드 일정 관리 도우미  
 
+# Why SSAFYEnS?
+![why](https://user-images.githubusercontent.com/48344143/136697966-a6c99dc6-0ca4-4b91-a4bb-5fafb43fde6e.PNG)
+![how](https://user-images.githubusercontent.com/48344143/136697976-e053baf2-960c-4325-bc50-97968bd153bb.PNG)
+
 ## Quick Link
 <a href="http://i5a109.p.ssafy.io/" target="_blank"><img src="https://img.shields.io/badge/HOMEPAGE-A3CCA3?style=flat-square&logo=&logoColor=white"/></a>
 
