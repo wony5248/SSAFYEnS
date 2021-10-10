@@ -27,6 +27,29 @@ $ npm install
 
 #### [Embedded](https://lab.ssafy.com/s05-webmobile3-sub3/S05P13A109/-/blob/master/embedded/README.md)
 
+
+## Technical Stack
+### Backend
+- Node.js
+- Express
+- JWT (JSON Web Tokens)
+- AWS (Amazon Web Service)
+- MariaDB
+- Docker
+- Nginx
+- Bycrpt
+
+### Frontend
+- React.js
+- Electron
+- Material-ui
+
+### Hardware
+- Linux
+- GCP (Google Cloud Platform)
+- OpenCV
+
+
 ## PREVIEW(Web)
 ### 일정등록
 ![일정등록변경](https://user-images.githubusercontent.com/48344143/136667518-e2b4e589-77d6-4d7c-9fb9-2076e5f58247.gif)
@@ -62,28 +85,6 @@ https://user-images.githubusercontent.com/48344143/136667847-f27ee6f3-c5ae-4d15-
 ## PREVIEW(Rpi) - 터치
 ### 일정변경
 https://user-images.githubusercontent.com/48344143/136668067-929d01a4-ac19-4f90-8e75-89c7b07892c1.mp4
-
-
-## Technical Stack
-### Backend
-- Node.js
-- Express
-- JWT (JSON Web Tokens)
-- AWS (Amazon Web Service)
-- MariaDB
-- Docker
-- Nginx
-- Bycrpt
-
-### Frontend
-- React.js
-- Electron
-- Material-ui
-
-### Hardware
-- Linux
-- GCP (Google Cloud Platform)
-- OpenCV
 
 
 ## Member
